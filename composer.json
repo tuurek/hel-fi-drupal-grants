@@ -15,10 +15,13 @@
         "drupal/hdbt": "^1.0",
         "drupal/hdbt_admin": "^1.0",
         "drupal/helfi_ahjo": "^1.0",
+        "drupal/helfi_grant_applications_config": "dev-main",
         "drupal/helfi_hauki": "^1.0",
         "drupal/helfi_platform_config": "^1.1",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^1.0",
+        "drupal/webform": "^6.0",
+        "drupal/webform_rest": "^4.0",
         "drush/drush": "^10.4"
     },
     "require-dev": {
