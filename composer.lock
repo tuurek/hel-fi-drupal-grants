@@ -3346,12 +3346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-grant-application.git",
-                "reference": "789784cce44a19dd186e5ff63f306d4eba747467"
+                "reference": "55488a9d7c2a6e64edc7d31ba6b6589d6925ebb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-grant-application/zipball/789784cce44a19dd186e5ff63f306d4eba747467",
-                "reference": "789784cce44a19dd186e5ff63f306d4eba747467",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-grant-application/zipball/55488a9d7c2a6e64edc7d31ba6b6589d6925ebb2",
+                "reference": "55488a9d7c2a6e64edc7d31ba6b6589d6925ebb2",
                 "shasum": ""
             },
             "type": "drupal-custom-module",
@@ -3363,7 +3363,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-grant-application/tree/main",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-grant-application/issues"
             },
-            "time": "2021-04-11T06:17:17+00:00"
+            "time": "2021-04-11T15:17:30+00:00"
         },
         {
             "name": "drupal/helfi_hauki",
