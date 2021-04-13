@@ -1,0 +1,11 @@
+name: grant_applications_config
+description: 'Hel.fi Grant Applications Config'
+type: module
+core_version_requirement: '^8.9 || ^9'
+dependencies:
+  - webform
+  - webform_ui
+  - webform_rest
+  - helfi_base_config
+version: '1.0.1'
+package: HELfi

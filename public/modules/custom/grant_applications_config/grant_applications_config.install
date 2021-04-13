@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains install functions for Grant applications Base Config.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Install HDBT and HDBT admin themes and make them as default themes.
+ */
+function grant_applications_config_install() {
+  \Drupal::service('theme_installer')->install(['helfi_grants']);
+  $system_theme = \Drupal::configFactory()->getEditable('system.theme');
+  $system_theme->set('default', 'helfi_grants')->set('admin', 'hdbt_admin')->save();
+
+}
