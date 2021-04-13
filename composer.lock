@@ -3340,31 +3340,7 @@
             },
             "time": "2021-03-30T15:32:09+00:00"
         },
-        {
-            "name": "drupal/helfi_grant_applications_config",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-grant-application.git",
-                "reference": "55488a9d7c2a6e64edc7d31ba6b6589d6925ebb2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-grant-application/zipball/55488a9d7c2a6e64edc7d31ba6b6589d6925ebb2",
-                "reference": "55488a9d7c2a6e64edc7d31ba6b6589d6925ebb2",
-                "shasum": ""
-            },
-            "type": "drupal-custom-module",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Grant Applciations config",
-            "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-grant-application/tree/main",
-                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-grant-application/issues"
-            },
-            "time": "2021-04-11T15:17:30+00:00"
-        },
+
         {
             "name": "drupal/helfi_hauki",
             "version": "1.0.4",
@@ -13812,9 +13788,6 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "drupal/helfi_grant_applications_config": 20
-    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],

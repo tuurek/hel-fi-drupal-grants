@@ -1,3 +1,27 @@
+.form-content .form-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  width: 100%;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left; }
+  .form-content .form-item label {
+    color: var(--label-color-default);
+    display: block;
+    font-weight: 500;
+    margin-bottom: var(--spacing-3-xs);
+    max-width: 400px;
+    width: 100%;
+    font-size: var(--fontsize-body-l);
+    -ms-flex-negative: 0;
+        flex-shrink: 0; }
+  .form-content .form-item .hds-text-input__input-wrapper {
+    min-width: 50%; }
 
 
 /*# sourceMappingURL=styles.min.css.map*/

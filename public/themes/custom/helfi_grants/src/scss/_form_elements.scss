@@ -1,2 +1,21 @@
-
-
+.form-content {
+  .form-item {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    justify-content: left;
+    label {
+      color: var(--label-color-default);
+      display: block;
+      font-weight: 500;
+      margin-bottom: var(--spacing-3-xs);
+      max-width: 400px;
+      width: 100%;
+      font-size: var(--fontsize-body-l);
+      flex-shrink: 0;
+    }
+    .hds-text-input__input-wrapper {
+      min-width: 50%;
+    }
+  }
+}
