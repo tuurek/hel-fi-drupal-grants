@@ -1,0 +1,19 @@
+uuid: f75def8c-c802-48cb-b341-95bab618cc05
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_testikentta
+    - node.type.esitiedot
+id: node.esitiedot.field_testikentta
+field_name: field_testikentta
+entity_type: node
+bundle: esitiedot
+label: Testikenttä
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

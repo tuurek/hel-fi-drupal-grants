@@ -1,0 +1,77 @@
+display:
+  default:
+    display_title: Isäntä
+    display_options:
+      exposed_form:
+        options:
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'Merkintöjä sivua kohti'
+            items_per_page_options_all_label: '- Kaikki -'
+            offset_label: Offset
+          tags:
+            previous: ‹‹
+            next: ››
+      fields:
+        media_bulk_form:
+          action_title: Toiminto
+      filters:
+        status:
+          group_info:
+            label: Julkaistu
+            group_items:
+              1:
+                title: Julkaistu
+              2:
+                title: Julkaisematon
+        name:
+          expose:
+            label: Nimi
+        langcode:
+          expose:
+            label: Kieli
+      title: Media
+  page:
+    display_title: Sivu
+    display_options:
+      fields:
+        media_bulk_form:
+          action_title: Toiminto
+        name:
+          separator: ', '
+        edit_media:
+          text: Muokkaa
+        delete_media:
+          text: Poista
+  widget:
+    display_options:
+      filters:
+        name:
+          expose:
+            label: Nimi
+      arguments:
+        bundle:
+          exception:
+            title: Kaikki
+  widget_table:
+    display_options:
+      fields:
+        thumbnail__target_id:
+          label: Pienoiskuva
+        name:
+          label: Nimi
+        uid:
+          label: Tekijä
+      filters:
+        name:
+          expose:
+            label: Nimi
+      arguments:
+        bundle:
+          exception:
+            title: Kaikki

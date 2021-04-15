@@ -1,0 +1,11 @@
+uuid: 66783513-1783-453c-9696-0034f302948b
+langcode: fi
+status: true
+dependencies:
+  config:
+    - node.type.esitiedot
+id: node.esitiedot
+target_entity_type_id: node
+target_bundle: esitiedot
+default_langcode: site_default
+language_alterable: false
