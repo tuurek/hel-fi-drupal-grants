@@ -1,0 +1,25 @@
+uuid: d534f4fc-78ec-46df-988f-7f0eb9bd47a7
+langcode: fi
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.esitiedot.field_testikentta
+    - field.field.node.esitiedot.field_verkkolomake
+    - node.type.esitiedot
+  module:
+    - user
+id: node.esitiedot.teaser
+targetEntityType: node
+bundle: esitiedot
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_testikentta: true
+  field_verkkolomake: true
+  langcode: true

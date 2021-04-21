@@ -1,0 +1,23 @@
+uuid: a774f368-c2ad-4789-9d8b-86c3949786fa
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_verkkolomake
+    - node.type.esitiedot
+  module:
+    - webform
+id: node.esitiedot.field_verkkolomake
+field_name: field_verkkolomake
+entity_type: node
+bundle: esitiedot
+label: verkkolomake
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:webform'
+  handler_settings: {  }
+field_type: webform

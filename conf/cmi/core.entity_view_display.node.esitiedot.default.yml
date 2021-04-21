@@ -1,0 +1,39 @@
+uuid: db2a5dcf-eafd-4608-aa8e-1c26daf06f08
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.node.esitiedot.field_testikentta
+    - field.field.node.esitiedot.field_verkkolomake
+    - node.type.esitiedot
+  module:
+    - user
+    - webform
+id: node.esitiedot.default
+targetEntityType: node
+bundle: esitiedot
+mode: default
+content:
+  field_testikentta:
+    weight: 101
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_verkkolomake:
+    weight: 102
+    label: above
+    settings:
+      source_entity: true
+    third_party_settings: {  }
+    type: webform_entity_reference_entity_view
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
