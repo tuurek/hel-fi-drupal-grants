@@ -26,17 +26,9 @@ class HelfiGrantsWebformLayout extends Container {
    * {@inheritdoc}
    */
   protected function defineDefaultProperties() {
-    // Here you define your webform element's default properties,
-    // which can be inherited.
-    //
-    // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
-    // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
     return [
-      'multiple' => '',
-      'size' => '',
-      'minlength' => '',
-      'maxlength' => '',
-      'placeholder' => '',
+      // Flexbox.
+      'title' => '',
     ] + parent::defineDefaultProperties();
   }
 
@@ -64,6 +56,15 @@ class HelfiGrantsWebformLayout extends Container {
     //
     // @see \Drupal\webform\Plugin\WebformElementBase::form
     // @see \Drupal\webform\Plugin\WebformElement\TextBase::form
+    $form['webformlayoutcontainer'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Container Settings'),
+    ];
+    $form['webformlayoutcontainer']['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Section Title'),
+      '#required' => TRUE,
+    ];
     return $form;
   }
 
