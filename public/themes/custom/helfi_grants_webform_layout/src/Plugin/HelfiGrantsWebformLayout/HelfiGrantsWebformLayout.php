@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\webform_example_element\Plugin\WebformElement;
+namespace Drupal\webform\Plugin\WebformElement;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\webform\Plugin\WebformElementBase;
 use Drupal\webform\WebformSubmissionInterface;
 
 /**
@@ -21,7 +20,7 @@ use Drupal\webform\WebformSubmissionInterface;
  * @see \Drupal\webform\Plugin\WebformElementInterface
  * @see \Drupal\webform\Annotation\WebformElement
  */
-class HelfiGrantsWebformLayout extends WebformElementBase {
+class HelfiGrantsWebformLayout extends Container {
 
   /**
    * {@inheritdoc}
