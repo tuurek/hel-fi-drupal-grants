@@ -21,7 +21,8 @@
     -ms-flex-negative: 0;
         flex-shrink: 0; }
   .form-content .form-item .hds-text-input__input-wrapper {
-    min-width: 50%; }
+    min-width: 50%;
+    padding-left: 40px; }
 
 
 /*# sourceMappingURL=styles.min.css.map*/

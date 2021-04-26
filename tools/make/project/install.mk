@@ -19,3 +19,7 @@ drush-locale-update: ## Update translations.
 	$(call drush_on_docker,locale:update)
 	$(call step,Import custom translations...)
 	$(call drush_on_docker,helfi:locale-import helfi_platform_config)
+
+PHONY += drush-fixgrant
+drush-fixgrant: ## Update translations.
+	$(call drush_on_docker,pm-uninstall grant_webform_layout)
