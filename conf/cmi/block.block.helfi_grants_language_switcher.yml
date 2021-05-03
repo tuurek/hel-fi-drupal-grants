@@ -1,0 +1,22 @@
+uuid: 45826edd-585e-4ff8-a27c-9239e544c4e4
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+  theme:
+    - helfi_grants
+_core:
+  default_config_hash: jDpKvB-ZNjf7l-dHk_CINYgToXHW1HAv6Yf9ZBphRYQ
+id: helfi_grants_language_switcher
+theme: helfi_grants
+region: header_top
+weight: 0
+provider: null
+plugin: 'language_block:language_content'
+settings:
+  id: 'language_block:language_content'
+  label: 'Language switcher'
+  provider: language
+  label_display: '0'
+visibility: {  }

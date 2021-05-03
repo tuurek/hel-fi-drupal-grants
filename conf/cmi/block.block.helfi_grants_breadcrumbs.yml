@@ -1,0 +1,22 @@
+uuid: 49882c10-56fc-42b8-b339-0ce89bd825f7
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - helfi_grants
+_core:
+  default_config_hash: X6F3oSAls1r1jwOVU5n7EG6Uaz0yFqo-GQcEXDzxxLk
+id: helfi_grants_breadcrumbs
+theme: helfi_grants
+region: breadcrumb
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

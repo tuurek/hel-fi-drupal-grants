@@ -22,7 +22,7 @@
         flex-shrink: 0; }
   .form-content .form-item .hds-text-input__input-wrapper {
     min-width: 50%;
-    padding-left: 40px; }
+    padding-left: var(--spacing-triple); }
 
 
 /*# sourceMappingURL=styles.min.css.map*/

@@ -1,0 +1,9 @@
+uuid: c49bb996-c2dd-44d4-91ac-edf7b72f5b82
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: Mqgf6_xfg7HLsBnW3BSP9e9EuHWJXsEMbt240DMt_5E
+id: node__page
+label: 'Content: Page'
+tags: {  }

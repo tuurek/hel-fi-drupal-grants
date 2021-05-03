@@ -1,0 +1,22 @@
+uuid: 197273a6-77d6-4220-ab97-23ac01e0fbe2
+langcode: en
+status: true
+dependencies:
+  module:
+    - hdbt_content
+  theme:
+    - helfi_grants
+_core:
+  default_config_hash: IsZxrQIR5fs_5xZDQ1BJ8K5LXwiaRAM3Gk-HY4vuVb4
+id: helfi_grants_footertopblock
+theme: helfi_grants
+region: footer_top
+weight: -3
+provider: null
+plugin: footer_top_block
+settings:
+  id: footer_top_block
+  label: 'Footer top block'
+  provider: hdbt_content
+  label_display: '0'
+visibility: {  }

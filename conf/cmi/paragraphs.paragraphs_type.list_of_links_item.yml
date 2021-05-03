@@ -1,0 +1,12 @@
+uuid: ce67ce26-0340-448c-a874-3af070538b3b
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: JJbV-c48oaLAnXbQQmvKk3j5QaOWCX84DFicAqITi68
+id: list_of_links_item
+label: 'List of links item'
+icon_uuid: null
+icon_default: null
+description: 'One item - a link with metadata - of list of links.'
+behavior_plugins: {  }
