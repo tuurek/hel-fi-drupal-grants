@@ -1,10 +1,9 @@
 name: Hel.fi Grants
-type: theme
 description: The HDBT based sub-theme for Grants
-core_version_requirement: ^8 || ^9
-
-# Defines the base theme
+type: theme
 base theme: hdbt
+tags: sub-theme
+core_version_requirement: ^8 || ^9
 
 # Defines libraries group in which we can add css/js.
 libraries:

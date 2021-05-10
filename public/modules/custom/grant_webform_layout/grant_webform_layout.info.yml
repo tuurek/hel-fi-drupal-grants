@@ -1,9 +1,0 @@
-name: 'Hel.fi Grants Webform Layout'
-type: module
-description: 'A layout element for hel.fi grants.'
-package: 'Hel.fi Forms'
-core_version_requirement: ^8.8 || ^9
-dependencies:
-  - 'webform:webform'
-  - 'webform:webform_ui'
-  - 'devel'

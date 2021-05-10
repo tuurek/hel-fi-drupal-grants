@@ -1,8 +1,0 @@
-grant_webform_layout:
-  path: '/admin/structure/webform/manage/{webform}/element/add/grantlayout'
-  defaults:
-    _form: '\Drupal\webform_ui\Form\WebformUiElementAddForm'
-    _title: 'Add Grantlayout'
-    type: grant_webform_layout
-  requirements:
-    _permission: 'access content'
