@@ -10,7 +10,7 @@ endif
 PHONY += drush-enable-modules
 drush-enable-modules: ## Enable modules and base configurations.
 	$(call step,Install base configurations...)
-	$(call drush_on_docker,en -y helfi_platform_config helfi_base_config grant_applications_config)
+	$(call drush_on_docker,en -y helfi_platform_config helfi_base_config)
 
 PHONY += drush-locale-update
 drush-locale-update: ## Update translations.

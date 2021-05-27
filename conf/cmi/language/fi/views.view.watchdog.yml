@@ -18,13 +18,11 @@ display:
             items_per_page_options_all_label: '- Kaikki -'
             offset_label: Offset
           tags:
-            previous: ‹‹
-            next: ››
+            previous: '‹ Edellinen'
+            next: 'Seuraava ›'
       fields:
         nothing:
           admin_label: Ikoni
-        wid:
-          label: WID
         severity:
           label: Vakavuus
         type:
