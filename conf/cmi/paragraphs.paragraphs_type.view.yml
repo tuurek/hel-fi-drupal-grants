@@ -1,0 +1,12 @@
+uuid: 58cc7914-f0d8-4ed0-9136-60bdbea50e1d
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: tQqBjFeLTiRQmAoHjO2COBVv9o5_W5Df2mYZBxJ6fqg
+id: view
+label: View
+icon_uuid: null
+icon_default: null
+description: 'Views paragraph can be used when you want to list content with various arguments and rules. These lists are premade.'
+behavior_plugins: {  }

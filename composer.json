@@ -20,6 +20,8 @@
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^1.0",
         "drupal/devel": "^4.1",
+        "drupal/api_tools": "^1.0",
+        "drupal/entity": "^1.0",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
         "drupal/entity_print": "^2.2",
