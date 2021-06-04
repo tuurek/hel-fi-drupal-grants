@@ -1,0 +1,10 @@
+uuid: bbdf435c-d831-4625-8dfb-ed36b6bb9265
+langcode: fi
+status: true
+dependencies: {  }
+id: paragraph_verkkolomake
+label: Verkkolomake
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

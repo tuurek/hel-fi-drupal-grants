@@ -1,4 +1,4 @@
-uuid: d2578f9a-41e8-40c8-b1a3-c8b4a4293cb1
+uuid: 92ea8497-0181-4b98-b0b1-1eb5b366afa6
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,11 @@ dependencies:
     - eu_cookie_compliance
     - system
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
   default_config_hash: Ofp5Nv8E3DryORBw9DXtbN860LdYomjt-klGkC0fCHs
-id: helfi_grants_eucookiecomplianceblock
-theme: helfi_grants
+id: helfi_grant_applications_eucookiecomplianceblock
+theme: helfi_grant_applications
 region: after_content
 weight: -5
 provider: null

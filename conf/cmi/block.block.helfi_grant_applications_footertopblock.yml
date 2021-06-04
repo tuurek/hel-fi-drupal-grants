@@ -1,15 +1,15 @@
-uuid: 560322c7-1af2-4fb5-8427-9f840ae555a5
+uuid: adc5668e-dd4b-4a35-9f6e-f81ea9c4961e
 langcode: en
 status: true
 dependencies:
   module:
     - hdbt_content
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
   default_config_hash: IsZxrQIR5fs_5xZDQ1BJ8K5LXwiaRAM3Gk-HY4vuVb4
-id: helfi_grants_footertopblock
-theme: helfi_grants
+id: helfi_grant_applications_footertopblock
+theme: helfi_grant_applications
 region: footer_top
 weight: -3
 provider: null

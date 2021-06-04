@@ -1,4 +1,4 @@
-uuid: 71026293-2242-49f7-9e2f-800d40fb61a3
+uuid: 5c160396-3f7f-4d3b-98d3-d8bcebd32172
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,11 @@ dependencies:
   module:
     - menu_block_current_language
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
   default_config_hash: Lq0uz6Wcg4xRo7w6BmzuzPTwOXtY8Q4qmYGUcGCvBLA
-id: helfi_grants_footerbottomnavigation
-theme: helfi_grants
+id: helfi_grant_applications_footerbottomnavigation
+theme: helfi_grant_applications
 region: footer_bottom
 weight: 0
 provider: null

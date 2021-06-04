@@ -1,0 +1,25 @@
+uuid: 8dfe910d-faf0-4a45-870b-dc543543a64a
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_verkkolomake
+    - paragraphs.paragraphs_type.paragraph_verkkolomake
+  module:
+    - webform
+id: paragraph.paragraph_verkkolomake.field_verkkolomake
+field_name: field_verkkolomake
+entity_type: paragraph
+bundle: paragraph_verkkolomake
+label: Webform
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:webform'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: webform

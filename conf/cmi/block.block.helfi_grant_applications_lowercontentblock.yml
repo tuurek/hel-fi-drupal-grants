@@ -1,15 +1,15 @@
-uuid: 88b96fdb-86ae-4ec4-8644-c9721c95bb8a
+uuid: e819c387-dcf6-42e6-9205-5965ee344aea
 langcode: en
 status: true
 dependencies:
   module:
     - hdbt_content
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
   default_config_hash: tNA-kZeJYbWgoVL9w2tJxX5TkbOqzXQVOVardatKtk8
-id: helfi_grants_lowercontentblock
-theme: helfi_grants
+id: helfi_grant_applications_lowercontentblock
+theme: helfi_grant_applications
 region: after_content
 weight: -6
 provider: null

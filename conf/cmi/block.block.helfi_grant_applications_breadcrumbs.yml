@@ -1,15 +1,15 @@
-uuid: 107eb6a0-87e6-4d86-bd69-ebf13ed098a5
+uuid: 1430369e-3905-4d0c-a74e-051aa720ae94
 langcode: en
 status: true
 dependencies:
   module:
     - system
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
   default_config_hash: X6F3oSAls1r1jwOVU5n7EG6Uaz0yFqo-GQcEXDzxxLk
-id: helfi_grants_breadcrumbs
-theme: helfi_grants
+id: helfi_grant_applications_breadcrumbs
+theme: helfi_grant_applications
 region: breadcrumb
 weight: 0
 provider: null

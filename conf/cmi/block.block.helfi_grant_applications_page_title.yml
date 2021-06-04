@@ -1,15 +1,15 @@
-uuid: 10d01475-b793-4aa9-bc88-009d05d0d603
+uuid: f6c782a2-2950-441e-b5ea-00e797e78f27
 langcode: en
 status: true
 dependencies:
   module:
     - ctools
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
-  default_config_hash: z1LqHeg9TgpYqkS-PC9VpEO_JnCL7wBoOnaXybhDHOo
-id: helfi_grants_page_title
-theme: helfi_grants
+  default_config_hash: cWAyHuLWbIx_Tsd04YPaUUGBOdvtYeKIjFXBXJhmi2w
+id: helfi_grant_applications_page_title
+theme: helfi_grant_applications
 region: before_content
 weight: -6
 provider: null

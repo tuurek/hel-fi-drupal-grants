@@ -1,13 +1,13 @@
-uuid: 7fd132a6-3163-4516-a346-09ad4f5dd74f
+uuid: 5b9b71fe-ce33-4bca-8a53-773f164f28c7
 langcode: en
 status: true
 dependencies:
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
-  default_config_hash: 6Hb0XzLbuoKRlAy07_TSLTlBGgcB4dtkQgiz2tjZ6XU
-id: helfi_grants_local_actions
-theme: helfi_grants
+  default_config_hash: H69FvwR04I2gfiz-9B_vOzX7lLLZrz-6FJvXMvMR1yc
+id: helfi_grant_applications_local_actions
+theme: helfi_grant_applications
 region: tools
 weight: -3
 provider: null

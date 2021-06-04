@@ -1,4 +1,4 @@
-uuid: 178ca42b-a323-4061-afdb-8ca5474c0647
+uuid: 70e4a18a-a763-43fa-8ccc-0dfc828b16d2
 langcode: en
 status: true
 dependencies:
@@ -6,11 +6,11 @@ dependencies:
     - ctools
     - hdbt_content
   theme:
-    - helfi_grants
+    - helfi_grant_applications
 _core:
   default_config_hash: nH8M6u66xNnGzjplyiDZAKKeyzDR6NFyTMXNwDYzldk
-id: helfi_grants_heroblock
-theme: helfi_grants
+id: helfi_grant_applications_heroblock
+theme: helfi_grant_applications
 region: before_content
 weight: -5
 provider: null

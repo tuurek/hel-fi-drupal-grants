@@ -1,0 +1,23 @@
+uuid: e2d7ab2f-7476-45d8-8e35-91911ce6aaee
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.paragraph_verkkolomake.field_verkkolomake
+    - paragraphs.paragraphs_type.paragraph_verkkolomake
+  module:
+    - webform
+id: paragraph.paragraph_verkkolomake.default
+targetEntityType: paragraph
+bundle: paragraph_verkkolomake
+mode: default
+content:
+  field_verkkolomake:
+    weight: 0
+    label: above
+    settings:
+      source_entity: true
+    third_party_settings: {  }
+    type: webform_entity_reference_entity_view
+    region: content
+hidden: {  }
