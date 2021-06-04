@@ -5,18 +5,18 @@
   width: 100%;
   justify-content: left;
   > h2.webform-section-title {
-    color: var(--label-color-default);
+    color: var(--hdbt-color-black);
     display: block;
     font-weight: 500;
-    margin-bottom: var(--spacing-3-xs);
+    margin-bottom: $spacing-quarter;
     max-width: 400px;
     width: 100%;
-    font-size: var(--fontsize-body-l);
+    font-size: 24px;
     flex-shrink: 0;
     margin-top: 0;
   }
-  > div.webform-section-wrapper {
+  > .webform-section-wrapper {
     min-width: 50%;
-    padding-left: var(--spacing-triple);
+    padding-left: $spacing-triple;
   }
 }

@@ -1,8 +1,15 @@
+// Color variables from HDS.
+@import "~hds-design-tokens/lib/color/all.scss";
+
 :root {
   --hdbt-color-black: #121212;
   --hdbt-default-link-color: var(--color-black-90);
+
+  // Default color variables.
   --hdbt-theme-color: var(--color-black);
   --hdbt-text-color: var(--color-white);
+
+  // Default text colors based on background colors.
   --hdbt-text-color--coat-of-arms: var(--color-white);
   --hdbt-text-color--brick: var(--color-white);
   --hdbt-text-color--bus: var(--color-white);
@@ -15,6 +22,8 @@
   --hdbt-text-color--fog: var(--hdbt-color-black);
   --hdbt-text-color--summer: var(--hdbt-color-black);
   --hdbt-text-color--suomenlinna: var(--hdbt-color-black);
+
+  // Default button colors based on background colors.
   --hdbt-button-text-color--coat-of-arms: var(--hdbt-color-black);
   --hdbt-button-text-color--brick: var(--hdbt-color-black);
   --hdbt-button-text-color--bus: var(--hdbt-color-black);
@@ -27,6 +36,8 @@
   --hdbt-button-text-color--fog: var(--color-white);
   --hdbt-button-text-color--summer: var(--color-white);
   --hdbt-button-text-color--suomenlinna: var(--color-white);
+
+  // Default button highlight colors based on background colors.
   --hdbt-button-highlight-color--coat-of-arms: var(--color-black-10);
   --hdbt-button-highlight-color--brick: var(--color-black-10);
   --hdbt-button-highlight-color--bus: var(--color-black-10);
@@ -38,51 +49,10 @@
   --hdbt-button-highlight-color--engel: var(--color-black);
   --hdbt-button-highlight-color--fog: var(--color-black);
   --hdbt-button-highlight-color--summer: var(--color-black);
-  --hdbt-button-highlight-color--suomenlinna: var(--color-black); }
+  --hdbt-button-highlight-color--suomenlinna: var(--color-black);
+}
 
-/**
- * To give different styles depending on how many items a wrapper has you can use this mixing to assign the styles
- * to correct element. For example:
- *
- * If the wrapper has 1, 2 or 3 items make the items 30% wide, otherwise they should be 20% wide:
- * .wrapper .item {
- *   width: 20%;
- *
- *   @include content_count(1, 2, 3) {
- *     width: 30%;
- *   }
- * }
- */
-.is-hidden {
-  display: none; }
+$hdbt-color-black: var(--hdbt-color-black);
+$hdbt-color-white: #f7f7f8;
 
-.webform-section {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
-  width: 100%;
-  -webkit-box-pack: left;
-      -ms-flex-pack: left;
-          justify-content: left; }
-  .webform-section > h2.webform-section-title {
-    color: #121212;
-    color: var(--hdbt-color-black);
-    display: block;
-    font-weight: 500;
-    margin-bottom: 4px;
-    max-width: 400px;
-    width: 100%;
-    font-size: 24px;
-    -ms-flex-negative: 0;
-        flex-shrink: 0;
-    margin-top: 0; }
-  .webform-section > .webform-section-wrapper {
-    min-width: 50%;
-    padding-left: 48px; }
-
-
-/*# sourceMappingURL=styles.min.css.map*/
+$body-bg-color: $color-white;
