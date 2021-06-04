@@ -1,4 +1,4 @@
-uuid: cf94a493-4c73-4041-89c2-f1652c01f1f2
+uuid: 633b6f24-a1bb-4acb-83d2-c8b666e936d6
 langcode: en
 status: true
 dependencies:
@@ -31,8 +31,8 @@ content:
   field_content:
     weight: 12
     settings:
-      title: Lohko
-      title_plural: Lohkot
+      title: Paragraph
+      title_plural: Paragraphs
       edit_mode: open
       closed_mode: summary
       autocollapse: none
@@ -57,8 +57,8 @@ content:
   field_hero:
     weight: 3
     settings:
-      title: Lohko
-      title_plural: Lohkot
+      title: Paragraph
+      title_plural: Paragraphs
       edit_mode: closed_expand_nested
       closed_mode: summary
       autocollapse: none

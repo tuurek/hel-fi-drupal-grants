@@ -1,6 +1,6 @@
 uuid: c7259448-db95-43bf-9851-b51cf95b0159
-name: 'Drush Site-Install'
-mail: admin@example.com
+name: Drupal
+mail: ''
 slogan: ''
 page:
   403: ''

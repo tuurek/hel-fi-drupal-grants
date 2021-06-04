@@ -1,4 +1,4 @@
-uuid: f23b7ece-2b09-4278-abeb-98f8e2e35cb1
+uuid: 63344b4d-a9ca-4139-97ec-2e5b7f662506
 langcode: en
 status: true
 dependencies:
@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.page.field_has_hero
     - field.field.node.page.field_hero
     - field.field.node.page.field_liftup_image
+    - field.field.node.page.field_lower_content
     - field.field.node.page.field_metatags
     - node.type.page
   module:
@@ -14,7 +15,7 @@ dependencies:
     - metatag
     - user
 _core:
-  default_config_hash: LdH98wEwWah2p-D2t_x-i8icjsnkoRBG4kbrbTH8KYs
+  default_config_hash: cz8DhQBJGX0eDYFZNhRAr32GsOmDhhcuMSM3NzTk2fM
 id: node.page.default
 targetEntityType: node
 bundle: page
@@ -22,24 +23,24 @@ mode: default
 content:
   field_content:
     type: entity_reference_revisions_entity_view
-    weight: 2
+    weight: 1
     region: content
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-  field_hero:
-    weight: 1
+  field_lower_content:
+    type: entity_reference_revisions_entity_view
+    weight: 4
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
     region: content
   field_metatags:
-    weight: 3
+    weight: 2
     label: above
     settings: {  }
     third_party_settings: {  }
@@ -52,5 +53,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_has_hero: true
+  field_hero: true
   field_liftup_image: true
   langcode: true

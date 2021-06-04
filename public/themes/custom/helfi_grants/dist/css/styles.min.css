@@ -1,4 +1,4 @@
-.form-content .form-item {
+.webform-section {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -10,7 +10,7 @@
   -webkit-box-pack: left;
       -ms-flex-pack: left;
           justify-content: left; }
-  .form-content .form-item label {
+  .webform-section > h2.webform-section-title {
     color: var(--label-color-default);
     display: block;
     font-weight: 500;
@@ -19,8 +19,9 @@
     width: 100%;
     font-size: var(--fontsize-body-l);
     -ms-flex-negative: 0;
-        flex-shrink: 0; }
-  .form-content .form-item .hds-text-input__input-wrapper {
+        flex-shrink: 0;
+    margin-top: 0; }
+  .webform-section > div.webform-section-wrapper {
     min-width: 50%;
     padding-left: var(--spacing-triple); }
 

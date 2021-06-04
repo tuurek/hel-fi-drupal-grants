@@ -1,4 +1,4 @@
-uuid: 0deb5e08-a10b-474b-92b6-9f8bc7b6df19
+uuid: e80aad32-b7a0-49fe-81ad-06d14a2a66e9
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,11 @@ dependencies:
   theme:
     - helfi_grants
 _core:
-  default_config_hash: 5_V2WQ9wdcP4x39Te28tg1RHycozD8sMNiZXudiwqYE
+  default_config_hash: cWAyHuLWbIx_Tsd04YPaUUGBOdvtYeKIjFXBXJhmi2w
 id: helfi_grants_page_title
 theme: helfi_grants
-region: content
-weight: -3
+region: before_content
+weight: -6
 provider: null
 plugin: page_title_block
 settings:

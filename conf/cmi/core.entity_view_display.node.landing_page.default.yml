@@ -1,4 +1,4 @@
-uuid: 23c0391d-0fd5-4586-8a72-2bad57f99ac6
+uuid: 7f6a4774-a771-4f46-bfcb-153d03ba78bf
 langcode: en
 status: true
 dependencies:
@@ -14,22 +14,13 @@ dependencies:
     - metatag
     - user
 _core:
-  default_config_hash: inJYPdBe_jra5K9rY4Dibq472PkCasLO2K_DIz51Z6M
+  default_config_hash: LuhyhnsQ44RvvqWLYbkgiR7_IFywxuxn3pPaBDaYIgc
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page
 mode: default
 content:
   field_content:
-    weight: 2
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
-    region: content
-  field_hero:
     weight: 1
     label: hidden
     settings:
@@ -39,7 +30,7 @@ content:
     type: entity_reference_revisions_entity_view
     region: content
   field_metatags:
-    weight: 3
+    weight: 2
     label: above
     settings: {  }
     third_party_settings: {  }
@@ -52,5 +43,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_has_hero: true
+  field_hero: true
   field_liftup_image: true
   langcode: true

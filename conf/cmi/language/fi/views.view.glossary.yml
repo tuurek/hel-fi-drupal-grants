@@ -1,11 +1,9 @@
-label: Sanasto
 display:
   default:
     display_title: Isäntä
     display_options:
       exposed_form:
         options:
-          submit_button: Käytä
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Nousevasti
@@ -15,21 +13,10 @@ display:
           expose:
             items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options_all_label: '- Kaikki -'
-            offset_label: Offset
-          tags:
-            previous: '‹ Edellinen'
-            next: 'Seuraava ›'
       fields:
         title:
           label: Otsikko
         name:
           label: Kirjoittaja
-        changed:
-          label: 'Viimeksi päivitetty'
-  attachment_1:
-    display_title: Liite
   page_1:
     display_title: Sivu
-    display_options:
-      menu:
-        title: Sanasto

@@ -1,0 +1,22 @@
+uuid: 88b96fdb-86ae-4ec4-8644-c9721c95bb8a
+langcode: en
+status: true
+dependencies:
+  module:
+    - hdbt_content
+  theme:
+    - helfi_grants
+_core:
+  default_config_hash: tNA-kZeJYbWgoVL9w2tJxX5TkbOqzXQVOVardatKtk8
+id: helfi_grants_lowercontentblock
+theme: helfi_grants
+region: after_content
+weight: -6
+provider: null
+plugin: lower_content_block
+settings:
+  id: lower_content_block
+  label: 'Lower content block'
+  provider: hdbt_content
+  label_display: '0'
+visibility: {  }

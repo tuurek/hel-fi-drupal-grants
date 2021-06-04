@@ -1,6 +1,7 @@
 const isDev = (process.env.NODE_ENV !== "production");
 
 const path = require("path");
+const glob = require("glob");
 const globImporter = require("node-sass-glob-importer");
 
 const CleanWebpackPlugin = require("clean-webpack-plugin");
@@ -12,7 +13,7 @@ const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 module.exports = {
   entry: {
     styles: ["./src/scss/styles.scss"],
-    bundle: ["./src/js/common.js"]
+    bundle: glob.sync("./src/js/**/*.js"),
   },
   output: {
     devtoolLineToLine: true,
@@ -46,6 +47,24 @@ module.exports = {
         ],
       },
       {
+        test: /\.svg$/,
+        include: [
+          path.resolve(__dirname, "src/icons")
+        ],
+        use: [
+          {
+            loader: "file-loader",
+          },
+          {
+            loader: "image-webpack-loader",
+            options: {
+              bypassOnDebug: true, // webpack@1.x
+              disable: true, // webpack@2.x and newer
+            },
+          },
+        ],
+      },
+      {
         test: /\.(woff|ttf|eot|svg)$/,
         include: [
           path.resolve(__dirname, "src/fonts")
@@ -55,8 +74,7 @@ module.exports = {
           options: {
             name: "fonts/[name].[ext]",
           },
-        },
-        ],
+        }],
       },
       {
         test: /modernizrrc\.js$/,
@@ -123,15 +141,53 @@ module.exports = {
       "patterns": [
         {
           "context": "./",
-          "from": "node_modules/select2/dist/js/select2.min.js",
-          "to": path.resolve(__dirname, "dist") + "/js/",
+          "from": "node_modules/hyphenopoly/min/{Hyphenopoly_Loader,Hyphenopoly}.js",
+          "to": path.resolve(__dirname, "dist") + "/js/hyphenopoly/",
           "force": true,
           "flatten": true
-        },
-        {
+        }, {
           "context": "./",
-          "from": "node_modules/select2/dist/css/select2.min.css",
-          "to": path.resolve(__dirname, "dist") + "/css/",
+          "from": "node_modules/hyphenopoly/min/patterns/{fi,sv,en-gb,ru}.wasm",
+          "to": path.resolve(__dirname, "dist") + "/js/hyphenopoly/patterns/",
+          "globOptions": {
+            "extglob": true
+          },
+          "force": true,
+          "flatten": true
+        }, {
+          "context": "./",
+          "from": "node_modules/@splidejs/splide/dist/js/splide.min.js",
+          "to": path.resolve(__dirname, "dist") + "/js/splide/",
+          "force": true,
+          "flatten": true
+        }, {
+          "context": "./",
+          "from": "node_modules/@splidejs/splide/dist/css/splide-core.min.css",
+          "to": path.resolve(__dirname, "dist") + "/css/splide/",
+          "force": true,
+          "flatten": true
+        }, {
+          "context": "./",
+          "from": "node_modules/tiny-slider/dist/min/tiny-slider.js",
+          "to": path.resolve(__dirname, "dist") + "/js/tiny-slider/",
+          "force": true,
+          "flatten": true
+        }, {
+          "context": "./",
+          "from": "node_modules/tiny-slider/dist/tiny-slider.css",
+          "to": path.resolve(__dirname, "dist") + "/css/tiny-slider/",
+          "force": true,
+          "flatten": true
+        }, {
+          "context": "./",
+          "from": "node_modules/handorgel/lib/js/umd/handorgel.min.js",
+          "to": path.resolve(__dirname, "dist") + "/js/handorgel/",
+          "force": true,
+          "flatten": true
+        }, {
+          "context": "./",
+          "from": "node_modules/handorgel/lib/css/handorgel.min.css",
+          "to": path.resolve(__dirname, "dist") + "/css/handorgel/",
           "force": true,
           "flatten": true
         }

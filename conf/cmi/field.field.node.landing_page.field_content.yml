@@ -1,4 +1,4 @@
-uuid: 6ffe322e-d6ee-421a-99ec-cfac0f2647df
+uuid: 10603cf8-662e-41fc-9a6e-1eb597ebc9f2
 langcode: en
 status: true
 dependencies:
@@ -13,12 +13,12 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: VuuTI6N8J827CZsvm_RrLmPzFcwY5kjDh9oF94YecsI
+  default_config_hash: Ehe5PsrXLNpnzHecyqqxXskELf3RoW8Sw5EKsEAnz74
 id: node.landing_page.field_content
 field_name: field_content
 entity_type: node
 bundle: landing_page
-label: Content
+label: 'Content region'
 description: ''
 required: false
 translatable: true

@@ -1,4 +1,4 @@
-uuid: 42f8c071-c07c-495d-bad6-19c1b841fa2d
+uuid: 93942faf-6f65-4cf9-a965-0ce78fadc5af
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,11 @@ dependencies:
   theme:
     - hdbt
 _core:
-  default_config_hash: 5_V2WQ9wdcP4x39Te28tg1RHycozD8sMNiZXudiwqYE
+  default_config_hash: cWAyHuLWbIx_Tsd04YPaUUGBOdvtYeKIjFXBXJhmi2w
 id: hdbt_page_title
 theme: hdbt
-region: content
-weight: -3
+region: before_content
+weight: -6
 provider: null
 plugin: page_title_block
 settings:
