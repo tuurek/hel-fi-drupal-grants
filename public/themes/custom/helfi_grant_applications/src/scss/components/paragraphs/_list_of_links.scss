@@ -1,0 +1,27 @@
+$item_spacing: $spacing-triple;
+
+.list-of-links {
+  .list-of-links {
+    &__title {
+      margin: 0;
+    }
+    &__content {
+      align-items: stretch;
+      flex-flow: row;
+      align-content: stretch;
+    }
+    &__item {
+      border-left: 3px solid $color-engel-dark;
+      margin-right: -3px;
+      height: 100%;
+      align-self: stretch;
+
+      @include breakpoint($breakpoint-s) {
+        flex-direction: row;
+        padding-left: $item_spacing / 2;
+        padding-right: $item_spacing / 2;
+        width: calc(33% - #{$item_spacing + 3px});
+      }
+    }
+  }
+}

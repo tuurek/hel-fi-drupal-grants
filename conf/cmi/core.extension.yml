@@ -17,6 +17,7 @@ module:
   editor: 0
   entity: 0
   entity_reference_revisions: 0
+  entity_usage: 0
   features: 0
   field: 0
   field_group: 0
@@ -89,6 +90,7 @@ module:
   views: 10
   eu_cookie_compliance: 11
   paragraphs: 11
+  paragraphs_library: 11
 theme:
   stable9: 0
   claro: 0
