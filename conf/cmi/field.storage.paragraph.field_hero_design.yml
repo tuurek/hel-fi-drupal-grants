@@ -34,6 +34,9 @@ settings:
     -
       value: diagonal
       label: Diagonal
+    -
+      value: no-background
+      label: 'No Background'
   allowed_values_function: ''
 module: options
 locked: false

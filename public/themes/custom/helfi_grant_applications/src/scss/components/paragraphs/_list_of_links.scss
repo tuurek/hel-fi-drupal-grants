@@ -6,9 +6,10 @@ $item_spacing: $spacing-triple;
       margin: 0;
     }
     &__content {
-      align-items: stretch;
-      flex-flow: row;
-      align-content: stretch;
+      display: grid;
+      grid-template-columns: auto auto auto;
+      margin-top: 0;
+      height: auto;
     }
     &__item {
       border-left: 3px solid $color-engel-dark;
@@ -20,7 +21,7 @@ $item_spacing: $spacing-triple;
         flex-direction: row;
         padding-left: $item_spacing / 2;
         padding-right: $item_spacing / 2;
-        width: calc(33% - #{$item_spacing + 3px});
+        width: 100% !important;
       }
     }
   }

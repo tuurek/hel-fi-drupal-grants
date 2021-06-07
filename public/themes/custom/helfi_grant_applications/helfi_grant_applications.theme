@@ -32,3 +32,24 @@ function helfi_grant_applications_preprocess(&$variables) {
   $variables['helfi_grant_applications_icons_path'] = helfi_grant_applications_get_icons_path();
   $variables['#attached']['drupalSettings']['helfigrantapplicationsIconsPath'] = $variables['helfi_grant_applications_icons_path'];
 }
+
+function helfi_grant_applications_field_widget_paragraphs_form_alter(&$element, FormStateInterface &$form_state, $context)
+{
+              echo 'aaaaa';
+            die();
+    switch ($element['#paragraph_type']) {
+        case 'myparagraphs':
+            $term = $form_state->getFormObject()->getEntity();
+
+            //Check if paragraph is inside a form term
+            if($term && ($term->getEntityTypeId()=='taxonomy_term')){
+                $voc=$term->bundle();
+                //Check if it is the desired voc
+                if($voc=='my_voc'){
+                    //unset($element['subform']['field_to_be hidded']); //to hide only one field
+                    $element=[]; //to hide all the form
+                }
+            }
+            break;
+    }
+}

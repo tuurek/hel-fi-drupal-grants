@@ -39,13 +39,17 @@
  */
 #}
 
+{% set background_color = content.field_hero_bg_color[0]['#markup'] %}
+{% set design = content.field_hero_design[0]['#markup'] %}
 {% set description = content.field_hero_desc %}
 
 {%
   set classes = [
-    'hero hero--grants-application',
+    'hero',
     view_mode ? 'hero--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'hero--unpublished',
+    design ? 'hero--' ~ design,
+    background_color ? 'hero--bg-color--' ~ background_color
   ]
 %}
 
@@ -53,15 +57,88 @@
   <div{{ attributes.addClass(classes) }}>
     {% embed "@hdbt/misc/container.twig" with {container_element: 'hero'} %}
       {% block container_content %}
-          <div class="hero__text-content">
+        <div class="hero__text-content">
+          {% if description[0]['#text'] is not empty and design == 'no-background' %}
             <div class="hero__category">
               {{ description }}
             </div>
-            <h1 class="hero__title">
-              {{ content.field_hero_title }}
-            </h1>
+          {% endif %}
+          <h1 class="hero__title">
+            {{ content.field_hero_title }}
+          </h1>
+          {% if description[0]['#text'] is not empty %}
+            {% if
+              design == "without-image-left" or
+              design == "without-image-center" or
+              design == "with-image-right" or
+              design == "with-image-left" or
+              design == "with-image-bottom" or
+              design == "diagonal"
+            %}
+              <div class="hero__description">
+                {{ description }}
+              </div>
+            {% endif %}
+          {% endif %}
+
+          {% if
+            design == "background-image" and
+            content.field_hero_link|render
+          %}
+            {% set link_type = content.field_hero_link_design[0]['#markup'] %}
+            <div class="hero__cta">
+              {% for key, item in content.field_hero_link if key|first != '#' %}
+                {% set link = item['#url'] %}
+                {% set text = item['#title'] %}
+                {% set target_new = item['#options']['target_new'] %}
+
+                <a href="{{ link }}" {% if target_new %}target="_blank"{% endif %} class="hero__button hds-button {% if link_type %}{{ 'hds-button--' ~ link_type }}{% endif %}">
+                  {% if icon_first == true %}<span aria-hidden="true" class="hds-icon {{ 'hds-icon--' ~ icon_first_type }}"></span>{% endif %}
+                  <span class="hds-button__label">{{ text }}</span>
+                  {% if link_type == 'supplementary' %}
+                    {% if target_new %}
+                      <span aria-hidden="true" class="hds-icon hds-icon--link-external"></span>
+                    {% else %}
+                      <span aria-hidden="true" class="hds-icon hds-icon--arrow-right"></span>
+                    {% endif %}
+                  {% elseif target_new %}
+                    <span aria-hidden="true" class="hds-icon hds-icon--link-external"></span>
+                  {% endif %}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
       {% endblock %}
     {% endembed %}
+
+    {% if
+      design == "with-image-right" or
+      design == "with-image-left" or
+      design == "with-image-bottom" or
+      design == "background-image" or
+      design == "diagonal"
+    %}
+      {% set image_id = content.field_hero_image[0]['#media'].id %}
+
+      {# This check should be done in edit form. #}
+      {% if image_id %}
+        {% set image_style = 'hero__background' %}
+
+        {% if design == "with-image-right" or design == "with-image-left" %}
+          {% set image_style = 'hero__left_right' %}
+        {% elseif design == "with-image-bottom" %}
+          {% set image_style = 'hero__bottom' %}
+        {% elseif design == "diagonal" %}
+          {% set image_style = 'hero__diagonal' %}
+        {% endif %}
+
+        <div class="hero__image-container">
+          {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: true } %}
+          {{ drupal_image(image_id, image_style, responsive=true) }}
+        </div>
+      {% endif %}
+    {% endif %}
+    {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
   </div>
 {% endblock paragraph %}
