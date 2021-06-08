@@ -139,6 +139,7 @@
         </div>
       {% endif %}
     {% endif %}
-    {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
-  </div>
+    {% if design != 'no-background' %}ssss
+      {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
+    {% endif %}  </div>
 {% endblock paragraph %}

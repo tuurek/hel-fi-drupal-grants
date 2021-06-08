@@ -63,21 +63,32 @@
   .hero.hero--no-background .hero__title {
     font-size: 36px; }
 
-.list-of-links .list-of-links__title {
-  margin: 0; }
+.list-of-links {
+  margin-top: 0; }
+  .list-of-links > .container {
+    padding-top: 0; }
+  .list-of-links .list-of-links__title {
+    margin: 0;
+    border-top: 2px solid #cccccc;
+    margin-bottom: 96px; }
+  .list-of-links .list-of-links__content {
+    margin-top: 0;
+    height: auto; }
+  .list-of-links .list-of-links__item {
+    border-left: 3px solid #dbc030;
+    margin-right: -3px;
+    height: 100%;
+    -ms-flex-item-align: stretch;
+        align-self: stretch;
+    padding-left: 24px;
+    padding-right: 24px; }
 
-.list-of-links .list-of-links__content {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  margin-top: 0;
-  height: auto; }
+.list-of-links--without-image .list-of-links__item .list-of-links__item__desc {
+  font-size: 16px;
+  color: #1a1a1a; }
 
-.list-of-links .list-of-links__item {
-  border-left: 3px solid #dbc030;
-  margin-right: -3px;
-  height: 100%;
-  -ms-flex-item-align: stretch;
-      align-self: stretch; }
+.list-of-links--without-image .list-of-links__item .list-of-links__item__title {
+  font-size: 24px; }
 
 .webform-section {
   display: -webkit-box;
@@ -111,17 +122,26 @@
         font-size: 32px; }
       .hero.hero--no-background .hero__title {
         font-size: 72px; }
+    .list-of-links {
+      margin-top: 0; }
+      .list-of-links .list-of-links__content {
+        margin: 0 24px 0 0;
+        display: grid;
+        grid-template-columns: auto auto auto; }
       .webform-section > .webform-section-wrapper {
         padding-left: 0px; } }
   @media (min-width: 576px) {
-    .list-of-links .list-of-links__item {
-      -webkit-box-orient: horizontal;
-      -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-              flex-direction: row;
-      padding-left: 24px;
-      padding-right: 24px;
-      width: 100% !important; } }
+    .list-of-links .list-of-links__container {
+      width: calc(100% - 96px); }
+      .list-of-links .list-of-links__item {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        width: 100% !important; } }
+  @media (min-width: 576px) and (min-width: 768px) {
+    .list-of-links .list-of-links__container {
+      width: 100%; } }
 
 
 /*# sourceMappingURL=styles.min.css.map*/

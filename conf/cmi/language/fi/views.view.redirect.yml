@@ -19,11 +19,13 @@ display:
           expose:
             items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options_all_label: '- Kaikki -'
+            offset_label: Offset
       fields:
         redirect_bulk_form:
           action_title: Valinnalla
         redirect_source__path:
           label: Lähettäjä
+          separator: ', '
         created:
           label: Luotu
       filters:
@@ -38,21 +40,6 @@ display:
             label: Tilakoodi
           group_info:
             label: Tilakoodi
-            group_items:
-              1:
-                title: '300 Multiple Choices'
-              2:
-                title: '301 Moved Permanently'
-              3:
-                title: '302 Found'
-              4:
-                title: '303 See Other'
-              5:
-                title: '304 Not Modified'
-              6:
-                title: '305 Use Proxy'
-              7:
-                title: '307 Temporary Redirect'
         language:
           expose:
             label: 'Alkuperäinen kieli'
