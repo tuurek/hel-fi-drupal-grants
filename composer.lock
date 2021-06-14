@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84ad73639a17b0f3612d964b67733b2c",
+    "content-hash": "e544fdffa0b70d643805103cb00c0069",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",

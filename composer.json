@@ -22,6 +22,7 @@
         "drupal/helfi_platform_config": "^1.1",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^1.0",
+        "drupal/menu_link_attributes": "^1.2",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
         "drush/drush": "^10.4"
