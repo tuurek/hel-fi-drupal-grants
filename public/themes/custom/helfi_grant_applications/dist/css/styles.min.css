@@ -108,7 +108,7 @@
     display: block;
     font-weight: 500;
     margin-bottom: 4px;
-    max-width: 400px;
+    max-width: 350px;
     width: 100%;
     font-size: 24px;
     -ms-flex-negative: 0;
@@ -140,9 +140,6 @@
   @media (min-width: 576px) and (min-width: 768px) {
     .list-of-links .list-of-links__container {
       width: 100%; } }
-  @media (min-width: 992px) {
-      .webform-section > .webform-section-wrapper {
-        padding-left: 0px; } }
 
 
 /*# sourceMappingURL=styles.min.css.map*/
