@@ -18,7 +18,7 @@
   > .webform-section-wrapper {
     min-width: 50%;
     padding-left: $spacing-triple;
-    @include breakpoint($breakpoint-m) {
+    @include breakpoint($breakpoint-l) {
       padding-left: 0px;
     }
   }

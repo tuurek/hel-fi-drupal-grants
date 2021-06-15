@@ -127,9 +127,7 @@
       .list-of-links .list-of-links__content {
         margin: 0 24px 0 0;
         display: grid;
-        grid-template-columns: auto auto auto; }
-      .webform-section > .webform-section-wrapper {
-        padding-left: 0px; } }
+        grid-template-columns: auto auto auto; } }
   @media (min-width: 576px) {
     .list-of-links .list-of-links__container {
       width: calc(100% - 96px); }
@@ -142,6 +140,9 @@
   @media (min-width: 576px) and (min-width: 768px) {
     .list-of-links .list-of-links__container {
       width: 100%; } }
+  @media (min-width: 992px) {
+      .webform-section > .webform-section-wrapper {
+        padding-left: 0px; } }
 
 
 /*# sourceMappingURL=styles.min.css.map*/
