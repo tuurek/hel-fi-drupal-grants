@@ -147,6 +147,12 @@
 
 .webform-progress .webform-progress-tracker {
   display: none; }
+  .webform-progress .webform-progress-tracker .progress-title[role="link"] {
+    text-decoration: underline;
+    color: #121212;
+    color: var(--hdbt-color-black); }
+    .webform-progress .webform-progress-tracker .progress-title[role="link"]:hover {
+      text-decoration: none; }
   .webform-progress .webform-progress-tracker .progress-step .progress-marker::after {
     right: calc(-50% - 25px);
     top: 25px;
@@ -189,11 +195,14 @@
     color: var(--hdbt-color-black);
     border: 4px #121212 solid;
     border: 4px var(--hdbt-color-black) solid;
-    content: "\2713"; }
+    content: "L";
+    -webkit-transform: scale(-1, 1) rotate(-45deg);
+            transform: scale(-1, 1) rotate(-45deg);
+    font-size: 32px; }
   .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete:hover .progress-marker::before {
-    color: var(--color-white);
-    background-color: #121212;
-    background-color: var(--hdbt-color-black);
+    background-color: var(--color-white);
+    color: #121212;
+    color: var(--hdbt-color-black);
     border: 4px #121212 solid;
     border: 4px var(--hdbt-color-black) solid; }
 

@@ -56,6 +56,13 @@
     @include breakpoint($breakpoint-m) {
       display: flex;
     }
+    .progress-title[role="link"] {
+      text-decoration: underline;
+      color: var(--hdbt-color-black);
+      &:hover {
+        text-decoration: none;
+      }
+    }
 
     .progress-step {
       .progress-marker::after {
@@ -110,13 +117,16 @@
           background-color: var(--color-white);
           color: var(--hdbt-color-black);
           border: 4px var(--hdbt-color-black) solid;
-          content: "\2713"
+          content: "L";
+          transform: scale(-1, 1) rotate(-45deg);
+          font-size: $base-font-size * 2;
+
 
         }
         &:hover {
           .progress-marker::before {
-            color: var(--color-white);
-            background-color: var(--hdbt-color-black);
+            background-color: var(--color-white);
+            color: var(--hdbt-color-black);
             border: 4px var(--hdbt-color-black) solid;
           }
         }
