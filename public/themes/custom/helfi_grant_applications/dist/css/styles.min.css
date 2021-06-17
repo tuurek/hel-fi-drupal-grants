@@ -117,6 +117,105 @@
   .webform-section > .webform-section-wrapper {
     min-width: 50%;
     padding-left: 48px; }
+
+.webform-progress .webform-progress-tracker-mobile {
+  display: block;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px rgba(0, 0, 0, 0.5) solid; }
+  .webform-progress .webform-progress-tracker-mobile .webform-progress-tracker-mobile-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: baseline;
+        -ms-flex-align: baseline;
+            align-items: baseline; }
+    .webform-progress .webform-progress-tracker-mobile .webform-progress-tracker-mobile-wrapper .progress-marker::before {
+      background-color: #121212;
+      background-color: var(--hdbt-color-black);
+      color: var(--color-white);
+      border: 2px #121212 solid;
+      border: 2px var(--hdbt-color-black) solid;
+      width: 55px;
+      height: 55px;
+      font-size: 24px;
+      margin-bottom: 16px;
+      font-weight: 500;
+      letter-spacing: -2px; }
+    .webform-progress .webform-progress-tracker-mobile .webform-progress-tracker-mobile-wrapper .progress-info {
+      padding-left: 16px; }
+
+.webform-progress .webform-progress-tracker {
+  display: none; }
+  .webform-progress .webform-progress-tracker .progress-step .progress-marker::after {
+    right: calc(-50% - 25px);
+    top: 25px;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--color-white), var(--color-white) 8px, rgba(0, 0, 0, 0.5) 1px, rgba(0, 0, 0, 0.5) 20px); }
+  .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
+    background-color: var(--color-white);
+    color: #121212;
+    color: var(--hdbt-color-black);
+    border: 2px #121212 solid;
+    border: 2px var(--hdbt-color-black) solid;
+    width: 55px;
+    height: 55px;
+    font-size: 24px;
+    margin-bottom: 16px;
+    font-weight: bold; }
+  .webform-progress .webform-progress-tracker .progress-step.is-active:hover .progress-marker::before {
+    background-color: #121212;
+    background-color: var(--hdbt-color-black);
+    color: var(--color-white);
+    border: 4px #121212 solid;
+    border: 4px var(--hdbt-color-black) solid; }
+  .webform-progress .webform-progress-tracker .progress-step.is-active .progress-marker::before {
+    background-color: #121212;
+    background-color: var(--hdbt-color-black);
+    color: var(--color-white);
+    border: 4px #121212 solid;
+    border: 4px var(--hdbt-color-black) solid; }
+  .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
+    background-color: var(--color-white);
+    color: #888;
+    border-color: #888; }
+  .webform-progress .webform-progress-tracker .progress-step:hover .progress-marker::before {
+    background-color: var(--color-white);
+    color: #888;
+    border-color: #888; }
+  .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete .progress-marker::before {
+    background-color: var(--color-white);
+    color: #121212;
+    color: var(--hdbt-color-black);
+    border: 4px #121212 solid;
+    border: 4px var(--hdbt-color-black) solid;
+    content: "\2713"; }
+  .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete:hover .progress-marker::before {
+    color: var(--color-white);
+    background-color: #121212;
+    background-color: var(--hdbt-color-black);
+    border: 4px #121212 solid;
+    border: 4px var(--hdbt-color-black) solid; }
+
+.webform-submission-form .form-actions {
+  margin-top: 32px;
+  padding-top: 48px;
+  border-top: 1px rgba(0, 0, 0, 0.5) solid; }
+  .webform-submission-form .form-actions input {
+    width: 100%;
+    margin-bottom: 16px; }
+  .webform-submission-form .form-actions input.webform-button--draft {
+    color: #121212;
+    color: var(--hdbt-color-black);
+    background: transparent;
+    border: 0px transparent solid;
+    text-decoration: underline;
+    -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+            order: 3; }
+  .webform-submission-form .form-actions input.webform-button--previous {
+    background: white;
+    color: var(--border-color); }
   @media (min-width: 768px) {
       .hero.hero--no-background .hero__category {
         font-size: 32px; }
@@ -127,7 +226,22 @@
       .list-of-links .list-of-links__content {
         margin: 0 24px 0 0;
         display: grid;
-        grid-template-columns: auto auto auto; } }
+        grid-template-columns: auto auto auto; }
+    .webform-progress .webform-progress-tracker-mobile {
+      display: none; }
+    .webform-progress .webform-progress-tracker {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex; }
+    .webform-submission-form .form-actions {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between; }
+      .webform-submission-form .form-actions input {
+        width: auto; } }
   @media (min-width: 576px) {
     .list-of-links .list-of-links__container {
       width: calc(100% - 96px); }
