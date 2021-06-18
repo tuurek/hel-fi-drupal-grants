@@ -1,7 +1,11 @@
 
 .webform-section {
+
   display: flex;
   flex-flow: row wrap;
+  @include breakpoint($breakpoint-m) {
+    flex-flow: row nowrap;
+  }
   width: 100%;
   justify-content: left;
   > h2.webform-section-title {
@@ -9,15 +13,33 @@
     display: block;
     font-weight: 500;
     margin-bottom: $spacing-quarter;
-    max-width: 350px;
     width: 100%;
+    hyphens: none;
+    @include breakpoint($breakpoint-m) {
+      width: 35%;
+      max-width: 350px;
+    }
+    padding-right: $spacing-triple;
     font-size: 24px;
     flex-shrink: 0;
     margin-top: 0;
   }
   > .webform-section-wrapper {
-    min-width: 50%;
+    font-size: $base-font-size;
+    width: 100%;
     padding-left: $spacing-triple;
+  }
+  .form-required::after {
+    content: '*';
+    display: inline;
+  }
+  legend {
+    font-size: $base-font-size;
+    font-weight: bold;
+    margin-bottom: $spacing;
+  }
+  .js-form-type-textarea .hds-text-input__input-wrapper {
+    display: block;
   }
 }
 
@@ -159,5 +181,12 @@
   input.webform-button--previous {
     background: white;
     color: var(--border-color);
+  }
+}
+
+.webform-preview {
+  label {
+    display: block;
+    font-weight: bold;
   }
 }

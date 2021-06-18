@@ -108,15 +108,28 @@
     display: block;
     font-weight: 500;
     margin-bottom: 4px;
-    max-width: 350px;
     width: 100%;
+    -webkit-hyphens: none;
+        -ms-hyphens: none;
+            hyphens: none;
+    padding-right: 48px;
     font-size: 24px;
     -ms-flex-negative: 0;
         flex-shrink: 0;
     margin-top: 0; }
   .webform-section > .webform-section-wrapper {
-    min-width: 50%;
+    font-size: 16px;
+    width: 100%;
     padding-left: 48px; }
+  .webform-section .form-required::after {
+    content: '*';
+    display: inline; }
+  .webform-section legend {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 16px; }
+  .webform-section .js-form-type-textarea .hds-text-input__input-wrapper {
+    display: block; }
 
 .webform-progress .webform-progress-tracker-mobile {
   display: block;
@@ -225,7 +238,12 @@
   .webform-submission-form .form-actions input.webform-button--previous {
     background: white;
     color: var(--border-color); }
-  @media (min-width: 768px) {
+
+.webform-preview label {
+  display: block;
+  font-weight: bold; }
+
+@media (min-width: 768px) {
       .hero.hero--no-background .hero__category {
         font-size: 32px; }
       .hero.hero--no-background .hero__title {
@@ -236,6 +254,14 @@
         margin: 0 24px 0 0;
         display: grid;
         grid-template-columns: auto auto auto; }
+    .webform-section {
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+          -ms-flex-flow: row nowrap;
+              flex-flow: row nowrap; }
+      .webform-section > h2.webform-section-title {
+        width: 35%;
+        max-width: 350px; }
     .webform-progress .webform-progress-tracker-mobile {
       display: none; }
     .webform-progress .webform-progress-tracker {
@@ -251,7 +277,8 @@
               justify-content: space-between; }
       .webform-submission-form .form-actions input {
         width: auto; } }
-  @media (min-width: 576px) {
+
+@media (min-width: 576px) {
     .list-of-links .list-of-links__container {
       width: calc(100% - 96px); }
       .list-of-links .list-of-links__item {
@@ -260,7 +287,8 @@
             -ms-flex-direction: row;
                 flex-direction: row;
         width: 100% !important; } }
-  @media (min-width: 576px) and (min-width: 768px) {
+
+@media (min-width: 576px) and (min-width: 768px) {
     .list-of-links .list-of-links__container {
       width: 100%; } }
 
