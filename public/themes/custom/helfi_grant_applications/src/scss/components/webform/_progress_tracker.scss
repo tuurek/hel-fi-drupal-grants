@@ -1,0 +1,110 @@
+.webform-progress {
+  .webform-progress-tracker-mobile {
+    display: block;
+    @include breakpoint($breakpoint-m) {
+      display: none;
+    }
+    padding-bottom: $spacing;
+    margin-bottom: $spacing;
+    border-bottom: 1px rgba(0, 0, 0, 0.6) solid;
+    .webform-progress-tracker-mobile-wrapper {
+      display: flex;
+      align-items: baseline;
+
+      .progress-marker::before {
+        background-color: var(--hdbt-color-black);
+        color: var(--color-white);
+        border: 2px var(--hdbt-color-black) solid;
+        width: 55px;
+        height: 55px;
+        font-size: $base-font-size * 1.5;
+        margin-bottom: $spacing;
+        font-weight: 500;
+        letter-spacing: -2px;
+      }
+      .progress-info {
+        padding-left: $spacing;
+      }
+    }
+  }
+  .webform-progress-tracker {
+    display: none;
+    @include breakpoint($breakpoint-m) {
+      display: flex;
+    }
+    .progress-title[role="link"] {
+      text-decoration: underline;
+      color: var(--hdbt-color-black);
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .progress-step {
+      .progress-marker::after {
+        right: calc(-50% - 25px);
+        top: 25px;
+        height: 2px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--color-white),
+          var(--color-white) 8px,
+          rgba(0, 0, 0, 0.6) 1px,
+          rgba(0, 0, 0, 0.6) 20px
+        );
+      }
+      .progress-marker::before {
+        background-color: var(--color-white);
+        color: var(--hdbt-color-black);
+        border: 2px var(--hdbt-color-black) solid;
+        width: 55px;
+        height: 55px;
+        font-size: $base-font-size * 1.5;
+        margin-bottom: $spacing;
+        font-weight: bold;
+      }
+      &.is-active {
+        &:hover {
+          .progress-marker::before {
+            background-color: var(--hdbt-color-black);
+            color: var(--color-white);
+            border: 4px var(--hdbt-color-black) solid;
+          }
+        }
+        .progress-marker::before {
+          background-color: var(--hdbt-color-black);
+          color: var(--color-white);
+          border: 4px var(--hdbt-color-black) solid;
+        }
+      }
+      .progress-marker::before {
+        background-color: var(--color-white);
+        color: #888;
+        border-color: #888;
+      }
+      &:hover .progress-marker::before {
+        background-color: var(--color-white);
+        color: #888;
+        border-color: #888;
+      }
+
+      &:not(.is-active).is-complete {
+        .progress-marker::before {
+          background-color: var(--color-white);
+          color: var(--hdbt-color-black);
+          border: 4px var(--hdbt-color-black) solid;
+          content: "L";
+          transform: scale(-1, 1) rotate(-45deg);
+          font-size: $base-font-size * 2;
+        }
+        &:hover {
+          .progress-marker::before {
+            background-color: var(--color-white);
+            color: var(--hdbt-color-black);
+            border: 4px var(--hdbt-color-black) solid;
+          }
+        }
+      }
+    }
+  }
+}

@@ -2234,6 +2234,23 @@ input[type=submit].hds-button--small {
 .list-of-links--without-image .list-of-links__item .list-of-links__item__title {
   font-size: 24px; }
 
+.webform-element-help {
+  background: var(--color-white);
+  color: #121212;
+  color: var(--hdbt-color-black);
+  border-color: #121212;
+  border-color: var(--hdbt-color-black); }
+
+.tippy-box {
+  background-color: var(--color-black-5);
+  border-left: 10px var(--color-coat-of-arms) solid;
+  padding: var(--spacing-s);
+  color: black;
+  border-radius: 0; }
+
+.tippy-arrow {
+  color: var(--color-black-5); }
+
 .webform-section {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2272,14 +2289,20 @@ input[type=submit].hds-button--small {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 16px; }
+  .webform-section label.hds-radio-button__label {
+    font-weight: normal; }
   .webform-section .js-form-type-textarea .hds-text-input__input-wrapper {
     display: block; }
+
+.webform-preview label {
+  display: block;
+  font-weight: bold; }
 
 .webform-progress .webform-progress-tracker-mobile {
   display: block;
   padding-bottom: 16px;
   margin-bottom: 16px;
-  border-bottom: 1px rgba(0, 0, 0, 0.5) solid; }
+  border-bottom: 1px rgba(0, 0, 0, 0.6) solid; }
   .webform-progress .webform-progress-tracker-mobile .webform-progress-tracker-mobile-wrapper {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -2314,7 +2337,7 @@ input[type=submit].hds-button--small {
     right: calc(-50% - 25px);
     top: 25px;
     height: 2px;
-    background: repeating-linear-gradient(90deg, var(--color-white), var(--color-white) 8px, rgba(0, 0, 0, 0.5) 1px, rgba(0, 0, 0, 0.5) 20px); }
+    background: repeating-linear-gradient(90deg, var(--color-white), var(--color-white) 8px, rgba(0, 0, 0, 0.6) 1px, rgba(0, 0, 0, 0.6) 20px); }
   .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
     background-color: var(--color-white);
     color: #121212;
@@ -2362,30 +2385,6 @@ input[type=submit].hds-button--small {
     color: var(--hdbt-color-black);
     border: 4px #121212 solid;
     border: 4px var(--hdbt-color-black) solid; }
-
-.webform-submission-form .form-actions {
-  margin-top: 32px;
-  padding-top: 48px;
-  border-top: 1px rgba(0, 0, 0, 0.5) solid; }
-  .webform-submission-form .form-actions input {
-    width: 100%;
-    margin-bottom: 16px; }
-  .webform-submission-form .form-actions input.webform-button--draft {
-    color: #121212;
-    color: var(--hdbt-color-black);
-    background: transparent;
-    border: 0px transparent solid;
-    text-decoration: underline;
-    -webkit-box-ordinal-group: 4;
-        -ms-flex-order: 3;
-            order: 3; }
-  .webform-submission-form .form-actions input.webform-button--previous {
-    background: white;
-    color: var(--border-color); }
-
-.webform-preview label {
-  display: block;
-  font-weight: bold; }
 
 .grant-applications--select-wrapper {
   --border-width: 2px;
@@ -2473,7 +2472,7 @@ input[type=submit].hds-button--small {
     background-color: var(--helper-color-default);
     -webkit-clip-path: polygon(100% 0%, 0 0%, 50% 100%);
             clip-path: polygon(100% 0%, 0 0%, 50% 100%); }
-  .grant-applications--select-wrapper select:focus + .focus {
+  .grant-applications--select-wrapper select:focus + .grant-applications--select-focus {
     position: absolute;
     top: -1px;
     left: -1px;
@@ -2481,6 +2480,26 @@ input[type=submit].hds-button--small {
     bottom: -1px;
     border: 2px solid var(--focus-outline-color);
     border-radius: inherit; }
+
+.webform-submission-form .form-actions {
+  margin-top: 32px;
+  padding-top: 48px;
+  border-top: 1px rgba(0, 0, 0, 0.6) solid; }
+  .webform-submission-form .form-actions input {
+    width: 100%;
+    margin-bottom: 16px; }
+  .webform-submission-form .form-actions input.webform-button--draft {
+    color: #121212;
+    color: var(--hdbt-color-black);
+    background: transparent;
+    border: 0px transparent solid;
+    text-decoration: underline;
+    -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+            order: 3; }
+  .webform-submission-form .form-actions input.webform-button--previous {
+    background: white;
+    color: var(--border-color); }
   @media (min-width: 768px){
       .hero.hero--no-background .hero__category {
         font-size: 32px; }
