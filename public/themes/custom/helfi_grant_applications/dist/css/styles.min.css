@@ -2243,15 +2243,19 @@ input[type=submit].hds-button--small {
 
 .tippy-box {
   background-color: var(--color-black-5);
-  border-left: 10px var(--color-coat-of-arms) solid;
+  border-left: var(--spacing-xs) var(--color-coat-of-arms) solid;
   padding: var(--spacing-s);
-  color: black;
+  color: #121212;
+  color: var(--hdbt-color-black);
   border-radius: 0; }
+  .tippy-box .webform-element-help--content a:link, .tippy-box .webform-element-help--content a:visited, .tippy-box .webform-element-help--content a:active, .tippy-box .webform-element-help--content a:hover {
+    color: #121212;
+    color: var(--hdbt-color-black); }
 
 .tippy-arrow {
   color: var(--color-black-5); }
 
-.webform-section {
+.webform-section-flex-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2263,7 +2267,7 @@ input[type=submit].hds-button--small {
   -webkit-box-pack: left;
       -ms-flex-pack: left;
           justify-content: left; }
-  .webform-section > h2.webform-section-title {
+  .webform-section-flex-wrapper > h2.webform-section-title {
     color: #121212;
     color: var(--hdbt-color-black);
     display: block;
@@ -2278,20 +2282,22 @@ input[type=submit].hds-button--small {
     -ms-flex-negative: 0;
         flex-shrink: 0;
     margin-top: 0; }
-  .webform-section > .webform-section-wrapper {
+  .webform-section-flex-wrapper > .webform-section-wrapper {
     font-size: 16px;
     width: 100%;
     padding-left: 48px; }
-  .webform-section .form-required::after {
+  .webform-section-flex-wrapper .form-required::after {
     content: '*';
     display: inline; }
-  .webform-section legend, .webform-section label {
+  .webform-section-flex-wrapper legend, .webform-section-flex-wrapper label {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 16px; }
-  .webform-section label.hds-radio-button__label {
+  .webform-section-flex-wrapper label.hds-radio-button__label {
     font-weight: normal; }
-  .webform-section .js-form-type-textarea .hds-text-input__input-wrapper {
+  .webform-section-flex-wrapper .checkboxes--wrapper label {
+    font-weight: normal; }
+  .webform-section-flex-wrapper .js-form-type-textarea .hds-text-input__input-wrapper {
     display: block; }
 
 .webform-preview label {
@@ -2327,6 +2333,11 @@ input[type=submit].hds-button--small {
 
 .webform-progress .webform-progress-tracker {
   display: none; }
+  .webform-progress .webform-progress-tracker .progress-step .progress-text {
+    color: #666; }
+  .webform-progress .webform-progress-tracker .is-active .progress-title {
+    color: #121212;
+    color: var(--hdbt-color-black); }
   .webform-progress .webform-progress-tracker .progress-title[role="link"] {
     text-decoration: underline;
     color: #121212;
@@ -2363,12 +2374,12 @@ input[type=submit].hds-button--small {
     border: 4px var(--hdbt-color-black) solid; }
   .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
     background-color: var(--color-white);
-    color: #888;
-    border-color: #888; }
+    color: #666;
+    border-color: #666; }
   .webform-progress .webform-progress-tracker .progress-step:hover .progress-marker::before {
     background-color: var(--color-white);
-    color: #888;
-    border-color: #888; }
+    color: #666;
+    border-color: #666; }
   .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete .progress-marker::before {
     background-color: var(--color-white);
     color: #121212;
@@ -2511,12 +2522,12 @@ input[type=submit].hds-button--small {
         margin: 0 24px 0 0;
         display: grid;
         grid-template-columns: auto auto auto; }
-    .webform-section {
+    .webform-section-flex-wrapper {
       -webkit-box-orient: horizontal;
       -webkit-box-direction: normal;
           -ms-flex-flow: row nowrap;
               flex-flow: row nowrap; }
-      .webform-section > h2.webform-section-title {
+      .webform-section-flex-wrapper > h2.webform-section-title {
         width: 35%;
         max-width: 350px; }
     .webform-progress .webform-progress-tracker-mobile {

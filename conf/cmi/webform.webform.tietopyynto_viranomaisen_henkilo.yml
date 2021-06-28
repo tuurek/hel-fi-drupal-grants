@@ -12,7 +12,228 @@ id: tietopyynto_viranomaisen_henkilo
 title: 'Tietopyyntö viranomaisen henkilörekisteristä'
 description: MVP-lomake
 category: ''
-elements: "1_hakijan_tiedot:\n  '#type': webform_wizard_page\n  '#title': '1. Hakijan tiedot'\n  '#prev_button_label': '< Edellinen'\n  '#next_button_label': 'Seuraava >'\n2_avustustiedot:\n  '#type': webform_wizard_page\n  '#title': '2. Avustustiedot'\n  '#prev_button_label': '< Edellinen'\n  '#next_button_label': 'Seuraava >'\n  avustuksen_tiedot:\n    '#type': webform_section\n    '#title': 'Avustuksen tiedot'\n    vuosi_jolle_haen_avustusta:\n      '#type': datelist\n      '#title': 'Vuosi, jolle haen avustusta'\n      '#date_part_order':\n        - year\n      '#date_year_range': '2021:2023'\n  edellisen_avustuksen_kayttoselvitys:\n    '#type': webform_section\n    '#title': 'Edellisen avustuksen käyttöselvitys'\n    kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta:\n      '#type': radios\n      '#title': 'Käyttöselvitys edellisenä vuonna saamastani avustuksesta'\n      '#options':\n        'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'\n        'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'\n      '#required': true\n    markup:\n      '#type': webform_markup\n      '#states':\n        visible:\n          ':input[name=\"kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta\"]':\n            value: 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'\n      '#markup': 'Anna k&auml;ytt&ouml;selvitys Helsingin kaupungilta saadusta avustuksesta. Avustuksen k&auml;ytt&ouml;selvitys tehd&auml;&auml;n avustuksesta, joka koskee viimeisint&auml; p&auml;&auml;ttynytt&auml; tilikautta. K&auml;ytt&ouml;selvityst&auml; ei tehd&auml; k&auml;ynniss&auml; olevalta tilikaudelta. K&auml;ytt&ouml;selvityksen antaminen on seuraavan avustuksen saamisen ehtona. Mik&auml;li k&auml;ytt&ouml;selvityst&auml; ei tehd&auml;, avustusta ei my&ouml;nnet&auml; eik&auml; makseta. My&ouml;nnetty avustus voidaan peri&auml; takaisin, jos edellisen avustuksen k&auml;ytt&ouml;&auml; ei ole hyv&auml;ksytt&auml;v&auml;sti selvitetty.'\n    selvitys_avustuksen_kaytosta:\n      '#type': textarea\n      '#title': 'Selvitys avustuksen käytöstä'\n      '#help': 'K&auml;ytt&ouml;selvityksess&auml; tulee kuvata lyhyesti, miten my&ouml;nnetty avustus on k&auml;ytetty. Avustuksen saajan on j&auml;rjestett&auml;v&auml; kirjanpitonsa niin, ett&auml; avustuksen k&auml;ytt&ouml;&auml; voidaan sielt&auml; seurata. Esimerkiksi jos yhteis&ouml; on saanut vuokra-avustusta, tilinp&auml;&auml;t&ouml;ksen tuloslaskelmasta tulee k&auml;yd&auml; ilmi avustuksen toteutuminen sek&auml; tuloissa ett&auml; menoissa. Lis&auml;&auml; tietoja avustuksen k&auml;yt&ouml;st&auml; voi my&ouml;s kirjoittaa erilliseen liitteeseen, jonka voi palauttaa K&auml;ytt&ouml;selvitys-liite kohdasta.'\n      '#required': true\n      '#counter_type': character\n      '#counter_minimum': 1\n      '#counter_maximum': 5000\n      '#counter_maximum_message': '%d/5000 merkkiä jäljellä'\n      '#states':\n        visible:\n          ':input[name=\"kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta\"]':\n            value: 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'\n3_yhteison_tiedot:\n  '#type': webform_wizard_page\n  '#title': '3. Yhteisön tiedot'\n  '#prev_button_label': '< Edellinen'\n  '#next_button_label': 'Seuraava >'\n  ensimmainen_otsikko:\n    '#type': webform_section\n    '#title': Jäsenmaksut\n    henkilojasenen_jasenmaksu_eu_vuosi_:\n      '#type': textfield\n      '#title': 'Henkilöjäsenen jäsenmaksu (€ / vuosi)'\n      '#maxlength': 50\n      '#attributes':\n        class:\n          - input--short\n    yhteisojasen_eu_vuosi_:\n      '#type': textfield\n      '#title': 'Yhteisöjäsen (€ / vuosi)'\n      '#maxlength': 50\n  jasenmaara:\n    '#type': webform_section\n    '#title': Jäsenmäärä\n    helsinkilaisia_henkilojasenia_yhteensa:\n      '#type': textfield\n      '#title': 'Helsinkiläisiä henkilöjäseniä yhteensä'\n      '#help': 'Kuinka monta j&auml;senmaksun maksanutta helsinkil&auml;ist&auml; henkil&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;?'\n      '#maxlength': 7\n      '#pattern': '^[0-9]*$'\n      '#pattern_error': 'Vain numeroita'\n    henkilojasenia_yhteensa:\n      '#type': textfield\n      '#title': 'Henkilöjäseniä yhteensä'\n      '#help': 'Kuinka monta j&auml;senmaksun maksanutta henkil&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;?'\n      '#maxlength': 7\n      '#pattern': '^[0-9]*$'\n      '#pattern_error': 'Vain numeroita'\n    yhteisojasenia:\n      '#type': textfield\n      '#title': Yhteisöjäseniä\n      '#help': 'Kuinka monta j&auml;senmaksun maksanutta yhteis&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;? Yhteis&ouml;j&auml;seni&auml; ovat muut kuin henkil&ouml;j&auml;senet, esimerkiksi yhdistykset, s&auml;&auml;ti&ouml;t, yritykset tai kunnat.'\n      '#maxlength': 7\n      '#pattern': '^[0-9]*$'\n      '#pattern_error': 'Vain numeroita'\n    helsinkilaisia_yhteisojasenia_yhteensa:\n      '#type': textfield\n      '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'\n      '#help': 'Kuinka monta j&auml;senmaksun maksanutta helsinkil&auml;ist&auml; yhteis&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;? Yhteis&ouml;j&auml;seni&auml; ovat muut kuin henkil&ouml;j&auml;senet, esimerkiksi yhdistykset, s&auml;&auml;ti&ouml;t, yritykset tai kunnat.'\n      '#maxlength': 7\n      '#pattern': '^[0-9]*$'\n      '#pattern_error': 'Vain numeroita'\n4_lisatiedot_ja_liitteet:\n  '#type': webform_wizard_page\n  '#title': '4. Lisätiedot ja liitteet'\n  '#prev_button_label': '< Edellinen'\n  '#next_button_label': 'Seuraava >'\nactions:\n  '#type': webform_actions\n  '#title': 'Submit button(s)'\n  '#submit__label': Lähetä\n  '#draft__label': 'Tallenna keskeneräisenä'\n  '#wizard_prev__label': '< Edellinen'\n  '#wizard_next__label': 'Seuraava >'\n  '#preview_prev__label': '< Edellinen'\n  '#preview_next__label': 'Esikatseluun >'"
+elements: |-
+  1_hakijan_tiedot:
+    '#type': webform_wizard_page
+    '#title': '1. Hakijan tiedot'
+    '#prev_button_label': '< Edellinen'
+    '#next_button_label': 'Seuraava >'
+    yhteiso_jolle_haetaan_avustusta:
+      '#type': webform_section
+      '#title': 'Yhteisö, jolle haetaan avustusta'
+    osoite:
+      '#type': webform_section
+      '#title': Osoite
+    hakemuksen_yhteyshenkilo:
+      '#type': webform_section
+      '#title': 'Hakemuksen yhteyshenkilö'
+    tilinumero:
+      '#type': webform_section
+      '#title': Tilinumero
+  2_avustustiedot:
+    '#type': webform_wizard_page
+    '#title': '2. Avustustiedot'
+    '#prev_button_label': '< Edellinen'
+    '#next_button_label': 'Seuraava >'
+    avustuksen_tiedot:
+      '#type': webform_section
+      '#title': 'Avustuksen tiedot'
+      vuosi_jolle_haen_avustusta:
+        '#type': datelist
+        '#title': 'Vuosi, jolle haen avustusta'
+        '#required': true
+        '#date_part_order':
+          - year
+        '#date_year_range': '2021:2023'
+    edellisen_avustuksen_kayttoselvitys:
+      '#type': webform_section
+      '#title': 'Edellisen avustuksen käyttöselvitys'
+      kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta:
+        '#type': radios
+        '#title': 'Käyttöselvitys edellisenä vuonna saamastani avustuksesta'
+        '#options':
+          'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+          'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+        '#required': true
+      markup:
+        '#type': webform_markup
+        '#states':
+          visible:
+            ':input[name="kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta"]':
+              value: 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+        '#markup': 'Anna k&auml;ytt&ouml;selvitys Helsingin kaupungilta saadusta avustuksesta. Avustuksen k&auml;ytt&ouml;selvitys tehd&auml;&auml;n avustuksesta, joka koskee viimeisint&auml; p&auml;&auml;ttynytt&auml; tilikautta. K&auml;ytt&ouml;selvityst&auml; ei tehd&auml; k&auml;ynniss&auml; olevalta tilikaudelta. K&auml;ytt&ouml;selvityksen antaminen on seuraavan avustuksen saamisen ehtona. Mik&auml;li k&auml;ytt&ouml;selvityst&auml; ei tehd&auml;, avustusta ei my&ouml;nnet&auml; eik&auml; makseta. My&ouml;nnetty avustus voidaan peri&auml; takaisin, jos edellisen avustuksen k&auml;ytt&ouml;&auml; ei ole hyv&auml;ksytt&auml;v&auml;sti selvitetty.'
+      selvitys_avustuksen_kaytosta:
+        '#type': textarea
+        '#title': 'Selvitys avustuksen käytöstä'
+        '#help': 'K&auml;ytt&ouml;selvityksess&auml; tulee kuvata lyhyesti, miten my&ouml;nnetty avustus on k&auml;ytetty. Avustuksen saajan on j&auml;rjestett&auml;v&auml; kirjanpitonsa niin, ett&auml; avustuksen k&auml;ytt&ouml;&auml; voidaan sielt&auml; seurata. Esimerkiksi jos yhteis&ouml; on saanut vuokra-avustusta, tilinp&auml;&auml;t&ouml;ksen tuloslaskelmasta tulee k&auml;yd&auml; ilmi avustuksen toteutuminen sek&auml; tuloissa ett&auml; menoissa. Lis&auml;&auml; tietoja avustuksen k&auml;yt&ouml;st&auml; voi my&ouml;s kirjoittaa erilliseen liitteeseen, jonka voi palauttaa K&auml;ytt&ouml;selvitys-liite kohdasta.'
+        '#required': true
+        '#counter_type': character
+        '#counter_minimum': 1
+        '#counter_maximum': 5000
+        '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#states':
+          visible:
+            ':input[name="kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta"]':
+              value: 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+    avustuslajit:
+      '#type': webform_section
+      '#title': Avustuslajit
+      haen_avustuslajeja:
+        '#type': checkboxes
+        '#title': 'Haen avustuslajeja'
+        '#help': |-
+          Valitse, mik&auml; avustuslaji soveltuu parhaiten tarpeisiisi.<br />
+          <br />
+          Voit hakea avustusta useasta avustuslajista yhdell&auml; kertaa valitsemalla t&auml;st&auml; haluamasi avustuslajit.<br />
+          <br />
+          <strong>Mik&auml; avustuslaji sopii parheiten yhteis&ouml;ni tarpeeseen? Mihin voin k&auml;ytt&auml;&auml; esimerkiksi &quot;Korot ja lyhennykset&quot; -avustuslajia?&nbsp;</strong>Tutustu tarkemmin avustuslajien k&auml;ytt&ouml;kohteisiin t&auml;m&auml;n avustuksen <a href="http://google.fi">palvelukuvauksesta</a>.
+        '#options':
+          'Korot ja lyhennykset': 'Korot ja lyhennykset'
+          Projektiavustus: Projektiavustus
+          Toiminta-avustus: Toiminta-avustus
+          Vuokra-avustus: Vuokra-avustus
+          'Muu avustus': 'Muu avustus'
+    korot_ja_lyhennykset:
+      '#type': webform_section
+      '#title': 'Korot ja lyhennykset'
+      '#states':
+        visible:
+          ':input[name="haen_avustuslajeja[Korot ja lyhennykset]"]':
+            checked: true
+      korot_summa:
+        '#type': textfield
+        '#title': 'Haettava summa (vuodelle, jolle haetaan avustusta)'
+        '#placeholder': €
+        '#autocomplete': ''
+        '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#required': true
+    projektiavustus:
+      '#type': webform_section
+      '#title': Projektiavustus
+      '#states':
+        visible:
+          ':input[name="haen_avustuslajeja[Projektiavustus]"]':
+            checked: true
+      projektiavustus_summa:
+        '#type': textfield
+        '#title': 'Haettava summa (vuodelle, jolle haetaan avustusta)'
+        '#placeholder': €
+        '#autocomplete': ''
+        '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#required': true
+    toiminta_avustus:
+      '#type': webform_section
+      '#title': Toiminta-avustus
+      '#states':
+        visible:
+          ':input[name="haen_avustuslajeja[Toiminta-avustus]"]':
+            checked: true
+      toimintaavustus_summa:
+        '#type': textfield
+        '#title': 'Haettava summa (vuodelle, jolle haetaan avustusta)'
+        '#placeholder': €
+        '#autocomplete': ''
+        '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#required': true
+    vuokra_avustus:
+      '#type': webform_section
+      '#title': Vuokra-avustus
+      '#states':
+        visible:
+          ':input[name="haen_avustuslajeja[Vuokra-avustus]"]':
+            checked: true
+      vuokraavustus_summa:
+        '#type': textfield
+        '#title': 'Haettava summa (vuodelle, jolle haetaan avustusta)'
+        '#placeholder': €
+        '#autocomplete': ''
+        '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#required': true
+    muu_avustus:
+      '#type': webform_section
+      '#title': 'Muu avustus'
+      '#states':
+        visible:
+          ':input[name="haen_avustuslajeja[Muu avustus]"]':
+            checked: true
+      muuavustus_summa:
+        '#type': textfield
+        '#title': 'Haettava summa (vuodelle, jolle haetaan avustusta)'
+        '#placeholder': €
+        '#autocomplete': ''
+        '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#required': true
+  3_yhteison_tiedot:
+    '#type': webform_wizard_page
+    '#title': '3. Yhteisön tiedot'
+    '#prev_button_label': '< Edellinen'
+    '#next_button_label': 'Seuraava >'
+    ensimmainen_otsikko:
+      '#type': webform_section
+      '#title': Jäsenmaksut
+      henkilojasenen_jasenmaksu_eu_vuosi_:
+        '#type': textfield
+        '#title': 'Henkilöjäsenen jäsenmaksu (€ / vuosi)'
+        '#maxlength': 50
+        '#attributes':
+          class:
+            - input--short
+      yhteisojasen_eu_vuosi_:
+        '#type': textfield
+        '#title': 'Yhteisöjäsen (€ / vuosi)'
+        '#maxlength': 50
+    jasenmaara:
+      '#type': webform_section
+      '#title': Jäsenmäärä
+      helsinkilaisia_henkilojasenia_yhteensa:
+        '#type': textfield
+        '#title': 'Helsinkiläisiä henkilöjäseniä yhteensä'
+        '#help': 'Kuinka monta j&auml;senmaksun maksanutta helsinkil&auml;ist&auml; henkil&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;?'
+        '#maxlength': 7
+        '#pattern': '^[0-9]*$'
+        '#pattern_error': 'Vain numeroita'
+      henkilojasenia_yhteensa:
+        '#type': textfield
+        '#title': 'Henkilöjäseniä yhteensä'
+        '#help': 'Kuinka monta j&auml;senmaksun maksanutta henkil&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;?'
+        '#maxlength': 7
+        '#pattern': '^[0-9]*$'
+        '#pattern_error': 'Vain numeroita'
+      yhteisojasenia:
+        '#type': textfield
+        '#title': Yhteisöjäseniä
+        '#help': 'Kuinka monta j&auml;senmaksun maksanutta yhteis&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;? Yhteis&ouml;j&auml;seni&auml; ovat muut kuin henkil&ouml;j&auml;senet, esimerkiksi yhdistykset, s&auml;&auml;ti&ouml;t, yritykset tai kunnat.'
+        '#maxlength': 7
+        '#pattern': '^[0-9]*$'
+        '#pattern_error': 'Vain numeroita'
+      helsinkilaisia_yhteisojasenia_yhteensa:
+        '#type': textfield
+        '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'
+        '#help': 'Kuinka monta j&auml;senmaksun maksanutta helsinkil&auml;ist&auml; yhteis&ouml;j&auml;sent&auml; yhteis&ouml;ll&auml; on t&auml;ll&auml; hetkell&auml;? Yhteis&ouml;j&auml;seni&auml; ovat muut kuin henkil&ouml;j&auml;senet, esimerkiksi yhdistykset, s&auml;&auml;ti&ouml;t, yritykset tai kunnat.'
+        '#maxlength': 7
+        '#pattern': '^[0-9]*$'
+        '#pattern_error': 'Vain numeroita'
+  4_kayttoselvitys:
+    '#type': webform_wizard_page
+    '#title': '4. Käyttöselvitys'
+  lisatiedot_ja_liitteet:
+    '#type': webform_wizard_page
+    '#title': 'Lisätiedot ja liitteet'
+    lisatietoja_hakemukseen_liittyen:
+      '#type': webform_section
+      '#title': 'Lisätietoja hakemukseen liittyen'
+    liitteet:
+      '#type': webform_section
+      '#title': Liitteet
+  actions:
+    '#type': webform_actions
+    '#title': 'Submit button(s)'
+    '#submit__label': Lähetä
+    '#draft__label': 'Tallenna keskeneräisenä'
+    '#wizard_prev__label': '< Edellinen'
+    '#wizard_next__label': 'Seuraava >'
+    '#preview_prev__label': '< Edellinen'
+    '#preview_next__label': 'Esikatseluun >'
 css: ''
 javascript: ''
 settings:

@@ -32,6 +32,13 @@
     @include breakpoint($breakpoint-m) {
       display: flex;
     }
+    .progress-step .progress-text {
+    color: #666;
+    }
+
+    .is-active .progress-title {
+      color: var(--hdbt-color-black);
+    }
     .progress-title[role="link"] {
       text-decoration: underline;
       color: var(--hdbt-color-black);
@@ -39,6 +46,7 @@
         text-decoration: none;
       }
     }
+
 
     .progress-step {
       .progress-marker::after {
@@ -79,13 +87,13 @@
       }
       .progress-marker::before {
         background-color: var(--color-white);
-        color: #888;
-        border-color: #888;
+        color: #666;
+        border-color: #666;
       }
       &:hover .progress-marker::before {
         background-color: var(--color-white);
-        color: #888;
-        border-color: #888;
+        color: #666;
+        border-color: #666;
       }
 
       &:not(.is-active).is-complete {

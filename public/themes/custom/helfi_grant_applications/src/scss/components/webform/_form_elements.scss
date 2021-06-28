@@ -1,4 +1,4 @@
-.webform-section {
+.webform-section-flex-wrapper {
 
   display: flex;
   flex-flow: row wrap;
@@ -39,6 +39,9 @@
 
   }
   label.hds-radio-button__label {
+    font-weight: normal;
+  }
+  .checkboxes--wrapper label {
     font-weight: normal;
   }
 
