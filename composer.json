@@ -25,6 +25,7 @@
         "drupal/menu_link_attributes": "^1.2",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
+	"drupal/entity_print": "^2.2",
         "drush/drush": "^10.4"
     },
     "require-dev": {
