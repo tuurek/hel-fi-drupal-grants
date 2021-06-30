@@ -316,5 +316,26 @@ langcode: en
 third_party_settings:
   captcha:
     replace_administration_mode: true
+  webform_entity_print:
+    debug: false
+    template:
+      header: '<h1>[webform_submission:label]</h1>'
+      footer: ''
+      css: |-
+        /* Remove page margins and padding and rely on the PDF generator's default margins. */
+        body {
+          margin: 0;
+        }
+
+        .page {
+          padding: 0;
+        }
+    export_types:
+      pdf:
+        enabled: true
+        link_text: 'Lataa PDF'
+        link_attributes:
+          class:
+            - button
 _core:
   default_config_hash: 1h6WrTweY39OdbNz3JJz6sgq5TAQ6HxtuNLIHMJR1tE

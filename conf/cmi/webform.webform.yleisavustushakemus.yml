@@ -8,8 +8,8 @@ weight: 0
 uid: 1
 template: false
 archive: false
-id: tietopyynto_viranomaisen_henkilo
-title: 'Tietopyyntö viranomaisen henkilörekisteristä'
+id: Yleisavustushakemus
+title: Yleisavustushakemus
 description: MVP-lomake
 category: ''
 elements: |-
@@ -318,7 +318,7 @@ settings:
   wizard_toggle: true
   wizard_toggle_show_label: ''
   wizard_toggle_hide_label: ''
-  preview: 1
+  preview: 2
   preview_label: '5. Vahvista, esikatsele ja lähetä'
   preview_title: 'Vahvista, esikatsele ja lähetä'
   preview_message: ''

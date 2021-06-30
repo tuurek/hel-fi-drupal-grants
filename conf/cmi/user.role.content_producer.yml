@@ -52,6 +52,7 @@ permissions:
   - 'edit own webform'
   - 'edit own webform submission'
   - 'edit terms in keywords'
+  - 'entity print access bundle paragraph_verkkolomake'
   - 'revert landing_page revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
