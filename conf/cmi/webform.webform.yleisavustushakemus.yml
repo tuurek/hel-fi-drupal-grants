@@ -93,6 +93,8 @@ elements: |-
           Toiminta-avustus: Toiminta-avustus
           Vuokra-avustus: Vuokra-avustus
           'Muu avustus': 'Muu avustus'
+        '#required': true
+        '#required_error': 'Valitse vähintään yksi avustuslaji'
     korot_ja_lyhennykset:
       '#type': webform_section
       '#title': 'Korot ja lyhennykset'
@@ -163,6 +165,17 @@ elements: |-
         '#autocomplete': ''
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#required': true
+    kayttotarkoitus:
+      '#type': webform_section
+      '#title': Käyttötarkoitus
+      lyhyt_kuvaus_haettavan_haettavien_avustusten_kayttotarkoituksist:
+        '#type': textarea
+        '#title': 'Lyhyt kuvaus haettavan / haettavien avustusten käyttötarkoituksista'
+        '#help': 'Kerro mit&auml; tarkoitusta varten avustusta haetaan, erittele tarvittaessa eri k&auml;ytt&ouml;kohteet. Kerro my&ouml;s mit&auml; avustuksella on tarkoitus saada aikaiseksi ja millaisia tavoitteita avustettavaan toimintaan liittyy.'
+        '#required': true
+        '#counter_type': character
+        '#counter_maximum': 5000
+        '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön tiedot'
@@ -222,6 +235,13 @@ elements: |-
     lisatietoja_hakemukseen_liittyen:
       '#type': webform_section
       '#title': 'Lisätietoja hakemukseen liittyen'
+      lisatiedot:
+        '#type': textarea
+        '#title': Lisätiedot
+        '#help': 'T&auml;h&auml;n voit tarvittaessa kirjoittaa lis&auml;tietoja tai muita perusteluja hakemukseen liittyen tai ilmoittaa perustietoihin tulleista muutoksista&nbsp;'
+        '#counter_type': character
+        '#counter_maximum': 5000
+        '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
     liitteet:
       '#type': webform_section
       '#title': Liitteet
