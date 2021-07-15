@@ -2234,6 +2234,63 @@ input[type=submit].hds-button--small {
 .list-of-links--without-image .list-of-links__item .list-of-links__item__title {
   font-size: 24px; }
 
+.js-form-type-webform-custom-composite {
+  --border-width: 2px;
+  --outline-width: 3px;
+  --input-height: 56px;
+  --textarea-height: 149px;
+  --icon-size: var(--spacing-m);
+  --helper-color-default: var(--color-black-60);
+  --helper-color-invalid: var(--color-error);
+  --icon-color-invalid: var(--color-error);
+  --input-background-default: var(--color-white);
+  --input-background-disabled: var(--color-black-10);
+  --input-border-color-default: var(--color-black-50);
+  --input-border-color-hover: var(--color-black-90);
+  --input-border-color-focus: var(--color-black-90);
+  --input-border-color-invalid: var(--color-error);
+  --input-border-color-disabled: var(--color-black-10);
+  --input-color-default: var(--color-black-90);
+  --input-color-disabled: var(--color-black-40);
+  --label-color-default: var(--color-black-90);
+  --label-color-invalid: var(--color-black-90);
+  --placeholder-color: var(--color-black-60);
+  --focus-outline-color: var(--color-coat-of-arms); }
+  .js-form-type-webform-custom-composite a.tabledrag-handle .handle {
+    width: 24px;
+    height: 24px; }
+  .js-form-type-webform-custom-composite input.form-number {
+    -webkit-appearance: none;
+    background-color: var(--input-background-default);
+    border: var(--border-width) solid var(--input-border-color-default);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: var(--input-color-default);
+    font-size: 1.125em;
+    height: var(--input-height);
+    line-height: normal;
+    padding: 0 var(--spacing-s);
+    width: 100%; }
+  .js-form-type-webform-custom-composite table {
+    border-collapse: collapse;
+    border-spacing: 0px;
+    margin-bottom: var(--spacing-m); }
+    .js-form-type-webform-custom-composite table td {
+      border-top: 2px var(--color-black-20) solid;
+      border-bottom: 2px var(--color-black-20) solid;
+      padding-top: var(--spacing-m);
+      padding-left: var(--spacing-m); }
+    .js-form-type-webform-custom-composite table td.webform-multiple-table--operations {
+      border-top: 2px var(--color-black-20) solid;
+      border-bottom: 2px var(--color-black-20) solid;
+      padding-top: var(--spacing-m);
+      padding-left: var(--spacing-m); }
+    .js-form-type-webform-custom-composite table td:first-child {
+      border-left: 2px var(--color-black-20) solid; }
+    .js-form-type-webform-custom-composite table td:last-child {
+      border-right: 2px var(--color-black-20) solid;
+      padding-right: var(--spacing-m); }
+
 .webform-element-help {
   background: var(--color-white);
   color: #121212;
@@ -2254,6 +2311,33 @@ input[type=submit].hds-button--small {
 
 .tippy-arrow {
   color: var(--color-black-5); }
+
+.js-form-type-webform-table table {
+  width: 100%; }
+
+.js-form-type-webform-table th {
+  text-align: left; }
+
+.js-form-type-webform-table td {
+  vertical-align: middle; }
+  .js-form-type-webform-table td > div {
+    margin-bottom: 0;
+    height: auto; }
+    .js-form-type-webform-table td > div label {
+      margin: -1px; }
+
+.js-form-type-webform-table .hds-text-input label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0; }
+
+.js-form-type-webform-table .hds-checkbox label.hds-checkbox__label::after {
+  content: ''; }
 
 .webform-section-flex-wrapper {
   display: -webkit-box;
@@ -2557,6 +2641,13 @@ input[type=submit].hds-button--small {
   @media (min-width: 576px) and (min-width: 768px){
     .list-of-links .list-of-links__container {
       width: 100%; } }
+  @media (max-width: 768px){
+        .js-form-type-webform-custom-composite table td {
+          border: 2px var(--color-black-20) solid; }
+        .js-form-type-webform-custom-composite table td.webform-multiple-table--operations {
+          border: 2px var(--color-black-20) solid;
+          background: white;
+          padding: 10px 5px 5px; } }
 
 
 /*# sourceMappingURL=styles.min.css.map*/

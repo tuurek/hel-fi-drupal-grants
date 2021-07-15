@@ -73,28 +73,35 @@ elements: |-
     avustuslajit:
       '#type': webform_section
       '#title': Avustuslajit
-      flexbox:
-        '#type': webform_flexbox
-        haen_avustuslajeja:
-          '#type': checkboxes
-          '#title': 'Haen avustuslajeja'
-          '#help': |-
-            Valitse, mik&auml; avustuslaji soveltuu parhaiten tarpeisiisi.<br />
-            <br />
-            Voit hakea avustusta useasta avustuslajista yhdell&auml; kertaa valitsemalla t&auml;st&auml; haluamasi avustuslajit.<br />
-            <br />
-            <strong>Mik&auml; avustuslaji sopii parheiten yhteis&ouml;ni tarpeeseen? Mihin voin k&auml;ytt&auml;&auml; esimerkiksi &quot;Korot ja lyhennykset&quot; -avustuslajia?&nbsp;</strong>Tutustu tarkemmin avustuslajien k&auml;ytt&ouml;kohteisiin t&auml;m&auml;n avustuksen <a href="http://google.fi">palvelukuvauksesta</a>.
-          '#options':
-            Yleisavustus: Yleisavustus
-          '#required': true
-          '#required_error': 'Valitse vähintään yksi avustuslaji'
-        yleisavustus_summa:
-          '#type': textfield
-          '#title': 'Haettava summa (vuodelle, jolle haetaan avustusta)'
-          '#states':
-            required:
-              ':input[name="haen_avustuslajeja[Yleisavustus]"]':
-                checked: true
+      avustuslajit_taulukko:
+        '#type': webform_table
+        '#title': Avustuslajit
+        '#help': |-
+          Valitse, mik&auml; avustuslaji soveltuu parhaiten tarpeisiisi.<br />
+          <br />
+          Voit hakea avustusta useasta avustuslajista yhdell&auml; kertaa valitsemalla t&auml;st&auml; haluamasi avustuslajit.<br />
+          <br />
+          <strong>Mik&auml; avustuslaji sopii parheiten yhteis&ouml;ni tarpeeseen? Mihin voin k&auml;ytt&auml;&auml; esimerkiksi &quot;Korot ja lyhennykset&quot; -avustuslajia?&nbsp;</strong>Tutustu tarkemmin avustuslajien k&auml;ytt&ouml;kohteisiin t&auml;m&auml;n avustuksen <a href="http://google.fi">palvelukuvauksesta</a>.
+        '#header':
+          - title: 'Avustuslaji *'
+            attributes: {  }
+          - title: 'Haettava summa (vuodelle, jolle haetaan avustusta)'
+            attributes: {  }
+        avustuslajit_taulukko_01:
+          '#type': webform_table_row
+          '#title': 'Avustuslajit (1)'
+          avustuslajit_taulukko_01_yleisavustus:
+            '#type': checkbox
+            '#title': Yleisavustus
+            '#required': true
+          yleisavustus_summa:
+            '#type': textfield
+            '#title': 'Yleisavustus, haettava summa (vuodelle, jolle haetaan avustusta)'
+            '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+            '#states':
+              required:
+                ':input[name="avustuslajit_taulukko_01_yleisavustus"]':
+                  checked: true
     kayttotarkoitus:
       '#type': webform_section
       '#title': Käyttötarkoitus
@@ -106,6 +113,131 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+    muut_samaan_tarkoitukseen_myonnetyt_avustukset:
+      '#type': webform_section
+      '#title': 'Muut samaan tarkoitukseen myönnetyt avustukset'
+      info_muut_samaan_tarkoitukseen_myonnetty:
+        '#type': webform_markup
+        '#markup': 'Ilmoita t&auml;h&auml;n ainoastaan avustukset, jotka on my&ouml;nnetty muualta kuin Helsingin kaupungilta kuluvana tai kahtena edellisen&auml; verovuotena.'
+      olemme_saaneet_muita_avustuksia:
+        '#type': radios
+        '#title': 'Olemme saaneet muita avustuksia'
+        '#description_display': before
+        '#options':
+          Kyllä: Kyllä
+          Ei: Ei
+      haettu_avustus:
+        '#type': webform_custom_composite
+        '#title': 'Haettu avustus'
+        '#title_display': before
+        '#multiple__header': false
+        '#multiple__empty_items': 0
+        '#multiple__sorting': false
+        '#multiple__add_more_input': false
+        '#element':
+          avustuksen_myontaja:
+            '#type': select
+            '#options':
+              EU: EU
+              Muu: Muu
+              STEA: STEA
+              Säätiö: Säätiö
+              Valtio: Valtio
+            '#required': true
+            '#title': 'Avustuksen myöntäjä'
+          avustuksen_myontajan_nimi:
+            '#type': textfield
+            '#required': true
+            '#title': 'Myöntäjän nimi'
+            '#help': 'Mikä taho avustusta on myöntänyt (esim. ministeriön nimi)'
+          vuosi:
+            '#type': textfield
+            '#required': true
+            '#title': Vuosi
+          summa:
+            '#type': textfield
+            '#required': true
+            '#title': 'Haetun avustuksen summa'
+            '#placeholder': €
+          kuvaus:
+            '#type': textarea
+            '#title': 'Kuvaus käyttötarkoituksesta'
+            '#help': 'Anna lyhyt kuvaus, mihin tarkoitukseen avustus on myönnetty?'
+    muut_samaan_tarkoitukseen_haetut_avustukset:
+      '#type': webform_section
+      '#title': 'Muut samaan tarkoitukseen haetut avustukset'
+      info_muut_samaan_tarkoitukseen_haettu:
+        '#type': webform_markup
+        '#markup': 'Ilmoita t&auml;h&auml;n ainoastaan avustukset, jotka on haettu muualta kuin Helsingin kaupungilta, eik&auml; p&auml;&auml;t&ouml;st&auml; ole viel&auml; tehty.'
+      olemme_hakeneet_avustuksia_muualta_kuin_helsingin_kaupungilta:
+        '#type': radios
+        '#title': 'Olemme hakeneet avustuksia muualta kuin Helsingin kaupungilta'
+        '#options':
+          Kyllä: Kyllä
+          Ei: Ei
+      haettu_avustus_tieto:
+        '#type': webform_custom_composite
+        '#title': 'Lisää uusi haettu avustus'
+        '#title_display': before
+        '#multiple__header': false
+        '#multiple__empty_items': 0
+        '#multiple__sorting': false
+        '#multiple__add_more_input': false
+        '#element':
+          avustuksen_myontaja:
+            '#type': select
+            '#options':
+              EU: EU
+              Muu: Muu
+              STEA: STEA
+              Säätiö: Säätiö
+              Valtio: Valtio
+            '#required': true
+            '#title': 'Avustuksen myöntäjä'
+          avustuksen_myontajan_nimi:
+            '#type': textfield
+            '#required': true
+            '#title': 'Myöntäjän nimi'
+            '#help': 'Mikä taho avustusta on myöntänyt (esim. ministeriön nimi)'
+          vuosi:
+            '#type': textfield
+            '#required': true
+            '#title': Vuosi
+          summa:
+            '#type': textfield
+            '#required': true
+            '#title': 'Haetun avustuksen summa'
+            '#placeholder': €
+          kuvaus:
+            '#type': textarea
+            '#title': 'Kuvaus käyttötarkoituksesta'
+            '#help': 'Anna lyhyt kuvaus, mihin tarkoitukseen avustus on myönnetty?'
+    kaupungilta_saadut_lainat_ja_takaukset:
+      '#type': webform_section
+      '#title': 'Kaupungilta saadut lainat ja takaukset'
+      kaupungilta_saadut_1:
+        '#type': webform_markup
+        '#markup': 'Kaupungilta saaduista lainoista on mainittava alkuperäinen lainamäärä, jäljellä oleva lainamäärä, laina-aika, korkoprosentti ja mihin tarkoitukseen laina on myönnetty. Takauksista ilmoitetaan niiden raha-arvo ja tarkoitus.'
+      kuvaus_lainoista_ja_takauksista:
+        '#type': textarea
+        '#title': 'Kuvaus lainoista ja takauksista'
+        '#maxlength': 500
+        '#counter_type': character
+        '#counter_maximum': 500
+        '#counter_maximum_message': '%d/500 merkkiä jäljellä'
+    kaupungilta_saatu_tiloihin_liittyva_tuki:
+      '#type': webform_section
+      '#title': 'Kaupungilta saatu tiloihin liittyvä tuki'
+      tilate_1:
+        '#type': webform_markup
+        '#markup': 'Tilat, jotka kaupunki on antanut korvauksetta tai vuokrannut hakijan k&auml;ytt&ouml;&ouml;n (tilan nimi tai osoite, vuokran m&auml;&auml;r&auml; &euro;/kk)'
+      kuvaus_tiloihin_liittyvasta_tuesta:
+        '#type': textarea
+        '#title': 'Kuvaus tiloihin liittyvästä tuesta'
+        '#maxlength': 500
+        '#counter_type': character
+        '#counter_maximum': 500
+        '#counter_maximum_message': '%d/500 merkkiä jäljellä'
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön tiedot'

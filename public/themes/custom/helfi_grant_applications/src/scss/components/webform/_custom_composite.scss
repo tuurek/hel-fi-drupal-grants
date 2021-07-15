@@ -1,0 +1,74 @@
+.js-form-type-webform-custom-composite {
+  --border-width: 2px;
+  --outline-width: 3px;
+  --input-height: 56px;
+  --textarea-height: 149px;
+  --icon-size: var(--spacing-m);
+  --helper-color-default: var(--color-black-60);
+  --helper-color-invalid: var(--color-error);
+  --icon-color-invalid: var(--color-error);
+  --input-background-default: var(--color-white);
+  --input-background-disabled: var(--color-black-10);
+  --input-border-color-default: var(--color-black-50);
+  --input-border-color-hover: var(--color-black-90);
+  --input-border-color-focus: var(--color-black-90);
+  --input-border-color-invalid: var(--color-error);
+  --input-border-color-disabled: var(--color-black-10);
+  --input-color-default: var(--color-black-90);
+  --input-color-disabled: var(--color-black-40);
+  --label-color-default: var(--color-black-90);
+  --label-color-invalid: var(--color-black-90);
+  --placeholder-color: var(--color-black-60);
+  --focus-outline-color: var(--color-coat-of-arms);
+
+  a.tabledrag-handle .handle {
+    width: 24px;
+    height: 24px;
+  }
+  input.form-number {
+    -webkit-appearance: none;
+    background-color: var(--input-background-default);
+    border: var(--border-width) solid var(--input-border-color-default);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: var(--input-color-default);
+    font-size: 1.125em;
+    height: var(--input-height);
+    line-height: normal;
+    padding: 0 var(--spacing-s);
+    width: 100%;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0px;
+    margin-bottom: var(--spacing-m);
+
+    td {
+      border-top: 2px var(--color-black-20) solid;
+      border-bottom: 2px var(--color-black-20) solid;
+      padding-top: var(--spacing-m);
+      padding-left: var(--spacing-m);
+      @media (max-width: 768px) {
+        border: 2px var(--color-black-20) solid;
+      }
+    }
+    td.webform-multiple-table--operations {
+      border-top: 2px var(--color-black-20) solid;
+      border-bottom: 2px var(--color-black-20) solid;
+      padding-top: var(--spacing-m);
+      padding-left: var(--spacing-m);
+      @media (max-width: 768px) {
+        border: 2px var(--color-black-20) solid;
+        background: white;
+        padding: 10px 5px 5px;
+      }
+    }
+    td:first-child {
+      border-left: 2px var(--color-black-20) solid;
+    }
+    td:last-child {
+      border-right: 2px var(--color-black-20) solid;
+      padding-right: var(--spacing-m);
+    }
+  }
+}

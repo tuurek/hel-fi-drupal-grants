@@ -1,0 +1,6 @@
+summation_field:
+  version: 1.x
+  js:
+    js/summation_field.js: {}
+  depencies:
+    - core/jquery

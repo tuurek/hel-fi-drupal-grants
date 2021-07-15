@@ -1,3 +1,35 @@
+.js-form-type-webform-table {
+  table {
+    width: 100%;
+  }
+  th {
+    text-align: left;
+  }
+  td {
+    vertical-align: middle;
+    > div {
+      margin-bottom: 0;
+      height: auto;
+      label {
+        margin: -1px;
+      }
+    }
+
+  }
+  .hds-text-input label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  .hds-checkbox label.hds-checkbox__label::after {
+    content: '';
+  }
+}
 .webform-section-flex-wrapper {
 
   display: flex;

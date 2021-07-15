@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Webform Summation Field module.
+ */
+
+use Drupal\webform\Entity\WebformSubmission;
+
+/**
+ * Implements hook_theme().
+ */
+function grants_webform_summation_field_theme() {
+
+  $info = [
+    'grants_webform_summation_field' => [
+      'render element' => 'element',
+    ],
+  ];
+
+  return $info;
+}
+
+ /**
+ * Implements hook_page_attachments().
+ */
+function grants_webform_summation_field_page_attachments(array &$page) {
+  $page['#attached']['drupalSettings']['myname'] = 'himanshu';
+}
+
+/**
+ * Implements hook_webform_submission_presave().
+ */
+function grants_webform_summation_field_webform_submission_presave(WebformSubmission $webform_submission) {
+  $grants_webform_summation_field_key = '';
+  $grants_webform_summation_field_collect_fields = [];
+  $webform = $webform_submission->getWebform();
+  $webform_fields = $webform->getElementsDecoded();
+
+  foreach ($webform_fields as $key => $value) {
+    if (isset($value['#type']) && $value['#type'] == 'grants_webform_summation_field') {
+      $grants_webform_summation_field_key = $key;
+      $grants_webform_summation_field_collect_fields = $value['#collect_field'];
+      break;
+    }
+  }
+
+  if ($grants_webform_summation_field_key) {
+    $data = $webform_submission->getData();
+    $result = 0;
+    foreach ($data as $key => $value) {
+      if (in_array($key, $grants_webform_summation_field_collect_fields)) {
+        $result .= $value;
+      }
+    }
+    $data[$grants_webform_summation_field_key] = $result;
+    $webform_submission->setData($data);
+    $webform_submission->setElementData($grants_webform_summation_field_key, $result);
+    $webform->invokeHandlers('overrideSettings', $webform_submission);
+
+  }
+}
