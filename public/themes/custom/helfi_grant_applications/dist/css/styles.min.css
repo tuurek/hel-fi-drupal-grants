@@ -2305,9 +2305,11 @@ input[type=submit].hds-button--small {
   color: #121212;
   color: var(--hdbt-color-black);
   border-radius: 0; }
-  .tippy-box .webform-element-help--content a:link, .tippy-box .webform-element-help--content a:visited, .tippy-box .webform-element-help--content a:active, .tippy-box .webform-element-help--content a:hover {
-    color: #121212;
-    color: var(--hdbt-color-black); }
+  .tippy-box .webform-element-help--content {
+    white-space: normal; }
+    .tippy-box .webform-element-help--content a:link, .tippy-box .webform-element-help--content a:visited, .tippy-box .webform-element-help--content a:active, .tippy-box .webform-element-help--content a:hover {
+      color: #121212;
+      color: var(--hdbt-color-black); }
 
 .tippy-arrow {
   color: var(--color-black-5); }

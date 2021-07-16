@@ -9,12 +9,18 @@
   padding: var(--spacing-s);
   color: var(--hdbt-color-black);
   border-radius: 0;
-  .webform-element-help--content a {
-    &:link, &:visited, &:active, &:hover {
-      color: var(--hdbt-color-black);
+  .webform-element-help--content {
+    white-space: normal;
+
+    a {
+      &:link,
+      &:visited,
+      &:active,
+      &:hover {
+        color: var(--hdbt-color-black);
+      }
     }
   }
-
 }
 .tippy-arrow {
   color: var(--color-black-5);
