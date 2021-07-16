@@ -1,0 +1,17 @@
+# Finnish translation of for grant applications config
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Webform (8.x-5.25)\n"
+"POT-Creation-Date: 2021-03-03 17:46+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Language-Team: Finnish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "Information message"
+msgstr "Huom"
+msgid "No items entered. Please add items below."
+msgstr "Ei syötettyjä arvoja. Lisää uusi sisältö alta."
