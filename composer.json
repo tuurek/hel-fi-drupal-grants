@@ -9,8 +9,11 @@
     "require": {
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
+        "dompdf/dompdf": "^1.0",
         "druidfi/omen": "^0.2.0",
         "drupal/api_tools": "^1.0",
+        "drupal/config_filter": "^2.2",
+        "drupal/config_ignore": "^2.3",
         "drupal/core-composer-scaffold": "^9.1",
         "drupal/core-recommended": "^9.1",
         "drupal/devel": "^4.1",
@@ -25,7 +28,10 @@
         "drupal/menu_link_attributes": "^1.2",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
-        "drush/drush": "^10.4"
+        "drush/drush": "^10.4",
+        "mikehaertl/phpwkhtmltopdf": "~2.1",
+        "tecnickcom/tcpdf": "~6",
+	"drupal/entity_print": "dev-dogit-3227262-8.x-2.x as 2.2"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
@@ -87,6 +93,10 @@
             "type": "composer",
             "url": "https://repository.drupal.hel.ninja"
         },
+	{
+	    "type": "vcs",
+	    "url": "https://git.drupalcode.org/issue/entity_print-3217497"
+	},
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"

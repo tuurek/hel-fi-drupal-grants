@@ -6,6 +6,7 @@
 $settings['cache']['bins']['render'] = 'cache.backend.null';
 $settings['cache']['bins']['page'] = 'cache.backend.null';
 $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
+$settings['file_public_base_url'] = 'https://hel-fi-drupal-grant-applications.docker.so/sites/default/files';
 
 $settings['skip_permissions_hardening'] = TRUE;
 

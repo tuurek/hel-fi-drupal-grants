@@ -333,7 +333,7 @@ third_party_settings:
     export_types:
       pdf:
         enabled: true
-        link_text: 'Lataa PDF'
+        link_text: 'Download PDF'
         link_attributes:
           class:
             - button
