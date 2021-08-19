@@ -68,7 +68,11 @@ elements: |-
           avustuslajit_taulukko_01_yleisavustus:
             '#type': checkbox
             '#title': Yleisavustus
+            '#disabled': true
             '#required': true
+            '#default_value': true
+            '#attributes':
+              checked: true
           yleisavustus_summa:
             '#type': textfield
             '#title': 'Yleisavustus, haettava summa (vuodelle, jolle haetaan avustusta)'
