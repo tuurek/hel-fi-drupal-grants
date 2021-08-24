@@ -1,0 +1,83 @@
+uuid: eeec575c-618d-48d3-83d4-751f35730022
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.user.user.field_kotipaikka
+    - field.field.user.user.field_lyhenne
+    - field.field.user.user.field_perustamisvuosi
+    - field.field.user.user.field_rekisterointipaiva
+    - field.field.user.user.field_virallinen_nimi
+    - field.field.user.user.field_y_tunnus
+  module:
+    - datetime
+    - path
+    - user
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  account:
+    weight: -10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_kotipaikka:
+    weight: 34
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_lyhenne:
+    weight: 36
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_perustamisvuosi:
+    weight: 33
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_rekisterointipaiva:
+    weight: 35
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_virallinen_nimi:
+    weight: 32
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_y_tunnus:
+    weight: 31
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  language:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
