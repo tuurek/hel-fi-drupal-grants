@@ -46,6 +46,7 @@ module:
   helfi_languages: 0
   helfi_media: 0
   helfi_platform_config: 0
+  helfi_tunnistamo: 0
   image: 0
   image_style_quality: 0
   language: 0
@@ -65,6 +66,7 @@ module:
   metatag_views: 0
   migrate: 0
   node: 0
+  openid_connect: 0
   options: 0
   paragraphs_asymmetric_translation_widgets: 0
   path: 0
