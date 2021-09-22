@@ -1,7 +1,9 @@
 uuid: 2c6da593-88ba-471f-a46e-8a13b6143431
 langcode: fi
 status: open
-dependencies: {  }
+dependencies:
+  module:
+    - grants_handler
 open: null
 close: null
 weight: 0
@@ -416,16 +418,16 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: page
+  confirmation_type: inline
   confirmation_title: ''
   confirmation_message: ''
-  confirmation_url: ''
+  confirmation_url: 'https://hel-fi-form-tool.docker.so/fi/kiitos-lomakkeen-tayttamisesta'
   confirmation_attributes: {  }
   confirmation_back: true
   confirmation_back_label: ''
   confirmation_back_attributes: {  }
-  confirmation_exclude_query: false
-  confirmation_exclude_token: false
+  confirmation_exclude_query: true
+  confirmation_exclude_token: true
   confirmation_update: false
   limit_total: null
   limit_total_interval: null
@@ -495,5 +497,16 @@ access:
     roles: {  }
     users: {  }
     permissions: {  }
-handlers: {  }
+handlers:
+  grants_handler:
+    id: grants_handler
+    label: 'Grants Handler'
+    notes: ''
+    handler_id: grants_handler
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      endpoint: 'This is a custom endpoint.'
+      debug: true
 variants: {  }

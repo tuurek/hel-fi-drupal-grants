@@ -30,6 +30,8 @@ module:
   focal_point: 0
   gin_toolbar: 0
   grant_applications_config: 0
+  grants_handler: 0
+  grants_metadata: 0
   grants_user_fields: 0
   grants_webform_summation_field: 0
   hal: 0
