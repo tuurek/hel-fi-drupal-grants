@@ -1,0 +1,12 @@
+name: 'Grant Applications: Form Metadata'
+type: module
+description: 'Creates additional fields for the Grant Applications forms'
+package: 'Hel.fi'
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - 'webform:webform'
+
+# Information added by Drupal.org packaging script on 2021-05-05
+version: '6.0.3'
+project: 'webform'
+datestamp: 1620250261

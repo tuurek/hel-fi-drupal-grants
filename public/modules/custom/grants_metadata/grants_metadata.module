@@ -1,0 +1,35 @@
+<?php
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
+
+function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'webform_settings_form' || $form_id == 'webform_add_form' || $form_id == 'webform_duplicate_form') {
+    $bundle = $form_state->getFormObject()->getEntity();
+    // Because hidden by default.
+    $form["third_party_settings"]["#access"] = true;
+    $form['third_party_settings']['#tree'] = TRUE;
+
+    $form['third_party_settings']['#title'] = t('Application Metadata');
+
+    $form['third_party_settings']['grant_metadata'] = [
+        '#type' => 'details',
+        '#title' => t('Application details'),
+        '#open' => true,
+        '#input' => false,
+      ];
+
+    $form['third_party_settings']['grant_metadata']['applicationType'] = [
+      '#type' => 'textfield',
+      '#title' => t('Application Type'),
+      '#default_value' => $bundle->getThirdPartySetting('grant_metadata', 'applicationType'),
+      '#required' => TRUE,
+    ];
+
+    $form['third_party_settings']['grant_metadata']['applicationTypeID'] = [
+      '#type' => 'textfield',
+      '#title' => t('Application Type ID'),
+      '#default_value' => $bundle->getThirdPartySetting('grant_metadata', 'applicationTypeID'),
+      '#required' => TRUE,
+    ];
+  }
+}

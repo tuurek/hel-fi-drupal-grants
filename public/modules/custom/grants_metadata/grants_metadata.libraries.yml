@@ -1,0 +1,7 @@
+form_tool_contact_info:
+  version: VERSION
+  css:
+    theme:
+      css/form_tool_contact_info.css: {}
+  dependencies:
+    - webform/webform.composite
