@@ -1,0 +1,18 @@
+uuid: 677e4ffa-e338-4d75-a327-f8a4bfc53bfc
+langcode: fi
+status: true
+dependencies:
+  config:
+    - node.type.address
+id: node.address.title
+field_name: title
+entity_type: node
+bundle: address
+label: Osoite
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

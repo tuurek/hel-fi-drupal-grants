@@ -123,9 +123,9 @@ elements: |-
         '#options':
           Kyllä: Kyllä
           Ei: Ei
-      haettu_avustus:
+      myonnetty_avustus:
         '#type': webform_custom_composite
-        '#title': 'Haettu avustus'
+        '#title': 'Myönnetty avustus'
         '#title_display': before
         '#multiple__header': false
         '#multiple__empty_items': 0
@@ -160,6 +160,10 @@ elements: |-
             '#type': textarea
             '#title': 'Kuvaus käyttötarkoituksesta'
             '#help': 'Anna lyhyt kuvaus, mihin tarkoitukseen avustus on myönnetty?'
+            '#maxlength': 500
+            '#counter_type': character
+            '#counter_maximum': 500
+            '#counter_maximum_message': '%d/500 merkkiä jäljellä'
     muut_samaan_tarkoitukseen_haetut_avustukset:
       '#type': webform_section
       '#title': 'Muut samaan tarkoitukseen haetut avustukset'
@@ -200,6 +204,9 @@ elements: |-
             '#type': textfield
             '#required': true
             '#title': Vuosi
+            '#maxlength': 4
+            '#pattern': '^[0-9]*$'
+            '#pattern_error': 'Vain numeroita'
           summa:
             '#type': textfield
             '#required': true

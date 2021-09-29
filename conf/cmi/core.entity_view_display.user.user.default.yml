@@ -3,6 +3,7 @@ langcode: fi
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_address
     - field.field.user.user.field_kotipaikka
     - field.field.user.user.field_lyhenne
     - field.field.user.user.field_perustamisvuosi
@@ -17,6 +18,14 @@ targetEntityType: user
 bundle: user
 mode: default
 content:
+  field_address:
+    weight: 12
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_kotipaikka:
     weight: 9
     label: above

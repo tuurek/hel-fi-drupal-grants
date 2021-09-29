@@ -1,0 +1,21 @@
+uuid: 17c9b459-492d-4758-9c91-973c66c35421
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_zip_code
+field_name: field_zip_code
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

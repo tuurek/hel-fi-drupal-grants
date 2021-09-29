@@ -1,0 +1,55 @@
+uuid: b0bbf8d3-8cb3-4c5c-8ec2-7b034e1fea29
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.node.address.field_city
+    - field.field.node.address.field_contact_person
+    - field.field.node.address.field_stre
+    - field.field.node.address.field_zip_code
+    - node.type.address
+  module:
+    - user
+id: node.address.default
+targetEntityType: node
+bundle: address
+mode: default
+content:
+  field_city:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_contact_person:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_stre:
+    weight: 3
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_zip_code:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  links: true

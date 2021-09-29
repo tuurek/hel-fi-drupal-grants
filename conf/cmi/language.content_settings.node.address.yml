@@ -1,0 +1,11 @@
+uuid: 3a346f28-9078-46bc-90b1-2eaf5763e9e2
+langcode: fi
+status: true
+dependencies:
+  config:
+    - node.type.address
+id: node.address
+target_entity_type_id: node
+target_bundle: address
+default_langcode: site_default
+language_alterable: false

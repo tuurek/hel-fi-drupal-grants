@@ -3,6 +3,7 @@ langcode: fi
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_address
     - field.field.user.user.field_kotipaikka
     - field.field.user.user.field_lyhenne
     - field.field.user.user.field_perustamisvuosi
@@ -22,6 +23,16 @@ content:
     weight: -10
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_address:
+    weight: 37
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_kotipaikka:
     weight: 34

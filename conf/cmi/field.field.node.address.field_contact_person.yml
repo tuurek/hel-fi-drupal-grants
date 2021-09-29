@@ -1,0 +1,19 @@
+uuid: e29b9b6e-bfbf-4ee8-8f23-bcaf70327afa
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_contact_person
+    - node.type.address
+id: node.address.field_contact_person
+field_name: field_contact_person
+entity_type: node
+bundle: address
+label: 'Henkilö, jolle posti osoitetaan'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,60 @@
+uuid: 00e0bb5d-e1fc-4eb9-a103-8be852fa819c
+langcode: fi
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.address.field_city
+    - field.field.node.address.field_contact_person
+    - field.field.node.address.field_stre
+    - field.field.node.address.field_zip_code
+    - node.type.address
+  module:
+    - user
+id: node.address.teaser
+targetEntityType: node
+bundle: address
+mode: teaser
+content:
+  field_city:
+    type: string
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_contact_person:
+    type: string
+    weight: 3
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_stre:
+    type: string
+    weight: 0
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_zip_code:
+    type: string
+    weight: 2
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  links:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true

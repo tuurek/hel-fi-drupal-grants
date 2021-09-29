@@ -11,6 +11,7 @@ module:
   config_replace: 0
   config_translation: 0
   config_update: 0
+  content_access: 0
   crop: 0
   ctools: 0
   datetime: 0

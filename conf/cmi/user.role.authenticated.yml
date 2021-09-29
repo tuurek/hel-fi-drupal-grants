@@ -10,7 +10,9 @@ weight: 1
 is_admin: false
 permissions:
   - 'access content'
+  - 'delete own address content'
   - 'display eu cookie compliance popup'
+  - 'edit own address content'
   - 'use text format full_html'
   - 'view media'
   - 'view remote entities'
