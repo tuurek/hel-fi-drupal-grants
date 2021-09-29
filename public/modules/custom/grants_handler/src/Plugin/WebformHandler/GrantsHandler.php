@@ -9,6 +9,7 @@ use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Webform example handler.
@@ -116,8 +117,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
+  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {    $this->debug(__FUNCTION__);
     if ($value = $form_state->getValue('element')) {
       $form_state->setErrorByName('element', $this->t('The element must be empty. You entered %value.', ['%value' => $value]));
     }
@@ -133,24 +134,29 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $endpoint = $this->configuration['endpoint'];
-    $endpoint = $this->replaceTokens($endpoint, $this->getWebformSubmission());
+  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
+    $endpoint = getEnv('AVUSTUS2_ENDPOINT');
+    $username = getEnv('AVUSTUS2_USERNAME');
+    $password = getEnv('AVUSTUS2_PASSWORD');
+    $applicationType = $form_state->getFormObject()->getEntity()->getWebform()->getThirdPartySetting('grant_metadata', 'applicationType');
+    $applicationTypeID = $form_state->getFormObject()->getEntity()->getWebform()->getThirdPartySetting('grant_metadata', 'applicationTypeID');
 
-    $applicationType = "ECONOMICGRANTAPPLICATION";
-    $applicationTypeID = 29;
+    $applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
 
-    $applicationNumber = "59595-JSON-VERSION-1";
+    // Check
     $status = "Vastaanotettu";
 
-    $actingYear = 2021;
+    $actingYear = $form_state->getValue('actingYear');
 
+    // Check
     $contactPerson = "Teemu Testaushenkilö";
     $street = "Annankatu 18 Ö 905";
     $city = "Helsinki";
     $postCode = "00120";
     $country = "Suomi";
 
+    // Check
     $applicantType = "2";
     $companyNumber = "5647641-1";
     $communityOfficialName = "TietoTesti Kh yleis 001 10062021";
@@ -161,52 +167,90 @@ class GrantsHandler extends WebformHandlerBase {
     $webpage = "www.ttry.fi";
     $email = "tsto@ttry.fi";
 
+    // Check
     $applicantOfficials = [
       ['name' => 'nimi', 'role' => '1', 'email' => 'tsto@ttry.fi', 'phone' => '1234'],
       ['name' => 'nimi2', 'role' => '2', 'email' => 'tsto2@ttry.fi', 'phone' => '1234']
     ];
 
+    // Check
     $accountNumber = "FI9640231442000454";
 
+    // Check
     $compensationTotalAmount = "14387.00";
-    $compensationPurpose = "Käyttötarkoituksenamme on se että ... kts. liite 10.";
-    $compensationExplanation = "Emme saaneet viime vuonna avustusta lainkaan.";
 
-    $compensations = [
-      ['subventionType' => '2', 'amount' => '2342.40'],
-      ['subventionType' => '3', 'amount' => '3342.40']
-    ];
+    $compensationPurpose = $form_state->getValue('compensationPurpose');
+    $compensationExplanation = $form_state->getValue('compensationExplanation');
 
-    $otherCompensations = [
-      ['issuer' => "5", "issuerName" => "Joku Säätiö Sr.", 'year' => "2021", 'amount' => 2800, 'purpose' => "Matkakuluihin ja muihin ylimääräisiin menoihin."]
-    ];
+    $compensations = [];
+    if ($form_state->getValue('subventionType1') == 1) {
+      $compensations[] = ['subventionType' => '1', 'amount' => $form_state->getValue('subventionType1Sum')];
+    }
+    if ($form_state->getValue('subventionType2') == 1) {
+      $compensations[] = ['subventionType' => '2', 'amount' => $form_state->getValue('subventionType2Sum')];
+    }
+    if ($form_state->getValue('subventionType3') == 1) {
+      $compensations[] = ['subventionType' => '3', 'amount' => $form_state->getValue('subventionType3Sum')];
+    }
+    if ($form_state->getValue('subventionType4') == 1) {
+      $compensations[] = ['subventionType' => '4', 'amount' => $form_state->getValue('subventionType4Sum')];
+    }
+    if ($form_state->getValue('subventionType5') == 1) {
+      $compensations[] = ['subventionType' => '5', 'amount' => $form_state->getValue('subventionType5Sum')];
+    }
+    if ($form_state->getValue('subventionType6') == 1) {
+      $compensations[] = ['subventionType' => '6', 'amount' => $form_state->getValue('subventionType6Sum')];
+    }
+
+    $otherCompensations = [];
+
+    foreach ($values['haettu_avustus'] as $otherCompensationsArrays) {
+      foreach ($otherCompensationsArrays as $otherCompensationsArray) {
+        $otherCompensations[] = [
+          'issuer' => (int) $otherCompensationsArray['issuer'],
+          'issuerName' => $otherCompensationsArray['issuerName'],
+          'year' => $otherCompensaitonsArray['year'],
+          'amount' => $otherCompensationsArray['amount'],
+          'purpose' => $otherCompensationsArray['purpose'],
+        ];
+      }
+    }
+
+    // Check
     $otherCompensationsTotal = "2800.0";
 
-    $benefitsPremises = "ei ole mitään tiloja kaupungilta käytössämme";
-    $benefitsLoans = "ei ole myöskään lainoja taikka takauksia";
+    $benefitsPremises = $form_state->getValue('benefitsPremises');
+    $benefitsLoans = $form_state->getValue('benefitsLoans');
 
+    // Check
     $businessPurpose = "Meidän toimintamme tarkoituksena on että ...";
     $communityPracticesBusiness = "false";
     $membersApplicantPersonGlobal = 50;
     $membersApplicantPersonLocal = 45;
+    $membersApplicantCommunityLocal = 1;
+    $membersApplicantCommunityGlobal = 1;
     $membersSubdivisionPersonGlobal = 20;
     $membersSubdivisionCommunityGlobal = 2;
     $membersSubdivisionPersonLocal = 10;
     $membersSubdivisionCommunityLocal = 1;
+
     $membersSubcommunityPersonGlobal = 3;
     $membersSubcommunityCommunityGlobal = 3;
     $membersSubcommunityPersonLocal = 29;
     $membersSubcommunityCommunityLocal = 3;
     $feePerson = 32;
     $feeCommunity = 32;
-    $additionalInformation = "Tällä kertaa ei ole muuta ilmoitettavaa tähän hakemukseen";
 
+    $additionalInformation = $form_state->getValue('additionalInformation');;
+
+    // Check
     $senderInfoFirstname = "Testaaja";
     $senderInfoLastname = "Tiina";
     $senderInfoPersonID = "123456-7890";
     $senderInfoUserID = "Testatii";
     $senderInfoEmail = "tiina.testaaja@testiyhdistys.fi";
 
+    // Check
     $attachments = [[
       'description' => "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
       'filename' => "01_pankin_ilmoitus_tilinomistajast_.docx",
@@ -515,6 +559,18 @@ class GrantsHandler extends WebformHandlerBase {
 				"valueType" => "int"
         ],
         (object) [
+          "ID" => "membersApplicantCommunityGlobal",
+          "label" => "Hakijayhteisö, yhteisöjäseniä",
+          "value" => $membersApplicantCommunityGlobal,
+          "valueType" => "int"
+        ],
+        (object) [
+          "ID" => "membersApplicantCommunityLocal",
+          "label" => "Hakijayhteisö, helsinkiläisiä yhteisöjäseniä",
+          "value" => $membersApplicantCommunityLocal,
+          "valueType" => "int"
+        ],
+        (object) [
 				"ID" => "membersSubdivisionPersonGlobal",
 				"label" => "Alayhdistykset, henkilöjäseniä",
 				"value" => $membersSubdivisionPersonGlobal,
@@ -644,16 +700,22 @@ class GrantsHandler extends WebformHandlerBase {
       ]
     ];
   }
-
     $attachmentsInfoObject = [
       "attachmentsArray" => $attachmentsArray
     ];
     $submitObject = (object) ['compensation' => $compensationObject, 'attachmentsInfo' => $attachmentsInfoObject];
     $submitObject->attachmentsInfo = $attachmentsInfoObject;
     $submitObject->formUpdate = FALSE;
-    $myJSON = json_encode($submitObject);
+    $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
     $this->messenger()->addStatus(Markup::create($myJSON), FALSE);
+/*
 
+    $client = \Drupal::httpClient();
+    $request = $client->post($endpoint, [
+      'auth' => [$username, $password, "Basic"],
+      'body' => $myJSON,
+    ]);
+    */
     $this->debug(__FUNCTION__);
   }
 }

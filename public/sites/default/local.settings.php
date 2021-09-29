@@ -13,3 +13,7 @@ $settings['skip_permissions_hardening'] = TRUE;
 $config['system.performance']['css']['preprocess'] = 0;
 $config['system.performance']['js']['preprocess'] = 0;
 $config['system.logging']['error_level'] = 'some';
+
+putenv('AVUSTUS2_ENDPOINT=https://avustus-integration-dev.apps.arodevtest.hel.fi/apply');
+putenv('AVUSTUS2_USERNAME=avustusas1test');
+putenv('AVUSTUS2_PASSWORD=OJaMfvdWwFOwdR1n0aor');

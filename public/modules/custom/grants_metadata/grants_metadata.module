@@ -9,8 +9,6 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
     $form["third_party_settings"]["#access"] = true;
     $form['third_party_settings']['#tree'] = TRUE;
 
-    $form['third_party_settings']['#title'] = t('Application Metadata');
-
     $form['third_party_settings']['grant_metadata'] = [
         '#type' => 'details',
         '#title' => t('Application details'),

@@ -3,7 +3,23 @@ langcode: fi
 status: open
 dependencies:
   module:
+    - grants_metadata
     - grants_handler
+    - webform_entity_print
+third_party_settings:
+  webform_entity_print:
+    template:
+      header: ''
+      footer: ''
+      css: ''
+    export_types:
+      pdf:
+        enabled: true
+        link_text: ''
+        link_attributes: {  }
+  grant_metadata:
+    applicationType: ECONOMICGRANTAPPLICATION
+    applicationTypeID: '29'
 open: null
 close: null
 weight: 0
@@ -40,7 +56,7 @@ elements: |-
     avustuksen_tiedot:
       '#type': webform_section
       '#title': 'Avustuksen tiedot'
-      vuosi_jolle_haen_avustusta:
+      actingYear:
         '#type': datelist
         '#title': 'Vuosi, jolle haen avustusta'
         '#required': true
@@ -64,10 +80,10 @@ elements: |-
             attributes: {  }
           - title: 'Haettava summa (vuodelle, jolle haetaan avustusta)'
             attributes: {  }
-        avustuslajit_taulukko_01:
+        subventions:
           '#type': webform_table_row
           '#title': 'Avustuslajit (1)'
-          avustuslajit_taulukko_01_yleisavustus:
+          subventionsType1:
             '#type': checkbox
             '#title': Yleisavustus
             '#disabled': true
@@ -75,7 +91,7 @@ elements: |-
             '#default_value': true
             '#attributes':
               checked: true
-          yleisavustus_summa:
+          subventionsType1Sum:
             '#type': textfield
             '#title': 'Yleisavustus, haettava summa (vuodelle, jolle haetaan avustusta)'
             '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
@@ -86,7 +102,7 @@ elements: |-
     kayttotarkoitus:
       '#type': webform_section
       '#title': Käyttötarkoitus
-      lyhyt_kuvaus_haettavan_haettavien_avustusten_kayttotarkoituksist:
+      compensationPurpose:
         '#type': textarea
         '#title': 'Lyhyt kuvaus haettavan / haettavien avustusten käyttötarkoituksista'
         '#help': 'Kerro mit&auml; tarkoitusta varten avustusta haetaan, erittele tarvittaessa eri k&auml;ytt&ouml;kohteet. Kerro my&ouml;s mit&auml; avustuksella on tarkoitus saada aikaiseksi ja millaisia tavoitteita avustettavaan toimintaan liittyy.'
@@ -116,31 +132,31 @@ elements: |-
         '#multiple__sorting': false
         '#multiple__add_more_input': false
         '#element':
-          avustuksen_myontaja:
+          issuer:
             '#type': select
             '#options':
-              EU: EU
-              Muu: Muu
-              STEA: STEA
-              Säätiö: Säätiö
-              Valtio: Valtio
+              1: EU
+              2: Muu
+              3: STEA
+              4: Säätiö
+              5: Valtio
             '#required': true
             '#title': 'Avustuksen myöntäjä'
-          avustuksen_myontajan_nimi:
+          issuerName:
             '#type': textfield
             '#required': true
             '#title': 'Myöntäjän nimi'
             '#help': 'Mikä taho avustusta on myöntänyt (esim. ministeriön nimi)'
-          vuosi:
+          year:
             '#type': textfield
             '#required': true
             '#title': Vuosi
-          summa:
+          amount:
             '#type': textfield
             '#required': true
             '#title': 'Haetun avustuksen summa'
             '#placeholder': €
-          kuvaus:
+          purpose:
             '#type': textarea
             '#title': 'Kuvaus käyttötarkoituksesta'
             '#help': 'Anna lyhyt kuvaus, mihin tarkoitukseen avustus on myönnetty?'
@@ -168,11 +184,11 @@ elements: |-
           avustuksen_myontaja:
             '#type': select
             '#options':
-              EU: EU
-              Muu: Muu
-              STEA: STEA
-              Säätiö: Säätiö
-              Valtio: Valtio
+              1: EU
+              2: Muu
+              3: STEA
+              4: Säätiö
+              5: Valtio
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           avustuksen_myontajan_nimi:
@@ -199,7 +215,7 @@ elements: |-
       kaupungilta_saadut_1:
         '#type': webform_markup
         '#markup': 'Kaupungilta saaduista lainoista on mainittava alkuperäinen lainamäärä, jäljellä oleva lainamäärä, laina-aika, korkoprosentti ja mihin tarkoitukseen laina on myönnetty. Takauksista ilmoitetaan niiden raha-arvo ja tarkoitus.'
-      kuvaus_lainoista_ja_takauksista:
+      benefitsLoans:
         '#type': textarea
         '#title': 'Kuvaus lainoista ja takauksista'
         '#maxlength': 500
@@ -212,7 +228,7 @@ elements: |-
       tilate_1:
         '#type': webform_markup
         '#markup': 'Tilat, jotka kaupunki on antanut korvauksetta tai vuokrannut hakijan k&auml;ytt&ouml;&ouml;n (tilan nimi tai osoite, vuokran m&auml;&auml;r&auml; &euro;/kk)'
-      kuvaus_tiloihin_liittyvasta_tuesta:
+      benefitsPremises:
         '#type': textarea
         '#title': 'Kuvaus tiloihin liittyvästä tuesta'
         '#maxlength': 500
@@ -232,7 +248,7 @@ elements: |-
       markup:
         '#type': webform_markup
         '#markup': 'Anna k&auml;ytt&ouml;selvitys Helsingin kaupungilta saadusta avustuksesta. Avustuksen k&auml;ytt&ouml;selvitys tehd&auml;&auml;n avustuksesta, joka koskee viimeisint&auml; p&auml;&auml;ttynytt&auml; tilikautta. K&auml;ytt&ouml;selvityst&auml; ei tehd&auml; k&auml;ynniss&auml; olevalta tilikaudelta. K&auml;ytt&ouml;selvityksen antaminen on seuraavan avustuksen saamisen ehtona. Mik&auml;li k&auml;ytt&ouml;selvityst&auml; ei tehd&auml;, avustusta ei my&ouml;nnet&auml; eik&auml; makseta. My&ouml;nnetty avustus voidaan peri&auml; takaisin, jos edellisen avustuksen k&auml;ytt&ouml;&auml; ei ole hyv&auml;ksytt&auml;v&auml;sti selvitetty.'
-      selvitys_avustuksen_kaytosta:
+      compensationExplanation:
         '#type': textarea
         '#title': 'Selvitys avustuksen käytöstä'
         '#help': 'K&auml;ytt&ouml;selvityksess&auml; tulee kuvata lyhyesti, miten my&ouml;nnetty avustus on k&auml;ytetty. Avustuksen saajan on j&auml;rjestett&auml;v&auml; kirjanpitonsa niin, ett&auml; avustuksen k&auml;ytt&ouml;&auml; voidaan sielt&auml; seurata. Esimerkiksi jos yhteis&ouml; on saanut vuokra-avustusta, tilinp&auml;&auml;t&ouml;ksen tuloslaskelmasta tulee k&auml;yd&auml; ilmi avustuksen toteutuminen sek&auml; tuloissa ett&auml; menoissa. Lis&auml;&auml; tietoja avustuksen k&auml;yt&ouml;st&auml; voi my&ouml;s kirjoittaa erilliseen liitteeseen, jonka voi palauttaa K&auml;ytt&ouml;selvitys-liite kohdasta.'
@@ -300,7 +316,7 @@ elements: |-
     lisatietoja_hakemukseen_liittyen:
       '#type': webform_section
       '#title': 'Lisätietoja hakemukseen liittyen'
-      lisatiedot:
+      additionalInformation:
         '#type': textarea
         '#title': Lisätiedot
         '#help': 'T&auml;h&auml;n voit tarvittaessa kirjoittaa lis&auml;tietoja tai muita perusteluja hakemukseen liittyen tai ilmoittaa perustietoihin tulleista muutoksista&nbsp;'
