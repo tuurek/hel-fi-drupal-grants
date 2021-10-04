@@ -20,7 +20,7 @@ third_party_settings:
         enabled: true
         link_text: ''
         link_attributes: {  }
-  grant_metadata:
+  grants_metadata:
     applicationType: ECONOMICGRANTAPPLICATION
     applicationTypeID: '29'
 _core:

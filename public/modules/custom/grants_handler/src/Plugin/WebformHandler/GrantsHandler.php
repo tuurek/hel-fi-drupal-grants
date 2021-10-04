@@ -118,10 +118,9 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
-  {    $this->debug(__FUNCTION__);
-    if ($value = $form_state->getValue('element')) {
-      $form_state->setErrorByName('element', $this->t('The element must be empty. You entered %value.', ['%value' => $value]));
-    }
+  {
+
+    $this->debug(__FUNCTION__);
   }
 
   /**
@@ -147,7 +146,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Check
     $status = "Vastaanotettu";
 
-    $actingYear = $form_state->getValue('actingYear');
+    $actingYear = $form_state->getValue('acting_year');
 
     // Check
     $contactPerson = "Teemu Testaushenkilö";
@@ -177,71 +176,79 @@ class GrantsHandler extends WebformHandlerBase {
     $accountNumber = "FI9640231442000454";
 
     // Check
-    $compensationTotalAmount = "14387.00";
+    $compensationTotalAmount = 0;
 
-    $compensationPurpose = $form_state->getValue('compensationPurpose');
-    $compensationExplanation = $form_state->getValue('compensationExplanation');
+    $compensationPurpose = $form_state->getValue('compensation_purpose');
+    $compensationExplanation = $form_state->getValue('compensation_explanation');
 
     $compensations = [];
-    if ($form_state->getValue('subventionType1') == 1) {
-      $compensations[] = ['subventionType' => '1', 'amount' => $form_state->getValue('subventionType1Sum')];
+    if ($form_state->getValue('subvention_type_1') == 1) {
+      $compensations[] = ['subventionType' => '1', 'amount' => (float) $form_state->getValue('subvention_type_1_sum')];
+      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_1_sum');
     }
-    if ($form_state->getValue('subventionType2') == 1) {
-      $compensations[] = ['subventionType' => '2', 'amount' => $form_state->getValue('subventionType2Sum')];
+    if ($form_state->getValue('subvention_type_2') == 1) {
+      $compensations[] = ['subventionType' => '2', 'amount' => (float) $form_state->getValue('subvention_type_2_sum')];
+      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_2_sum');
     }
-    if ($form_state->getValue('subventionType3') == 1) {
-      $compensations[] = ['subventionType' => '3', 'amount' => $form_state->getValue('subventionType3Sum')];
+    if ($form_state->getValue('subvention_type_3') == 1) {
+      $compensations[] = ['subventionType' => '3', 'amount' => (float) $form_state->getValue('subvention_type_3_sum')];
+      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_3_sum');
     }
-    if ($form_state->getValue('subventionType4') == 1) {
-      $compensations[] = ['subventionType' => '4', 'amount' => $form_state->getValue('subventionType4Sum')];
+    if ($form_state->getValue('subvention_type_4') == 1) {
+      $compensations[] = ['subventionType' => '4', 'amount' => (float) $form_state->getValue('subvention_type_4_sum')];
+      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_4_sum');
     }
-    if ($form_state->getValue('subventionType5') == 1) {
-      $compensations[] = ['subventionType' => '5', 'amount' => $form_state->getValue('subventionType5Sum')];
+    if ($form_state->getValue('subvention_type_5') == 1) {
+      $compensations[] = ['subventionType' => '5', 'amount' => (float) $form_state->getValue('subvention_type_5_sum')];
+      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_5_sum');
     }
-    if ($form_state->getValue('subventionType6') == 1) {
-      $compensations[] = ['subventionType' => '6', 'amount' => $form_state->getValue('subventionType6Sum')];
+    if ($form_state->getValue('subvention_type_6') == 1) {
+      $compensations[] = ['subventionType' => '6', 'amount' => (float) $form_state->getValue('subvention_type_6_sum')];
+      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_6_sum');
     }
 
     $otherCompensations = [];
 
-    foreach ($values['haettu_avustus'] as $otherCompensationsArrays) {
-      foreach ($otherCompensationsArrays as $otherCompensationsArray) {
-        $otherCompensations[] = [
-          'issuer' => (int) $otherCompensationsArray['issuer'],
-          'issuerName' => $otherCompensationsArray['issuerName'],
-          'year' => $otherCompensaitonsArray['year'],
-          'amount' => $otherCompensationsArray['amount'],
-          'purpose' => $otherCompensationsArray['purpose'],
-        ];
+    $otherCompensationsTotal = 0;
+    foreach ($form_state->getValue('myonnetty_avustus')[0] as $values) {
+      foreach ($values['myonnetty_avustus'] as $otherCompensationsArrays) {
+        foreach ($otherCompensationsArrays as $otherCompensationsArray) {
+          $otherCompensations[] = [
+            'issuer' => (int) $otherCompensationsArray['issuer'],
+            'issuerName' => $otherCompensationsArray['issuer_name'],
+            'year' => $otherCompensationsArray['year'],
+            'amount' => (float) $otherCompensationsArray['amount'],
+            'purpose' => $otherCompensationsArray['purpose'],
+          ];
+          $otherCompensationsTotal += (float) $otherCompensationsArray['amount'];
+        }
       }
     }
 
-    // Check
-    $otherCompensationsTotal = "2800.0";
-
-    $benefitsPremises = $form_state->getValue('benefitsPremises');
-    $benefitsLoans = $form_state->getValue('benefitsLoans');
+    $benefitsPremises = $form_state->getValue('benefits_premises');
+    $benefitsLoans = $form_state->getValue('benefits_loans');
 
     // Check
     $businessPurpose = "Meidän toimintamme tarkoituksena on että ...";
     $communityPracticesBusiness = "false";
-    $membersApplicantPersonGlobal = 50;
-    $membersApplicantPersonLocal = 45;
-    $membersApplicantCommunityLocal = 1;
-    $membersApplicantCommunityGlobal = 1;
-    $membersSubdivisionPersonGlobal = 20;
-    $membersSubdivisionCommunityGlobal = 2;
-    $membersSubdivisionPersonLocal = 10;
-    $membersSubdivisionCommunityLocal = 1;
+    $membersApplicantPersonGlobal = $form_state->getValue('members_applicant_person_global');
+    $membersApplicantPersonLocal = $form_state->getValue('members_applicant_person_local');
+    $membersApplicantCommunityLocal = $form_state->getValue('members_applicant_community_local');
+    $membersApplicantCommunityGlobal = $form_state->getValue('members_applicant_community_global');
 
-    $membersSubcommunityPersonGlobal = 3;
-    $membersSubcommunityCommunityGlobal = 3;
-    $membersSubcommunityPersonLocal = 29;
-    $membersSubcommunityCommunityLocal = 3;
-    $feePerson = 32;
-    $feeCommunity = 32;
+    $membersSubdivisionPersonGlobal = 0;
+    $membersSubdivisionCommunityGlobal = 0;
+    $membersSubdivisionPersonLocal = 0;
+    $membersSubdivisionCommunityLocal = 0;
 
-    $additionalInformation = $form_state->getValue('additionalInformation');;
+    $membersSubcommunityPersonGlobal = 0;
+    $membersSubcommunityCommunityGlobal = 0;
+    $membersSubcommunityPersonLocal = 0;
+    $membersSubcommunityCommunityLocal = 0;
+    $feePerson = $form_state->getValue('fee_person');
+    $feeCommunity = $form_state->getValue('fee_community');
+
+    $additionalInformation = $form_state->getValue('additional_information');
 
     // Check
     $senderInfoFirstname = "Testaaja";
@@ -251,15 +258,17 @@ class GrantsHandler extends WebformHandlerBase {
     $senderInfoEmail = "tiina.testaaja@testiyhdistys.fi";
 
     // Check
-    $attachments = [[
-      'description' => "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
-      'filename' => "01_pankin_ilmoitus_tilinomistajast_.docx",
-      'filetype' => 1
-    ], [
-      'description' => "2 Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
-      'filename' => "02_pankin_ilmoitus_tilinomistajast_.docx",
-      'filetype' => 2
-    ]];
+    $attachments = [
+      [
+        'description' => "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
+        'filename' => "01_pankin_ilmoitus_tilinomistajast_.docx",
+        'filetype' => 1
+      ], [
+        'description' => "2 Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
+        'filename' => "02_pankin_ilmoitus_tilinomistajast_.docx",
+        'filetype' => 2
+      ],
+    ];
 
     $applicationInfoArray = [
       (object) [
@@ -302,7 +311,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $currentAddressInfoArray = [
       (object) [
-        "ID" =>  "contactPerson",
+        "ID" => "contactPerson",
         "label" => "Yhteyshenkilö",
         "value" => $contactPerson,
         "valueType" => "string"
