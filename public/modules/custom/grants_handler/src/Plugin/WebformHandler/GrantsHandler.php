@@ -210,19 +210,14 @@ class GrantsHandler extends WebformHandlerBase {
     $otherCompensations = [];
 
     $otherCompensationsTotal = 0;
-    foreach ($form_state->getValue('myonnetty_avustus')[0] as $values) {
-      foreach ($values['myonnetty_avustus'] as $otherCompensationsArrays) {
-        foreach ($otherCompensationsArrays as $otherCompensationsArray) {
-          $otherCompensations[] = [
-            'issuer' => (int) $otherCompensationsArray['issuer'],
-            'issuerName' => $otherCompensationsArray['issuer_name'],
-            'year' => $otherCompensationsArray['year'],
-            'amount' => (float) $otherCompensationsArray['amount'],
-            'purpose' => $otherCompensationsArray['purpose'],
-          ];
-          $otherCompensationsTotal += (float) $otherCompensationsArray['amount'];
-        }
-      }
+    foreach ($form_state->getValue('myonnetty_avustus') as $otherCompensationsArray) {
+      $otherCompensations[] = [
+        'issuer' => (int) $otherCompensationsArray['issuer'],
+        'issuerName' => $otherCompensationsArray['issuer_name'],
+        'year' => $otherCompensationsArray['year'],
+        'amount' => (float) $otherCompensationsArray['amount'],
+        'purpose' => $otherCompensationsArray['purpose'],
+      ];
     }
 
     $benefitsPremises = $form_state->getValue('benefits_premises');

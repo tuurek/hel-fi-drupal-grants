@@ -88,7 +88,7 @@ elements: |-
             '#title': Yleisavustus
             '#disabled': true
             '#required': true
-            '#default_value': true
+            '#return_value': Yleisavustus
             '#attributes':
               checked: true
           subventions_type_1_sum:
@@ -286,8 +286,8 @@ elements: |-
         '#type': textfield
         '#title': 'Henkilöjäsenen jäsenmaksu (€ / vuosi)'
         '#maxlength': 50
-        '#attributes':
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#attributes':
           class:
             - input--short
       fee_community:
