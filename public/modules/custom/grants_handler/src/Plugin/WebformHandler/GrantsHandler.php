@@ -149,27 +149,27 @@ class GrantsHandler extends WebformHandlerBase {
     $actingYear = $form_state->getValue('acting_year');
 
     // Check
-    $contactPerson = "Teemu Testaushenkilö";
-    $street = "Annankatu 18 Ö 905";
-    $city = "Helsinki";
-    $postCode = "00120";
-    $country = "Suomi";
+    $contactPerson = "(placeholder) Teemu Testaushenkilö";
+    $street = "(placeholder) Annankatu 18 Ö 905";
+    $city = "(placeholder) Helsinki";
+    $postCode = "(placeholder) 00120";
+    $country = "(placeholder) Suomi";
 
     // Check
-    $applicantType = "2";
-    $companyNumber = "5647641-1";
-    $communityOfficialName = "TietoTesti Kh yleis 001 10062021";
-    $communityOfficialNameShort = "TT ry";
-    $registrationDate = "2021-01-01T00:00:00.000Z";
-    $foundingYear = "2021";
-    $home = "Helsinki";
-    $webpage = "www.ttry.fi";
-    $email = "tsto@ttry.fi";
+    $applicantType = "(placeholder) 2";
+    $companyNumber = "(placeholder) 5647641-1";
+    $communityOfficialName = "(placeholder) TietoTesti Kh yleis 001 10062021";
+    $communityOfficialNameShort = "(placeholder) TT ry";
+    $registrationDate = "(placeholder) 2021-01-01T00:00:00.000Z";
+    $foundingYear = "(placeholder) 2021";
+    $home = "(placeholder) Helsinki";
+    $webpage = "(placeholder) www.ttry.fi";
+    $email = "(placeholder) tsto@ttry.fi";
 
     // Check
     $applicantOfficials = [
-      ['name' => 'nimi', 'role' => '1', 'email' => 'tsto@ttry.fi', 'phone' => '1234'],
-      ['name' => 'nimi2', 'role' => '2', 'email' => 'tsto2@ttry.fi', 'phone' => '1234']
+      ['name' => '(placeholder) nimi', 'role' => '1', 'email' => '(placeholder) tsto@ttry.fi', 'phone' => '1234'],
+      ['name' => '(placeholder) nimi2', 'role' => '2', 'email' => '(placeholder) tsto2@ttry.fi', 'phone' => '1234']
     ];
 
     // Check
@@ -224,8 +224,9 @@ class GrantsHandler extends WebformHandlerBase {
     $benefitsLoans = $form_state->getValue('benefits_loans');
 
     // Check
-    $businessPurpose = "Meidän toimintamme tarkoituksena on että ...";
+    $businessPurpose = "(placeholder) Meidän toimintamme tarkoituksena on että ...";
     $communityPracticesBusiness = "false";
+
     $membersApplicantPersonGlobal = $form_state->getValue('members_applicant_person_global');
     $membersApplicantPersonLocal = $form_state->getValue('members_applicant_person_local');
     $membersApplicantCommunityLocal = $form_state->getValue('members_applicant_community_local');
@@ -240,17 +241,17 @@ class GrantsHandler extends WebformHandlerBase {
     $membersSubcommunityCommunityGlobal = 0;
     $membersSubcommunityPersonLocal = 0;
     $membersSubcommunityCommunityLocal = 0;
-    $feePerson = $form_state->getValue('fee_person');
-    $feeCommunity = $form_state->getValue('fee_community');
+    $feePerson = (int) $form_state->getValue('fee_person');
+    $feeCommunity = (int) $form_state->getValue('fee_community');
 
     $additionalInformation = $form_state->getValue('additional_information');
 
     // Check
-    $senderInfoFirstname = "Testaaja";
-    $senderInfoLastname = "Tiina";
-    $senderInfoPersonID = "123456-7890";
-    $senderInfoUserID = "Testatii";
-    $senderInfoEmail = "tiina.testaaja@testiyhdistys.fi";
+    $senderInfoFirstname = "(placeholder) Testaaja";
+    $senderInfoLastname = "(placeholder) Tiina";
+    $senderInfoPersonID = "(placeholder) 123456-7890";
+    $senderInfoUserID = "(placeholder) Testatii";
+    $senderInfoEmail = "(placeholder) tiina.testaaja@testiyhdistys.fi";
 
     // Check
     $attachments = [
@@ -711,15 +712,13 @@ class GrantsHandler extends WebformHandlerBase {
     $submitObject->attachmentsInfo = $attachmentsInfoObject;
     $submitObject->formUpdate = FALSE;
     $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
-    $this->messenger()->addStatus(Markup::create($myJSON), FALSE);
-/*
 
     $client = \Drupal::httpClient();
     $request = $client->post($endpoint, [
       'auth' => [$username, $password, "Basic"],
       'body' => $myJSON,
     ]);
-    */
+
     $this->debug(__FUNCTION__);
   }
 }

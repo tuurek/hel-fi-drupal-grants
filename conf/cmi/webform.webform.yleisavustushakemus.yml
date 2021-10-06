@@ -88,9 +88,11 @@ elements: |-
             '#title': Yleisavustus
             '#disabled': true
             '#required': true
+            '#default_value': Yleisavustus
             '#return_value': Yleisavustus
             '#attributes':
               checked: true
+            '#format': raw
           subventions_type_1_sum:
             '#type': textfield
             '#title': 'Yleisavustus, haettava summa (vuodelle, jolle haetaan avustusta)'
