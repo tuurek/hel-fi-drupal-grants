@@ -88,7 +88,7 @@ elements: |-
             '#title': Yleisavustus
             '#disabled': true
             '#required': true
-            '#default_value': Yleisavustus
+            '#default_value': true
             '#return_value': Yleisavustus
             '#attributes':
               checked: true

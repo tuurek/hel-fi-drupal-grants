@@ -253,11 +253,11 @@ class GrantsHandler extends WebformHandlerBase {
     $additionalInformation = $form_state->getValue('additional_information');
 
     // Check
-    $senderInfoFirstname = "(placeholder) Testaaja";
-    $senderInfoLastname = "(placeholder) Tiina";
-    $senderInfoPersonID = "(placeholder) 123456-7890";
-    $senderInfoUserID = "(placeholder) Testatii";
-    $senderInfoEmail = "(placeholder) tiina.testaaja@testiyhdistys.fi";
+    $senderInfoFirstname = "Tiina";
+    $senderInfoLastname = "Testaaja";
+    $senderInfoPersonID = "123456-7890";
+    $senderInfoUserID = "Testatii";
+    $senderInfoEmail = "tiina.testaaja@testiyhdistys.fi";
 
     // Check
     $attachments = [
