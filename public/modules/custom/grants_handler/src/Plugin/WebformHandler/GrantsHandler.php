@@ -138,6 +138,12 @@ class GrantsHandler extends WebformHandlerBase {
     $endpoint = getEnv('AVUSTUS2_ENDPOINT');
     $username = getEnv('AVUSTUS2_USERNAME');
     $password = getEnv('AVUSTUS2_PASSWORD');
+    if (!empty($this->configuration['debug'])) {
+      $t_args = [
+        '@endpoint' => $endpoint,
+      ];
+      $this->messenger()->addMessage($this->t('DEBUG: Endpoint:: @endpoint', $t_args));
+    }
     $applicationType = $form_state->getFormObject()->getEntity()->getWebform()->getThirdPartySetting('grant_metadata', 'applicationType');
     $applicationTypeID = $form_state->getFormObject()->getEntity()->getWebform()->getThirdPartySetting('grant_metadata', 'applicationTypeID');
 
@@ -718,6 +724,12 @@ class GrantsHandler extends WebformHandlerBase {
       'auth' => [$username, $password, "Basic"],
       'body' => $myJSON,
     ]);
+    if (!empty($this->configuration['debug'])) {
+      $t_args = [
+        '@response' => $request->getBody()->getContents(),
+      ];
+      $this->messenger()->addMessage($this->t('DEBUG: Response from the endpoint: @response', $t_args));
+    }
 
     $this->debug(__FUNCTION__);
   }
