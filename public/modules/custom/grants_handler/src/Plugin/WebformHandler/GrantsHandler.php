@@ -156,27 +156,27 @@ class GrantsHandler extends WebformHandlerBase {
     $actingYear = $form_state->getValue('acting_year');
 
     // Check
-    $contactPerson = "(placeholder) Teemu Testaushenkilö";
-    $street = "(placeholder) Annankatu 18 Ö 905";
-    $city = "(placeholder) Helsinki";
-    $postCode = "(placeholder) 00120";
-    $country = "(placeholder) Suomi";
+    $contactPerson = "Teemu Testaushenkilö";
+    $street = "Annankatu 18 Ö 905";
+    $city = "Helsinki";
+    $postCode = "00120";
+    $country = "Suomi";
 
     // Check
-    $applicantType = "(placeholder) 2";
-    $companyNumber = "(placeholder) 5647641-1";
-    $communityOfficialName = "(placeholder) TietoTesti Kh yleis 001 10062021";
-    $communityOfficialNameShort = "(placeholder) TT ry";
-    $registrationDate = "(placeholder) 2021-01-01T00:00:00.000Z";
-    $foundingYear = "(placeholder) 2021";
-    $home = "(placeholder) Helsinki";
-    $webpage = "(placeholder) www.ttry.fi";
-    $email = "(placeholder) tsto@ttry.fi";
+    $applicantType = "2";
+    $companyNumber = "5647641-1";
+    $communityOfficialName = "TietoTesti Kh yleis 001 10062021";
+    $communityOfficialNameShort = "TT ry";
+    $registrationDate = "2021-01-01T00:00:00.000Z";
+    $foundingYear = "2021";
+    $home = "Helsinki";
+    $webpage = "www.ttry.fi";
+    $email = "tsto@ttry.fi";
 
     // Check
     $applicantOfficials = [
-      ['name' => '(placeholder) nimi', 'role' => '1', 'email' => '(placeholder) tsto@ttry.fi', 'phone' => '1234'],
-      ['name' => '(placeholder) nimi2', 'role' => '2', 'email' => '(placeholder) tsto2@ttry.fi', 'phone' => '1234']
+      ['name' => 'nimi', 'role' => '1', 'email' => 'tsto@ttry.fi', 'phone' => '1234'],
+      ['name' => 'nimi2', 'role' => '2', 'email' => 'tsto2@ttry.fi', 'phone' => '1234']
     ];
 
     // Check
@@ -231,7 +231,7 @@ class GrantsHandler extends WebformHandlerBase {
     $benefitsLoans = $form_state->getValue('benefits_loans');
 
     // Check
-    $businessPurpose = "(placeholder) Meidän toimintamme tarkoituksena on että ...";
+    $businessPurpose = "Meidän toimintamme tarkoituksena on että ...";
     $communityPracticesBusiness = "false";
 
     $membersApplicantPersonGlobal = $form_state->getValue('members_applicant_person_global');
