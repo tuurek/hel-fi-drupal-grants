@@ -126,7 +126,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
@@ -718,12 +719,14 @@ class GrantsHandler extends WebformHandlerBase {
     $submitObject->attachmentsInfo = $attachmentsInfoObject;
     $submitObject->formUpdate = FALSE;
     $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
-
+      echo $myJSON;
+      die();
     $client = \Drupal::httpClient();
     $request = $client->post($endpoint, [
       'auth' => [$username, $password, "Basic"],
       'body' => $myJSON,
     ]);
+
     if (!empty($this->configuration['debug'])) {
       $t_args = [
         '@response' => $request->getBody()->getContents(),
