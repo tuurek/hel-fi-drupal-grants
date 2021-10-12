@@ -134,7 +134,8 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+
+  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
   {
     $this->debug(__FUNCTION__);
   }
@@ -142,7 +143,7 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+    public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
   {
     $endpoint = getEnv('AVUSTUS2_ENDPOINT');
     $username = getEnv('AVUSTUS2_USERNAME');
@@ -161,7 +162,7 @@ class GrantsHandler extends WebformHandlerBase
     // Check
     $status = "Vastaanotettu";
 
-    $actingYear = $form_state->getValue('acting_year');
+    $actingYear = "".$form_state->getValue('acting_year');
 
     // Check
     $contactPerson = "Teemu Testaushenkilö";
@@ -227,7 +228,7 @@ class GrantsHandler extends WebformHandlerBase
     $otherCompensationsTotal = 0;
     foreach ($form_state->getValue('myonnetty_avustus') as $otherCompensationsArray) {
       $otherCompensations[] = [
-        'issuer' => $otherCompensationsArray['issuer'],
+        'issuer' => "".$otherCompensationsArray['issuer'],
         'issuerName' => $otherCompensationsArray['issuer_name'],
         'year' => $otherCompensationsArray['year'],
         'amount' => $otherCompensationsArray['amount'],
@@ -235,7 +236,7 @@ class GrantsHandler extends WebformHandlerBase
       ];
       $otherCompensationsTotal += (float) $otherCompensationsArray['amount'];
     }
-    $otherCompensationsTotal = "".$otherCompensationsTotal;
+    $otherCompensationsTotal = $otherCompensationsTotal;
 
     $benefitsPremises = $form_state->getValue('benefits_premises');
     $benefitsLoans = $form_state->getValue('benefits_loans');
@@ -275,11 +276,11 @@ class GrantsHandler extends WebformHandlerBase
       [
         'description' => "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
         'filename' => "01_pankin_ilmoitus_tilinomistajast_.docx",
-        'filetype' => 1
+        'filetype' => "1"
       ], [
         'description' => "2 Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
         'filename' => "02_pankin_ilmoitus_tilinomistajast_.docx",
-        'filetype' => 2
+        'filetype' => "2"
       ],
     ];
 
@@ -729,6 +730,8 @@ class GrantsHandler extends WebformHandlerBase
       $submitObject->attachmentsInfo = $attachmentsInfoObject;
       $submitObject->formUpdate = FALSE;
       $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
+      echo $myJSON;
+      die();
       $client = \Drupal::httpClient();
       $request = $client->post($endpoint, [
         'auth' => [$username, $password, "Basic"],
