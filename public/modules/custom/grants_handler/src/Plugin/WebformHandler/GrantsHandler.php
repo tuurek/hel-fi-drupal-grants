@@ -135,7 +135,7 @@ class GrantsHandler extends WebformHandlerBase
    * {@inheritdoc}
    */
 
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
   {
     $this->debug(__FUNCTION__);
   }
@@ -143,7 +143,7 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-    public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
   {
     $endpoint = getEnv('AVUSTUS2_ENDPOINT');
     $username = getEnv('AVUSTUS2_USERNAME');
@@ -730,8 +730,6 @@ class GrantsHandler extends WebformHandlerBase
       $submitObject->attachmentsInfo = $attachmentsInfoObject;
       $submitObject->formUpdate = FALSE;
       $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
-      echo $myJSON;
-      die();
       $client = \Drupal::httpClient();
       $request = $client->post($endpoint, [
         'auth' => [$username, $password, "Basic"],
