@@ -719,8 +719,6 @@ class GrantsHandler extends WebformHandlerBase {
     $submitObject->attachmentsInfo = $attachmentsInfoObject;
     $submitObject->formUpdate = FALSE;
     $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
-      echo $myJSON;
-      die();
     $client = \Drupal::httpClient();
     $request = $client->post($endpoint, [
       'auth' => [$username, $password, "Basic"],
