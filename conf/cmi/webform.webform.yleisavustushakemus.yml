@@ -3,7 +3,6 @@ langcode: fi
 status: open
 dependencies:
   module:
-    - grant_metadata
     - grants_handler
     - grants_metadata
     - webform_entity_print
@@ -18,9 +17,6 @@ third_party_settings:
         enabled: true
         link_text: ''
         link_attributes: {  }
-  grants_metadata:
-    applicationType: ECONOMICGRANTAPPLICATION
-    applicationTypeID: '29'
   grant_metadata:
     applicationType: ECONOMICGRANTAPPLICATION
     applicationTypeID: '29'

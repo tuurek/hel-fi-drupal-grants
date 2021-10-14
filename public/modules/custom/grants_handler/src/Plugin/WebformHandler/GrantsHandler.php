@@ -199,27 +199,27 @@ class GrantsHandler extends WebformHandlerBase
     $compensations = [];
     if ($form_state->getValue('subvention_type_1') == 1) {
       $compensations[] = ['subventionType' => '1', 'amount' => $form_state->getValue('subvention_type_1_sum')];
-      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_1_sum');
+      $compensationTotalAmount += (double) $form_state->getValue('subvention_type_1_sum');
     }
     if ($form_state->getValue('subvention_type_2') == 1) {
       $compensations[] = ['subventionType' => '2', 'amount' => $form_state->getValue('subvention_type_2_sum')];
-      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_2_sum');
+      $compensationTotalAmount += (double) $form_state->getValue('subvention_type_2_sum');
     }
     if ($form_state->getValue('subvention_type_3') == 1) {
       $compensations[] = ['subventionType' => '3', 'amount' => $form_state->getValue('subvention_type_3_sum')];
-      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_3_sum');
+      $compensationTotalAmount += (double) $form_state->getValue('subvention_type_3_sum');
     }
     if ($form_state->getValue('subvention_type_4') == 1) {
       $compensations[] = ['subventionType' => '4', 'amount' => $form_state->getValue('subvention_type_4_sum')];
-      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_4_sum');
+      $compensationTotalAmount += (double) $form_state->getValue('subvention_type_4_sum');
     }
     if ($form_state->getValue('subvention_type_5') == 1) {
       $compensations[] = ['subventionType' => '5', 'amount' => $form_state->getValue('subvention_type_5_sum')];
-      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_5_sum');
+      $compensationTotalAmount += (double) $form_state->getValue('subvention_type_5_sum');
     }
     if ($form_state->getValue('subvention_type_6') == 1) {
       $compensations[] = ['subventionType' => '6', 'amount' => $form_state->getValue('subvention_type_6_sum')];
-      $compensationTotalAmount += (float) $form_state->getValue('subvention_type_6_sum');
+      $compensationTotalAmount += (double) $form_state->getValue('subvention_type_6_sum');
     }
 
     $compensationTotalAmount = $compensationTotalAmount."";
@@ -234,7 +234,7 @@ class GrantsHandler extends WebformHandlerBase
         'amount' => $otherCompensationsArray['amount'],
         'purpose' => $otherCompensationsArray['purpose'],
       ];
-      $otherCompensationsTotal += (float) $otherCompensationsArray['amount'];
+      $otherCompensationsTotal += (double) $otherCompensationsArray['amount'];
     }
     $otherCompensationsTotal = $otherCompensationsTotal;
 
@@ -259,8 +259,8 @@ class GrantsHandler extends WebformHandlerBase
     $membersSubcommunityCommunityGlobal = "0";
     $membersSubcommunityPersonLocal = "0";
     $membersSubcommunityCommunityLocal = "0";
-    $feePerson = $form_state->getValue('fee_person');
-    $feeCommunity = $form_state->getValue('fee_community');
+    $feePerson = (int) $form_state->getValue('fee_person');
+    $feeCommunity = (int) $form_state->getValue('fee_community');
 
     $additionalInformation = $form_state->getValue('additional_information');
 
