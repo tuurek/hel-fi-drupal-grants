@@ -222,13 +222,13 @@ class GrantsHandler extends WebformHandlerBase
       $compensationTotalAmount += (double) $form_state->getValue('subvention_type_6_sum');
     }
 
-    $compensationTotalAmount = $compensationTotalAmount."";
+    $compensationTotalAmount = $compensationTotalAmount . "";
     $otherCompensations = [];
 
     $otherCompensationsTotal = 0;
     foreach ($form_state->getValue('myonnetty_avustus') as $otherCompensationsArray) {
       $otherCompensations[] = [
-        'issuer' => "".$otherCompensationsArray['issuer'],
+        'issuer' => "" . $otherCompensationsArray['issuer'],
         'issuerName' => $otherCompensationsArray['issuer_name'],
         'year' => $otherCompensationsArray['year'],
         'amount' => $otherCompensationsArray['amount'],
@@ -288,7 +288,7 @@ class GrantsHandler extends WebformHandlerBase
       (object) [
         "ID" => "applicationType",
         "label" => "Hakemustyyppi",
-        "value" => $applicationType,
+        "value" => null,
         "valueType" => "string",
       ],
       (object) [
