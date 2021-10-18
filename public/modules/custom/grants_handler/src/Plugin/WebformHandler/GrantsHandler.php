@@ -793,7 +793,7 @@ class GrantsHandler extends WebformHandlerBase
       $this->messenger()->addMessage($this->t('DEBUG: Response from the endpoint: @response', $t_args));
     }
 
-    $this->debug(__FUNCTION__, $update ? 'update' : 'insert');
+    $this->debug(__FUNCTION__);
   }
 
   /**
