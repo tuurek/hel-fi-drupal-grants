@@ -135,63 +135,6 @@ class GrantsHandler extends WebformHandlerBase
    */
   public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
   {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preCreate(array &$values)
-  {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postCreate(WebformSubmissionInterface $webform_submission)
-  {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postLoad(WebformSubmissionInterface $webform_submission)
-  {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preDelete(WebformSubmissionInterface $webform_submission)
-  {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postDelete(WebformSubmissionInterface $webform_submission)
-  {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE)
-  {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(WebformSubmissionInterface $webform_submission)
-  {
-    $form = $webform_submission->getWebform();
     $endpoint = getenv('AVUSTUS2_ENDPOINT');
     $username = getenv('AVUSTUS2_USERNAME');
     $password = getenv('AVUSTUS2_PASSWORD');
@@ -201,8 +144,8 @@ class GrantsHandler extends WebformHandlerBase
       ];
       $this->messenger()->addMessage($this->t('DEBUG: Endpoint:: @endpoint', $t_args));
     }
-    $applicationType = $form->getThirdPartySetting('grant_metadata', 'applicationType');
-    $applicationTypeID = $form->getThirdPartySetting('grant_metadata', 'applicationTypeID');
+    $applicationType = $webform_submission->getWebform()->getThirdPartySetting('grant_metadata', 'applicationType');
+    $applicationTypeID = $webform_submission->getWebform()->getThirdPartySetting('grant_metadata', 'applicationTypeID');
 
     $applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
 
@@ -492,7 +435,7 @@ class GrantsHandler extends WebformHandlerBase
         ]
       ];
     }
-      $compensationArray = [];
+    $compensationArray = [];
 
     foreach ($compensations as $compensation) {
       $compensationArray[] = [
@@ -792,6 +735,63 @@ class GrantsHandler extends WebformHandlerBase
       ];
       $this->messenger()->addMessage($this->t('DEBUG: Response from the endpoint: @response', $t_args));
     }
+
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preCreate(array &$values)
+  {
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postCreate(WebformSubmissionInterface $webform_submission)
+  {
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postLoad(WebformSubmissionInterface $webform_submission)
+  {
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preDelete(WebformSubmissionInterface $webform_submission)
+  {
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postDelete(WebformSubmissionInterface $webform_submission)
+  {
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE)
+  {
+    $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(WebformSubmissionInterface $webform_submission)
+  {
 
     $this->debug(__FUNCTION__);
   }
