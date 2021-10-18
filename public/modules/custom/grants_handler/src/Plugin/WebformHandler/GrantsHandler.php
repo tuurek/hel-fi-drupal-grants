@@ -294,7 +294,7 @@ class GrantsHandler extends WebformHandlerBase
       (object) [
         "ID" => "applicationTypeID",
         "label" => "Hakemustyypin numero",
-        "value" => $applicationTypeID,
+        "value" => null,
         "valueType" => "int",
       ],
       (object) [
