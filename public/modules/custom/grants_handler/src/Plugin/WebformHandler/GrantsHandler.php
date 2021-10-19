@@ -2,14 +2,11 @@
 
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Markup;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 
 /**
  * Webform example handler.
@@ -27,9 +24,10 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 class GrantsHandler extends WebformHandlerBase
 {
 
-  private function grants_handler_convert_eur_to_double(string $value) {
+  private function grants_handler_convert_eur_to_double(string $value)
+  {
     $value = str_replace(['€', ' '], ['', ''], $value);
-    $value = (double) $value;
+    $value = (float) $value;
     return "" . $value;
   }
   /**
@@ -292,7 +290,7 @@ class GrantsHandler extends WebformHandlerBase
       (object) [
         "ID" => "formTimeStamp",
         "label" => "Hakemuksen/sanoman lähetyshetki",
-        "value" => gmdate("2020-12-25\TH:i:s.v\Z", $webform_submission->getCreatedTime()),
+        "value" => gmdate("Y-m-d\TH:i:s.v\Z", $webform_submission->getCreatedTime()),
         "valueType" => "datetime",
       ],
       (object) [
@@ -487,7 +485,6 @@ class GrantsHandler extends WebformHandlerBase
       "compensationArray" => $compensationArray,
 
     ];
-
 
     $otherCompesationsArray = [];
     foreach ($otherCompensations as $compensation) {
