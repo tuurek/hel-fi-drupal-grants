@@ -83,7 +83,7 @@ elements: |-
         subventions:
           '#type': webform_table_row
           '#title': 'Avustuslajit (1)'
-          subventions_type_1:
+          subventions_type_6:
             '#type': checkbox
             '#title': Yleisavustus
             '#disabled': true
@@ -93,13 +93,13 @@ elements: |-
             '#attributes':
               checked: true
             '#format': raw
-          subventions_type_1_sum:
+          subventions_type_6_sum:
             '#type': textfield
             '#title': 'Yleisavustus, haettava summa (vuodelle, jolle haetaan avustusta)'
             '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
             '#states':
               required:
-                ':input[name="subventions_type_1"]':
+                ':input[name="subventions_type_6"]':
                   checked: true
     kayttotarkoitus:
       '#type': webform_section

@@ -187,29 +187,125 @@ class GrantsHandler extends WebformHandlerBase
     $compensationExplanation = $values['compensation_explanation'];
 
     $compensations = [];
+    // Toiminta-avustus
     if (array_key_exists('subventions_type_1', $values) && $values['subventions_type_1'] == 1) {
       $compensations[] = ['subventionType' => '1', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_1_sum'])];
       $compensationTotalAmount += (float) $this->grants_handler_convert_eur_to_double($values['subventions_type_1_sum']);
     }
+    // Palkkausavustus
     if (array_key_exists('subventions_type_2', $values) && $values['subventions_type_2'] == 1) {
       $compensations[] = ['subventionType' => '2', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_2_sum'])];
       $compensationTotalAmount += (float) $values['subventions_type_2_sum'];
     }
-    if (array_key_exists('subventions_type_3', $values) && $values['subventions_type_3'] == 1) {
-      $compensations[] = ['subventionType' => '3', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_3_sum'])];
-      $compensationTotalAmount += (float) $values['subventions_type_3_sum'];
-    }
+    // Projektiavustus
     if (array_key_exists('subventions_type_4', $values) && $values['subventions_type_4'] == 1) {
       $compensations[] = ['subventionType' => '4', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_4_sum'])];
       $compensationTotalAmount += (float) $values['subventions_type_4_sum'];
     }
+    // Vuokra-avustus
     if (array_key_exists('subventions_type_5', $values) && $values['subventions_type_5'] == 1) {
       $compensations[] = ['subventionType' => '5', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_5_sum'])];
       $compensationTotalAmount += (float) $values['subventions_type_5_sum'];
     }
+    // Yleisavustus
     if (array_key_exists('subventions_type_6', $values) && $values['subventions_type_6'] == 1) {
       $compensations[] = ['subventionType' => '6', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_6_sum'])];
       $compensationTotalAmount += (float) $values['subventions_type_6_sum'];
+    }
+    // Työttömien koulutusavustus
+    if (array_key_exists('subventions_type_7', $values) && $values['subventions_type_7'] == 1) {
+      $compensations[] = ['subventionType' => '7', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_7_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_7_sum'];
+    }
+    // Korot ja lyhennykset
+    if (array_key_exists('subventions_type_8', $values) && $values['subventions_type_8'] == 1) {
+      $compensations[] = ['subventionType' => '8', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_8_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_8_sum'];
+    }
+    // Muu
+    if (array_key_exists('subventions_type_9', $values) && $values['subventions_type_9'] == 1) {
+      $compensations[] = ['subventionType' => '9', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_9_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_9_sum'];
+    }
+    // Leiriavustus
+    if (array_key_exists('subventions_type_12', $values) && $values['subventions_type_12'] == 1) {
+      $compensations[] = ['subventionType' => '12', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_12_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_12_sum'];
+    }
+    // Lisäavustus
+    if (array_key_exists('subventions_type_14', $values) && $values['subventions_type_14'] == 1) {
+      $compensations[] = ['subventionType' => '14', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_14_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_14_sum'];
+    }
+    // Suunnistuskartta-avustus
+    if (array_key_exists('subventions_type_15', $values) && $values['subventions_type_15'] == 1) {
+      $compensations[] = ['subventionType' => '15', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_15_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_15_sum'];
+    }
+    // Toiminnan kehittämisavustus
+    if (array_key_exists('subventions_type_17', $values) && $values['subventions_type_17'] == 1) {
+      $compensations[] = ['subventionType' => '17', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_17_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_17_sum'];
+    }
+    // Kehittämisavustukset / Helsingin malli
+    if (array_key_exists('subventions_type_29', $values) && $values['subventions_type_29'] == 1) {
+      $compensations[] = ['subventionType' => '29', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_29_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_29_sum'];
+    }
+    // Starttiavustus
+    if (array_key_exists('subventions_type_31', $values) && $values['subventions_type_31'] == 1) {
+      $compensations[] = ['subventionType' => '31', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_31_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_31_sum'];
+    }
+    // Tilankäyttöavustus
+    if (array_key_exists('subventions_type_32', $values) && $values['subventions_type_32'] == 1) {
+      $compensations[] = ['subventionType' => '32', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_32_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_32_sum'];
+    }
+    // Taiteen perusopetus
+    if (array_key_exists('subventions_type_34', $values) && $values['subventions_type_34'] == 1) {
+      $compensations[] = ['subventionType' => '34', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_34_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_34_sum'];
+    }
+    // Varhaiskasvatus
+    if (array_key_exists('subventions_type_35', $values) && $values['subventions_type_35'] == 1) {
+      $compensations[] = ['subventionType' => '35', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_35_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_35_sum'];
+    }
+    // Vapaa sivistystyö
+    if (array_key_exists('subventions_type_36', $values) && $values['subventions_type_36'] == 1) {
+      $compensations[] = ['subventionType' => '36', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_36_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_36_sum'];
+    }
+    // Tapahtuma-avustus
+    if (array_key_exists('subventions_type_37', $values) && $values['subventions_type_37'] == 1) {
+      $compensations[] = ['subventionType' => '37', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_37_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_37_sum'];
+    }
+    // Pienavustus
+    if (array_key_exists('subventions_type_38', $values) && $values['subventions_type_38'] == 1) {
+      $compensations[] = ['subventionType' => '38', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_38_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_38_sum'];
+    }
+    // Kotouttamisavustus
+    if (array_key_exists('subventions_type_39', $values) && $values['subventions_type_39'] == 1) {
+      $compensations[] = ['subventionType' => '39', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_39_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_39_sum'];
+    }
+    // Harrastushaku
+    if (array_key_exists('subventions_type_40', $values) && $values['subventions_type_40'] == 1) {
+      $compensations[] = ['subventionType' => '40', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_40_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_40_sum'];
+    }
+    // Laitosavustus
+    if (array_key_exists('subventions_type_41', $values) && $values['subventions_type_41'] == 1) {
+      $compensations[] = ['subventionType' => '41', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_41_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_41_sum'];
+    }
+    // Muiden liikuntaa edistävien yhteisöjen avustus
+    if (array_key_exists('subventions_type_42', $values) && $values['subventions_type_42'] == 1) {
+      $compensations[] = ['subventionType' => '42', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_42_sum'])];
+      $compensationTotalAmount += (float) $values['subventions_type_42_sum'];
     }
 
     $compensationTotalAmount = $compensationTotalAmount . "";
