@@ -21,12 +21,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   submission = \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
  * )
  */
-class GrantsHandler extends WebformHandlerBase {
+class GrantsHandler extends WebformHandlerBase
+{
 
   /**
-   *
+   * Convert EUR format value to to "double" .
    */
-  private function grants_handler_convert_eur_to_double(string $value) {
+  private function grantsHandlerConvertToFloat(string $value)
+  {
     $value = str_replace(['€', ' '], ['', ''], $value);
     $value = (float) $value;
     return "" . $value;
@@ -42,7 +44,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
+  {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->tokenManager = $container->get('webform.token_manager');
     return $instance;
@@ -51,7 +54,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration()
+  {
     return [
       'debug' => FALSE,
     ];
@@ -60,7 +64,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state)
+  {
     // Development.
     $form['development'] = [
       '#type' => 'details',
@@ -80,7 +85,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state)
+  {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['debug'] = (bool) $form_state->getValue('debug');
   }
@@ -88,28 +94,32 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function alterElements(array &$elements, WebformInterface $webform) {
+  public function alterElements(array &$elements, WebformInterface $webform)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function overrideSettings(array &$settings, WebformSubmissionInterface $webform_submission) {
+  public function overrideSettings(array &$settings, WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
 
     $this->debug(__FUNCTION__);
   }
@@ -117,14 +127,16 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
     $endpoint = getenv('AVUSTUS2_ENDPOINT');
     $username = getenv('AVUSTUS2_USERNAME');
     $password = getenv('AVUSTUS2_PASSWORD');
@@ -181,122 +193,194 @@ class GrantsHandler extends WebformHandlerBase {
     $compensations = [];
     // Toiminta-avustus.
     if (array_key_exists('subventions_type_1', $values) && $values['subventions_type_1'] == 1) {
-      $compensations[] = ['subventionType' => '1', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_1_sum'])];
-      $compensationTotalAmount += (float) $this->grants_handler_convert_eur_to_double($values['subventions_type_1_sum']);
+      $compensations[] = [
+        'subventionType' => '1',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_1_sum']),
+      ];
+      $compensationTotalAmount += (float) $this->grantsHandlerConvertToFloat($values['subventions_type_1_sum']);
     }
     // Palkkausavustus.
     if (array_key_exists('subventions_type_2', $values) && $values['subventions_type_2'] == 1) {
-      $compensations[] = ['subventionType' => '2', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_2_sum'])];
+      $compensations[] = [
+        'subventionType' => '2',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_2_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_2_sum'];
     }
     // Projektiavustus.
     if (array_key_exists('subventions_type_4', $values) && $values['subventions_type_4'] == 1) {
-      $compensations[] = ['subventionType' => '4', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_4_sum'])];
+      $compensations[] = [
+        'subventionType' => '4',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_4_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_4_sum'];
     }
     // Vuokra-avustus.
     if (array_key_exists('subventions_type_5', $values) && $values['subventions_type_5'] == 1) {
-      $compensations[] = ['subventionType' => '5', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_5_sum'])];
+      $compensations[] = [
+        'subventionType' => '5',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_5_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_5_sum'];
     }
     // Yleisavustus.
     if (array_key_exists('subventions_type_6', $values) && $values['subventions_type_6'] == 1) {
-      $compensations[] = ['subventionType' => '6', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_6_sum'])];
+      $compensations[] = [
+        'subventionType' => '6',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_6_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_6_sum'];
     }
     // Työttömien koulutusavustus.
     if (array_key_exists('subventions_type_7', $values) && $values['subventions_type_7'] == 1) {
-      $compensations[] = ['subventionType' => '7', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_7_sum'])];
+      $compensations[] = [
+        'subventionType' => '7',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_7_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_7_sum'];
     }
     // Korot ja lyhennykset.
     if (array_key_exists('subventions_type_8', $values) && $values['subventions_type_8'] == 1) {
-      $compensations[] = ['subventionType' => '8', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_8_sum'])];
+      $compensations[] = [
+        'subventionType' => '8',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_8_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_8_sum'];
     }
     // Muu.
     if (array_key_exists('subventions_type_9', $values) && $values['subventions_type_9'] == 1) {
-      $compensations[] = ['subventionType' => '9', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_9_sum'])];
+      $compensations[] = [
+        'subventionType' => '9',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_9_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_9_sum'];
     }
     // Leiriavustus.
     if (array_key_exists('subventions_type_12', $values) && $values['subventions_type_12'] == 1) {
-      $compensations[] = ['subventionType' => '12', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_12_sum'])];
+      $compensations[] = [
+        'subventionType' => '12',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_12_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_12_sum'];
     }
     // Lisäavustus.
     if (array_key_exists('subventions_type_14', $values) && $values['subventions_type_14'] == 1) {
-      $compensations[] = ['subventionType' => '14', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_14_sum'])];
+      $compensations[] = [
+        'subventionType' => '14',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_14_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_14_sum'];
     }
     // Suunnistuskartta-avustus.
     if (array_key_exists('subventions_type_15', $values) && $values['subventions_type_15'] == 1) {
-      $compensations[] = ['subventionType' => '15', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_15_sum'])];
+      $compensations[] = [
+        'subventionType' => '15',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_15_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_15_sum'];
     }
     // Toiminnan kehittämisavustus.
     if (array_key_exists('subventions_type_17', $values) && $values['subventions_type_17'] == 1) {
-      $compensations[] = ['subventionType' => '17', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_17_sum'])];
+      $compensations[] = [
+        'subventionType' => '17',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_17_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_17_sum'];
     }
     // Kehittämisavustukset / Helsingin malli.
     if (array_key_exists('subventions_type_29', $values) && $values['subventions_type_29'] == 1) {
-      $compensations[] = ['subventionType' => '29', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_29_sum'])];
+      $compensations[] = [
+        'subventionType' => '29',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_29_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_29_sum'];
     }
     // Starttiavustus.
     if (array_key_exists('subventions_type_31', $values) && $values['subventions_type_31'] == 1) {
-      $compensations[] = ['subventionType' => '31', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_31_sum'])];
+      $compensations[] = [
+        'subventionType' => '31',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_31_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_31_sum'];
     }
     // Tilankäyttöavustus.
     if (array_key_exists('subventions_type_32', $values) && $values['subventions_type_32'] == 1) {
-      $compensations[] = ['subventionType' => '32', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_32_sum'])];
+      $compensations[] = [
+        'subventionType' => '32',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_32_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_32_sum'];
     }
     // Taiteen perusopetus.
     if (array_key_exists('subventions_type_34', $values) && $values['subventions_type_34'] == 1) {
-      $compensations[] = ['subventionType' => '34', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_34_sum'])];
+      $compensations[] = [
+        'subventionType' => '34',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_34_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_34_sum'];
     }
     // Varhaiskasvatus.
     if (array_key_exists('subventions_type_35', $values) && $values['subventions_type_35'] == 1) {
-      $compensations[] = ['subventionType' => '35', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_35_sum'])];
+      $compensations[] = [
+        'subventionType' => '35',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_35_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_35_sum'];
     }
     // Vapaa sivistystyö.
     if (array_key_exists('subventions_type_36', $values) && $values['subventions_type_36'] == 1) {
-      $compensations[] = ['subventionType' => '36', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_36_sum'])];
+      $compensations[] = [
+        'subventionType' => '36',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_36_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_36_sum'];
     }
     // Tapahtuma-avustus.
     if (array_key_exists('subventions_type_37', $values) && $values['subventions_type_37'] == 1) {
-      $compensations[] = ['subventionType' => '37', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_37_sum'])];
+      $compensations[] = [
+        'subventionType' => '37',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_37_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_37_sum'];
     }
     // Pienavustus.
     if (array_key_exists('subventions_type_38', $values) && $values['subventions_type_38'] == 1) {
-      $compensations[] = ['subventionType' => '38', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_38_sum'])];
+      $compensations[] = [
+        'subventionType' => '38',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_38_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_38_sum'];
     }
     // Kotouttamisavustus.
     if (array_key_exists('subventions_type_39', $values) && $values['subventions_type_39'] == 1) {
-      $compensations[] = ['subventionType' => '39', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_39_sum'])];
+      $compensations[] = [
+        'subventionType' => '39',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_39_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_39_sum'];
     }
     // Harrastushaku.
     if (array_key_exists('subventions_type_40', $values) && $values['subventions_type_40'] == 1) {
-      $compensations[] = ['subventionType' => '40', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_40_sum'])];
+      $compensations[] = [
+        'subventionType' => '40',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_40_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_40_sum'];
     }
     // Laitosavustus.
     if (array_key_exists('subventions_type_41', $values) && $values['subventions_type_41'] == 1) {
-      $compensations[] = ['subventionType' => '41', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_41_sum'])];
+      $compensations[] = [
+        'subventionType' => '41',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_41_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_41_sum'];
     }
     // Muiden liikuntaa edistävien yhteisöjen avustus.
     if (array_key_exists('subventions_type_42', $values) && $values['subventions_type_42'] == 1) {
-      $compensations[] = ['subventionType' => '42', 'amount' => $this->grants_handler_convert_eur_to_double($values['subventions_type_42_sum'])];
+      $compensations[] = [
+        'subventionType' => '42',
+        'amount' => $this->grantsHandlerConvertToFloat($values['subventions_type_42_sum']),
+      ];
       $compensationTotalAmount += (float) $values['subventions_type_42_sum'];
     }
 
@@ -309,7 +393,7 @@ class GrantsHandler extends WebformHandlerBase {
         'issuer' => "" . $otherCompensationsArray['issuer'],
         'issuerName' => $otherCompensationsArray['issuer_name'],
         'year' => $otherCompensationsArray['year'],
-        'amount' => $this->grants_handler_convert_eur_to_double($otherCompensationsArray['amount']),
+        'amount' => $this->grantsHandlerConvertToFloat($otherCompensationsArray['amount']),
         'purpose' => $otherCompensationsArray['purpose'],
       ];
       $otherCompensationsTotal += (float) $otherCompensationsArray['amount'];
@@ -337,8 +421,8 @@ class GrantsHandler extends WebformHandlerBase {
     $membersSubcommunityCommunityGlobal = "0";
     $membersSubcommunityPersonLocal = "0";
     $membersSubcommunityCommunityLocal = "0";
-    $feePerson = $this->grants_handler_convert_eur_to_double($values['fee_person']);
-    $feeCommunity = $this->grants_handler_convert_eur_to_double($values['fee_community']);
+    $feePerson = $this->grantsHandlerConvertToFloat($values['fee_person']);
+    $feeCommunity = $this->grantsHandlerConvertToFloat($values['fee_community']);
 
     $additionalInformation = $values['additional_information'];
 
@@ -823,49 +907,56 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function preCreate(array &$values) {
+  public function preCreate(array &$values)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postCreate(WebformSubmissionInterface $webform_submission) {
+  public function postCreate(WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postLoad(WebformSubmissionInterface $webform_submission) {
+  public function postLoad(WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preDelete(WebformSubmissionInterface $webform_submission) {
+  public function preDelete(WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postDelete(WebformSubmissionInterface $webform_submission) {
+  public function postDelete(WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
+  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preSave(WebformSubmissionInterface $webform_submission) {
+  public function preSave(WebformSubmissionInterface $webform_submission)
+  {
 
     $this->debug(__FUNCTION__);
   }
@@ -873,49 +964,56 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function preprocessConfirmation(array &$variables) {
+  public function preprocessConfirmation(array &$variables)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createHandler() {
+  public function createHandler()
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateHandler() {
+  public function updateHandler()
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteHandler() {
+  public function deleteHandler()
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createElement($key, array $element) {
+  public function createElement($key, array $element)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateElement($key, array $element, array $original_element) {
+  public function updateElement($key, array $element, array $original_element)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteElement($key, array $element) {
+  public function deleteElement($key, array $element)
+  {
     $this->debug(__FUNCTION__);
   }
 
@@ -927,7 +1025,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @param string $context1
    *   Additional parameter passed to the invoked method name.
    */
-  protected function debug($method_name, $context1 = NULL) {
+  protected function debug($method_name, $context1 = NULL)
+  {
     if (!empty($this->configuration['debug'])) {
       $t_args = [
         '@id' => $this->getHandlerId(),
@@ -938,5 +1037,4 @@ class GrantsHandler extends WebformHandlerBase {
       $this->messenger()->addWarning($this->t('Invoked @id: @class_name:@method_name @context1', $t_args), TRUE);
     }
   }
-
 }
