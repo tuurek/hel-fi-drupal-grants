@@ -137,11 +137,11 @@ elements: |-
           issuer:
             '#type': select
             '#options':
-              1: EU
-              2: Muu
-              3: STEA
-              4: Säätiö
-              5: Valtio
+              3: EU
+              4: Muu
+              6: STEA
+              5: Säätiö
+              1: Valtio
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           issuer_name:
@@ -193,11 +193,11 @@ elements: |-
           issuer:
             '#type': select
             '#options':
-              1: EU
-              2: Muu
-              3: STEA
-              4: Säätiö
-              5: Valtio
+              3: EU
+              4: Muu
+              6: STEA
+              5: Säätiö
+              1: Valtio
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           issuer_name:
