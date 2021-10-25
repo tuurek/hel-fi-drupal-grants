@@ -169,13 +169,13 @@ class GrantsHandler extends WebformHandlerBase {
         'name' => 'nimi',
         'role' => '1',
         'email' => 'tsto@ttry.fi',
-        'phone' => '1234'
+        'phone' => '1234',
       ],
       [
         'name' => 'nimi2',
         'role' => '2',
         'email' => 'tsto2@ttry.fi',
-        'phone' => '1234'
+        'phone' => '1234',
       ],
     ];
 
