@@ -21,14 +21,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   submission = \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
  * )
  */
-class GrantsHandler extends WebformHandlerBase
-{
+class GrantsHandler extends WebformHandlerBase {
 
   /**
    * Convert EUR format value to to "double" .
    */
-  private function grantsHandlerConvertToFloat(string $value)
-  {
+  private function grantsHandlerConvertToFloat(string $value) {
     $value = str_replace(['€', ' '], ['', ''], $value);
     $value = (float) $value;
     return "" . $value;
@@ -44,8 +42,7 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
-  {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->tokenManager = $container->get('webform.token_manager');
     return $instance;
@@ -54,8 +51,7 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration()
-  {
+  public function defaultConfiguration() {
     return [
       'debug' => FALSE,
     ];
@@ -64,8 +60,7 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state)
-  {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     // Development.
     $form['development'] = [
       '#type' => 'details',
@@ -85,8 +80,7 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state)
-  {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['debug'] = (bool) $form_state->getValue('debug');
   }
@@ -94,49 +88,42 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function alterElements(array &$elements, WebformInterface $webform)
-  {
+  public function alterElements(array &$elements, WebformInterface $webform) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function overrideSettings(array &$settings, WebformSubmissionInterface $webform_submission)
-  {
+  public function overrideSettings(array &$settings, WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
-  {
+  public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
-  {
-
+  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
-  {
+  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
-  {
+  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
     $endpoint = getenv('AVUSTUS2_ENDPOINT');
     $username = getenv('AVUSTUS2_USERNAME');
     $password = getenv('AVUSTUS2_PASSWORD');
@@ -178,8 +165,18 @@ class GrantsHandler extends WebformHandlerBase
 
     // Check.
     $applicantOfficials = [
-      ['name' => 'nimi', 'role' => '1', 'email' => 'tsto@ttry.fi', 'phone' => '1234'],
-      ['name' => 'nimi2', 'role' => '2', 'email' => 'tsto2@ttry.fi', 'phone' => '1234'],
+      [
+        'name' => 'nimi',
+        'role' => '1',
+        'email' => 'tsto@ttry.fi',
+        'phone' => '1234'
+      ],
+      [
+        'name' => 'nimi2',
+        'role' => '2',
+        'email' => 'tsto2@ttry.fi',
+        'phone' => '1234'
+      ],
     ];
 
     // Check.
@@ -883,7 +880,10 @@ class GrantsHandler extends WebformHandlerBase
     $attachmentsInfoObject = [
       "attachmentsArray" => $attachmentsArray,
     ];
-    $submitObject = (object) ['compensation' => $compensationObject, 'attachmentsInfo' => $attachmentsInfoObject];
+    $submitObject = (object) [
+      'compensation' => $compensationObject,
+      'attachmentsInfo' => $attachmentsInfoObject,
+    ];
     $submitObject->attachmentsInfo = $attachmentsInfoObject;
     $submitObject->formUpdate = FALSE;
     $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
@@ -907,56 +907,49 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function preCreate(array &$values)
-  {
+  public function preCreate(array &$values) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postCreate(WebformSubmissionInterface $webform_submission)
-  {
+  public function postCreate(WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postLoad(WebformSubmissionInterface $webform_submission)
-  {
+  public function postLoad(WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preDelete(WebformSubmissionInterface $webform_submission)
-  {
+  public function preDelete(WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postDelete(WebformSubmissionInterface $webform_submission)
-  {
+  public function postDelete(WebformSubmissionInterface $webform_submission) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE)
-  {
+  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preSave(WebformSubmissionInterface $webform_submission)
-  {
+  public function preSave(WebformSubmissionInterface $webform_submission) {
 
     $this->debug(__FUNCTION__);
   }
@@ -964,56 +957,49 @@ class GrantsHandler extends WebformHandlerBase
   /**
    * {@inheritdoc}
    */
-  public function preprocessConfirmation(array &$variables)
-  {
+  public function preprocessConfirmation(array &$variables) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createHandler()
-  {
+  public function createHandler() {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateHandler()
-  {
+  public function updateHandler() {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteHandler()
-  {
+  public function deleteHandler() {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createElement($key, array $element)
-  {
+  public function createElement($key, array $element) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateElement($key, array $element, array $original_element)
-  {
+  public function updateElement($key, array $element, array $original_element) {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteElement($key, array $element)
-  {
+  public function deleteElement($key, array $element) {
     $this->debug(__FUNCTION__);
   }
 
@@ -1025,8 +1011,7 @@ class GrantsHandler extends WebformHandlerBase
    * @param string $context1
    *   Additional parameter passed to the invoked method name.
    */
-  protected function debug($method_name, $context1 = NULL)
-  {
+  protected function debug($method_name, $context1 = NULL) {
     if (!empty($this->configuration['debug'])) {
       $t_args = [
         '@id' => $this->getHandlerId(),
@@ -1037,4 +1022,5 @@ class GrantsHandler extends WebformHandlerBase
       $this->messenger()->addWarning($this->t('Invoked @id: @class_name:@method_name @context1', $t_args), TRUE);
     }
   }
+
 }
