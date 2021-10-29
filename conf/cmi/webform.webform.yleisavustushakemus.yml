@@ -3,8 +3,8 @@ langcode: fi
 status: open
 dependencies:
   module:
-    - grants_handler
     - grants_metadata
+    - grants_handler
     - webform_entity_print
 third_party_settings:
   webform_entity_print:
@@ -39,6 +39,41 @@ elements: |-
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
+      applicant_type:
+        '#type': select
+        '#title': 'Hakijan tyyppi'
+        '#options':
+          1: '1'
+          2: '2'
+          3: '3'
+      company_number:
+        '#type': textfield
+        '#title': Rekisterinumero
+        '#required': true
+      community_official_name:
+        '#type': textfield
+        '#title': 'Yhteisön nimi'
+        '#required': true
+      community_official_name_short:
+        '#type': textfield
+        '#title': 'Yhteisön lyhenne'
+      registration_date:
+        '#type': date
+        '#title': Rekisteröimispäivä
+      founding_year:
+        '#type': textfield
+        '#title': Perustamisvuosi
+        '#required': true
+      home:
+        '#type': textfield
+        '#title': Kotipaikka
+        '#required': true
+      homepage:
+        '#type': textfield
+        '#title': www-sivut
+      email:
+        '#type': email
+        '#title': Sähköpostiosoite
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -137,11 +172,11 @@ elements: |-
           issuer:
             '#type': select
             '#options':
-              3: EU
-              4: Muu
-              6: STEA
-              5: Säätiö
-              1: Valtio
+              1: EU
+              2: Muu
+              3: STEA
+              4: Säätiö
+              5: Valtio
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           issuer_name:
@@ -193,11 +228,11 @@ elements: |-
           issuer:
             '#type': select
             '#options':
-              3: EU
-              4: Muu
-              6: STEA
-              5: Säätiö
-              1: Valtio
+              1: EU
+              2: Muu
+              3: STEA
+              4: Säätiö
+              5: Valtio
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           issuer_name:

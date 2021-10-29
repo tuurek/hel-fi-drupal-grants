@@ -409,15 +409,6 @@ class GrantsHandler extends WebformHandlerBase {
     $membersApplicantCommunityLocal = $values['members_applicant_community_local'];
     $membersApplicantCommunityGlobal = $values['members_applicant_community_global'];
 
-    $membersSubdivisionPersonGlobal = "0";
-    $membersSubdivisionCommunityGlobal = "0";
-    $membersSubdivisionPersonLocal = "0";
-    $membersSubdivisionCommunityLocal = "0";
-
-    $membersSubcommunityPersonGlobal = "0";
-    $membersSubcommunityCommunityGlobal = "0";
-    $membersSubcommunityPersonLocal = "0";
-    $membersSubcommunityCommunityLocal = "0";
     $feePerson = $this->grantsHandlerConvertToFloat($values['fee_person']);
     $feeCommunity = $this->grantsHandlerConvertToFloat($values['fee_community']);
 
@@ -749,54 +740,6 @@ class GrantsHandler extends WebformHandlerBase {
         "valueType" => "int",
       ],
       (object) [
-        "ID" => "membersSubdivisionPersonGlobal",
-        "label" => "Alayhdistykset, henkilöjäseniä",
-        "value" => $membersSubdivisionPersonGlobal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubdivisionCommunityGlobal",
-        "label" => "Alayhdistykset, yhteisöjäseniä",
-        "value" => $membersSubdivisionCommunityGlobal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubdivisionPersonLocal",
-        "label" => "Alayhdistykset, helsinkiläisiä henkilöjäseniä",
-        "value" => $membersSubdivisionPersonLocal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubdivisionCommunityLocal",
-        "label" => "Alayhdistykset, helsinkiläisiä yhteisöjäseniä",
-        "value" => $membersSubdivisionCommunityLocal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubcommunityPersonGlobal",
-        "label" => "Alaosastot, henkilöjäseniä",
-        "value" => $membersSubcommunityPersonGlobal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubcommunityCommunityGlobal",
-        "label" => "Alaosastot, yhteisöjäseniä",
-        "value" => $membersSubcommunityCommunityGlobal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubcommunityPersonLocal",
-        "label" => "Alaosastot, helsinkiläisiä henkilöjäseniä",
-        "value" => $membersSubcommunityPersonLocal,
-        "valueType" => "int",
-      ],
-      (object) [
-        "ID" => "membersSubcommunityCommunityLocal",
-        "label" => "Alaosastot, helsinkiläisiä yhteisöjäseniä",
-        "value" => $membersSubcommunityCommunityLocal,
-        "valueType" => "int",
-      ],
-      (object) [
         "ID" => "feePerson",
         "label" => "Jäsenmaksun suuruus, Henkiöjäsen euroa",
         "value" => $feePerson,
@@ -971,7 +914,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function updateHandler() {
+  public function updateHandler()
+  {
     $this->debug(__FUNCTION__);
   }
 
