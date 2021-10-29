@@ -912,8 +912,7 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function updateHandler()
-  {
+  public function updateHandler() {
     $this->debug(__FUNCTION__);
   }
 
