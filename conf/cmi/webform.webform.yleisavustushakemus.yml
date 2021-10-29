@@ -46,6 +46,7 @@ elements: |-
           1: '1'
           2: '2'
           3: '3'
+        '#required': true
       company_number:
         '#type': textfield
         '#title': Rekisterinumero
@@ -57,9 +58,11 @@ elements: |-
       community_official_name_short:
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
+        '#required': true
       registration_date:
         '#type': date
         '#title': Rekisteröimispäivä
+        '#required': true
       founding_year:
         '#type': textfield
         '#title': Perustamisvuosi
@@ -77,12 +80,36 @@ elements: |-
     osoite:
       '#type': webform_section
       '#title': Osoite
+      contact_person_street:
+        '#type': textfield
+        '#title': Katuosoite
+        '#required': true
+      contact_person_city:
+        '#type': textfield
+        '#title': Postitoimipaikka
+        '#required': true
+      contact_person_post_code:
+        '#type': textfield
+        '#title': Postinumero
+        '#required': true
+      contact_person_country:
+        '#type': textfield
+        '#title': Maa
+        '#required': true
     hakemuksen_yhteyshenkilo:
       '#type': webform_section
       '#title': 'Hakemuksen yhteyshenkilö'
+      contact_person:
+        '#type': textfield
+        '#title': Yhteyshenkilö
+        '#required': true
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
+      account_number:
+        '#type': textfield
+        '#title': Tilinumero
+        '#required': true
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'

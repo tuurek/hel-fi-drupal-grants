@@ -145,23 +145,21 @@ class GrantsHandler extends WebformHandlerBase {
 
     $actingYear = "" . $values['acting_year'];
 
-    // Check.
-    $contactPerson = "Teemu Testaushenkilö";
-    $street = "Annankatu 18 Ö 905";
-    $city = "Helsinki";
-    $postCode = "00120";
-    $country = "Suomi";
+    $contactPerson = $values['contact_person'];
+    $street = $values['contact_person_street'];
+    $city = $values['contact_person_city'];
+    $postCode = $values['contact_person_post_code'];
+    $country = $values['contact_person_country'];
 
-    // Check.
-    $applicantType = "2";
-    $companyNumber = "5647641-1";
-    $communityOfficialName = "TietoTesti Kh yleis 001 10062021";
-    $communityOfficialNameShort = "TT ry";
-    $registrationDate = "2021-01-01T00:00:00.000Z";
-    $foundingYear = "2021";
-    $home = "Helsinki";
-    $webpage = "www.ttry.fi";
-    $email = "tsto@ttry.fi";
+    $applicantType = "" . $values['applicant_type'];
+    $companyNumber = $values['company_number'];
+    $communityOfficialName = $values['community_official_name'];
+    $communityOfficialNameShort = $values['community_official_name_short'];
+    $registrationDate = $values['registration_date'];
+    $foundingYear = $values['founding_year'];
+    $home = $values['home'];
+    $webpage = $values['webpage'];
+    $email = $values['email'];
 
     // Check.
     $applicantOfficials = [
