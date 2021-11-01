@@ -3,7 +3,7 @@ langcode: fi
 status: open
 dependencies:
   module:
-    - grant_metadata
+    - grants_metadata
     - grants_handler
     - webform_entity_print
 third_party_settings:
@@ -346,7 +346,7 @@ elements: |-
     edellisen_avustuksen_kayttoselvitys:
       '#type': webform_section
       '#title': 'Edellisen avustuksen käyttöselvitys'
-      kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta:
+      compensation_boolean:
         '#type': radios
         '#title': 'Käyttöselvitys edellisenä vuonna saamastani avustuksesta'
         '#options':
