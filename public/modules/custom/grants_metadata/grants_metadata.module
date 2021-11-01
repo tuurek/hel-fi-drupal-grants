@@ -9,24 +9,24 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
     $form["third_party_settings"]["#access"] = true;
     $form['third_party_settings']['#tree'] = TRUE;
 
-    $form['third_party_settings']['grant_metadata'] = [
+    $form['third_party_settings']['grants_metadata'] = [
         '#type' => 'details',
         '#title' => t('Application details'),
         '#open' => true,
         '#input' => false,
       ];
 
-    $form['third_party_settings']['grant_metadata']['applicationType'] = [
+    $form['third_party_settings']['grants_metadata']['applicationType'] = [
       '#type' => 'textfield',
       '#title' => t('Application Type'),
-      '#default_value' => $bundle->getThirdPartySetting('grant_metadata', 'applicationType'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationType'),
       '#required' => TRUE,
     ];
 
-    $form['third_party_settings']['grant_metadata']['applicationTypeID'] = [
+    $form['third_party_settings']['grants_metadata']['applicationTypeID'] = [
       '#type' => 'textfield',
       '#title' => t('Application Type ID'),
-      '#default_value' => $bundle->getThirdPartySetting('grant_metadata', 'applicationTypeID'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeID'),
       '#required' => TRUE,
     ];
   }

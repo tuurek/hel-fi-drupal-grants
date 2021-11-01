@@ -133,8 +133,8 @@ class GrantsHandler extends WebformHandlerBase {
       ];
       $this->messenger()->addMessage($this->t('DEBUG: Endpoint:: @endpoint', $t_args));
     }
-    $applicationType = $webform_submission->getWebform()->getThirdPartySetting('grant_metadata', 'applicationType');
-    $applicationTypeID = $webform_submission->getWebform()->getThirdPartySetting('grant_metadata', 'applicationTypeID');
+    $applicationType = $webform_submission->getWebform()->getThirdPartySetting('grants_metadata', 'applicationType');
+    $applicationTypeID = $webform_submission->getWebform()->getThirdPartySetting('grants_metadata', 'applicationTypeID');
 
     $applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
 
@@ -146,6 +146,7 @@ class GrantsHandler extends WebformHandlerBase {
     $actingYear = "" . $values['acting_year'];
 
     $contactPerson = $values['contact_person'];
+    $phoneNumber = $values['contact_person_phone_number'];
     $street = $values['contact_person_street'];
     $city = $values['contact_person_city'];
     $postCode = $values['contact_person_post_code'];
@@ -161,28 +162,23 @@ class GrantsHandler extends WebformHandlerBase {
     $webpage = $values['webpage'];
     $email = $values['email'];
 
-    // Check.
-    $applicantOfficials = [
-      [
-        'name' => 'nimi',
-        'role' => '1',
-        'email' => 'tsto@ttry.fi',
-        'phone' => '1234',
-      ],
-      [
-        'name' => 'nimi2',
-        'role' => '2',
-        'email' => 'tsto2@ttry.fi',
-        'phone' => '1234',
-      ],
-    ];
+    $applicantOfficials = [];
 
-    // Check.
-    $accountNumber = "FI9640231442000454";
+    foreach ($values['myonnetty_avustus'] as $applicantOfficialsArray) {
+      $applicantOfficials[] = [
+        'name' => "" . $applicantOfficialsArray['official_name'],
+        'role' => $applicantOfficialsArray['official_role'],
+        'email' => $applicantOfficialsArray['official_email'],
+        'phone' => $applicantOfficialsArray['official_phone'],
+      ];
+    }
+
+    $accountNumber = $values['account_number'];
 
     $compensationTotalAmount = 0;
 
     $compensationPurpose = $values['compensation_purpose'];
+    $compensationBoolean = ($values['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
     $compensationExplanation = $values['compensation_explanation'];
 
     $compensations = [];
@@ -479,6 +475,12 @@ class GrantsHandler extends WebformHandlerBase {
         "valueType" => "string",
       ],
       (object) [
+        "ID" => "phoneNumber",
+        "label" => "Puhelinnumero",
+        "value" => $phoneNumber,
+        "valueType" => "string",
+      ],
+      (object) [
         "ID" => "street",
         "label" => "Katuosoite",
         "value" => $street,
@@ -626,6 +628,13 @@ class GrantsHandler extends WebformHandlerBase {
           "value" => $compensationTotalAmount,
           "valueType" => "float",
         ],
+        (object) [
+          "ID" => "noCompensationPreviousYear",
+          "label" => "En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna",
+          "value" => $compensationBoolean,
+          "valueType" => "string",
+        ],
+
         (object) [
           "ID" => "purpose",
           "label" => "Haetun avustuksen käyttötarkoitus",
@@ -829,17 +838,20 @@ class GrantsHandler extends WebformHandlerBase {
     $submitObject->formUpdate = FALSE;
     $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
 
-    $client = \Drupal::httpClient();
-    $request = $client->post($endpoint, [
-      'auth' => [$username, $password, "Basic"],
-      'body' => $myJSON,
-    ]);
-
     if (!empty($this->configuration['debug'])) {
       $t_args = [
-        '@response' => $request->getBody()->getContents(),
+        '@myJSON' => $myJSON,
       ];
-      $this->messenger()->addMessage($this->t('DEBUG: Response from the endpoint: @response', $t_args));
+      $this->messenger()->addMessage($this->t('DEBUG: Sent JSON: @myJSON', $t_args));
+
+    }
+    else {
+      $client = \Drupal::httpClient();
+      $client->post($endpoint, [
+        'auth' => [$username, $password, "Basic"],
+        'body' => $myJSON,
+      ]);
+
     }
 
     $this->debug(__FUNCTION__);

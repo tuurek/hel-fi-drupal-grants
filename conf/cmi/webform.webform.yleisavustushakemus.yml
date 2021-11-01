@@ -3,7 +3,7 @@ langcode: fi
 status: open
 dependencies:
   module:
-    - grants_metadata
+    - grant_metadata
     - grants_handler
     - webform_entity_print
 third_party_settings:
@@ -77,6 +77,13 @@ elements: |-
       email:
         '#type': email
         '#title': Sähköpostiosoite
+      hakemuksen_yhteyshenkilo:
+        '#type': webform_section
+        '#title': 'Hakemuksen yhteyshenkilö'
+        contact_person:
+          '#type': textfield
+          '#title': Yhteyshenkilö
+          '#required': true
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -96,12 +103,9 @@ elements: |-
         '#type': textfield
         '#title': Maa
         '#required': true
-    hakemuksen_yhteyshenkilo:
-      '#type': webform_section
-      '#title': 'Hakemuksen yhteyshenkilö'
-      contact_person:
+      contact_person_phone_number:
         '#type': textfield
-        '#title': Yhteyshenkilö
+        '#title': Puhelinnumero
         '#required': true
     tilinumero:
       '#type': webform_section
@@ -110,6 +114,32 @@ elements: |-
         '#type': textfield
         '#title': Tilinumero
         '#required': true
+    toiminnasta_vastaavat_henkilot:
+      '#type': webform_section
+      '#title': 'Toiminnasta vastaavat henkilöt'
+      applicant_officials:
+        '#type': webform_custom_composite
+        '#title': 'Toiminnasta vastaavat henkilöt'
+        '#element':
+          official_name:
+            '#type': textfield
+            '#title': Nimi
+          official_role:
+            '#type': select
+            '#options':
+              1: Puheenjohtaja
+              2: 'Taloudesta vastaava'
+              3: Sihteeri
+              4: Toiminnanjohtaja
+              5: Varapuheenjohtaja
+              6: Muu
+            '#title': Rooli
+          official_email:
+            '#type': email
+            '#title': Sähköposti
+          official_phone:
+            '#type': textfield
+            '#title': Puhelinnumero
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'

@@ -6,7 +6,6 @@ dependencies:
     module:
       - grants_handler
   module:
-    - grants_metadata
     - grants_handler
     - webform_entity_print
 third_party_settings:
@@ -20,9 +19,6 @@ third_party_settings:
         enabled: true
         link_text: ''
         link_attributes: {  }
-  grants_metadata:
-    applicationType: ECONOMICGRANTAPPLICATION
-    applicationTypeID: '29'
 _core:
   default_config_hash: BDOZZzTImFWgapQcZ_RJ7jCQnmVQRHLM4ZUqt5UChIs
 open: null
