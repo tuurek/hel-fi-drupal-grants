@@ -159,7 +159,7 @@ class GrantsHandler extends WebformHandlerBase {
     $registrationDate = $values['registration_date'];
     $foundingYear = $values['founding_year'];
     $home = $values['home'];
-    $webpage = $values['webpage'];
+    $webpage = $values['homepage'];
     $email = $values['email'];
 
     $applicantOfficials = [];
