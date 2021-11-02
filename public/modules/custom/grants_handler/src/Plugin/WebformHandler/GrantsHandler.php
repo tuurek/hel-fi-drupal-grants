@@ -164,7 +164,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $applicantOfficials = [];
 
-    foreach ($values['myonnetty_avustus'] as $applicantOfficialsArray) {
+    foreach ($values['applicant_officials'] as $applicantOfficialsArray) {
       $applicantOfficials[] = [
         'name' => "" . $applicantOfficialsArray['official_name'],
         'role' => $applicantOfficialsArray['official_role'],
