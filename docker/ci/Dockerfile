@@ -14,4 +14,7 @@ RUN curl --silent --show-error https://getcomposer.org/installer | php -- --inst
 # Install drush
 RUN composer global require "drush/drush:${DRUSH}.*"
 
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted gnu-libiconv
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+
 ENV PATH "$PATH:/root/.composer/vendor/bin"
