@@ -40,8 +40,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Convert EUR format value to "double" .
    */
-  private function grantsHandlerConvertToFloat(string $value): string {
-    $value = str_replace(['€', ' '], ['', ''], $value);
+  private function grantsHandlerConvertToFloat(string $value) {
+    $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
     $value = (float) $value;
     return "" . $value;
   }
