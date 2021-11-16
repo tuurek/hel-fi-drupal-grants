@@ -13,8 +13,8 @@ display:
       pager:
         options:
           tags:
-            previous: ‹‹
-            next: ››
+            previous: '‹ Edellinen'
+            next: 'Seuraava ›'
             first: '« Ensimmäinen'
             last: 'Viimeinen »'
           expose:
@@ -37,6 +37,9 @@ display:
         view_webform_submission:
           label: Toimenpiteet
           text: näkymä
+      header:
+        result:
+          content: 'Näytetään @start - @end / @total'
       arguments:
         in_draft:
           exception:

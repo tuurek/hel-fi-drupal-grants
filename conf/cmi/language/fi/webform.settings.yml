@@ -13,4 +13,5 @@ settings:
     wide:
       title: Leveä
 element:
+  empty_message: '-'
   default_more_title: Lisää

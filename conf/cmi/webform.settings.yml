@@ -97,6 +97,20 @@ settings:
     wide:
       title: Wide
       width: 1000
+  webform_bulk_form: true
+  webform_bulk_form_actions:
+    - webform_open_action
+    - webform_close_action
+    - webform_archive_action
+    - webform_unarchive_action
+    - webform_delete_action
+  webform_submission_bulk_form: true
+  webform_submission_bulk_form_actions:
+    - webform_submission_make_sticky_action
+    - webform_submission_make_unsticky_action
+    - webform_submission_make_lock_action
+    - webform_submission_make_unlock_action
+    - webform_submission_delete_action
 assets:
   css: ''
   javascript: ''
@@ -135,6 +149,7 @@ batch:
 purge:
   cron_size: 100
 form:
+  limit: 50
   filter_category: ''
   filter_state: ''
 element:
@@ -301,6 +316,7 @@ ui:
   dialog_disabled: false
   offcanvas_disabled: false
   promotions_disabled: false
+  support_disabled: false
   description_help: true
   toolbar_item: false
 libraries:
@@ -316,26 +332,5 @@ langcode: en
 third_party_settings:
   captcha:
     replace_administration_mode: true
-  webform_entity_print:
-    debug: false
-    template:
-      header: '<h1>[webform_submission:label]</h1>'
-      footer: ''
-      css: |-
-        /* Remove page margins and padding and rely on the PDF generator's default margins. */
-        body {
-          margin: 0;
-        }
-
-        .page {
-          padding: 0;
-        }
-    export_types:
-      pdf:
-        enabled: true
-        link_text: 'Download PDF'
-        link_attributes:
-          class:
-            - button
 _core:
   default_config_hash: 1h6WrTweY39OdbNz3JJz6sgq5TAQ6HxtuNLIHMJR1tE

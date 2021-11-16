@@ -7,20 +7,6 @@ dependencies:
       - grants_handler
   module:
     - grants_handler
-    - webform_entity_print
-third_party_settings:
-  webform_entity_print:
-    template:
-      header: ''
-      footer: ''
-      css: ''
-    export_types:
-      pdf:
-        enabled: true
-        link_text: ''
-        link_attributes: {  }
-_core:
-  default_config_hash: BDOZZzTImFWgapQcZ_RJ7jCQnmVQRHLM4ZUqt5UChIs
 open: null
 close: null
 weight: 0
@@ -84,6 +70,9 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
+  form_method: ''
+  form_action: ''
+  form_attributes: {  }
   share: false
   share_node: false
   share_theme_name: ''
@@ -235,3 +224,5 @@ handlers:
       debug: true
       endpoint: 'This is a custom endpoint. 2'
 variants: {  }
+_core:
+  default_config_hash: BDOZZzTImFWgapQcZ_RJ7jCQnmVQRHLM4ZUqt5UChIs
