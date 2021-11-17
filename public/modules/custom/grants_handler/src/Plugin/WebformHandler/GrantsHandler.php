@@ -5,7 +5,6 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
-use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,23 +26,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GrantsHandler extends WebformHandlerBase {
 
   /**
-   * @var array $_submitted_form_data Holds submitted data for processing in
-   * confirmForm, when we want to delete all submitted data before saving
+   * Form data saved because the data in saved submission is not preserved.
+   *
+   * @var array
+   *   Holds submitted data for processing in confirmForm.
+   *
+   * When we want to delete all submitted data before saving
    * submission to database. This way we can still use webform functionality
    * while not saving any sensitive data to local drupal.
    */
-  private array $_submitted_form_data = [];
-
-  /**
-   * @var bool $_data_saved_succesfully Variable to denote that external save
-   * was succesful and attachement files are ok to delete.
-   */
-  private bool $_data_saved_succesfully = FALSE;
+  private array $submittedFormData = [];
 
   /**
    * Convert EUR format value to "double" .
    */
-  private function grantsHandlerConvertToFloat(string $value) {
+  private function grantsHandlerConvertToFloat(string $value): string {
     $value = str_replace(['€', ' '], ['', ''], $value);
     $value = (float) $value;
     return "" . $value;
@@ -113,12 +110,12 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function preSave(WebformSubmissionInterface $webform_submission) {
 
-    // get data from form submission
-    // and set it to class private variable
-    $this->_submitted_form_data = $webform_submission->getData();
+    // Get data from form submission
+    // and set it to class private variable.
+    $this->submittedFormData = $webform_submission->getData();
 
-    // set submission data to empty.
-    // form will still contain submission details, IP time etc etc
+    // Set submission data to empty.
+    // form will still contain submission details, IP time etc etc.
     $webform_submission->setData([]);
 
     $this->debug(__FUNCTION__);
@@ -138,7 +135,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $webformId = $webform_submission->getWebform()->getOriginalId();
 
-    // process only yleisavustushakemukset
+    // Process only yleisavustushakemukset.
     if ($webformId === 'yleisavustushakemus') {
 
       $endpoint = getenv('AVUSTUS2_ENDPOINT');
@@ -153,34 +150,33 @@ class GrantsHandler extends WebformHandlerBase {
           ->addMessage($this->t('DEBUG: Endpoint:: @endpoint', $t_args));
       }
 
-      $parsedCompensations = $this->_parseCompensations();
+      $parsedCompensations = $this->parseCompensations();
 
       $bankAccountArray = [
         (object) [
           "ID" => "accountNumber",
           "label" => "Tilinumero",
-          "value" => $this->_submitted_form_data['account_number'],
+          "value" => $this->submittedFormData['account_number'],
           "valueType" => "string",
         ],
       ];
 
       $compensationObject = (object) [
-        "applicationInfoArray" => $this->_parseApplicationInfo($webform_submission),
-        "currentAddressInfoArray" => $this->_parseCurrentAddressInfo(),
-        "applicantInfoArray" => $this->_parseApplicantInfo(),
-        "applicantOfficialsArray" => $this->_parseApplicationOfficials(),
+        "applicationInfoArray" => $this->parseApplicationInfo($webform_submission),
+        "currentAddressInfoArray" => $this->parseCurrentAddressInfo(),
+        "applicantInfoArray" => $this->parseApplicantInfo(),
+        "applicantOfficialsArray" => $this->parseApplicationOfficials(),
         "bankAccountArray" => $bankAccountArray,
         "compensationInfo" => $parsedCompensations['compensationInfo'],
         "otherCompensationsInfo" => $parsedCompensations['otherCompensations'],
-        "benefitsInfoArray" => $this->_parseBenefitsInfo(),
-        "activitiesInfoArray" => $this->_parseActivitiesInfo(),
-        "additionalInformation" => $this->_submitted_form_data['additional_information'],
-        "senderInfoArray" => $this->_parseSenderInfo(),
+        "benefitsInfoArray" => $this->parseBenefitsInfo(),
+        "activitiesInfoArray" => $this->parseActivitiesInfo(),
+        "additionalInformation" => $this->submittedFormData['additional_information'],
+        "senderInfoArray" => $this->parseSenderInfo(),
       ];
 
-
       $attachmentsInfoObject = [
-        "attachmentsArray" => $this->_parseAttachements($this->_submitted_form_data),
+        "attachmentsArray" => $this->parseAttachements($this->submittedFormData),
       ];
       $submitObject = (object) [
         'compensation' => $compensationObject,
@@ -199,15 +195,15 @@ class GrantsHandler extends WebformHandlerBase {
 
       }
       else {
-        //      $client = \Drupal::httpClient();
-        //      $client->post($endpoint, [
-        //        'auth' => [$username, $password, "Basic"],
-        //        'body' => $myJSON,
-        //      ]);
-
+        /*
+        $client = \Drupal::httpClient();
+        $client->post($endpoint, [
+        'auth' => [$username, $password, "Basic"],
+        'body' => $myJSON,
+        ]);
+         */
       }
     }
-
 
     $this->_data_saved_succesfully = TRUE;
 
@@ -243,7 +239,6 @@ class GrantsHandler extends WebformHandlerBase {
     $this->configuration['debug'] = (bool) $form_state->getValue('debug');
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -251,10 +246,16 @@ class GrantsHandler extends WebformHandlerBase {
     $this->debug(__FUNCTION__);
   }
 
-  private function _parseAttachements() {
+  /**
+   * Parse attachments from POST.
+   *
+   * @return array[]
+   *   Parsed attchments.
+   */
+  private function parseAttachements(): array {
 
     // Check.
-    // TODO: make attachements to come from submitted form
+    // @todo make attachements to come from submitted form.
     $attachments = [
       [
         'description' => "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
@@ -293,12 +294,14 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Parse benefits details from POST.
    *
    * @return object[]
+   *   Parsed objects for JSON request.
    */
-  private function _parseBenefitsInfo(): array {
-    $benefitsPremises = $this->_submitted_form_data['benefits_premises'];
-    $benefitsLoans = $this->_submitted_form_data['benefits_loans'];
+  private function parseBenefitsInfo(): array {
+    $benefitsPremises = $this->submittedFormData['benefits_premises'];
+    $benefitsLoans = $this->submittedFormData['benefits_loans'];
 
     return [
       (object) [
@@ -317,9 +320,12 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Parse sender details from POST.
+   *
    * @return object[]
+   *   Array of sender details for JSON.
    */
-  private function _parseSenderInfo(): array {
+  private function parseSenderInfo(): array {
 
     // Check.
     $senderInfoFirstname = "Tiina";
@@ -363,21 +369,24 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Parse activities from POST.
+   *
    * @return object[]
+   *   Activities objects for JSON.
    */
-  private function _parseActivitiesInfo(): array {
+  private function parseActivitiesInfo(): array {
     // Check.
-    // TODO: check business purpose
+    // @todo check business purpose.
     $businessPurpose = "Meidän toimintamme tarkoituksena on että ...";
     $communityPracticesBusiness = "false";
 
-    $membersApplicantPersonGlobal = $this->_submitted_form_data['members_applicant_person_global'];
-    $membersApplicantPersonLocal = $this->_submitted_form_data['members_applicant_person_local'];
-    $membersApplicantCommunityLocal = $this->_submitted_form_data['members_applicant_community_local'];
-    $membersApplicantCommunityGlobal = $this->_submitted_form_data['members_applicant_community_global'];
+    $membersApplicantPersonGlobal = $this->submittedFormData['members_applicant_person_global'];
+    $membersApplicantPersonLocal = $this->submittedFormData['members_applicant_person_local'];
+    $membersApplicantCommunityLocal = $this->submittedFormData['members_applicant_community_local'];
+    $membersApplicantCommunityGlobal = $this->submittedFormData['members_applicant_community_global'];
 
-    $feePerson = $this->grantsHandlerConvertToFloat($this->_submitted_form_data['fee_person']);
-    $feeCommunity = $this->grantsHandlerConvertToFloat($this->_submitted_form_data['fee_community']);
+    $feePerson = $this->grantsHandlerConvertToFloat($this->submittedFormData['fee_person']);
+    $feeCommunity = $this->grantsHandlerConvertToFloat($this->submittedFormData['fee_community']);
 
     return [
       (object) [
@@ -432,16 +441,19 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Parse address details from POST.
+   *
    * @return object[]
+   *   Address details objects for JSON.
    */
-  private function _parseCurrentAddressInfo(): array {
+  private function parseCurrentAddressInfo(): array {
 
-    $contactPerson = $this->_submitted_form_data['contact_person'];
-    $phoneNumber = $this->_submitted_form_data['contact_person_phone_number'];
-    $street = $this->_submitted_form_data['contact_person_street'];
-    $city = $this->_submitted_form_data['contact_person_city'];
-    $postCode = $this->_submitted_form_data['contact_person_post_code'];
-    $country = $this->_submitted_form_data['contact_person_country'];
+    $contactPerson = $this->submittedFormData['contact_person'];
+    $phoneNumber = $this->submittedFormData['contact_person_phone_number'];
+    $street = $this->submittedFormData['contact_person_street'];
+    $city = $this->submittedFormData['contact_person_city'];
+    $postCode = $this->submittedFormData['contact_person_post_code'];
+    $country = $this->submittedFormData['contact_person_country'];
 
     return [
       (object) [
@@ -484,19 +496,22 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * PArse applicant details from POST.
+   *
    * @return object[]
+   *   Applicant objects for JSON.
    */
-  private function _parseApplicantInfo(): array {
+  private function parseApplicantInfo(): array {
 
-    $applicantType = "" . $this->_submitted_form_data['applicant_type'];
-    $companyNumber = $this->_submitted_form_data['company_number'];
-    $communityOfficialName = $this->_submitted_form_data['community_official_name'];
-    $communityOfficialNameShort = $this->_submitted_form_data['community_official_name_short'];
-    $registrationDate = $this->_submitted_form_data['registration_date'];
-    $foundingYear = $this->_submitted_form_data['founding_year'];
-    $home = $this->_submitted_form_data['home'];
-    $webpage = $this->_submitted_form_data['homepage'];
-    $email = $this->_submitted_form_data['email'];
+    $applicantType = "" . $this->submittedFormData['applicant_type'];
+    $companyNumber = $this->submittedFormData['company_number'];
+    $communityOfficialName = $this->submittedFormData['community_official_name'];
+    $communityOfficialNameShort = $this->submittedFormData['community_official_name_short'];
+    $registrationDate = $this->submittedFormData['registration_date'];
+    $foundingYear = $this->submittedFormData['founding_year'];
+    $home = $this->submittedFormData['home'];
+    $webpage = $this->submittedFormData['homepage'];
+    $email = $this->submittedFormData['email'];
 
     return [
       (object) [
@@ -557,13 +572,15 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * Parse basic application info from form values
+   * Parse basic application info from form values.
    *
    * @param \Drupal\webform\Entity\WebformSubmission $webform_submission
+   *   Submission object from Webform.
    *
    * @return object[]
+   *   Application details for JSON.
    */
-  private function _parseApplicationInfo(
+  private function parseApplicationInfo(
     WebformSubmission $webform_submission): array {
 
     $applicationType = $webform_submission->getWebform()
@@ -573,10 +590,10 @@ class GrantsHandler extends WebformHandlerBase {
     $applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
 
     // Check.
-    // TODO: Check status
+    // @todo Check status.
     $status = "Vastaanotettu";
 
-    $actingYear = "" . $this->_submitted_form_data['acting_year'];
+    $actingYear = "" . $this->submittedFormData['acting_year'];
 
     return [
       (object) [
@@ -622,208 +639,209 @@ class GrantsHandler extends WebformHandlerBase {
    * Parse compensation data from form values.
    *
    * @return array[]
+   *   Compensation details for JSON.
    */
-  private function _parseCompensations(): array {
+  private function parseCompensations(): array {
     $compensations = [];
     $compensationTotalAmount = 0;
 
     // Toiminta-avustus.
-    if (array_key_exists('subventions_type_1', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_1'] == 1) {
+    if (array_key_exists('subventions_type_1', $this->submittedFormData) && $this->submittedFormData['subventions_type_1'] == 1) {
       $compensations[] = [
         'subventionType' => '1',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_1_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_1_sum']),
       ];
-      $compensationTotalAmount += (float) $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_1_sum']);
+      $compensationTotalAmount += (float) $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_1_sum']);
     }
     // Palkkausavustus.
-    if (array_key_exists('subventions_type_2', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_2'] == 1) {
+    if (array_key_exists('subventions_type_2', $this->submittedFormData) && $this->submittedFormData['subventions_type_2'] == 1) {
       $compensations[] = [
         'subventionType' => '2',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_2_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_2_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_2_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_2_sum'];
     }
     // Projektiavustus.
-    if (array_key_exists('subventions_type_4', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_4'] == 1) {
+    if (array_key_exists('subventions_type_4', $this->submittedFormData) && $this->submittedFormData['subventions_type_4'] == 1) {
       $compensations[] = [
         'subventionType' => '4',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_4_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_4_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_4_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_4_sum'];
     }
     // Vuokra-avustus.
-    if (array_key_exists('subventions_type_5', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_5'] == 1) {
+    if (array_key_exists('subventions_type_5', $this->submittedFormData) && $this->submittedFormData['subventions_type_5'] == 1) {
       $compensations[] = [
         'subventionType' => '5',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_5_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_5_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_5_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_5_sum'];
     }
     // Yleisavustus.
-    if (array_key_exists('subventions_type_6', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_6'] == 1) {
+    if (array_key_exists('subventions_type_6', $this->submittedFormData) && $this->submittedFormData['subventions_type_6'] == 1) {
       $compensations[] = [
         'subventionType' => '6',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_6_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_6_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_6_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_6_sum'];
     }
     // Työttömien koulutusavustus.
-    if (array_key_exists('subventions_type_7', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_7'] == 1) {
+    if (array_key_exists('subventions_type_7', $this->submittedFormData) && $this->submittedFormData['subventions_type_7'] == 1) {
       $compensations[] = [
         'subventionType' => '7',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_7_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_7_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_7_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_7_sum'];
     }
     // Korot ja lyhennykset.
-    if (array_key_exists('subventions_type_8', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_8'] == 1) {
+    if (array_key_exists('subventions_type_8', $this->submittedFormData) && $this->submittedFormData['subventions_type_8'] == 1) {
       $compensations[] = [
         'subventionType' => '8',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_8_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_8_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_8_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_8_sum'];
     }
     // Muu.
-    if (array_key_exists('subventions_type_9', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_9'] == 1) {
+    if (array_key_exists('subventions_type_9', $this->submittedFormData) && $this->submittedFormData['subventions_type_9'] == 1) {
       $compensations[] = [
         'subventionType' => '9',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_9_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_9_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_9_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_9_sum'];
     }
     // Leiriavustus.
-    if (array_key_exists('subventions_type_12', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_12'] == 1) {
+    if (array_key_exists('subventions_type_12', $this->submittedFormData) && $this->submittedFormData['subventions_type_12'] == 1) {
       $compensations[] = [
         'subventionType' => '12',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_12_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_12_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_12_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_12_sum'];
     }
     // Lisäavustus.
-    if (array_key_exists('subventions_type_14', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_14'] == 1) {
+    if (array_key_exists('subventions_type_14', $this->submittedFormData) && $this->submittedFormData['subventions_type_14'] == 1) {
       $compensations[] = [
         'subventionType' => '14',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_14_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_14_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_14_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_14_sum'];
     }
     // Suunnistuskartta-avustus.
-    if (array_key_exists('subventions_type_15', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_15'] == 1) {
+    if (array_key_exists('subventions_type_15', $this->submittedFormData) && $this->submittedFormData['subventions_type_15'] == 1) {
       $compensations[] = [
         'subventionType' => '15',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_15_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_15_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_15_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_15_sum'];
     }
     // Toiminnan kehittämisavustus.
-    if (array_key_exists('subventions_type_17', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_17'] == 1) {
+    if (array_key_exists('subventions_type_17', $this->submittedFormData) && $this->submittedFormData['subventions_type_17'] == 1) {
       $compensations[] = [
         'subventionType' => '17',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_17_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_17_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_17_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_17_sum'];
     }
     // Kehittämisavustukset / Helsingin malli.
-    if (array_key_exists('subventions_type_29', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_29'] == 1) {
+    if (array_key_exists('subventions_type_29', $this->submittedFormData) && $this->submittedFormData['subventions_type_29'] == 1) {
       $compensations[] = [
         'subventionType' => '29',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_29_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_29_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_29_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_29_sum'];
     }
     // Starttiavustus.
-    if (array_key_exists('subventions_type_31', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_31'] == 1) {
+    if (array_key_exists('subventions_type_31', $this->submittedFormData) && $this->submittedFormData['subventions_type_31'] == 1) {
       $compensations[] = [
         'subventionType' => '31',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_31_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_31_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_31_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_31_sum'];
     }
     // Tilankäyttöavustus.
-    if (array_key_exists('subventions_type_32', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_32'] == 1) {
+    if (array_key_exists('subventions_type_32', $this->submittedFormData) && $this->submittedFormData['subventions_type_32'] == 1) {
       $compensations[] = [
         'subventionType' => '32',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_32_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_32_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_32_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_32_sum'];
     }
     // Taiteen perusopetus.
-    if (array_key_exists('subventions_type_34', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_34'] == 1) {
+    if (array_key_exists('subventions_type_34', $this->submittedFormData) && $this->submittedFormData['subventions_type_34'] == 1) {
       $compensations[] = [
         'subventionType' => '34',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_34_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_34_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_34_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_34_sum'];
     }
     // Varhaiskasvatus.
-    if (array_key_exists('subventions_type_35', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_35'] == 1) {
+    if (array_key_exists('subventions_type_35', $this->submittedFormData) && $this->submittedFormData['subventions_type_35'] == 1) {
       $compensations[] = [
         'subventionType' => '35',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_35_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_35_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_35_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_35_sum'];
     }
     // Vapaa sivistystyö.
-    if (array_key_exists('subventions_type_36', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_36'] == 1) {
+    if (array_key_exists('subventions_type_36', $this->submittedFormData) && $this->submittedFormData['subventions_type_36'] == 1) {
       $compensations[] = [
         'subventionType' => '36',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_36_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_36_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_36_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_36_sum'];
     }
     // Tapahtuma-avustus.
-    if (array_key_exists('subventions_type_37', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_37'] == 1) {
+    if (array_key_exists('subventions_type_37', $this->submittedFormData) && $this->submittedFormData['subventions_type_37'] == 1) {
       $compensations[] = [
         'subventionType' => '37',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_37_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_37_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_37_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_37_sum'];
     }
     // Pienavustus.
-    if (array_key_exists('subventions_type_38', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_38'] == 1) {
+    if (array_key_exists('subventions_type_38', $this->submittedFormData) && $this->submittedFormData['subventions_type_38'] == 1) {
       $compensations[] = [
         'subventionType' => '38',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_38_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_38_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_38_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_38_sum'];
     }
     // Kotouttamisavustus.
-    if (array_key_exists('subventions_type_39', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_39'] == 1) {
+    if (array_key_exists('subventions_type_39', $this->submittedFormData) && $this->submittedFormData['subventions_type_39'] == 1) {
       $compensations[] = [
         'subventionType' => '39',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_39_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_39_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_39_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_39_sum'];
     }
     // Harrastushaku.
-    if (array_key_exists('subventions_type_40', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_40'] == 1) {
+    if (array_key_exists('subventions_type_40', $this->submittedFormData) && $this->submittedFormData['subventions_type_40'] == 1) {
       $compensations[] = [
         'subventionType' => '40',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_40_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_40_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_40_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_40_sum'];
     }
     // Laitosavustus.
-    if (array_key_exists('subventions_type_41', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_41'] == 1) {
+    if (array_key_exists('subventions_type_41', $this->submittedFormData) && $this->submittedFormData['subventions_type_41'] == 1) {
       $compensations[] = [
         'subventionType' => '41',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_41_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_41_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_41_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_41_sum'];
     }
     // Muiden liikuntaa edistävien yhteisöjen avustus.
-    if (array_key_exists('subventions_type_42', $this->_submitted_form_data) && $this->_submitted_form_data['subventions_type_42'] == 1) {
+    if (array_key_exists('subventions_type_42', $this->submittedFormData) && $this->submittedFormData['subventions_type_42'] == 1) {
       $compensations[] = [
         'subventionType' => '42',
-        'amount' => $this->grantsHandlerConvertToFloat($this->_submitted_form_data['subventions_type_42_sum']),
+        'amount' => $this->grantsHandlerConvertToFloat($this->submittedFormData['subventions_type_42_sum']),
       ];
-      $compensationTotalAmount += (float) $this->_submitted_form_data['subventions_type_42_sum'];
+      $compensationTotalAmount += (float) $this->submittedFormData['subventions_type_42_sum'];
     }
 
     $otherCompensations = [];
 
     $otherCompensationsTotal = 0;
-    foreach ($this->_submitted_form_data['myonnetty_avustus'] as $otherCompensationsData) {
+    foreach ($this->submittedFormData['myonnetty_avustus'] as $otherCompensationsData) {
       $otherCompensations[] = [
         (object) [
           "ID" => "issuer",
@@ -878,9 +896,9 @@ class GrantsHandler extends WebformHandlerBase {
       ];
     };
 
-    $compensationPurpose = $this->_submitted_form_data['compensation_purpose'];
-    $compensationBoolean = ($this->_submitted_form_data['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
-    $compensationExplanation = $this->_submitted_form_data['compensation_explanation'];
+    $compensationPurpose = $this->submittedFormData['compensation_purpose'];
+    $compensationBoolean = ($this->submittedFormData['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
+    $compensationExplanation = $this->submittedFormData['compensation_explanation'];
 
     $compensationInfoData = (object) [
       "generalInfoArray" => [
@@ -915,7 +933,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $otherCompensationsInfoData = (object) [
       "otherCompensationsArray" =>
-        $otherCompensations,
+      $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 
@@ -931,11 +949,14 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Parse application officials' details from form.
+   *
    * @return array[]
+   *   Application officials' objects for JSON.
    */
-  private function _parseApplicationOfficials(): array {
+  private function parseApplicationOfficials(): array {
     $applicantOfficialsData = [];
-    foreach ($this->_submitted_form_data['applicant_officials'] as $official) {
+    foreach ($this->submittedFormData['applicant_officials'] as $official) {
       $applicantOfficialsData[] = [
         (object) [
           "ID" => "email",
