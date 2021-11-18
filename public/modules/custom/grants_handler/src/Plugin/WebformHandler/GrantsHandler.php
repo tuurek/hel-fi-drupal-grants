@@ -611,7 +611,7 @@ class GrantsHandler extends WebformHandlerBase {
       (object) [
         "ID" => "formTimeStamp",
         "label" => "Hakemuksen/sanoman lähetyshetki",
-        "value" => gmdate("Y-m-d\TH:i:s.v\Z", $webform_submission->getCreatedTime()),
+        "value" => gmdate("Y-m-d\TH:i:s.v\Z"),
         "valueType" => "datetime",
       ],
       (object) [
