@@ -198,8 +198,8 @@ class GrantsHandler extends WebformHandlerBase {
       else {
         $client = \Drupal::httpClient();
         $client->post($endpoint, [
-        'auth' => [$username, $password, "Basic"],
-        'body' => $myJSON,
+          'auth' => [$username, $password, "Basic"],
+          'body' => $myJSON,
         ]);
       }
     }
