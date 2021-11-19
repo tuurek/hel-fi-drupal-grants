@@ -6,6 +6,5 @@ dependencies:
   - webform
   - webform_ui
   - webform_rest
-  - helfi_base_config
 version: '1.0.1'
 package: HELfi

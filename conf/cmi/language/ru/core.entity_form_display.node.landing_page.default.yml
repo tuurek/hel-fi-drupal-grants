@@ -2,6 +2,8 @@ content:
   field_content:
     settings:
       title: Параграф
+      title_plural: Параграфы
   field_hero:
     settings:
       title: Параграф
+      title_plural: Параграфы

@@ -3,20 +3,9 @@ langcode: fi
 status: open
 dependencies:
   module:
-    - grants_metadata
     - grants_handler
-    - webform_entity_print
+    - grants_metadata
 third_party_settings:
-  webform_entity_print:
-    template:
-      header: ''
-      footer: ''
-      css: ''
-    export_types:
-      pdf:
-        enabled: true
-        link_text: ''
-        link_attributes: {  }
   grants_metadata:
     applicationType: ECONOMICGRANTAPPLICATION
     applicationTypeID: '29'
@@ -486,6 +475,9 @@ settings:
   form_access_denied_message: ''
   form_access_denied_attributes: {  }
   form_file_limit: ''
+  form_method: ''
+  form_action: ''
+  form_attributes: {  }
   share: false
   share_node: false
   share_theme_name: ''
