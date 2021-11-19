@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
+use Drupal\webform\WebformTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -51,7 +52,7 @@ class GrantsHandler extends WebformHandlerBase {
    *
    * @var \Drupal\webform\WebformTokenManagerInterface
    */
-  protected $tokenManager;
+  protected WebformTokenManagerInterface $tokenManager;
 
   /**
    * {@inheritdoc}
@@ -195,13 +196,11 @@ class GrantsHandler extends WebformHandlerBase {
 
       }
       else {
-        /*
         $client = \Drupal::httpClient();
         $client->post($endpoint, [
         'auth' => [$username, $password, "Basic"],
         'body' => $myJSON,
         ]);
-         */
       }
     }
 
