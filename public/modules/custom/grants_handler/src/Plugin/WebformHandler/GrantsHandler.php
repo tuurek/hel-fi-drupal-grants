@@ -6,8 +6,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\webform\WebformTokenManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Webform example handler.
@@ -41,32 +39,16 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Convert EUR format value to "double" .
    */
-  private function grantsHandlerConvertToFloat(string $value) {
+  private function grantsHandlerConvertToFloat(string $value): string {
     $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
     $value = (float) $value;
     return "" . $value;
   }
 
   /**
-   * The token manager.
-   *
-   * @var \Drupal\webform\WebformTokenManagerInterface
-   */
-  protected WebformTokenManagerInterface $tokenManager;
-
-  /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->tokenManager = $container->get('webform.token_manager');
-    return $instance;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [
       'debug' => FALSE,
     ];
