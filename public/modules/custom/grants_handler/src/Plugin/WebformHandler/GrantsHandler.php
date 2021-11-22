@@ -2,10 +2,15 @@
 
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
+
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+use Drupal\grants_attachments\AttachmentRemover;
+use Drupal\grants_attachments\AttachmentUploader;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Webform example handler.
@@ -35,6 +40,59 @@ class GrantsHandler extends WebformHandlerBase {
    * while not saving any sensitive data to local drupal.
    */
   private array $submittedFormData = [];
+
+  /**
+   * Field names for attachments.
+   *
+   * TODO: get field names from form where field type is attachment
+   *
+   * @var array|string[]
+   */
+  private array $attachmentFieldNames = [
+    'vahvistettu_tilinpaatos',
+    'vahvistettu_toimintakertomus',
+  ];
+
+  /**
+   * @var array $attachmentFileIds
+   */
+  private array $attachmentFileIds;
+
+  /**
+   * @var \Drupal\grants_attachments\AttachmentUploader
+   */
+  protected AttachmentUploader $attachmentUploader;
+
+  /**
+   * @var \Drupal\grants_attachments\AttachmentRemover
+   */
+  protected AttachmentRemover $attachmentRemover;
+
+  /**
+   * @var string $applicationType
+   */
+  protected string $applicationType;
+
+  /**
+   * @var string $applicationTypeID
+   */
+  protected string $applicationTypeID;
+
+  /**
+   * @var string $applicationNumber
+   */
+  protected string $applicationNumber;
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->attachmentUploader = $container->get('grants_attachments.attachment_uploader');
+    $instance->attachmentRemover = $container->get('grants_attachments.attachment_remover');
+    return $instance;
+  }
 
   /**
    * Convert EUR format value to "double" .
@@ -113,6 +171,7 @@ class GrantsHandler extends WebformHandlerBase {
 
   /**
    * {@inheritdoc}
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
 
@@ -159,7 +218,7 @@ class GrantsHandler extends WebformHandlerBase {
       ];
 
       $attachmentsInfoObject = [
-        "attachmentsArray" => $this->parseAttachements($this->submittedFormData),
+        "attachmentsArray" => $this->parseAttachments($form),
       ];
       $submitObject = (object) [
         'compensation' => $compensationObject,
@@ -179,11 +238,29 @@ class GrantsHandler extends WebformHandlerBase {
       }
       else {
         $client = \Drupal::httpClient();
-        $client->post($endpoint, [
+        $res = $client->post($endpoint, [
           'auth' => [$username, $password, "Basic"],
           'body' => $myJSON,
         ]);
+
+        $status = $res->getStatusCode();
+
+        if ($status === 201) {
+          $attachmentResult = $this->attachmentUploader->uploadAttachments(
+            $this->attachmentFileIds,
+            $this->applicationNumber);
+
+          if ($attachmentResult === TRUE) {
+            $this->messenger()
+              ->addStatus('Grant application saved and attachments saved');
+
+            $this->attachmentRemover->removeGrantAttachments($this->attachmentFileIds);
+          }
+        }
+
       }
+
+
     }
 
     $this->_data_saved_succesfully = TRUE;
@@ -233,45 +310,74 @@ class GrantsHandler extends WebformHandlerBase {
    * @return array[]
    *   Parsed attchments.
    */
-  private function parseAttachements(): array {
+  private function parseAttachments($form): array {
 
-    // Check.
-    // @todo make attachements to come from submitted form.
-    $attachments = [
-      [
-        'description' => "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
-        'filename' => "01_pankin_ilmoitus_tilinomistajast_.docx",
-        'filetype' => "1",
-      ],
-      [
-        'description' => "2 Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
-        'filename' => "02_pankin_ilmoitus_tilinomistajast_.docx",
-        'filetype' => "2",
-      ],
-    ];
 
     $attachmentsArray = [];
-    foreach ($attachments as $attachment) {
-      $attachmentsArray[] = [
-        (object) [
-          "ID" => "description",
-          "value" => $attachment['description'],
-          "valueType" => "string",
-        ],
-        (object) [
-          "ID" => "fileName",
-          "value" => $attachment['filename'],
-          "valueType" => "string",
-        ],
-        (object) [
-          "ID" => "fileType",
-          "value" => $attachment['filetype'],
-          "valueType" => "int",
-        ],
-      ];
+    foreach ($this->attachmentFieldNames as $attachmentFieldName) {
+      $attachmentsArray[] = $this->getAttachmentByFieldName($attachmentFieldName, $form);
     }
 
     return $attachmentsArray;
+  }
+
+  /**
+   * @param string $fieldName
+   * @param array $form
+   *
+   * @return array
+   */
+  private function getAttachmentByFieldName(string $fieldName, array $form): array {
+
+    $retval = [];
+    $field = $this->submittedFormData[$fieldName];
+
+    $retval[] = (object) [
+      "ID" => "description",
+      "value" => $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
+      "valueType" => "string",
+    ];
+
+    if (isset($field['attachment']) && $field['attachment'] !== NULL) {
+      $file = File::load($field['attachment']);
+      // add file id for easier usage in future
+      $this->attachmentFileIds[] = $field['attachment'];
+
+      $retval[] = (object) [
+        "ID" => "fileName",
+        "value" => $file->getFilename(),
+        "valueType" => "string",
+      ];
+      // TODO: check isNewAttachement status
+      $retval[] = (object) [
+        "ID" => "isNewAttachment",
+        "value" => 'true',
+        "valueType" => "bool",
+      ];
+      // TODO: check attachment fileType
+      $retval[] = (object) [
+        "ID" => "fileType",
+        //        "value" => $file->getMimeType(),
+        "value" => 1,
+        "valueType" => "int",
+      ];
+    }
+    if (isset($field['isDeliveredLater'])) {
+      $retval[] = (object) [
+        "ID" => "isDeliveredLater",
+        "value" => $field['isDeliveredLater'] === "1" ? 'true' : 'false',
+        "valueType" => "bool",
+      ];
+    }
+    if (isset($field['isIncludedInOtherFile'])) {
+      $retval[] = (object) [
+        "ID" => "isIncludedInOtherFile",
+        "value" => $field['isIncludedInOtherFile'] === "1" ? 'true' : 'false',
+        "valueType" => "bool",
+      ];
+    }
+    return $retval;
+
   }
 
   /**
@@ -564,11 +670,11 @@ class GrantsHandler extends WebformHandlerBase {
   private function parseApplicationInfo(
     WebformSubmission $webform_submission): array {
 
-    $applicationType = $webform_submission->getWebform()
+    $this->applicationType = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationType');
-    $applicationTypeID = $webform_submission->getWebform()
+    $this->applicationTypeID = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
-    $applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
+    $this->applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
 
     // Check.
     // @todo Check status.
@@ -580,13 +686,13 @@ class GrantsHandler extends WebformHandlerBase {
       (object) [
         "ID" => "applicationType",
         "label" => "Hakemustyyppi",
-        "value" => $applicationType,
+        "value" => $this->applicationType,
         "valueType" => "string",
       ],
       (object) [
         "ID" => "applicationTypeID",
         "label" => "Hakemustyypin numero",
-        "value" => $applicationTypeID,
+        "value" => $this->applicationTypeID,
         "valueType" => "int",
       ],
       (object) [
@@ -598,7 +704,7 @@ class GrantsHandler extends WebformHandlerBase {
       (object) [
         "ID" => "applicationNumber",
         "label" => "Hakemusnumero",
-        "value" => $applicationNumber,
+        "value" => $this->applicationNumber,
         "valueType" => "string",
       ],
       (object) [
@@ -914,7 +1020,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $otherCompensationsInfoData = (object) [
       "otherCompensationsArray" =>
-      $otherCompensations,
+        $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 

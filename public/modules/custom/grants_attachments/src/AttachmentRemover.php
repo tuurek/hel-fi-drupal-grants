@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_attachments;
 
+use Drupal\file\Entity\File;
 use Drupal\file\FileUsage\FileUsageInterface;
 
 /**
@@ -28,10 +29,19 @@ class AttachmentRemover {
 
   /**
    * Method description.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function removeGrantAttachments(): bool {
-
+  public function removeGrantAttachments(array $attachments): bool {
+    foreach ($attachments as $fileId) {
+      $file = File::load($fileId);
+      $file->delete();
+    }
     return TRUE;
+  }
+
+  public function purgeAllAttachments(){
+
   }
 
 }

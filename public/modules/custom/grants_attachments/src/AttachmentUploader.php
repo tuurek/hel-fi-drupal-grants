@@ -27,9 +27,12 @@ class AttachmentUploader {
   }
 
   /**
-   * Method description.
+   * @param array $attachments
+   * @param string $applicationNumber
+   *
+   * @return bool
    */
-  public function uploadAttachments() {
+  public function uploadAttachments(array $attachments, string $applicationNumber): bool {
 
     return TRUE;
 
