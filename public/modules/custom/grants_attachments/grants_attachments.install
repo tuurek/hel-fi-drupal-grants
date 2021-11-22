@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the grants_attachments module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function grants_attachments_install() {
+  \Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function grants_attachments_uninstall() {
+  \Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+
+/**
+ * Grants file schema
+ *
+ * @return array[]
+ */
+function grants_attachments_schema(): array {
+  $schema['grants_attachments'] = [
+    'description' => 'Stores module data as key/value pairs per user.',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid this record affects.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'webform_submission_id' => [
+        'description' => 'Webform submission',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'fid' => [
+        'description' => 'File ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ]
+    ],
+    'primary key' => [
+      'uid',
+      'webform_submission_id',
+      'fid',
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function grants_attachments_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $value = mt_rand(0, 100);
+    $requirements['grants_attachments_status'] = [
+      'title' => t('grants_attachments status'),
+      'value' => t('grants_attachments value: @value', ['@value' => $value]),
+      'severity' => $value > 50 ? REQUIREMENT_INFO : REQUIREMENT_WARNING,
+    ];
+  }
+
+  return $requirements;
+}

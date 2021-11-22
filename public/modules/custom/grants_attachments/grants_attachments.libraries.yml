@@ -1,0 +1,9 @@
+# Custom module library for general purposes.
+grants_attachments:
+  js:
+    js/grants-attachments.js: {}
+  css:
+    component:
+      css/grants-attachments.css: {}
+  dependencies:
+    - core/drupalSettings
