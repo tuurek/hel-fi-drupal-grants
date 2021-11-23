@@ -30,6 +30,7 @@ module:
   filter: 0
   focal_point: 0
   gin_toolbar: 0
+  grants_attachments: 0
   grants_handler: 0
   grants_metadata: 0
   grants_user_fields: 0

@@ -43,13 +43,28 @@ function grants_attachments_schema(): array {
         'not null' => TRUE,
         'default' => 0,
       ],
+      'grants_application_number' => [
+        'description' => 'Application id',
+        'type' => 'varchar',
+        'length' => '40',
+        'not null' => TRUE,
+        'default' => '',
+      ],
       'fid' => [
         'description' => 'File ID',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-      ]
+      ],
+      'user_hp_uuid' => [
+        'description' => 'User Helsinki-profiili ID',
+        'type' => 'varchar',
+        'length' => '40',
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
     ],
     'primary key' => [
       'uid',
