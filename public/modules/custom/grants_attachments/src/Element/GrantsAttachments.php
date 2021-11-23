@@ -51,14 +51,19 @@ class GrantsAttachments extends WebformCompositeBase {
   }
 
   /**
-   * @param $element
+   * Validate Checkbox.
+   *
+   * @param array $element
+   *   Validated element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param $complete_form
+   *   Form state.
+   * @param array $complete_form
+   *   Form itself.
    */
   public static function validateDeliveredLaterCheckbox(
-    &$element,
+    array &$element,
     FormStateInterface $form_state,
-    &$complete_form) {
+    array &$complete_form) {
 
     $file = $form_state->getValue([
       $element["#parents"][0],
@@ -76,14 +81,19 @@ class GrantsAttachments extends WebformCompositeBase {
   }
 
   /**
-   * @param $element
+   * Validate checkbox.
+   *
+   * @param array $element
+   *   Validated element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param $complete_form
+   *   Form state.
+   * @param array $complete_form
+   *   Form itself.
    */
   public static function validateIncludedOtherFileCheckbox(
-    &$element,
+    array &$element,
     FormStateInterface $form_state,
-    &$complete_form) {
+    array &$complete_form) {
 
     $file = $form_state->getValue([
       $element["#parents"][0],
@@ -98,6 +108,5 @@ class GrantsAttachments extends WebformCompositeBase {
       $form_state->setError($element, t('You cannot send file and have it in another file'));
     }
   }
-
 
 }

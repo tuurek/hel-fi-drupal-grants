@@ -2,7 +2,6 @@
 
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
-
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
@@ -44,45 +43,56 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Field names for attachments.
    *
-   * TODO: get field names from form where field type is attachment
-   *
    * @var array|string[]
+   *
+   * @todo get field names from form where field type is attachment.
    */
   private array $attachmentFieldNames = [
     'vahvistettu_tilinpaatos',
-    'vahvistettu_toimintakertomus',
+    // 'vahvistettu_toimintakertomus',
   ];
 
   /**
-   * @var array $attachmentFileIds
+   * Array containing added file ids for removal & upload.
+   *
+   * @var array
    */
   private array $attachmentFileIds;
 
   /**
+   * Uploader service.
+   *
    * @var \Drupal\grants_attachments\AttachmentUploader
    */
   protected AttachmentUploader $attachmentUploader;
 
   /**
+   * Remover service.
+   *
    * @var \Drupal\grants_attachments\AttachmentRemover
    */
   protected AttachmentRemover $attachmentRemover;
 
   /**
-   * @var string $applicationType
+   * Application type.
+   *
+   * @var string
    */
   protected string $applicationType;
 
   /**
-   * @var string $applicationTypeID
+   * Application type ID.
+   *
+   * @var string
    */
   protected string $applicationTypeID;
 
   /**
-   * @var string $applicationNumber
+   * Generated application number.
+   *
+   * @var string
    */
   protected string $applicationNumber;
-
 
   /**
    * {@inheritdoc}
@@ -155,11 +165,15 @@ class GrantsHandler extends WebformHandlerBase {
     // and set it to class private variable.
     $this->submittedFormData = $webform_submission->getData();
 
-    // Set submission data to empty.
-    // form will still contain submission details, IP time etc etc.
-    $webform_submission->setData([]);
+    // Do not save form data if we have debug set up.
+    if (!empty($this->configuration['debug'])) {
+      // Set submission data to empty.
+      // form will still contain submission details, IP time etc etc.
+      $webform_submission->setData([]);
+    }
 
     $this->debug(__FUNCTION__);
+
   }
 
   /**
@@ -171,6 +185,7 @@ class GrantsHandler extends WebformHandlerBase {
 
   /**
    * {@inheritdoc}
+   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
@@ -228,12 +243,29 @@ class GrantsHandler extends WebformHandlerBase {
       $submitObject->formUpdate = FALSE;
       $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
 
-      if (!empty($this->configuration['debug'])) {
+      if ($this->isDebug()) {
         $t_args = [
           '@myJSON' => $myJSON,
         ];
         $this->messenger()
           ->addMessage($this->t('DEBUG: Sent JSON: @myJSON', $t_args));
+
+        $attachmentResult = $this->attachmentUploader->uploadAttachments(
+          $this->attachmentFileIds,
+          $this->applicationNumber,
+          $this->isDebug()
+        );
+
+        $this->messenger()
+          ->addStatus('Grant application saved and attachments saved');
+
+        $this->attachmentRemover->removeGrantAttachments(
+          $this->attachmentFileIds,
+          $attachmentResult,
+          $this->applicationNumber,
+          $this->isDebug(),
+          $webform_submission->id()
+        );
 
       }
       else {
@@ -248,24 +280,36 @@ class GrantsHandler extends WebformHandlerBase {
         if ($status === 201) {
           $attachmentResult = $this->attachmentUploader->uploadAttachments(
             $this->attachmentFileIds,
-            $this->applicationNumber);
+            $this->applicationNumber,
+            $this->isDebug()
+          );
 
-          if ($attachmentResult === TRUE) {
-            $this->messenger()
-              ->addStatus('Grant application saved and attachments saved');
+          $this->messenger()
+            ->addStatus('Grant application saved and attachments saved');
 
-            $this->attachmentRemover->removeGrantAttachments($this->attachmentFileIds);
-          }
+          $this->attachmentRemover->removeGrantAttachments(
+            $this->attachmentFileIds,
+            $attachmentResult,
+            $this->applicationNumber,
+            $this->isDebug()
+          );
         }
 
       }
 
-
     }
 
-    $this->_data_saved_succesfully = TRUE;
-
     $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * Helper to find out if we're debugging or not.
+   *
+   * @return bool
+   *   If debug mode is on or not.
+   */
+  protected function isDebug(): bool {
+    return !empty($this->configuration['debug']);
   }
 
   /**
@@ -312,7 +356,6 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function parseAttachments($form): array {
 
-
     $attachmentsArray = [];
     foreach ($this->attachmentFieldNames as $attachmentFieldName) {
       $attachmentsArray[] = $this->getAttachmentByFieldName($attachmentFieldName, $form);
@@ -322,10 +365,15 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * @param string $fieldName
-   * @param array $form
+   * Extract attachments from form data.
    *
-   * @return array
+   * @param string $fieldName
+   *   Field to be extracted.
+   * @param array $form
+   *   Form data.
+   *
+   * @return \stdClass[]
+   *   Data for JSON.
    */
   private function getAttachmentByFieldName(string $fieldName, array $form): array {
 
@@ -340,7 +388,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     if (isset($field['attachment']) && $field['attachment'] !== NULL) {
       $file = File::load($field['attachment']);
-      // add file id for easier usage in future
+      // Add file id for easier usage in future.
       $this->attachmentFileIds[] = $field['attachment'];
 
       $retval[] = (object) [
@@ -348,16 +396,16 @@ class GrantsHandler extends WebformHandlerBase {
         "value" => $file->getFilename(),
         "valueType" => "string",
       ];
-      // TODO: check isNewAttachement status
+      // @todo check isNewAttachement status
       $retval[] = (object) [
         "ID" => "isNewAttachment",
         "value" => 'true',
         "valueType" => "bool",
       ];
-      // TODO: check attachment fileType
+      // @todo check attachment fileType
       $retval[] = (object) [
         "ID" => "fileType",
-        //        "value" => $file->getMimeType(),
+        // "value" => $file->getMimeType(),
         "value" => 1,
         "valueType" => "int",
       ];
@@ -1020,7 +1068,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $otherCompensationsInfoData = (object) [
       "otherCompensationsArray" =>
-        $otherCompensations,
+      $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 

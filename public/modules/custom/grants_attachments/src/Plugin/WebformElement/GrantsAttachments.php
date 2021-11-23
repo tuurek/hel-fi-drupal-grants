@@ -41,7 +41,7 @@ class GrantsAttachments extends WebformCompositeBase {
     $lines = [];
 
     if ($value['attachment'] !== NULL) {
-      // load file
+      // Load file.
       /** @var \Drupal\file\FileInterface|null $file */
       $file = \Drupal::entityTypeManager()
         ->getStorage('file')
@@ -55,7 +55,6 @@ class GrantsAttachments extends WebformCompositeBase {
 
     $lines[] = $value["isIncludedInOtherFile"] === '1' ?
       $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render() : NULL;
-
 
     return $lines;
   }
