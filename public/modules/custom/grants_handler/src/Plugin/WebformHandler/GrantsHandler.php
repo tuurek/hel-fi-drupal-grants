@@ -291,7 +291,8 @@ class GrantsHandler extends WebformHandlerBase {
             $this->attachmentFileIds,
             $attachmentResult,
             $this->applicationNumber,
-            $this->isDebug()
+            $this->isDebug(),
+            $webform_submission->id()
           );
         }
 

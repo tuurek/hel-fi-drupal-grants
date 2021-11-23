@@ -131,7 +131,6 @@ class AttachmentUploader {
           ]);
         }
       }
-
       catch (GuzzleException $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
         $this->loggerFactory->error('Grants attachment upload failed: @error', [
