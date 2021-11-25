@@ -4,6 +4,7 @@ namespace Drupal\grants_attachments;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\Entity\File;
@@ -38,9 +39,9 @@ class AttachmentRemover {
   /**
    * Logger Factory.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   * @var \Drupal\Core\Logger\LoggerChannel
    */
-  protected LoggerChannelFactory $loggerFactory;
+  protected LoggerChannel $loggerChannel;
 
   /**
    * Constructs an AttachmentRemover object.
@@ -62,7 +63,7 @@ class AttachmentRemover {
   ) {
     $this->fileUsage = $file_usage;
     $this->messenger = $messenger;
-    $this->loggerFactory = $loggerFactory;
+    $this->loggerChannel = $loggerFactory->get('grants_attachments');
     $this->connection = $connection;
   }
 
@@ -117,7 +118,7 @@ class AttachmentRemover {
             ->condition('fid', $file->id())
             ->execute();
 
-          $this->loggerFactory->get('grants_attachments')->notice('Removed file entity & db log row');
+          $this->loggerChannel->notice('Removed file entity & db log row');
 
         }
         catch (EntityStorageException $e) {
@@ -136,11 +137,11 @@ class AttachmentRemover {
             ])
             ->execute();
 
-          $this->loggerFactory->get('grants_attachments')->error('Upload failed, files are saved for retry.');
+          $this->loggerChannel->error('Upload failed, files are saved for retry.');
 
         }
         catch (\Exception $e) {
-          $this->loggerFactory->get('grants_attachments')->error('Upload failed, removal failed, adding db row failed. Wow.');
+          $this->loggerChannel->error('Upload failed, removal failed, adding db row failed. Wow.');
         }
       }
     }
@@ -177,6 +178,7 @@ class AttachmentRemover {
       }
     }
     catch (\Exception $e) {
+      $this->loggerChannel->error('Error purging leftover attachments');
       $this->messenger->addError('Error purging leftover attachments');
     }
 

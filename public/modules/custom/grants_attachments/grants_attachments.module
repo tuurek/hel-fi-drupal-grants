@@ -13,13 +13,13 @@
 /**
  * Implements hook_theme().
  */
-function grants_attachments_theme(): array {
-  return [
-    'grants_attachment' => [
-      'render element' => 'element',
-    ],
-  ];
-}
+//function grants_attachments_theme(): array {
+//  return [
+//    'grants_attachments' => [
+//      'render element' => 'element',
+//    ],
+//  ];
+//}
 
 /**
  * Prepares variables for webform templates.
@@ -47,8 +47,6 @@ function grants_attachments_cron() {
   // parse results into structure that uploader eats
   $resultParsed = [];
   foreach ($result as $item) {
-    $item->grants_application_number = $item->grants_application_number;
-
     $resultParsed[$item->grants_application_number]['fid'][] = $item->fid;
   }
 

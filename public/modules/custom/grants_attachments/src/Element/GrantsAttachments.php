@@ -35,6 +35,7 @@ class GrantsAttachments extends WebformCompositeBase {
       '#multiple' => FALSE,
       '#uri_scheme' => 'private',
       '#upload_location' => 'private://grants_attachments',
+      '#sanitize' => TRUE,
     ];
     $elements['isDeliveredLater'] = [
       '#type' => 'checkbox',
@@ -69,13 +70,17 @@ class GrantsAttachments extends WebformCompositeBase {
       $element["#parents"][0],
       'attachment',
     ]);
-    $checkboxValue = $form_state->getValue([
+    $isDeliveredLaterCheckboxValue = $form_state->getValue([
       $element["#parents"][0],
       'isDeliveredLater',
     ]);
 
-    if ($file !== NULL && $checkboxValue === '1') {
+    if ($file !== NULL && $isDeliveredLaterCheckboxValue === '1') {
       $form_state->setError($element, t('You cannot send file and have it delivered later'));
+    }
+
+    if ($file === NULL) {
+
     }
 
   }

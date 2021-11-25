@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
@@ -49,7 +50,12 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private array $attachmentFieldNames = [
     'vahvistettu_tilinpaatos',
-    // 'vahvistettu_toimintakertomus',
+    'vahvistettu_toimintakertomus',
+    'vahvistettu_tilin_tai_toiminnantarkastuskertomus',
+    'vuosikokouksen_poytakirja',
+    'toimintasuunnitelma',
+    'talousarvio',
+    'muu_liite',
   ];
 
   /**
@@ -95,12 +101,53 @@ class GrantsHandler extends WebformHandlerBase {
   protected string $applicationNumber;
 
   /**
+   * Drupal\Core\Session\AccountProxyInterface definition.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected AccountProxyInterface $currentUser;
+
+  /**
+   * Oidc access token.
+   *
+   * @var string
+   */
+  protected string $accessToken;
+
+  /**
+   * Jwt token.
+   *
+   * @var string
+   */
+  protected string $idToken;
+
+  /**
+   * Decoded jwt data.
+   *
+   * @var object
+   */
+  protected \stdClass $jwtData;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    /** @var \Drupal\Core\DependencyInjection\Container $container */
     $instance->attachmentUploader = $container->get('grants_attachments.attachment_uploader');
     $instance->attachmentRemover = $container->get('grants_attachments.attachment_remover');
+
+    $instance->currentUser = $container->get('current_user');
+    $session = $container->get('openid_connect.session');
+
+    // Access token tells us.
+    $at = $session->retrieveAccessToken();
+    if ($at !== NULL) {
+      $instance->accessToken = $at;
+      $instance->idToken = $session->retrieveIdToken();
+      $instance->jwtData = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $instance->idToken)[1]))));
+    }
+
     return $instance;
   }
 
@@ -146,7 +193,58 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+    // @todo Is parent::validateForm needed in validateForm?
+    parent::validateForm($form, $form_state, $webform_submission);
+
+    $currentPage = $form["progress"]["#current_page"];
+    if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
+      foreach ($this->attachmentFieldNames as $fieldName) {
+        $this->validateAttachmentField(
+          $fieldName,
+          $form_state,
+          $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
+        );
+      }
+    }
+
     $this->debug(__FUNCTION__);
+  }
+
+  /**
+   * Validate single attachment field.
+   *
+   * @param string $fieldName
+   *   Name of the field in validation.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   * @param string $fieldTitle
+   *   Field title for errors.
+   *
+   * @todo think about how attachment validation logic could be moved to the component.
+   */
+  private function validateAttachmentField(string $fieldName, FormStateInterface $form_state, string $fieldTitle) {
+    $value = $form_state->getValue($fieldName);
+
+    if ($fieldName !== 'muu_liite' && $value === NULL) {
+      $form_state->setErrorByName($fieldName, $this->t('@fieldname field is required', [
+        '@fieldname' => $fieldTitle,
+      ]));
+    }
+    if ($value !== NULL) {
+      if (is_int($value['attachment'])) {
+        if ($value['isDeliveredLater'] === "1") {
+          $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", $this->t('@fieldname has file added, it cannot be added later.', [
+            '@fieldname' => $fieldTitle,
+          ]));
+        }
+        if ($value['isIncludedInOtherFile'] === "1") {
+          $form_state->setErrorByName("[" . $fieldName . "][isIncludedInOtherFile]", $this->t('@fieldname has file added, it cannot belong to other file.', [
+            '@fieldname' => $fieldTitle,
+          ]));
+        }
+      }
+      $r = 'asdf';
+    }
   }
 
   /**
@@ -250,23 +348,11 @@ class GrantsHandler extends WebformHandlerBase {
         $this->messenger()
           ->addMessage($this->t('DEBUG: Sent JSON: @myJSON', $t_args));
 
-        $attachmentResult = $this->attachmentUploader->uploadAttachments(
-          $this->attachmentFileIds,
-          $this->applicationNumber,
-          $this->isDebug()
-        );
-
+      }
+      // If backend mode is dev, then don't post things to backend.
+      if (getenv('BACKEND_MODE') === 'dev') {
         $this->messenger()
-          ->addStatus('Grant application saved and attachments saved');
-
-        $this->attachmentRemover->removeGrantAttachments(
-          $this->attachmentFileIds,
-          $attachmentResult,
-          $this->applicationNumber,
-          $this->isDebug(),
-          $webform_submission->id()
-        );
-
+          ->addWarning($this->t('Backend DEV mode on, no posting to backend is done.'));
       }
       else {
         $client = \Drupal::httpClient();
@@ -284,6 +370,7 @@ class GrantsHandler extends WebformHandlerBase {
             $this->isDebug()
           );
 
+          // @todo print message for every attachment
           $this->messenger()
             ->addStatus('Grant application saved and attachments saved');
 
@@ -295,9 +382,7 @@ class GrantsHandler extends WebformHandlerBase {
             $webform_submission->id()
           );
         }
-
       }
-
     }
 
     $this->debug(__FUNCTION__);

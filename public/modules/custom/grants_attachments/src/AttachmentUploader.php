@@ -2,13 +2,13 @@
 
 namespace Drupal\grants_attachments;
 
-use Psr7\Utils;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\Entity\File;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Utils;
 
 /**
  * Uploads attachments to backend.
@@ -39,9 +39,9 @@ class AttachmentUploader {
   /**
    * Logger Factory.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   * @var \Drupal\Core\Logger\LoggerChannel
    */
-  protected $loggerFactory;
+  protected $loggerChannel;
 
   /**
    * Database connection.
@@ -68,7 +68,7 @@ class AttachmentUploader {
                               Connection $connection) {
     $this->httpClient = $http_client;
     $this->messenger = $messenger;
-    $this->loggerFactory = $loggerFactory->get('grants_attachments');
+    $this->loggerChannel = $loggerFactory->get('grants_attachments');
     $this->connection = $connection;
   }
 
@@ -92,28 +92,38 @@ class AttachmentUploader {
   ): array {
     $retval = [];
     foreach ($attachments as $fileId) {
-      $file = File::load($fileId);
-      $fileUri = $file->get('uri')->value;
-      $filePath = \Drupal::service('file_system')->realpath($fileUri);
-      $body = Utils::tryFopen($filePath, 'r');
-
       try {
+        $file = File::load($fileId);
+
+        // If for some reason the file entity does not wxist, do no more.
+        if ($file === NULL) {
+          continue;
+        }
+
+        $fileUri = $file->get('uri')->value;
+        $filePath = \Drupal::service('file_system')->realpath($fileUri);
+
+        $body = Utils::tryFopen($filePath, 'r');
+
+        $requestData = [
+          'body' => $body,
+          'auth' => [
+            getenv('AVUSTUS2_USERNAME'),
+            getenv('AVUSTUS2_PASSWORD'),
+          ],
+          'headers' => [
+            'X-Case-ID' => $applicationNumber,
+          ],
+        ];
+
         $response = $this->httpClient->request(
           'POST',
           getenv('AVUSTUS2_LIITE_ENDPOINT'),
-          [
-            'body' => $body,
-            'auth' => [
-              getenv('AVUSTUS2_LIITE_USERNAME'),
-              getenv('AVUSTUS2_LIITE_PASSWD'),
-            ],
-            'headers' => [
-              'X-Case-ID' => $applicationNumber,
-            ],
-          ]);
+          $requestData
+          );
         if ($response->getStatusCode() === $this->validStatusCode) {
           $retval[$fileId] = TRUE;
-          $this->loggerFactory->notice('Grants attachment upload succeeded: Response statusCode = @status', [
+          $this->loggerChannel->notice('Grants attachment upload succeeded: Response statusCode = @status', [
             '@status' => $response->getStatusCode(),
           ]);
           // Make sure that no rows remain for this FID.
@@ -121,19 +131,31 @@ class AttachmentUploader {
             ->condition('fid', $file->id())
             ->execute();
 
-          $this->loggerFactory->get('grants_attachments')
-            ->notice('Removed file entity & db log row');
+          $this->loggerChannel->notice('Removed file entity & db log row');
         }
         else {
           $retval[$fileId] = FALSE;
-          $this->loggerFactory->error('Grants attachment upload failed: Response statusCode = @status', [
+          $this->loggerChannel->error('Grants attachment upload failed: Response statusCode = @status', [
             '@status' => $response->getStatusCode(),
           ]);
         }
       }
+      catch (Exception $e) {
+        $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
+        if ($debug) {
+          $this->messenger->addError(printf('Grants attachment upload failed: %s', [$e->getMessage()]));
+        }
+        $this->loggerChannel->error('Grants attachment upload failed: @error', [
+          '@error' => $e->getMessage(),
+        ]);
+        $retval[$fileId] = FALSE;
+      }
       catch (GuzzleException $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
-        $this->loggerFactory->error('Grants attachment upload failed: @error', [
+        if ($debug) {
+          $this->messenger->addError($e->getMessage());
+        }
+        $this->loggerChannel->error('Grants attachment upload failed: @error', [
           '@error' => $e->getMessage(),
         ]);
         $retval[$fileId] = FALSE;
