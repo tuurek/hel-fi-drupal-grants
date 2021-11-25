@@ -1,0 +1,13 @@
+# Printable version of the webform on a single page
+
+grants_webform_print:
+  path: '/webform/{webform}/print'
+  defaults:
+    _controller: '\Drupal\grants_webform_print\Controller\GrantsWebformPrintController::page'
+    _title_callback: '\Drupal\webform\Controller\WebformEntityController::title'
+  options:
+    parameters:
+      webform:
+        type: 'entity:webform'
+  requirements:
+    _entity_access: 'webform.submission_create'
