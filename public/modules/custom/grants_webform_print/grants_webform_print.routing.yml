@@ -1,6 +1,6 @@
 # Printable version of the webform on a single page
 
-entity.webform.print_page:
+grants_webform_print:
   path: '/webform/{webform}/print'
   defaults:
     _controller: '\Drupal\grants_webform_print\Controller\GrantsWebformPrintController::page'

@@ -5,26 +5,12 @@ namespace Drupal\grants_webform_print\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\webform\Entity\Webform;
 
 /**
  * Undocumented class.
  */
 class GrantsWebformPrintController extends ControllerBase {
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The webform message manager.
-   *
-   * @var \Drupal\webform\WebformMessageManagerInterface
-   */
-  protected $messageManager;
-
   /**
    * The webform request handler.
    *
@@ -73,7 +59,7 @@ class GrantsWebformPrintController extends ControllerBase {
             $item['#description'] = '';
           }
           $item['#description'] = $item['#help'] . "\n" . $item['#description'];
-          $item['#help'] = NULL;
+          $item['#help'] = null;
         }
         if (isset($item['#type'])) {
           if ($item['#type'] === 'textarea' || $item['#type'] === 'textfield') {
@@ -86,7 +72,6 @@ class GrantsWebformPrintController extends ControllerBase {
       }
     }
   }
-
   /**
    * Returns a webform to be printed.
    *
@@ -106,22 +91,20 @@ class GrantsWebformPrintController extends ControllerBase {
     $webform = $this->requestHandler->getCurrentWebform();
     $sourceEntity = $this->requestHandler->getCurrentSourceEntity(['webform']);
     $webformArray = $webform->getElementsDecoded();
-
     array_walk_recursive($webformArray, [$this, 'formatWebformElement']);
     $this->traverseWebform($webformArray);
 
     // Create a webform.
     $webform->setElements($webformArray);
-    $build = [
-      'webform' => [
-        '#type' => 'webform',
-        '#webform' => $webform,
-        '#source_entity' => $sourceEntity,
-        '#prefix' => '<div class="webform-print-submission-form">',
-        '#suffix' => '</div>',
-      ],
-    ];
+    $build = [];
     // Webform.
+    $build['webform'] = [
+      '#type' => 'webform',
+      '#webform' => $webform,
+      '#source_entity' => $sourceEntity,
+      '#prefix' => '<div class="webform-share-submission-form">',
+      '#suffix' => '</div>',
+    ];
     return $build;
 
   }
