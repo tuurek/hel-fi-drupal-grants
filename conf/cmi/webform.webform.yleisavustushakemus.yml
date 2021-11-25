@@ -428,24 +428,31 @@ elements: |-
       vahvistettu_tilinpaatos:
         '#type': grants_attachments
         '#title': 'Vahvistettu tilinpäätös (edelliseltä päättyneeltä tilikaudelta)'
+        '#title_display': before
       vahvistettu_toimintakertomus:
         '#type': grants_attachments
         '#title': 'Vahvistettu toimintakertomus (edelliseltä päättyneeltä tilikaudelta)'
+        '#title_display': before
       vahvistettu_tilin_tai_toiminnantarkastuskertomus:
         '#type': grants_attachments
         '#title': 'Vahvistettu tilin- tai toiminnantarkastuskertomus (edelliseltä päättyneeltä tilikaudelta)'
+        '#title_display': before
       vuosikokouksen_poytakirja:
         '#type': grants_attachments
         '#title': 'Vuosikokouksen pöytäkirja, jossa on vahvistettu edellisen päättyneen tilikauden tilinpäätös'
+        '#title_display': before
       toimintasuunnitelma:
         '#type': grants_attachments
         '#title': 'Toimintasuunnitelma (sille vuodelle jolle haet avustusta)'
+        '#title_display': before
       talousarvio:
         '#type': grants_attachments
         '#title': 'Talousarvio (sille vuodelle jolle haet avustusta)'
+        '#title_display': before
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'
+        '#title_display': before
         '#isDeliveredLater__access': false
         '#isIncludedInOtherFile__access': false
   actions:
@@ -594,12 +601,12 @@ settings:
 access:
   create:
     roles:
-      - anonymous
       - authenticated
     users: {  }
     permissions: {  }
   view_any:
-    roles: {  }
+    roles:
+      - admin
     users: {  }
     permissions: {  }
   update_any:
