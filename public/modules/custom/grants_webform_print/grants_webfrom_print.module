@@ -5,7 +5,7 @@
 /**
  * Implements hook_theme().
  */
-function webform_print_theme($existing, $type, $theme, $path) {
+function grants_webform_print_theme($existing, $type, $theme, $path) {
   return [
     // Using dedicated html and page template ensures the shared webforms
     // output is as simple as possible.
