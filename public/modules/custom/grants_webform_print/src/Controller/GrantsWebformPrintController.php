@@ -104,6 +104,7 @@ class GrantsWebformPrintController extends ControllerBase {
       '#source_entity' => $sourceEntity,
       '#prefix' => '<div class="webform-share-submission-form">',
       '#suffix' => '</div>',
+      '#theme' => 'page__webform_print',
     ];
     return $build;
 
