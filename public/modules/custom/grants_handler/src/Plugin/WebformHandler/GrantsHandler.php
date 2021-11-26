@@ -251,7 +251,7 @@ class GrantsHandler extends WebformHandlerBase {
     ];
 
     $attachmentsArray = [];
-    foreach ($attachments as $attachment) {
+    /*foreach ($attachments as $attachment) {
       $attachmentsArray[] = [
         (object) [
           "ID" => "description",
@@ -269,7 +269,7 @@ class GrantsHandler extends WebformHandlerBase {
           "valueType" => "int",
         ],
       ];
-    }
+    }*/
 
     return $attachmentsArray;
   }
