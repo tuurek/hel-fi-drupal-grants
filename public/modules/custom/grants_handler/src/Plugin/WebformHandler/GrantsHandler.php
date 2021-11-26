@@ -251,26 +251,6 @@ class GrantsHandler extends WebformHandlerBase {
     ];
 
     $attachmentsArray = [];
-    /*foreach ($attachments as $attachment) {
-      $attachmentsArray[] = [
-        (object) [
-          "ID" => "description",
-          "value" => $attachment['description'],
-          "valueType" => "string",
-        ],
-        (object) [
-          "ID" => "fileName",
-          "value" => $attachment['filename'],
-          "valueType" => "string",
-        ],
-        (object) [
-          "ID" => "fileType",
-          "value" => $attachment['filetype'],
-          "valueType" => "int",
-        ],
-      ];
-    }*/
-
     return $attachmentsArray;
   }
 
