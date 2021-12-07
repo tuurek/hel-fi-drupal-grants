@@ -1,5 +1,5 @@
 <?php
-
+use Drupal\Core\Render\Element;
 /**
  * @file
  * Primary module hooks for grants_attachments module.
@@ -13,13 +13,17 @@
 /**
  * Implements hook_theme().
  */
-//function grants_attachments_theme(): array {
-//  return [
-//    'grants_attachments' => [
-//      'render element' => 'element',
-//    ],
-//  ];
-//}
+function grants_attachments_theme(): array {
+  return [
+    'grants_attachments__managed_file' => [
+      'hook' => 'managed_file',
+      'render element' => 'element',
+    ],
+    'grants_attachments' => [
+      'render element' => 'children',
+    ],
+  ];
+}
 
 /**
  * Prepares variables for webform templates.
@@ -31,7 +35,7 @@
  *   - element: An associative array containing the properties of the element.
  */
 function template_preprocess_grants_attachments(array &$variables) {
-  echo('ads');
+
 }
 
 
