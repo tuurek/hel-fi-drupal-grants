@@ -196,8 +196,11 @@ class GrantsHandler extends WebformHandlerBase {
     // @todo Is parent::validateForm needed in validateForm?
     parent::validateForm($form, $form_state, $webform_submission);
 
+    // Get current page.
     $currentPage = $form["progress"]["#current_page"];
+    // Only validate set forms.
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
+      // Loop through fieldnames and validate fields.
       foreach ($this->attachmentFieldNames as $fieldName) {
         $this->validateAttachmentField(
           $fieldName,
@@ -206,7 +209,6 @@ class GrantsHandler extends WebformHandlerBase {
         );
       }
     }
-
     $this->debug(__FUNCTION__);
   }
 
@@ -220,17 +222,21 @@ class GrantsHandler extends WebformHandlerBase {
    * @param string $fieldTitle
    *   Field title for errors.
    *
-   * @todo think about how attachment validation logic could be moved to the component.
+   * @todo think about how attachment validation logic could be moved to the
+   *   component.
    */
   private function validateAttachmentField(string $fieldName, FormStateInterface $form_state, string $fieldTitle) {
+    // Get value.
     $value = $form_state->getValue($fieldName);
 
+    // Muu liite is optional.
     if ($fieldName !== 'muu_liite' && $value === NULL) {
       $form_state->setErrorByName($fieldName, $this->t('@fieldname field is required', [
         '@fieldname' => $fieldTitle,
       ]));
     }
     if ($value !== NULL) {
+      // If attachment is uploaded, make sure no other field is selected.
       if (is_int($value['attachment'])) {
         if ($value['isDeliveredLater'] === "1") {
           $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", $this->t('@fieldname has file added, it cannot be added later.', [
@@ -243,7 +249,6 @@ class GrantsHandler extends WebformHandlerBase {
           ]));
         }
       }
-      $r = 'asdf';
     }
   }
 
@@ -269,9 +274,7 @@ class GrantsHandler extends WebformHandlerBase {
       // form will still contain submission details, IP time etc etc.
       $webform_submission->setData([]);
     }
-
     $this->debug(__FUNCTION__);
-
   }
 
   /**
@@ -283,8 +286,6 @@ class GrantsHandler extends WebformHandlerBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
 
@@ -316,6 +317,7 @@ class GrantsHandler extends WebformHandlerBase {
         ],
       ];
 
+      // Build object for json.
       $compensationObject = (object) [
         "applicationInfoArray" => $this->parseApplicationInfo($webform_submission),
         "currentAddressInfoArray" => $this->parseCurrentAddressInfo(),
@@ -329,7 +331,7 @@ class GrantsHandler extends WebformHandlerBase {
         "additionalInformation" => $this->submittedFormData['additional_information'],
         "senderInfoArray" => $this->parseSenderInfo(),
       ];
-
+      // attachments' details.
       $attachmentsInfoObject = [
         "attachmentsArray" => $this->parseAttachments($form),
       ];
@@ -341,13 +343,13 @@ class GrantsHandler extends WebformHandlerBase {
       $submitObject->formUpdate = FALSE;
       $myJSON = json_encode($submitObject, JSON_UNESCAPED_UNICODE);
 
+      // If debug, print out json.
       if ($this->isDebug()) {
         $t_args = [
           '@myJSON' => $myJSON,
         ];
         $this->messenger()
           ->addMessage($this->t('DEBUG: Sent JSON: @myJSON', $t_args));
-
       }
       // If backend mode is dev, then don't post things to backend.
       if (getenv('BACKEND_MODE') === 'dev') {
