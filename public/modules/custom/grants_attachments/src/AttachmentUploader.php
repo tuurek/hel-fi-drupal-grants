@@ -99,28 +99,37 @@ class AttachmentUploader {
         if ($file === NULL) {
           continue;
         }
-
+        // Get file metadata.
         $fileUri = $file->get('uri')->value;
         $filePath = \Drupal::service('file_system')->realpath($fileUri);
 
+        // Get file data.
         $body = Utils::tryFopen($filePath, 'r');
 
-        $requestData = [
-          'body' => $body,
-          'auth' => [
-            getenv('AVUSTUS2_USERNAME'),
-            getenv('AVUSTUS2_PASSWORD'),
-          ],
-          'headers' => [
-            'X-Case-ID' => $applicationNumber,
-          ],
-        ];
-
+        // Get response with built request.
         $response = $this->httpClient->request(
           'POST',
+          // Liite endpoint.
           getenv('AVUSTUS2_LIITE_ENDPOINT'),
-          $requestData
-          );
+          [
+            'headers' => [
+              'X-Case-ID' => $applicationNumber,
+            ],
+            'auth' => [
+              // Auth details.
+              getenv('AVUSTUS2_USERNAME'),
+              getenv('AVUSTUS2_PASSWORD'),
+            ],
+            // Form data.
+            'multipart' => [
+              [
+                'name' => $file->getFilename(),
+                'filename' => $file->getFilename(),
+                'contents' => $body,
+              ],
+            ],
+          ]
+        );
         if ($response->getStatusCode() === $this->validStatusCode) {
           $retval[$fileId] = TRUE;
           $this->loggerChannel->notice('Grants attachment upload succeeded: Response statusCode = @status', [
@@ -140,7 +149,7 @@ class AttachmentUploader {
           ]);
         }
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
         if ($debug) {
           $this->messenger->addError(printf('Grants attachment upload failed: %s', [$e->getMessage()]));
