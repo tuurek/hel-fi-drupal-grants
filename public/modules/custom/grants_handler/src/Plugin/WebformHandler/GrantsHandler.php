@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
+use Drupal\helfi_user_external_data\UserExternalData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
@@ -23,8 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   cardinality =
  *   \Drupal\webform\Plugin\WebformHandlerInterface::CARDINALITY_SINGLE,
  *   results = \Drupal\webform\Plugin\WebformHandlerInterface::RESULTS_IGNORED,
- *   submission =
- *   \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
+ *   submission = \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
  * )
  */
 class GrantsHandler extends WebformHandlerBase {
@@ -57,6 +57,8 @@ class GrantsHandler extends WebformHandlerBase {
     'talousarvio',
     'muu_liite',
   ];
+
+
 
   /**
    * Array containing added file ids for removal & upload.
@@ -108,25 +110,10 @@ class GrantsHandler extends WebformHandlerBase {
   protected AccountProxyInterface $currentUser;
 
   /**
-   * Oidc access token.
-   *
-   * @var string
+   * @var \Drupal\helfi_user_external_data\UserExternalData
    */
-  protected string $accessToken;
+  protected UserExternalData $userExternalData;
 
-  /**
-   * Jwt token.
-   *
-   * @var string
-   */
-  protected string $idToken;
-
-  /**
-   * Decoded jwt data.
-   *
-   * @var object
-   */
-  protected \stdClass $jwtData;
 
   /**
    * {@inheritdoc}
@@ -138,15 +125,8 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->attachmentRemover = $container->get('grants_attachments.attachment_remover');
 
     $instance->currentUser = $container->get('current_user');
-    $session = $container->get('openid_connect.session');
 
-    // Access token tells us.
-    $at = $session->retrieveAccessToken();
-    if ($at !== NULL) {
-      $instance->accessToken = $at;
-      $instance->idToken = $session->retrieveIdToken();
-      $instance->jwtData = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $instance->idToken)[1]))));
-    }
+    $instance->userExternalData = $container->get('helfi_user_external_data.user_external_data');
 
     return $instance;
   }

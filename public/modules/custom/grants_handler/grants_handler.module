@@ -5,6 +5,9 @@
  * Provides an example of a webform handler.
  */
 
+use Drupal\Core\Datetime\DrupalDateTime;
+use \Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_theme().
  */
@@ -14,4 +17,51 @@ function grants_handler_theme() {
       'variables' => ['settings' => NULL, 'handler' => []],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function grants_handler_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  if ($form_id === 'webform_submission_yleisavustushakemus_add_form') {
+
+    $form['#prefix'] = '<div id="form_wrap">';
+    $form['#suffix'] = '</div>';
+    $form['#wrapper'] = 'form_wrap';
+
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#ajax"] = [
+      'callback' => 'testaa_ytunnus_hakua',
+      // don't forget :: when calling a class method.
+      //'callback' => [$this, 'myAjaxCallback'], //alternative notation
+      'disable-refocus' => FALSE,
+      // Or TRUE to prevent re-focusing on the triggering element.
+      'event' => 'change',
+      'wrapper' => 'form_wrap',
+      // This element is updated with this AJAX callback.
+      'progress' => [
+        'type' => 'throbber',
+        'message' => 'Getting YTJ data',
+      ],
+    ];
+  }
+}
+
+function testaa_ytunnus_hakua(array &$form, FormStateInterface $form_state) {
+
+  $client = \Drupal::service('helfi_yjdh.client');
+
+  $companyInfo = $client->getCompany('1961307-7');
+
+//  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#default_value"] = 'AJAKSILLAAAAAAAAf';
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $companyInfo[0]->Company->TradeName->Name;
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $companyInfo[0]->Company->Municipality->Type->Descriptions->CodeDescription[0]->Description;
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = new DrupalDateTime($companyInfo[0]->Company->CompanyStatus->Validity->StartDate, 'Europe/Helsinki');
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#default_value"] = new DrupalDateTime($companyInfo[0]->Company->CompanyStatus->Validity->StartDate, 'Europe/Helsinki');
+
+  $foundingYearExplode = explode('-',$companyInfo[0]->Company->CompanyStatus->Validity->StartDate);
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
+
+  return $form;
 }
