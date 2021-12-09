@@ -36,6 +36,11 @@ elements: |-
           2: '2'
           3: '3'
         '#required': true
+      company_select:
+        '#type': select
+        '#title': 'Company select'
+        '#options':
+          value: text1
       company_number:
         '#type': textfield
         '#title': Rekisterinumero

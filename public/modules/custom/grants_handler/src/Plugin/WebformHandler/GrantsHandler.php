@@ -554,42 +554,37 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function parseSenderInfo(): array {
 
-    // Check.
-    $senderInfoFirstname = "Tiina";
-    $senderInfoLastname = "Testaaja";
-    $senderInfoPersonID = "123456-7890";
-    $senderInfoUserID = "Testatii";
-    $senderInfoEmail = "tiina.testaaja@testiyhdistys.fi";
+    $userData = $this->userExternalData->getUserProfileData();
 
     return [
       (object) [
         "ID" => "firstname",
         "label" => "Etunimi",
-        "value" => $senderInfoFirstname,
+        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["firstName"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "lastname",
         "label" => "Sukunimi",
-        "value" => $senderInfoLastname,
+        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["lastName"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "personID",
         "label" => "Henkilötunnus",
-        "value" => $senderInfoPersonID,
+        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "userID",
         "label" => "Käyttäjätunnus",
-        "value" => $senderInfoUserID,
+        "value" => $userData["myProfile"]["id"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "email",
         "label" => "Sähköposti",
-        "value" => $senderInfoEmail,
+        "value" => $userData["myProfile"]["primaryEmail"]["email"],
         "valueType" => "string",
       ],
     ];

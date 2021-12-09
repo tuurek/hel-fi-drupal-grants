@@ -22,18 +22,25 @@ function grants_handler_theme() {
 /**
  * Implements hook_form_alter().
  */
-function grants_handler_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function grants_handler_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
 
   if ($form_id === 'webform_submission_yleisavustushakemus_add_form') {
 
+    $userExternalData = \Drupal::service('helfi_user_external_data.user_external_data');
+
     $form['#prefix'] = '<div id="form_wrap">';
     $form['#suffix'] = '</div>';
-    $form['#wrapper'] = 'form_wrap';
 
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#ajax"] = [
-      'callback' => 'testaa_ytunnus_hakua',
+    $options = [];
+    foreach ($userExternalData->getUserAssociations() as $association) {
+      $options[$association->BusinessId] = $association->AssociationNameInfo[0]->AssociationName;
+    }
+
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#options"] = $options;
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#ajax"] = [
+      'callback' => 'company_select_callback',
       // don't forget :: when calling a class method.
-      //'callback' => [$this, 'myAjaxCallback'], //alternative notation
       'disable-refocus' => FALSE,
       // Or TRUE to prevent re-focusing on the triggering element.
       'event' => 'change',
@@ -47,21 +54,70 @@ function grants_handler_form_alter(&$form, FormStateInterface $form_state, $form
   }
 }
 
-function testaa_ytunnus_hakua(array &$form, FormStateInterface $form_state) {
+function company_select_callback(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\helfi_user_external_data\UserExternalData $userExternalData */
+  $userExternalData = \Drupal::service('helfi_user_external_data.user_external_data');
 
-  $client = \Drupal::service('helfi_yjdh.client');
+  $formInput = $form_state->getUserInput();
 
-  $companyInfo = $client->getCompany('1961307-7');
+  $selectedCompanyData = $userExternalData->getYjdhClient()
+    ->getBasicInfo($formInput["company_select"]);
 
-//  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#default_value"] = 'AJAKSILLAAAAAAAAf';
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $companyInfo[0]->Company->TradeName->Name;
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $companyInfo[0]->Company->Municipality->Type->Descriptions->CodeDescription[0]->Description;
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData->BusinessId;
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData->AssociationNameInfo[0]->AssociationName;
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = new DrupalDateTime($selectedCompanyData->RegistryDate, 'Europe/Helsinki');
 
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = new DrupalDateTime($companyInfo[0]->Company->CompanyStatus->Validity->StartDate, 'Europe/Helsinki');
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#default_value"] = new DrupalDateTime($companyInfo[0]->Company->CompanyStatus->Validity->StartDate, 'Europe/Helsinki');
-
-  $foundingYearExplode = explode('-',$companyInfo[0]->Company->CompanyStatus->Validity->StartDate);
+  $foundingYearExplode = explode('-', $selectedCompanyData->RegistryDate);
   $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData->Address[0]->City;
+
+  if($selectedCompanyData->Address[0]->AddressTypeCode == 'YRPO') {
+
+  }
+
+  //
+  //  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#default_value"] = 'AJAKSILLAAAAAAAAf';
+  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $companyInfo[0]->Company->TradeName->Name;
+  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $companyInfo[0]->Company->Municipality->Type->Descriptions->CodeDescription[0]->Description;
+  //
+  //
+  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#default_value"] = new DrupalDateTime($companyInfo[0]->Company->CompanyStatus->Validity->StartDate, 'Europe/Helsinki');
+  //
+
 
   return $form;
 }
+
+/**
+ * How to prepopulate webforms
+ *
+ * Implements hook_webform_submission_form_alter().
+ *
+ * Prepopulates the Webform if the conditions are met.
+ */
+//function webform_prepopulate_webform_submission_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+//  /** @var \Drupal\webform_prepopulate\WebformPrepopulateUtils $utils */
+//  $utils = \Drupal::service('webform_prepopulate.utils');
+//  $hash = \Drupal::request()->query->get('hash');
+//  if (
+//    $utils->isFilePrepopulateEnabled($form['#webform_id']) &&
+//    !empty($hash) &&
+//    !empty($form['#webform_id'])
+//  ) {
+//    // If there are too many access to several hashes, do not prepopulate.
+//    if ($utils->hasHashAccess($hash, $form['#webform_id'])) {
+//      /** @var \Drupal\webform_prepopulate\WebformPrepopulateStorage $webformPrepopulateStorage */
+//      $webformPrepopulateStorage = \Drupal::service('webform_prepopulate.storage');
+//      $values = $webformPrepopulateStorage->getDataFromHash($hash, $form['#webform_id']);
+//      // Retain only Webform elements that have the same keys.
+//      $intersectKeys = array_intersect_key($values, $form['elements']);
+//      foreach ($intersectKeys as $elementKey => $elementValue) {
+//        // Override only if the form element default value is empty.
+//        if (empty($form['elements'][$elementKey]['#default_value'])) {
+//          $form['elements'][$elementKey]['#default_value'] = $values[$elementKey];
+//        }
+//      }
+//    }
+//  }
+//}
