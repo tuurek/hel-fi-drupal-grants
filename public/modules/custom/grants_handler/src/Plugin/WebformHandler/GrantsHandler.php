@@ -227,26 +227,36 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function validateAttachmentField(string $fieldName, FormStateInterface $form_state, string $fieldTitle) {
     // Get value.
-    $value = $form_state->getValue($fieldName);
+    $values = $form_state->getValue($fieldName);
 
-    // Muu liite is optional.
-    if ($fieldName !== 'muu_liite' && $value === NULL) {
-      $form_state->setErrorByName($fieldName, $this->t('@fieldname field is required', [
-        '@fieldname' => $fieldTitle,
-      ]));
+    $args = [];
+    if (isset($values[0]) && is_array($values[0])) {
+      $args = $values;
     }
-    if ($value !== NULL) {
-      // If attachment is uploaded, make sure no other field is selected.
-      if (is_int($value['attachment'])) {
-        if ($value['isDeliveredLater'] === "1") {
-          $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", $this->t('@fieldname has file added, it cannot be added later.', [
-            '@fieldname' => $fieldTitle,
-          ]));
-        }
-        if ($value['isIncludedInOtherFile'] === "1") {
-          $form_state->setErrorByName("[" . $fieldName . "][isIncludedInOtherFile]", $this->t('@fieldname has file added, it cannot belong to other file.', [
-            '@fieldname' => $fieldTitle,
-          ]));
+    else {
+      $args[] = $values;
+    }
+
+    foreach ($args as $value) {
+      // Muu liite is optional.
+      if ($fieldName !== 'muu_liite' && $value === NULL) {
+        $form_state->setErrorByName($fieldName, $this->t('@fieldname field is required', [
+          '@fieldname' => $fieldTitle,
+        ]));
+      }
+      if ($value !== NULL) {
+        // If attachment is uploaded, make sure no other field is selected.
+        if (is_int($value['attachment'])) {
+          if ($value['isDeliveredLater'] === "1") {
+            $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", $this->t('@fieldname has file added, it cannot be added later.', [
+              '@fieldname' => $fieldTitle,
+            ]));
+          }
+          if ($value['isIncludedInOtherFile'] === "1") {
+            $form_state->setErrorByName("[" . $fieldName . "][isIncludedInOtherFile]", $this->t('@fieldname has file added, it cannot belong to other file.', [
+              '@fieldname' => $fieldTitle,
+            ]));
+          }
         }
       }
     }
@@ -446,31 +456,45 @@ class GrantsHandler extends WebformHandlerBase {
 
     $attachmentsArray = [];
     foreach ($this->attachmentFieldNames as $attachmentFieldName) {
-      $attachmentsArray[] = $this->getAttachmentByFieldName($attachmentFieldName, $form);
-    }
+      $field = $this->submittedFormData[$attachmentFieldName];
+      $descriptionValue = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#title"];
 
+      // Since we have to support multiple field elements, we need to
+      // handle all as they were a multifield.
+      $args = [];
+      if (isset($field[0]) && is_array($field[0])) {
+        $args = $field;
+      }
+      else {
+        $args[] = $field;
+      }
+
+      // Lppt args & create attachement field.
+      foreach ($args as $fieldElement) {
+        $attachmentsArray[] = $this->getAttachmentByField($fieldElement, $descriptionValue);
+      }
+    }
     return $attachmentsArray;
   }
 
   /**
    * Extract attachments from form data.
    *
-   * @param string $fieldName
-   *   Field to be extracted.
-   * @param array $form
-   *   Form data.
+   * @param array $field
+   *   The field parsed.
+   * @param string $fieldDescription
+   *   The field description from form element title.
    *
    * @return \stdClass[]
    *   Data for JSON.
    */
-  private function getAttachmentByFieldName(string $fieldName, array $form): array {
+  private function getAttachmentByField(array $field, string $fieldDescription): array {
 
     $retval = [];
-    $field = $this->submittedFormData[$fieldName];
 
     $retval[] = (object) [
       "ID" => "description",
-      "value" => $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
+      "value" => ($field['description'] !== "") ? $fieldDescription . ': ' . $field['description'] : $fieldDescription,
       "valueType" => "string",
     ];
 
@@ -1098,7 +1122,7 @@ class GrantsHandler extends WebformHandlerBase {
         ],
       ];
 
-      $otherCompensationsTotal += $this->grantsHandlerConvertToFloat($otherCompensationsData['amount']);
+      $otherCompensationsTotal .= $this->grantsHandlerConvertToFloat($otherCompensationsData['amount']);
     }
 
     $compensatiosArray = [];
