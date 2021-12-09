@@ -20,11 +20,16 @@ class GrantsAttachments extends WebformCompositeBase {
   /**
    * {@inheritdoc}
    */
-  public function getInfo() {
+  public function getInfo(): array {
     return parent::getInfo() + ['#theme' => 'grants_attachments'];
   }
 
   /**
+   * Form elements for attachments.
+   *
+   * @todo Use description field always and poplate contents from field title.
+   * @todo Allowed file extensions for attachments??
+   *
    * {@inheritdoc}
    */
   public static function getCompositeElements(array $element): array {
@@ -34,8 +39,16 @@ class GrantsAttachments extends WebformCompositeBase {
       '#title' => t('Attachment'),
       '#multiple' => FALSE,
       '#uri_scheme' => 'private',
+      '#file_extensions' => 'pdf',
+      '#upload_validators' => [
+        'file_validate_extensions' => 'pdf',
+      ],
       '#upload_location' => 'private://grants_attachments',
       '#sanitize' => TRUE,
+    ];
+    $elements['description'] = [
+      '#type' => 'textfield',
+      '#title' => t('Attachment description'),
     ];
     $elements['isDeliveredLater'] = [
       '#type' => 'checkbox',
@@ -77,10 +90,6 @@ class GrantsAttachments extends WebformCompositeBase {
 
     if ($file !== NULL && $isDeliveredLaterCheckboxValue === '1') {
       $form_state->setError($element, t('You cannot send file and have it delivered later'));
-    }
-
-    if ($file === NULL) {
-
     }
 
   }

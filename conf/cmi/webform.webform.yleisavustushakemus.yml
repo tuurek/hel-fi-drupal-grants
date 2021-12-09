@@ -429,29 +429,36 @@ elements: |-
         '#type': grants_attachments
         '#title': 'Vahvistettu tilinpäätös (edelliseltä päättyneeltä tilikaudelta)'
         '#title_display': before
+        '#description__access': false
       vahvistettu_toimintakertomus:
         '#type': grants_attachments
         '#title': 'Vahvistettu toimintakertomus (edelliseltä päättyneeltä tilikaudelta)'
         '#title_display': before
+        '#description__access': false
       vahvistettu_tilin_tai_toiminnantarkastuskertomus:
         '#type': grants_attachments
         '#title': 'Vahvistettu tilin- tai toiminnantarkastuskertomus (edelliseltä päättyneeltä tilikaudelta)'
         '#title_display': before
+        '#description__access': false
       vuosikokouksen_poytakirja:
         '#type': grants_attachments
         '#title': 'Vuosikokouksen pöytäkirja, jossa on vahvistettu edellisen päättyneen tilikauden tilinpäätös'
         '#title_display': before
+        '#description__access': false
       toimintasuunnitelma:
         '#type': grants_attachments
         '#title': 'Toimintasuunnitelma (sille vuodelle jolle haet avustusta)'
         '#title_display': before
+        '#description__access': false
       talousarvio:
         '#type': grants_attachments
         '#title': 'Talousarvio (sille vuodelle jolle haet avustusta)'
         '#title_display': before
+        '#description__access': false
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'
+        '#multiple': 10
         '#title_display': before
         '#isDeliveredLater__access': false
         '#isIncludedInOtherFile__access': false
