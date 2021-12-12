@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
-use Drupal\helfi_user_external_data\UserExternalData;
+use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
@@ -57,8 +57,6 @@ class GrantsHandler extends WebformHandlerBase {
     'talousarvio',
     'muu_liite',
   ];
-
-
 
   /**
    * Array containing added file ids for removal & upload.
@@ -110,10 +108,11 @@ class GrantsHandler extends WebformHandlerBase {
   protected AccountProxyInterface $currentUser;
 
   /**
-   * @var \Drupal\helfi_user_external_data\UserExternalData
+   * User data from helsinkiprofiili & auth methods.
+   *
+   * @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData
    */
-  protected UserExternalData $userExternalData;
-
+  protected HelsinkiProfiiliUserData $userExternalData;
 
   /**
    * {@inheritdoc}
@@ -126,7 +125,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $instance->currentUser = $container->get('current_user');
 
-    $instance->userExternalData = $container->get('helfi_user_external_data.user_external_data');
+    $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
 
     return $instance;
   }
@@ -729,7 +728,7 @@ class GrantsHandler extends WebformHandlerBase {
     $companyNumber = $this->submittedFormData['company_number'];
     $communityOfficialName = $this->submittedFormData['community_official_name'];
     $communityOfficialNameShort = $this->submittedFormData['community_official_name_short'];
-    $registrationDate = $this->submittedFormData['registration_date'];
+    $registrationDate = $this->submittedFormData['registration_date_text'];
     $foundingYear = $this->submittedFormData['founding_year'];
     $home = $this->submittedFormData['home'];
     $webpage = $this->submittedFormData['homepage'];

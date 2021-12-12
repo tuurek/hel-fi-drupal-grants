@@ -27,97 +27,70 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
   if ($form_id === 'webform_submission_yleisavustushakemus_add_form') {
 
-    $userExternalData = \Drupal::service('helfi_user_external_data.user_external_data');
+    /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $userExternalData */
+    $userExternalData = \Drupal::service('helfi_helsinki_profiili.userdata');
 
-    $form['#prefix'] = '<div id="form_wrap">';
-    $form['#suffix'] = '</div>';
+    // if not authenticated let's not do anything. This is more for admin usage than
+    if(!$userExternalData->isAuthenticatedExternally()) return;
 
-    $options = [];
-    foreach ($userExternalData->getUserAssociations() as $association) {
-      $options[$association->BusinessId] = $association->AssociationNameInfo[0]->AssociationName;
+    /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhClient */
+    $yjdhClient = \Drupal::service('helfi_yjdh.client');
+    try {
+      $associationRoles = $yjdhClient->roleSearchWithSsn($userExternalData->getSsn());
+
+      $form['#prefix'] = '<div id="form_wrap">';
+      $form['#suffix'] = '</div>';
+
+      $options = [];
+      foreach ($associationRoles['Role'] as $association) {
+        $options[$association['BusinessId']] = $association['AssociationNameInfo'][0]['AssociationName'];
+      }
+
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#options"] = $options;
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#ajax"] = [
+        'callback' => 'company_select_callback',
+        // don't forget :: when calling a class method.
+        'disable-refocus' => FALSE,
+        // Or TRUE to prevent re-focusing on the triggering element.
+        'event' => 'change',
+        'wrapper' => 'form_wrap',
+        // This element is updated with this AJAX callback.
+        'progress' => [
+          'type' => 'throbber',
+          'message' => 'Getting YTJ data',
+        ],
+      ];
+
+    } catch (\Drupal\helfi_yjdh\Exception\YjdhException $e) {
+      $d = 'aasdf';
     }
 
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#options"] = $options;
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#ajax"] = [
-      'callback' => 'company_select_callback',
-      // don't forget :: when calling a class method.
-      'disable-refocus' => FALSE,
-      // Or TRUE to prevent re-focusing on the triggering element.
-      'event' => 'change',
-      'wrapper' => 'form_wrap',
-      // This element is updated with this AJAX callback.
-      'progress' => [
-        'type' => 'throbber',
-        'message' => 'Getting YTJ data',
-      ],
-    ];
+
   }
 }
 
 function company_select_callback(array &$form, FormStateInterface $form_state) {
-  /** @var \Drupal\helfi_user_external_data\UserExternalData $userExternalData */
-  $userExternalData = \Drupal::service('helfi_user_external_data.user_external_data');
+
+  $yjdhService = \Drupal::service('helfi_yjdh.client');
 
   $formInput = $form_state->getUserInput();
 
-  $selectedCompanyData = $userExternalData->getYjdhClient()
-    ->getBasicInfo($formInput["company_select"]);
+  $selectedCompanyData = $yjdhService->getAssociationBasicInfo($formInput["company_select"]);
 
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData->BusinessId;
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData->AssociationNameInfo[0]->AssociationName;
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = new DrupalDateTime($selectedCompanyData->RegistryDate, 'Europe/Helsinki');
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData['BusinessId'];
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData['AssociationNameInfo'][0]['AssociationName'];
 
-  $foundingYearExplode = explode('-', $selectedCompanyData->RegistryDate);
+  $regDate = new DrupalDateTime($selectedCompanyData['RegistryDate'], 'Europe/Helsinki');
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date_text"]["#value"] = $regDate->format('d.m.Y');
+
+  $foundingYearExplode = explode('-', $selectedCompanyData['RegistryDate']);
   $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
 
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData->Address[0]->City;
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData['Address'][0]['City'];
 
-  if($selectedCompanyData->Address[0]->AddressTypeCode == 'YRPO') {
-
-  }
-
-  //
-  //  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#default_value"] = 'AJAKSILLAAAAAAAAf';
-  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $companyInfo[0]->Company->TradeName->Name;
-  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $companyInfo[0]->Company->Municipality->Type->Descriptions->CodeDescription[0]->Description;
-  //
-  //
-  //  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#default_value"] = new DrupalDateTime($companyInfo[0]->Company->CompanyStatus->Validity->StartDate, 'Europe/Helsinki');
-  //
-
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"]["#value"] = $selectedCompanyData["AssociationStatus"];
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"]["#value"] = $selectedCompanyData["AssociationSpecialCondition"];
 
   return $form;
 }
-
-/**
- * How to prepopulate webforms
- *
- * Implements hook_webform_submission_form_alter().
- *
- * Prepopulates the Webform if the conditions are met.
- */
-//function webform_prepopulate_webform_submission_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-//  /** @var \Drupal\webform_prepopulate\WebformPrepopulateUtils $utils */
-//  $utils = \Drupal::service('webform_prepopulate.utils');
-//  $hash = \Drupal::request()->query->get('hash');
-//  if (
-//    $utils->isFilePrepopulateEnabled($form['#webform_id']) &&
-//    !empty($hash) &&
-//    !empty($form['#webform_id'])
-//  ) {
-//    // If there are too many access to several hashes, do not prepopulate.
-//    if ($utils->hasHashAccess($hash, $form['#webform_id'])) {
-//      /** @var \Drupal\webform_prepopulate\WebformPrepopulateStorage $webformPrepopulateStorage */
-//      $webformPrepopulateStorage = \Drupal::service('webform_prepopulate.storage');
-//      $values = $webformPrepopulateStorage->getDataFromHash($hash, $form['#webform_id']);
-//      // Retain only Webform elements that have the same keys.
-//      $intersectKeys = array_intersect_key($values, $form['elements']);
-//      foreach ($intersectKeys as $elementKey => $elementValue) {
-//        // Override only if the form element default value is empty.
-//        if (empty($form['elements'][$elementKey]['#default_value'])) {
-//          $form['elements'][$elementKey]['#default_value'] = $values[$elementKey];
-//        }
-//      }
-//    }
-//  }
-//}
