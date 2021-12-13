@@ -39,9 +39,9 @@ class GrantsAttachments extends WebformCompositeBase {
       '#title' => t('Attachment'),
       '#multiple' => FALSE,
       '#uri_scheme' => 'private',
-      '#file_extensions' => 'pdf',
+      '#file_extensions' => 'doc,docx,gif,jpg,jpeg,pdf,png,ppt,pptx,rtf,txt,xls,xlsx,zip',
       '#upload_validators' => [
-        'file_validate_extensions' => 'pdf',
+        'file_validate_extensions' => 'doc,docx,gif,jpg,jpeg,pdf,png,ppt,pptx,rtf,txt,xls,xlsx,zip',
       ],
       '#upload_location' => 'private://grants_attachments',
       '#sanitize' => TRUE,
@@ -75,9 +75,9 @@ class GrantsAttachments extends WebformCompositeBase {
    *   Form itself.
    */
   public static function validateDeliveredLaterCheckbox(
-    array &$element,
+    array              &$element,
     FormStateInterface $form_state,
-    array &$complete_form) {
+    array              &$complete_form) {
 
     $file = $form_state->getValue([
       $element["#parents"][0],
@@ -105,9 +105,9 @@ class GrantsAttachments extends WebformCompositeBase {
    *   Form itself.
    */
   public static function validateIncludedOtherFileCheckbox(
-    array &$element,
+    array              &$element,
     FormStateInterface $form_state,
-    array &$complete_form) {
+    array              &$complete_form) {
 
     $file = $form_state->getValue([
       $element["#parents"][0],
