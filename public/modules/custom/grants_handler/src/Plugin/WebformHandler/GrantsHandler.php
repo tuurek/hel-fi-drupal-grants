@@ -246,7 +246,7 @@ class GrantsHandler extends WebformHandlerBase {
       }
       if ($value !== NULL) {
         // If attachment is uploaded, make sure no other field is selected.
-        if (is_int($value['attachment'])) {
+        if (isset($value['attachment']) && is_int($value['attachment'])) {
           if ($value['isDeliveredLater'] === "1") {
             $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", $this->t('@fieldname has file added, it cannot be added later.', [
               '@fieldname' => $fieldTitle,
@@ -367,33 +367,40 @@ class GrantsHandler extends WebformHandlerBase {
           ->addWarning($this->t('Backend DEV mode on, no posting to backend is done.'));
       }
       else {
-        $client = \Drupal::httpClient();
-        $res = $client->post($endpoint, [
-          'auth' => [$username, $password, "Basic"],
-          'body' => $myJSON,
-        ]);
 
-        $status = $res->getStatusCode();
+        try {
+          $client = \Drupal::httpClient();
+          $res = $client->post($endpoint, [
+            'auth' => [$username, $password, "Basic"],
+            'body' => $myJSON,
+          ]);
 
-        if ($status === 201) {
-          $attachmentResult = $this->attachmentUploader->uploadAttachments(
-            $this->attachmentFileIds,
-            $this->applicationNumber,
-            $this->isDebug()
-          );
+          $status = $res->getStatusCode();
 
-          // @todo print message for every attachment
-          $this->messenger()
-            ->addStatus('Grant application saved and attachments saved');
+          if ($status === 201) {
+            $attachmentResult = $this->attachmentUploader->uploadAttachments(
+              $this->attachmentFileIds,
+              $this->applicationNumber,
+              $this->isDebug()
+            );
 
-          $this->attachmentRemover->removeGrantAttachments(
-            $this->attachmentFileIds,
-            $attachmentResult,
-            $this->applicationNumber,
-            $this->isDebug(),
-            $webform_submission->id()
-          );
+            // @todo print message for every attachment
+            $this->messenger()
+              ->addStatus('Grant application saved and attachments saved');
+
+            $this->attachmentRemover->removeGrantAttachments(
+              $this->attachmentFileIds,
+              $attachmentResult,
+              $this->applicationNumber,
+              $this->isDebug(),
+              $webform_submission->id()
+            );
+          }
         }
+        catch (\Exception $e) {
+          $this->messenger()->addError($e->getMessage());
+        }
+
       }
     }
 
@@ -459,6 +466,13 @@ class GrantsHandler extends WebformHandlerBase {
       $field = $this->submittedFormData[$attachmentFieldName];
       $descriptionValue = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#title"];
 
+      if (isset($form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"])) {
+        $fileType = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"];
+      }
+      else {
+        $fileType = '0';
+      }
+
       // Since we have to support multiple field elements, we need to
       // handle all as they were a multifield.
       $args = [];
@@ -471,7 +485,7 @@ class GrantsHandler extends WebformHandlerBase {
 
       // Lppt args & create attachement field.
       foreach ($args as $fieldElement) {
-        $attachmentsArray[] = $this->getAttachmentByField($fieldElement, $descriptionValue);
+        $attachmentsArray[] = $this->getAttachmentByField($fieldElement, $descriptionValue, $fileType);
       }
     }
     return $attachmentsArray;
@@ -484,17 +498,19 @@ class GrantsHandler extends WebformHandlerBase {
    *   The field parsed.
    * @param string $fieldDescription
    *   The field description from form element title.
+   * @param string $fileType
+   *   Filetype id from element configuration.
    *
    * @return \stdClass[]
    *   Data for JSON.
    */
-  private function getAttachmentByField(array $field, string $fieldDescription): array {
+  private function getAttachmentByField(array $field, string $fieldDescription, string $fileType): array {
 
     $retval = [];
 
     $retval[] = (object) [
       "ID" => "description",
-      "value" => ($field['description'] !== "") ? $fieldDescription . ': ' . $field['description'] : $fieldDescription,
+      "value" => (isset($field['description']) && $field['description'] !== "") ? $fieldDescription . ': ' . $field['description'] : $fieldDescription,
       "valueType" => "string",
     ];
 
@@ -517,8 +533,7 @@ class GrantsHandler extends WebformHandlerBase {
       // @todo check attachment fileType
       $retval[] = (object) [
         "ID" => "fileType",
-        // "value" => $file->getMimeType(),
-        "value" => 1,
+        "value" => (int) $fileType,
         "valueType" => "int",
       ];
     }
