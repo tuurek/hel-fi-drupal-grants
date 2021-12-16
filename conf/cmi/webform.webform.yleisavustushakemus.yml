@@ -428,11 +428,15 @@ elements: |-
       vahvistettu_tilinpaatos:
         '#type': grants_attachments
         '#title': 'Vahvistettu tilinpäätös (edelliseltä päättyneeltä tilikaudelta)'
+        '#multiple': false
+        '#filetype': '5'
         '#title_display': before
         '#description__access': false
       vahvistettu_toimintakertomus:
         '#type': grants_attachments
         '#title': 'Vahvistettu toimintakertomus (edelliseltä päättyneeltä tilikaudelta)'
+        '#multiple': false
+        '#filetype': '4'
         '#title_display': before
         '#description__access': false
       vahvistettu_tilin_tai_toiminnantarkastuskertomus:
