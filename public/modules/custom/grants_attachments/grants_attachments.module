@@ -37,8 +37,6 @@ function grants_attachments_theme(): array {
 function template_preprocess_grants_attachments(array &$variables) {
 
 }
-
-
 /**
  * Implements hook_cron().
  */

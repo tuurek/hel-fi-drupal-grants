@@ -109,6 +109,16 @@ elements: |-
       applicant_officials:
         '#type': webform_custom_composite
         '#title': 'Toiminnasta vastaavat henkilöt'
+        '#title_display': before
+        '#multiple__header': false
+        '#multiple__item_label': henkilö
+        '#multiple__no_items_message': 'Ei toiminnasta vastaavia henkil&ouml;it&auml;. Lis&auml;&auml; uusi henkil&ouml; alta.'
+        '#multiple__min_items': 1
+        '#multiple__sorting': false
+        '#multiple__add': false
+        '#multiple__add_more_input': false
+        '#multiple__add_more_button_label': 'Lisää henkilö'
+        '#format_items': hr
         '#element':
           official_name:
             '#type': textfield
@@ -211,9 +221,13 @@ elements: |-
         '#title': 'Myönnetty avustus'
         '#title_display': before
         '#multiple__header': false
+        '#multiple__item_label': 'myönnetty avustus'
+        '#multiple__no_items_message': 'Ei sy&ouml;tettyj&auml; arvoja. Lis&auml;&auml; uusi my&ouml;nnetty avustus alta.'
         '#multiple__empty_items': 0
         '#multiple__sorting': false
+        '#multiple__add': false
         '#multiple__add_more_input': false
+        '#multiple__add_more_button_label': 'Lisää myönnetty avustus'
         '#element':
           issuer:
             '#type': select
@@ -267,9 +281,13 @@ elements: |-
         '#title': 'Lisää uusi haettu avustus'
         '#title_display': before
         '#multiple__header': false
+        '#multiple__item_label': 'haettu avustus'
+        '#multiple__no_items_message': 'Ei sy&ouml;tettyj&auml; arvoja. Lis&auml;&auml; uusi haettu avustus alta.'
         '#multiple__empty_items': 0
         '#multiple__sorting': false
+        '#multiple__add': false
         '#multiple__add_more_input': false
+        '#multiple__add_more_button_label': 'Lisää haettu avustus'
         '#element':
           issuer:
             '#type': select
@@ -463,7 +481,13 @@ elements: |-
         '#type': grants_attachments
         '#title': 'Muu liite'
         '#multiple': 10
+        '#filetype': '1'
         '#title_display': before
+        '#multiple__item_label': liite
+        '#multiple__sorting': false
+        '#multiple__add': false
+        '#multiple__add_more_input': false
+        '#multiple__add_more_button_label': 'Lisää liite'
         '#isDeliveredLater__access': false
         '#isIncludedInOtherFile__access': false
   actions:
