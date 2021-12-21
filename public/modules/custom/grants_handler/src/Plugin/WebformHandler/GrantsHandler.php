@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
+use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
@@ -115,6 +116,11 @@ class GrantsHandler extends WebformHandlerBase {
   protected HelsinkiProfiiliUserData $userExternalData;
 
   /**
+   * @var \Drupal\grants_profile\GrantsProfileService
+   */
+  protected GrantsProfileService $grantsProfile;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -126,6 +132,8 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->currentUser = $container->get('current_user');
 
     $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
+
+    $instance->grantsProfile = $container->get('grants_profile.service');
 
     return $instance;
   }

@@ -1,0 +1,7 @@
+grants_profile.example:
+  path: '/grants-profile/show'
+  defaults:
+    _title: 'Show Grants profile'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::build'
+  requirements:
+    _permission: 'access content'
