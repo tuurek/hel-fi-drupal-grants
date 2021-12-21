@@ -223,6 +223,6 @@ handlers:
     weight: 0
     settings:
       message: 'This is a custom message.'
-      debug: true
+      debug: false
       endpoint: 'This is a custom endpoint. 2'
 variants: {  }
