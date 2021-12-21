@@ -1,0 +1,4 @@
+administer grants_attachments configuration:
+  title: 'Administer grants_attachments configuration'
+  description: 'Optional description.'
+  restrict access: true

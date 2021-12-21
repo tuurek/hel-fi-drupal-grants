@@ -7,6 +7,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "ext-json": "*",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
         "dompdf/dompdf": "^1.0",
@@ -21,6 +22,7 @@
         "drupal/entity": "^1.0",
         "drupal/entity_print": "dev-dogit-3227262-8.x-2.x as 2.2",
         "drupal/externalauth": "^1.4",
+        "drupal/filename_transliteration": "^1.0",
         "drupal/hdbt": "^1.0",
         "drupal/hdbt_admin": "^1.0",
         "drupal/helfi_ahjo": "^1.0",
@@ -112,6 +114,7 @@
         ],
         "post-update-cmd": [
             "@copy-commit-message-script"
-        ]
+        ],
+        "phpcs": "vendor/bin/phpcs public/modules/custom --standard=Drupal"
     }
 }

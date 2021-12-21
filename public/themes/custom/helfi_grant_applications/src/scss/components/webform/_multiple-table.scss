@@ -1,0 +1,24 @@
+.webform-multiple-table {
+  table {
+    margin-bottom: var(--spacing-2-xs);
+    border: 0px var(--color-white) solid;
+    border-collapse: collapse;
+  }
+  .webform-multiple-table--operations-two {
+    min-width: 60px;
+  }
+  tbody tr {
+    background: var(--color-black-10);
+    border-bottom: var(--spacing-s) var(--color-white) solid;
+
+    &:hover {
+      background: var(--color-black-10);
+    }
+  }
+  td {
+    padding-top: 0;
+  }
+  table thead th {
+    padding: 0 var(--spacing-s);
+  }
+}

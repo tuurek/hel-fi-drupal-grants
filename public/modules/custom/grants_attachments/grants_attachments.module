@@ -1,0 +1,67 @@
+<?php
+use Drupal\Core\Render\Element;
+/**
+ * @file
+ * Primary module hooks for grants_attachments module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+
+/**
+ * Implements hook_theme().
+ */
+function grants_attachments_theme(): array {
+  return [
+    'grants_attachments__managed_file' => [
+      'hook' => 'managed_file',
+      'render element' => 'element',
+    ],
+    'grants_attachments' => [
+      'render element' => 'children',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for webform templates.
+ *
+ * Default template: grants-attachments.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - element: An associative array containing the properties of the element.
+ */
+function template_preprocess_grants_attachments(array &$variables) {
+
+}
+/**
+ * Implements hook_cron().
+ */
+function grants_attachments_cron() {
+
+  // get saved files from db
+  $database = \Drupal::database();
+  $query = $database->query("SELECT * FROM {grants_attachments}");
+  $result = $query->fetchAll();
+  // parse results into structure that uploader eats
+  $resultParsed = [];
+  foreach ($result as $item) {
+    $resultParsed[$item->grants_application_number]['fid'][] = $item->fid;
+  }
+
+  /** @var \Drupal\grants_attachments\AttachmentUploader $attachmentUploader */
+  $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
+  foreach ($resultParsed as $applicationNumber => $item) {
+    // try to upload again with added data.
+    $attachmentUploader->uploadAttachments($item['fid'], $applicationNumber, FALSE);
+  }
+
+  /**
+   * @var \Drupal\grants_attachments\AttachmentRemover
+   */
+  $attachmentRemover = \Drupal::service('grants_attachments.attachment_remover');
+  $attachmentRemover->purgeAllAttachments();
+}
