@@ -6,3 +6,7 @@ view own grants_profile:
   title: 'View own grants profile'
   description: 'Optional description.'
   restrict access: true
+administer own grants_profile:
+  title: 'Administer own grants profile'
+  description: 'Optional description.'
+  restrict access: true
