@@ -7,6 +7,7 @@
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use \Drupal\Core\Form\FormStateInterface;
+use Drupal\helfi_yjdh\Exception\YjdhException;
 
 /**
  * Implements hook_theme().
@@ -63,8 +64,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
         ],
       ];
 
-    } catch (\Drupal\helfi_yjdh\Exception\YjdhException $e) {
-      $d = 'aasdf';
+    } catch (YjdhException $e) {
+      \Drupal::messenger()
+        ->addError('Company data fetching failed: ' . $e->getMessage());
     }
 
 
