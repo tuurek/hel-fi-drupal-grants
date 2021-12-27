@@ -1,4 +1,0 @@
-services:
-  grants_profile.service:
-    class: Drupal\grants_profile\GrantsProfileService
-    arguments: ['@helfi_atv.atv_service', '@helfi_helsinki_profiili.userdata', '@tempstore.private']
