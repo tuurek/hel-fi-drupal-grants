@@ -109,15 +109,15 @@
         },
         {
             "type": "vcs",
-            "url":  "git@github.com:City-of-Helsinki/drupal-module-helfi-atv.git"
+            "url":  "https://github.com/City-of-Helsinki/drupal-module-helfi-atv.git"
         },
         {
             "type": "vcs",
-            "url":  "git@github.com:City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git"
+            "url":  "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git"
         },
         {
             "type": "vcs",
-            "url":  "git@github.com:City-of-Helsinki/drupal-module-helfi-yjdh.git"
+            "url":  "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh.git"
         }
     ],
     "scripts": {
