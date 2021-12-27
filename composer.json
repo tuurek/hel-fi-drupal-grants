@@ -37,10 +37,7 @@
         "drupal/webform_views": "^5.0@alpha",
         "drush/drush": "^10.4",
         "mikehaertl/phpwkhtmltopdf": "~2.1",
-        "tecnickcom/tcpdf": "~6",
-        "drupal/drupal-module-helfi-atv": "dev-develop",
-        "drupal/drupal-module-helfi-helsinki-profiili": "dev-develop",
-        "drupal/drupal-module-helfi-yjdh": "dev-develop"
+        "tecnickcom/tcpdf": "~6"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
@@ -109,18 +106,6 @@
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "vcs",
-            "url":  "https://github.com/City-of-Helsinki/drupal-module-helfi-atv.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh.git"
         }
     ],
     "scripts": {
