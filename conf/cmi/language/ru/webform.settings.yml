@@ -7,10 +7,7 @@ settings:
   dialog_options:
     narrow:
       title: Узкий
-    normal:
-      title: Нормальный
     wide:
       title: Широкий
 element:
-  empty_message: '-'
   default_more_title: Ещё
