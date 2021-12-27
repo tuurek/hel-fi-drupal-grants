@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\webform_share\EventSubscriber;
+namespace Drupal\webform_print\EventSubscriber;
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\webform_share\WebformShareHelper;
+use Drupal\webform_print\WebformPrintHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Event subscriber to allow webform to be shared via an iframe.
  */
-class WebformShareEventSubscriber implements EventSubscriberInterface {
+class WebformPrintEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The current route match.
@@ -21,7 +21,7 @@ class WebformShareEventSubscriber implements EventSubscriberInterface {
   protected $routeMatch;
 
   /**
-   * Constructs a WebformShareEventSubscriber object.
+   * Constructs a WebformPrintEventSubscriber object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
@@ -37,7 +37,7 @@ class WebformShareEventSubscriber implements EventSubscriberInterface {
    *   The response event.
    */
   public function onResponse(FilterResponseEvent $event) {
-    if (!WebformShareHelper::isPage($this->routeMatch)) {
+    if (!WebformPrintHelper::isPage($this->routeMatch)) {
       return;
     }
 

@@ -1,5 +1,5 @@
 services:
-  webform_share.theme_negotiator:
+  webform_print.theme_negotiator:
     class: Drupal\grants_webform_print\Theme\GrantsWebformPrintThemeNegotiator
     arguments: ['@config.factory']
     tags:

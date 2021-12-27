@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\webform_share\Routing;
+namespace Drupal\webform_print\Routing;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
@@ -9,7 +9,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Remove webform share routes.
  */
-class WebformShareRouteSubscriber extends RouteSubscriberBase {
+class WebformPrintRouteSubscriber extends RouteSubscriberBase {
 
   /**
    * The module handler.
@@ -19,7 +19,7 @@ class WebformShareRouteSubscriber extends RouteSubscriberBase {
   protected $moduleHandler;
 
   /**
-   * Constructs a WebformShareRouteSubscriber object.
+   * Constructs a WebformPrintRouteSubscriber object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.

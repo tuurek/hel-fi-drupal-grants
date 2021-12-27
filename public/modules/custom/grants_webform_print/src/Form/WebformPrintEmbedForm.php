@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\webform_share\Form;
+namespace Drupal\webform_print\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Webform share embed form.
  */
-class WebformShareEmbedForm extends FormBase {
+class WebformPrintEmbedForm extends FormBase {
 
   /**
    * The renderer.
@@ -40,7 +40,7 @@ class WebformShareEmbedForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'webform_share_embed_form';
+    return 'webform_print_embed_form';
   }
 
   /**
@@ -95,7 +95,7 @@ class WebformShareEmbedForm extends FormBase {
     ];
     foreach ($types as $type => $item) {
       $build = [
-        '#type' => 'webform_share_' . $item['type'],
+        '#type' => 'webform_print_' . $item['type'],
         '#webform' => $webform,
         '#source_entity' => $source_entity,
         '#query' => $this->getRequest()->query->all(),
@@ -129,7 +129,7 @@ class WebformShareEmbedForm extends FormBase {
       ];
     }
 
-    $form['#attached']['library'][] = 'webform_share/webform_share.admin';
+    $form['#attached']['library'][] = 'webform_print/webform_print.admin';
 
     return $form;
   }

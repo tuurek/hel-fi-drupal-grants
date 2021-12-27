@@ -181,12 +181,6 @@ function grants_webform_print_theme($existing, $type, $theme, $path) {
     'page__grants_webform_print' => [
       'render element' => 'page',
     ],
-    'grants_webform_print_iframe' => [
-      'render element' => 'element',
-    ],
-    'grants_webform_print_script' => [
-      'render element' => 'element',
-    ],
   ];
 }
 
@@ -285,41 +279,4 @@ function grants_webform_print_preprocess_page_title(&$variables) {
   if (isset($variables['title_suffix'])) {
     unset($variables['title_suffix']['add_or_remove_shortcut']);
   }
-}
-
-/**
- * Prepares variables for webform share iframe templates.
- *
- * Default template: webform-share-iframe.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #webform, #javascript, #options, and #attributes.
- */
-function template_preprocess_grants_webform_print_iframe(array &$variables) {
-  $element = $variables['element'];
-
-  // Set javascript.
-  $variables['javascript'] = $element['#javascript'];
-
-  // Set iframe-resizer script options.
-  $variables['script'] = $element['#script'];
-  $options = json_encode($element['#options'], JSON_FORCE_OBJECT);
-  $variables['options'] = Markup::create($options);
-}
-
-/**
- * Prepares variables for webform share script templates.
- *
- * Default template: webform-share-script.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties of the element.
- *     Properties used: #webform, #javascript, #options, and #attributes.
- */
-function template_preprocess_grants_webform_print_script(array &$variables) {
-  $element = $variables['element'];
-  $variables['script'] = $element['#script'];
 }

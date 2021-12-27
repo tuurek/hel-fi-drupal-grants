@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\webform_share\Access;
+namespace Drupal\webform_print\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
@@ -11,7 +11,7 @@ use Drupal\webform_node\Access\WebformNodeAccess;
 /**
  * Defines the custom access control handler for webform sharing.
  */
-class WebformShareAccess {
+class WebformPrintAccess {
 
   /**
    * Check whether the webform can be shared and it is not a template.
