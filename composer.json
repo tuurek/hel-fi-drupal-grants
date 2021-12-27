@@ -37,7 +37,10 @@
         "drupal/webform_views": "^5.0@alpha",
         "drush/drush": "^10.4",
         "mikehaertl/phpwkhtmltopdf": "~2.1",
-        "tecnickcom/tcpdf": "~6"
+        "tecnickcom/tcpdf": "~6",
+        "drupal/drupal-module-helfi-atv": "dev-develop",
+        "drupal/drupal-module-helfi-helsinki-profiili": "dev-develop",
+        "drupal/drupal-module-helfi-yjdh": "dev-develop"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",

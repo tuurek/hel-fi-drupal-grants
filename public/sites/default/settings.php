@@ -1,5 +1,9 @@
 <?php
 
+// override gc settings coming from default.services.yml
+ini_set('session.gc_probability', 100);
+ini_set('session.gc_divisor', 100);
+
 if (PHP_SAPI === 'cli') {
   ini_set('memory_limit', '512M');
 }
