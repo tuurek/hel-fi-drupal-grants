@@ -99,13 +99,25 @@
             "type": "composer",
             "url": "https://repository.drupal.hel.ninja"
         },
-	{
-	    "type": "vcs",
-	    "url": "https://git.drupalcode.org/issue/entity_print-3217497"
-	},
+        {
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/entity_print-3217497"
+        },
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:City-of-Helsinki/drupal-module-helfi-atv.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@github.com:City-of-Helsinki/drupal-module-helfi-yjdh.git"
         }
     ],
     "scripts": {
