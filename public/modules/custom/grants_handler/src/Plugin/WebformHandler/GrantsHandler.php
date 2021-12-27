@@ -126,9 +126,7 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->currentUser = $container->get('current_user');
 
     $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
-
-    $instance->grantsProfile = $container->get('grants_profile.service');
-
+    
     return $instance;
   }
 
