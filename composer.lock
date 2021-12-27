@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e51f260d61c0720b80541fbe3696eec9",
+    "content-hash": "e1d0e03c7421cd86add36958ea69e270",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -5913,50 +5913,6 @@
             "homepage": "https://www.drupal.org/project/select2",
             "support": {
                 "source": "https://git.drupalcode.org/project/select2"
-            }
-        },
-        {
-            "name": "drupal/session_based_temp_store",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/session_based_temp_store.git",
-                "reference": "8.x-1.1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/session_based_temp_store-8.x-1.1.zip",
-                "reference": "8.x-1.1",
-                "shasum": "29112c9d5a0ea372c0dec38a5877d2404b3eee9e"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.1",
-                    "datestamp": "1605684846",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "nortmas",
-                    "homepage": "https://www.drupal.org/user/790656"
-                }
-            ],
-            "description": "Provides a service to store and retrieve temporary data for a given owner through the session.",
-            "homepage": "https://www.drupal.org/project/session_based_temp_store",
-            "support": {
-                "source": "https://git.drupalcode.org/project/session_based_temp_store"
             }
         },
         {
@@ -16108,5 +16064,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
