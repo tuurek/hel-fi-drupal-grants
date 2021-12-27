@@ -29,6 +29,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $userExternalData */
     $userExternalData = \Drupal::service('helfi_helsinki_profiili.userdata');
+    $profileData = $userExternalData->getUserProfileData();
 
     // if not authenticated let's not do anything. This is more for admin usage than
     if(!$userExternalData->isAuthenticatedExternally()) return;
@@ -36,7 +37,8 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhClient */
     $yjdhClient = \Drupal::service('helfi_yjdh.client');
     try {
-      $associationRoles = $yjdhClient->roleSearchWithSsn($userExternalData->getSsn());
+
+      $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
 
       $form['#prefix'] = '<div id="form_wrap">';
       $form['#suffix'] = '</div>';
