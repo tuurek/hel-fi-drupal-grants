@@ -64,7 +64,10 @@ if ($drush_options_uri && !in_array($drush_options_uri, $routes)) {
 
 $settings['config_sync_directory'] = '../conf/cmi';
 $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/files';
-$settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
+
+# $settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
+$settings['file_private_path'] = 'sites/default/files/private';
+
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 $settings['install_profile'] = 'minimal';
 
