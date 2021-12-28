@@ -1,0 +1,18 @@
+
+<p>Bank accounts here?</p>
+
+
+{% if bank_accounts %}
+  <ul class="bank-accounts-list">
+    {% for key,item in bank_accounts %}
+      <li class="bank_accounts">
+        <a href="/grants-profile/bank-accounts/{{ key }}">
+          {{ item.bank_account }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<p>
+  <a href="/grants-profile/bank-accounts/new">New Bank Account</a>
+</p>
