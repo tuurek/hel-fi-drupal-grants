@@ -42,6 +42,7 @@ module:
   hdbt_admin_tools: 0
   hdbt_component_library: 0
   hdbt_content: 0
+  helfi_toc: 0
   helfi_api_base: 0
   helfi_content: 0
   helfi_example_content: 0
@@ -106,6 +107,7 @@ module:
   eu_cookie_compliance: 11
   paragraphs: 11
   paragraphs_library: 11
+  minimal: 1000
 theme:
   stable9: 0
   claro: 0
