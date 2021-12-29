@@ -192,7 +192,11 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function validateForm(
+    array                      &$form,
+    FormStateInterface         $form_state,
+    WebformSubmissionInterface $webform_submission
+  ) {
     // @todo Is parent::validateForm needed in validateForm?
     parent::validateForm($form, $form_state, $webform_submission);
 
@@ -396,8 +400,7 @@ class GrantsHandler extends WebformHandlerBase {
               $webform_submission->id()
             );
           }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $this->messenger()->addError($e->getMessage());
         }
 
@@ -1162,6 +1165,8 @@ class GrantsHandler extends WebformHandlerBase {
     $compensationBoolean = ($this->submittedFormData['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
     $compensationExplanation = $this->submittedFormData['compensation_explanation'];
 
+    // TODO: Apparently the boolean here is in wrong way, and probably needs to be flipped
+
     $compensationInfoData = (object) [
       "generalInfoArray" => [
         (object) [
@@ -1195,7 +1200,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $otherCompensationsInfoData = (object) [
       "otherCompensationsArray" =>
-      $otherCompensations,
+        $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 
