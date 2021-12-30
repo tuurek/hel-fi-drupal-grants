@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
   admin_toolbar: 0
   admin_toolbar_tools: 0
@@ -35,6 +37,7 @@ module:
   grants_attachments: 0
   grants_handler: 0
   grants_metadata: 0
+  grants_profile: 0
   grants_user_fields: 0
   grants_webform_summation_field: 0
   hal: 0
@@ -42,8 +45,8 @@ module:
   hdbt_admin_tools: 0
   hdbt_component_library: 0
   hdbt_content: 0
-  helfi_toc: 0
   helfi_api_base: 0
+  helfi_atv: 0
   helfi_content: 0
   helfi_example_content: 0
   helfi_gdpr_compliance: 0
@@ -51,6 +54,7 @@ module:
   helfi_languages: 0
   helfi_media: 0
   helfi_platform_config: 0
+  helfi_toc: 0
   helfi_tunnistamo: 0
   helfi_yjdh: 0
   image: 0
@@ -119,5 +123,3 @@ theme:
   helfi_grants: 0
   helfi_grant_applications: 0
 profile: minimal
-_core:
-  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

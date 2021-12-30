@@ -1,0 +1,14 @@
+uuid: 8b232930-bc50-413c-bf1e-3663a1deee3a
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.helsinkiprofiili
+  module:
+    - user
+id: user_remove_role_action.helsinkiprofiili
+label: 'Remove the HelsinkiProfiili role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: helsinkiprofiili
