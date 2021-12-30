@@ -137,7 +137,7 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->attachmentUploader = $container->get('grants_attachments.attachment_uploader');
     $instance->attachmentRemover = $container->get('grants_attachments.attachment_remover');
 
-    // make sure we have empty array as initial value
+    // Make sure we have empty array as initial value.
     $instance->attachmentFileIds = [];
 
     $instance->currentUser = $container->get('current_user');
