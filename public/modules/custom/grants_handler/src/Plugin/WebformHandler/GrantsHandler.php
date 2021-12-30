@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
+use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
@@ -23,8 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   cardinality =
  *   \Drupal\webform\Plugin\WebformHandlerInterface::CARDINALITY_SINGLE,
  *   results = \Drupal\webform\Plugin\WebformHandlerInterface::RESULTS_IGNORED,
- *   submission =
- *   \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
+ *   submission = \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
  * )
  */
 class GrantsHandler extends WebformHandlerBase {
@@ -108,25 +108,11 @@ class GrantsHandler extends WebformHandlerBase {
   protected AccountProxyInterface $currentUser;
 
   /**
-   * Oidc access token.
+   * User data from helsinkiprofiili & auth methods.
    *
-   * @var string
+   * @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData
    */
-  protected string $accessToken;
-
-  /**
-   * Jwt token.
-   *
-   * @var string
-   */
-  protected string $idToken;
-
-  /**
-   * Decoded jwt data.
-   *
-   * @var object
-   */
-  protected \stdClass $jwtData;
+  protected HelsinkiProfiiliUserData $userExternalData;
 
   /**
    * {@inheritdoc}
@@ -137,16 +123,12 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->attachmentUploader = $container->get('grants_attachments.attachment_uploader');
     $instance->attachmentRemover = $container->get('grants_attachments.attachment_remover');
 
-    $instance->currentUser = $container->get('current_user');
-    $session = $container->get('openid_connect.session');
+    // Make sure we have empty array as initial value.
+    $instance->attachmentFileIds = [];
 
-    // Access token tells us.
-    $at = $session->retrieveAccessToken();
-    if ($at !== NULL) {
-      $instance->accessToken = $at;
-      $instance->idToken = $session->retrieveIdToken();
-      $instance->jwtData = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $instance->idToken)[1]))));
-    }
+    $instance->currentUser = $container->get('current_user');
+
+    $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
 
     return $instance;
   }
@@ -592,42 +574,37 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function parseSenderInfo(): array {
 
-    // Check.
-    $senderInfoFirstname = "Tiina";
-    $senderInfoLastname = "Testaaja";
-    $senderInfoPersonID = "123456-7890";
-    $senderInfoUserID = "Testatii";
-    $senderInfoEmail = "tiina.testaaja@testiyhdistys.fi";
+    $userData = $this->userExternalData->getUserProfileData();
 
     return [
       (object) [
         "ID" => "firstname",
         "label" => "Etunimi",
-        "value" => $senderInfoFirstname,
+        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["firstName"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "lastname",
         "label" => "Sukunimi",
-        "value" => $senderInfoLastname,
+        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["lastName"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "personID",
         "label" => "Henkilötunnus",
-        "value" => $senderInfoPersonID,
+        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "userID",
         "label" => "Käyttäjätunnus",
-        "value" => $senderInfoUserID,
+        "value" => $userData["myProfile"]["id"],
         "valueType" => "string",
       ],
       (object) [
         "ID" => "email",
         "label" => "Sähköposti",
-        "value" => $senderInfoEmail,
+        "value" => $userData["myProfile"]["primaryEmail"]["email"],
         "valueType" => "string",
       ],
     ];
@@ -772,7 +749,7 @@ class GrantsHandler extends WebformHandlerBase {
     $companyNumber = $this->submittedFormData['company_number'];
     $communityOfficialName = $this->submittedFormData['community_official_name'];
     $communityOfficialNameShort = $this->submittedFormData['community_official_name_short'];
-    $registrationDate = $this->submittedFormData['registration_date'];
+    $registrationDate = $this->submittedFormData['registration_date_text'];
     $foundingYear = $this->submittedFormData['founding_year'];
     $home = $this->submittedFormData['home'];
     $webpage = $this->submittedFormData['homepage'];
