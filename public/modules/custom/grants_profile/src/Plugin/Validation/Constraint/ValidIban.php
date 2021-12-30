@@ -15,7 +15,11 @@ use Symfony\Component\Validator\Constraint;
  */
 class ValidIban extends Constraint {
 
-  // The message that will be shown if the value is not unique.
+  /**
+   * The message that will be shown if the value is not unique.
+   *
+   * @var string
+   */
   public string $notValidIban = '%value is not valid IBAN';
 
 }

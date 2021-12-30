@@ -24,7 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   cardinality =
  *   \Drupal\webform\Plugin\WebformHandlerInterface::CARDINALITY_SINGLE,
  *   results = \Drupal\webform\Plugin\WebformHandlerInterface::RESULTS_IGNORED,
- *   submission = \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
+ *   submission =
+ *   \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
  * )
  */
 class GrantsHandler extends WebformHandlerBase {
@@ -1142,8 +1143,7 @@ class GrantsHandler extends WebformHandlerBase {
     $compensationBoolean = ($this->submittedFormData['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
     $compensationExplanation = $this->submittedFormData['compensation_explanation'];
 
-    // TODO: Apparently the boolean here is in wrong way, and probably needs to be flipped
-
+    // @todo Apparently the boolean here is in wrong way, and probably needs to be flipped
     $compensationInfoData = (object) [
       "generalInfoArray" => [
         (object) [

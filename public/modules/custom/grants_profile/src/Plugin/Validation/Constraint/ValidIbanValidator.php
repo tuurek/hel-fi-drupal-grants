@@ -5,7 +5,6 @@ namespace Drupal\grants_profile\Plugin\Validation\Constraint;
 use PHP_IBAN\IBAN;
 use Symfony\Component\Validator\ConstraintValidator;
 
-
 /**
  * Validates the ValidIban constraint.
  */
@@ -21,11 +20,13 @@ class ValidIbanValidator extends ConstraintValidator {
   }
 
   /**
-   * Is value valid IBAN
+   * Is value valid IBAN.
    *
    * @param string $value
+   *   Value to be validated.
    *
    * @return bool
+   *   If value is valid IBAN.
    */
   private function isValidIban(string $value): bool {
     $myIban = new IBAN($value);
