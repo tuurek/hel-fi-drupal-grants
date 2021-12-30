@@ -176,8 +176,8 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(
-    array                      &$form,
-    FormStateInterface         $form_state,
+    array &$form,
+    FormStateInterface $form_state,
     WebformSubmissionInterface $webform_submission
   ) {
     // @todo Is parent::validateForm needed in validateForm?
@@ -383,7 +383,8 @@ class GrantsHandler extends WebformHandlerBase {
               $webform_submission->id()
             );
           }
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
           $this->messenger()->addError($e->getMessage());
         }
 
@@ -1177,7 +1178,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $otherCompensationsInfoData = (object) [
       "otherCompensationsArray" =>
-        $otherCompensations,
+      $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 
