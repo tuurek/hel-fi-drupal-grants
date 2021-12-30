@@ -1,29 +1,36 @@
 BUILD_TARGETS := composer-install
-CLEAN_FOLDERS += vendor
-ifeq ($(ENV),production)
-	COMPOSER_ARGS := --no-dev --optimize-autoloader --prefer-dist
-else
-	COMPOSER_ARGS :=
-endif
+CLEAN_FOLDERS += $(COMPOSER_JSON_PATH)/vendor
 
 PHONY += composer-info
 composer-info: ## Composer info
-	$(call step,Do Composer info...)
-	$(call composer_on_${RUN_ON},info)
+	$(call step,Do Composer info...\n)
+	$(call composer,info)
 
 PHONY += composer-update
 composer-update: ## Update Composer packages
-	$(call step,Do Composer update...)
-	$(call composer_on_${RUN_ON},update)
+	$(call step,Do Composer update...\n)
+	$(call composer,update)
 
+PHONY += composer-install
 composer-install: ## Install Composer packages
-	$(call step,Do Composer install...)
-	$(call composer_on_${RUN_ON},install ${COMPOSER_ARGS})
+	$(call step,Do Composer install...\n)
+ifeq ($(ENV),production)
+	$(call composer,install --no-dev --optimize-autoloader --prefer-dist)
+else
+	$(call composer,install)
+endif
 
-define composer_on_docker
-	$(call docker_run_cmd,cd ${DOCKER_PROJECT_ROOT} && composer --ansi $(1))
-endef
+PHONY += composer-outdated
+composer-outdated: ## Show outdated Composer packages
+	$(call step,Show outdated Composer packages...\n)
+	$(call composer,outdated --direct)
 
-define composer_on_host
-	@composer --ansi $(1)
+ifeq ($(RUN_ON),docker)
+define composer
+	$(call docker_run_cmd,cd ${DOCKER_PROJECT_ROOT} && composer --ansi --working-dir=$(COMPOSER_JSON_PATH) $(1))
 endef
+else
+define composer
+	@composer --ansi --working-dir=$(COMPOSER_JSON_PATH) $(1)
+endef
+endif
