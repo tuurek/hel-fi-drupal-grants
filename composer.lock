@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "798d50b635dc25630e078c3db2c224b8",
+    "content-hash": "672ec1016c90246ed4b79127d235108e",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -4667,6 +4667,35 @@
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-hauki/issues"
             },
             "time": "2021-05-21T06:10:50+00:00"
+        },
+        {
+            "name": "drupal/helfi_helsinki_profiili",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git",
+                "reference": "b57421e666da590d9aab50f2daf733ecb0323051"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/zipball/b57421e666da590d9aab50f2daf733ecb0323051",
+                "reference": "b57421e666da590d9aab50f2daf733ecb0323051",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\HelfiHelsinkiProfiili\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/tree/develop",
+                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/issues"
+            },
+            "time": "2021-12-28T06:21:03+00:00"
         },
         {
             "name": "drupal/helfi_media_formtool",
@@ -16375,6 +16404,7 @@
         "drupal/content_access": 15,
         "drupal/entity_print": 20,
         "drupal/helfi_atv": 20,
+        "drupal/helfi_helsinki_profiili": 20,
         "drupal/helfi_yjdh": 20,
         "drupal/webform_views": 15
     },
