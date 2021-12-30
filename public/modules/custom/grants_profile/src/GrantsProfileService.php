@@ -3,6 +3,7 @@
 namespace Drupal\grants_profile;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\TempStoreException;
@@ -28,19 +29,30 @@ class GrantsProfileService {
   protected PrivateTempStore $tempStore;
 
   /**
+   * The Messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected MessengerInterface $messenger;
+
+  /**
    * Constructs a GrantsProfileService object.
    *
    * @param \Drupal\helfi_atv\AtvService $helfi_atv
    *   The helfi_atv service.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempstore
    *   Storage factory for temp store.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   Show messages to user.
    */
   public function __construct(
     AtvService $helfi_atv,
-    PrivateTempStoreFactory $tempstore
+    PrivateTempStoreFactory $tempstore,
+    MessengerInterface $messenger
   ) {
     $this->helfiAtv = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
+    $this->messenger = $messenger;
   }
 
   /**
@@ -53,6 +65,11 @@ class GrantsProfileService {
     $updateData = [
       'content' => $grantsProfile['content'],
     ];
+
+    if (!isset($grantsProfile['id'])) {
+      $this->messenger->addError('No profile document / incorrect structure returned');
+      return FALSE;
+    }
 
     return $this->helfiAtv->patchDocument($grantsProfile['id'], $updateData);
   }
@@ -227,11 +244,11 @@ class GrantsProfileService {
     }
 
     $profileData = $this->getGrantsProfile($businessId);
-    if (is_string($profileData['content'])) {
+    if (isset($profileData['content']) && is_string($profileData['content'])) {
       // @todo when content is proper json, remove str_replace
       return Json::decode(str_replace("'", "\"", $profileData['content']));
     }
-    return Json::decode(str_replace("'", "\"", $profileData['content']));
+    return $profileData;
 
   }
 
@@ -246,11 +263,19 @@ class GrantsProfileService {
    */
   public function getGrantsProfile(string $businessId): ?array {
     if ($this->isCached($businessId)) {
-      return $this->getFromCache($businessId);
+      $document = $this->getFromCache($businessId);
+      if (!isset($document['id'])) {
+        $this->messenger->addStatus('Refetching document...');
+      }
+      else {
+        return $document;
+      }
     }
 
     $profileData = $this->getGrantsProfileFromAtv($businessId);
-    $this->setToCache($businessId, $profileData);
+    if (!empty($profileData)) {
+      $this->setToCache($businessId, $profileData);
+    }
 
     return $profileData;
 
@@ -329,7 +354,8 @@ class GrantsProfileService {
    *   Data in cache or null
    */
   private function getFromCache(string $key): ?array {
-    return !empty($this->tempStore->get($key)) ? $this->tempStore->get($key) : NULL;
+    $retval = !empty($this->tempStore->get($key)) ? $this->tempStore->get($key) : NULL;
+    return $retval;
   }
 
   /**
