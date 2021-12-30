@@ -1,6 +1,16 @@
 # Your Drupal 9 project
 
-Description of your project.
+Grants application.
+
+# DEVELOPMENT @ feature/AU-278-omat-tiedot-tunnistamosta
+
+- Normal git pull.
+- Checkout integration modules manually to /public/modules/custom
+  - https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh -> develop branch
+  - https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili -> develop branch
+- Drush cim / Drush si / make new
+-
+
 
 ## Environments
 

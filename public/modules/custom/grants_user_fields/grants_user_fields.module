@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * @file
  * Primary module hooks for handling user information integration to the external systems.
@@ -7,12 +9,14 @@
 
 
 function grants_user_fields_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if($form_id == 'user_register_form' || $form_id == 'user_form') {
-      $form['field_y_tunnus']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-      $form['field_virallinen_nimi']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-      $form['field_kotipaikka']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-      $form['field_rekisterointipaiva']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
-   }
+
+
+  //  if($form_id == 'user_register_form' || $form_id == 'user_form') {
+//      $form['field_y_tunnus']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+//      $form['field_virallinen_nimi']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+//      $form['field_kotipaikka']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+//      $form['field_rekisterointipaiva']['widget'][0]['value']['#attributes']['readonly'] = 'readonly';
+//   }
 }
 
 function grants_user_fields_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state)

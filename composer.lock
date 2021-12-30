@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1d0e03c7421cd86add36958ea69e270",
+    "content-hash": "994e5abd2352e7658b071d1b706bcead",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -4604,6 +4604,36 @@
             "time": "2021-10-12T07:30:51+00:00"
         },
         {
+            "name": "drupal/helfi_atv",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv.git",
+                "reference": "4b4b6e5e69dd5622bf55200c303f51466ea0dc99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/4b4b6e5e69dd5622bf55200c303f51466ea0dc99",
+                "reference": "4b4b6e5e69dd5622bf55200c303f51466ea0dc99",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\HelfiAtv\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "ATV integration module",
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/tree/develop",
+                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/issues"
+            },
+            "time": "2021-12-28T06:21:21+00:00"
+        },
+        {
             "name": "drupal/helfi_hauki",
             "version": "1.0.5",
             "source": {
@@ -4637,6 +4667,35 @@
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-hauki/issues"
             },
             "time": "2021-05-21T06:10:50+00:00"
+        },
+        {
+            "name": "drupal/helfi_helsinki_profiili",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git",
+                "reference": "b57421e666da590d9aab50f2daf733ecb0323051"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/zipball/b57421e666da590d9aab50f2daf733ecb0323051",
+                "reference": "b57421e666da590d9aab50f2daf733ecb0323051",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\HelfiHelsinkiProfiili\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/tree/develop",
+                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/issues"
+            },
+            "time": "2021-12-28T06:21:03+00:00"
         },
         {
             "name": "drupal/helfi_media_map",
@@ -4832,6 +4891,35 @@
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-tunnistamo/issues"
             },
             "time": "2021-10-06T08:08:51+00:00"
+        },
+        {
+            "name": "drupal/helfi_yjdh",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh.git",
+                "reference": "67dfba24b0c89412ddfaa949394f4590902c9c5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-yjdh/zipball/67dfba24b0c89412ddfaa949394f4590902c9c5a",
+                "reference": "67dfba24b0c89412ddfaa949394f4590902c9c5a",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\HelfiYjdh\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh/tree/develop",
+                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh/issues"
+            },
+            "time": "2021-12-28T06:25:27+00:00"
         },
         {
             "name": "drupal/image_style_quality",
@@ -16056,6 +16144,9 @@
     "stability-flags": {
         "drupal/content_access": 15,
         "drupal/entity_print": 20,
+        "drupal/helfi_atv": 20,
+        "drupal/helfi_helsinki_profiili": 20,
+        "drupal/helfi_yjdh": 20,
         "drupal/webform_views": 15
     },
     "prefer-stable": true,
