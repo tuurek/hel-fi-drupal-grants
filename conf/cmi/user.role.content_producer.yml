@@ -71,3 +71,5 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'view any unpublished landing_page content'
+  - 'view any unpublished page content'

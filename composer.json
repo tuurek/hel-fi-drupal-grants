@@ -29,7 +29,7 @@
         "drupal/helfi_atv": "dev-develop",
         "drupal/helfi_hauki": "^1.0",
         "drupal/helfi_helsinki_profiili": "dev-develop",
-        "drupal/helfi_platform_config": "^1.1",
+        "drupal/helfi_platform_config": "^2.0",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/helfi_yjdh": "dev-develop",
@@ -92,6 +92,9 @@
                 "type:drupal-custom-theme"
             ],
             "drush/{$name}": [
+                "type:drupal-drush"
+            ],
+            "drush/Commands/{$name}": [
                 "type:drupal-drush"
             ]
         }
