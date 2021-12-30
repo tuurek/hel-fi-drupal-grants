@@ -47,10 +47,12 @@ module:
   helfi_content: 0
   helfi_example_content: 0
   helfi_gdpr_compliance: 0
+  helfi_helsinki_profiili: 0
   helfi_languages: 0
   helfi_media: 0
   helfi_platform_config: 0
   helfi_tunnistamo: 0
+  helfi_yjdh: 0
   image: 0
   image_style_quality: 0
   inline_form_errors: 0
