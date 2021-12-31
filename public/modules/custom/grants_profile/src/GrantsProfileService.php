@@ -8,11 +8,14 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\helfi_atv\AtvService;
+use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * Handle all profile functionality.
  */
-class GrantsProfileService {
+class GrantsProfileService
+{
 
   /**
    * The helfi_atv service.
@@ -36,6 +39,14 @@ class GrantsProfileService {
   protected MessengerInterface $messenger;
 
   /**
+   * The Messenger service.
+   *
+   * @var HelsinkiProfiiliUserData
+   */
+  protected HelsinkiProfiiliUserData $helsinkiProfiili;
+
+  /**
+   *
    * Constructs a GrantsProfileService object.
    *
    * @param \Drupal\helfi_atv\AtvService $helfi_atv
@@ -44,34 +55,109 @@ class GrantsProfileService {
    *   Storage factory for temp store.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   Show messages to user.
+   * @param HelsinkiProfiiliUserData $helsinkiProfiiliUserData
+   *    Access to Helsinki profiili data
    */
   public function __construct(
-    AtvService $helfi_atv,
-    PrivateTempStoreFactory $tempstore,
-    MessengerInterface $messenger
-  ) {
+    AtvService               $helfi_atv,
+    PrivateTempStoreFactory  $tempstore,
+    MessengerInterface       $messenger,
+    HelsinkiProfiiliUserData $helsinkiProfiiliUserData
+  )
+  {
     $this->helfiAtv = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
     $this->messenger = $messenger;
+    $this->helsinkiProfiili = $helsinkiProfiiliUserData;
+  }
+
+  public function newProfile($data)
+  {
+
+    $newProfile = [];
+    $selectedCompany = $this->getSelectedCompany();
+    $userProfile = $this->helsinkiProfiili->getUserProfileData();
+
+    // if data is already in profile format, use that as is.
+    if (isset($data['content'])) {
+      $newProfile = $data;
+    } else {
+      // or create new content field
+      $newProfile['content'] = $data;
+    }
+
+    $newProfile['type'] = 'grants_profile';
+    $newProfile['business_id'] = $selectedCompany;
+    $newProfile['user_id'] = $userProfile['id'];
+
+    $newProfile['transaction_id'] = $this->newProfileTransactionId();
+    $newProfile['tos_record_id'] = $this->newProfileTosRecordId();
+    $newProfile['tos_function_id'] = $this->newProfileTosFunctionId();
+
+    $newProfile['metadata'] = $this->newProfileMetadata();
+    return $newProfile;
+  }
+
+  /**
+   * @return string[]
+   */
+  #[ArrayShape(['metadata-field' => "string"])] protected function newProfileMetadata(): array
+  {
+    return [
+      'metadata-field' => 'metadata-value'
+    ];
+  }
+
+  /**
+   * @return string
+   */
+  protected function newProfileTransactionId(): string
+  {
+    return 'eb30af1d9d654ebc98287ca25f231bf6';
+  }
+
+  /**
+   * @return string
+   */
+  protected function newProfileTosRecordId(): string
+  {
+    return 'eb30af1d9d654ebc98287ca25f231bf6';
+  }
+
+  /**
+   * @return string
+   */
+  protected function newProfileTosFunctionId(): string
+  {
+    return 'eb30af1d9d654ebc98287ca25f231bf6';
   }
 
   /**
    * Format data from tempstore & save document back to ATV.
    */
-  public function saveGrantsProfile(): ?bool {
+  public function saveGrantsProfile(): ?bool
+  {
+    // Get selected company
     $selectedCompany = $this->tempStore->get('selected_company');
+    // Get grants profile
     $grantsProfile = $this->getGrantsProfile($selectedCompany['business_id']);
 
-    $updateData = [
+    $payloadData = [
       'content' => $grantsProfile['content'],
     ];
 
+    // If we don't have profile, one needs to be created
     if (!isset($grantsProfile['id'])) {
-      $this->messenger->addError('No profile document / incorrect structure returned');
-      return FALSE;
-    }
+      $this->messenger->addError('No profile saved');
 
-    return $this->helfiAtv->patchDocument($grantsProfile['id'], $updateData);
+      $newProfile = $this->newProfile($payloadData);
+
+      return FALSE;
+    } else {
+
+      return $this->helfiAtv->patchDocument($grantsProfile['id'], $payloadData);
+
+    }
   }
 
   /**
@@ -82,15 +168,15 @@ class GrantsProfileService {
    * @param array $address
    *   Address array.
    */
-  public function saveAddress(string $address_id, array $address): bool {
+  public function saveAddress(string $address_id, array $address): bool
+  {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
     $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
 
     if ($address_id == 'new') {
       $nextId = count($addresses) + 1;
-    }
-    else {
+    } else {
       $nextId = $address_id;
     }
 
@@ -108,14 +194,14 @@ class GrantsProfileService {
    * @return string[]
    *   Array containing address or new address
    */
-  public function getAddress(string $address_id): array {
+  public function getAddress(string $address_id): array
+  {
     $selectedCompany = $this->tempStore->get('selected_company');
     $profileContent = $this->getGrantsProfileContent($selectedCompany['business_id']);
 
     if (isset($profileContent['addresses'][$address_id])) {
       return $profileContent['addresses'][$address_id];
-    }
-    else {
+    } else {
       return [
         'street' => '',
         'city' => '',
@@ -134,14 +220,14 @@ class GrantsProfileService {
    * @return string[]
    *   Array containing official data
    */
-  public function getOfficial(string $official_id): array {
+  public function getOfficial(string $official_id): array
+  {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
 
     if (isset($profileContent['officials'][$official_id])) {
       return $profileContent['officials'][$official_id];
-    }
-    else {
+    } else {
       return [
         'name' => '',
         'role' => '',
@@ -160,14 +246,14 @@ class GrantsProfileService {
    * @return string[]
    *   Array containing official data
    */
-  public function getBankAccount(string $bank_account_id): array {
+  public function getBankAccount(string $bank_account_id): array
+  {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
 
     if (isset($profileContent['bank_accounts'][$bank_account_id])) {
       return $profileContent['bank_accounts'][$bank_account_id];
-    }
-    else {
+    } else {
       return [
         'bank_account' => '',
       ];
@@ -182,15 +268,15 @@ class GrantsProfileService {
    * @param array $official
    *   Data to be saved.
    */
-  public function saveOfficial(string $official_id, array $official) {
+  public function saveOfficial(string $official_id, array $official)
+  {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
     $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
 
     if ($official_id == 'new') {
       $nextId = count($officials) + 1;
-    }
-    else {
+    } else {
       $nextId = $official_id;
     }
 
@@ -207,15 +293,15 @@ class GrantsProfileService {
    * @param array $bank_account
    *   Data to be saved.
    */
-  public function saveBankAccount(string $bank_account_id, array $bank_account) {
+  public function saveBankAccount(string $bank_account_id, array $bank_account)
+  {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
     $bankAccounts = (isset($profileContent['bank_accounts']) && $profileContent['bank_accounts'] !== NULL) ? $profileContent['bank_accounts'] : [];
 
     if ($bank_account_id == 'new') {
       $nextId = count($bankAccounts) + 1;
-    }
-    else {
+    } else {
       $nextId = $bank_account_id;
     }
 
@@ -233,7 +319,8 @@ class GrantsProfileService {
    * @return array
    *   Content
    */
-  public function getGrantsProfileContent(string $businessId): array {
+  public function getGrantsProfileContent(string $businessId): array
+  {
     if ($this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
       if (is_string($profileData['content'])) {
@@ -261,24 +348,24 @@ class GrantsProfileService {
    * @return array
    *   Profiledata
    */
-  public function getGrantsProfile(string $businessId): ?array {
+  public function getGrantsProfile(string $businessId): array
+  {
     if ($this->isCached($businessId)) {
       $document = $this->getFromCache($businessId);
       if (!isset($document['id'])) {
         $this->messenger->addStatus('Refetching document...');
-      }
-      else {
-        return $document;
+      } else {
+        return $document ?? [];
       }
     }
 
     $profileData = $this->getGrantsProfileFromAtv($businessId);
     if (!empty($profileData)) {
       $this->setToCache($businessId, $profileData);
+      return $profileData;
+    } else {
+      return $document ?? [];
     }
-
-    return $profileData;
-
   }
 
   /**
@@ -290,7 +377,8 @@ class GrantsProfileService {
    * @return array
    *   Profile data
    */
-  private function getGrantsProfileFromAtv(string $businessId): array {
+  private function getGrantsProfileFromAtv(string $businessId): array
+  {
 
     $searchParams = [
       'business_id' => $businessId,
@@ -312,7 +400,8 @@ class GrantsProfileService {
    * @return string|null
    *   Selected company
    */
-  public function getSelectedCompany(): ?string {
+  public function getSelectedCompany(): ?string
+  {
     if ($this->isCached('selected_company')) {
       $data = $this->getFromCache('selected_company');
       return $data['business_id'];
@@ -326,7 +415,8 @@ class GrantsProfileService {
    * @param string $businessId
    *   ID to be saved.
    */
-  public function setSelectedCompany(string $businessId): bool {
+  public function setSelectedCompany(string $businessId): bool
+  {
     return $this->setToCache('selected_company', ['business_id' => $businessId]);
   }
 
@@ -339,7 +429,8 @@ class GrantsProfileService {
    * @return bool
    *   Is this cached?
    */
-  private function isCached(string $key): bool {
+  private function isCached(string $key): bool
+  {
     $cacheData = $this->tempStore->get($key);
     return !is_null($cacheData);
   }
@@ -353,7 +444,8 @@ class GrantsProfileService {
    * @return array|null
    *   Data in cache or null
    */
-  private function getFromCache(string $key): ?array {
+  private function getFromCache(string $key): ?array
+  {
     $retval = !empty($this->tempStore->get($key)) ? $this->tempStore->get($key) : NULL;
     return $retval;
   }
@@ -369,25 +461,23 @@ class GrantsProfileService {
    * @return bool
    *   Did save succeed?
    */
-  private function setToCache(string $key, array $data): bool {
+  private function setToCache(string $key, array $data): bool
+  {
 
     try {
       if (isset($data['content'])) {
         $this->tempStore->set($key, $data);
         return TRUE;
-      }
-      elseif ($key == 'selected_company') {
+      } elseif ($key == 'selected_company') {
         $this->tempStore->set($key, $data);
         return TRUE;
-      }
-      else {
+      } else {
         $grantsProfile = $this->getGrantsProfile($key);
         $grantsProfile['content'] = $data;
         $this->tempStore->set($key, $grantsProfile);
         return TRUE;
       }
-    }
-    catch (TempStoreException $e) {
+    } catch (TempStoreException $e) {
       return FALSE;
     }
   }
