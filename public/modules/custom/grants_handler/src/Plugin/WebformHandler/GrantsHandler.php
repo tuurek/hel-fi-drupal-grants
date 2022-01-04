@@ -28,7 +28,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   \Drupal\webform\Plugin\WebformHandlerInterface::SUBMISSION_REQUIRED,
  * )
  */
-class GrantsHandler extends WebformHandlerBase {
+class GrantsHandler extends WebformHandlerBase
+{
 
   /**
    * Form data saved because the data in saved submission is not preserved.
@@ -57,6 +58,14 @@ class GrantsHandler extends WebformHandlerBase {
     'toimintasuunnitelma',
     'talousarvio',
     'muu_liite',
+  ];
+
+  /**
+   * Holds application statuses in
+   * @var array|string[]
+   */
+  private array $applicationStatuses = [
+    'DRAFT', 'FINALIZED', 'SENT', 'RECEIVED', 'PENDING', 'PROCESSING', 'READY', 'DONE', 'REJECTED'
   ];
 
   /**
@@ -118,7 +127,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
+  {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     /** @var \Drupal\Core\DependencyInjection\Container $container */
     $instance->attachmentUploader = $container->get('grants_attachments.attachment_uploader');
@@ -137,16 +147,18 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Convert EUR format value to "double" .
    */
-  private function grantsHandlerConvertToFloat(string $value): string {
+  private function grantsHandlerConvertToFloat(string $value): string
+  {
     $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
-    $value = (float) $value;
+    $value = (float)$value;
     return "" . $value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration(): array {
+  public function defaultConfiguration(): array
+  {
     return [
       'debug' => FALSE,
     ];
@@ -155,7 +167,8 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array
+  {
     // Development.
     $form['development'] = [
       '#type' => 'details',
@@ -176,10 +189,11 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission
-  ) {
+  )
+  {
     // @todo Is parent::validateForm needed in validateForm?
     parent::validateForm($form, $form_state, $webform_submission);
 
@@ -212,15 +226,15 @@ class GrantsHandler extends WebformHandlerBase {
    * @todo think about how attachment validation logic could be moved to the
    *   component.
    */
-  private function validateAttachmentField(string $fieldName, FormStateInterface $form_state, string $fieldTitle) {
+  private function validateAttachmentField(string $fieldName, FormStateInterface $form_state, string $fieldTitle)
+  {
     // Get value.
     $values = $form_state->getValue($fieldName);
 
     $args = [];
     if (isset($values[0]) && is_array($values[0])) {
       $args = $values;
-    }
-    else {
+    } else {
       $args[] = $values;
     }
 
@@ -252,14 +266,16 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preSave(WebformSubmissionInterface $webform_submission) {
+  public function preSave(WebformSubmissionInterface $webform_submission)
+  {
 
     // Get data from form submission
     // and set it to class private variable.
@@ -269,7 +285,7 @@ class GrantsHandler extends WebformHandlerBase {
     if (!empty($this->configuration['debug'])) {
       // Set submission data to empty.
       // form will still contain submission details, IP time etc etc.
-      $webform_submission->setData([]);
+//      $webform_submission->setData([]);
     }
     $this->debug(__FUNCTION__);
   }
@@ -277,14 +293,16 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
+  public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE)
+  {
     $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission)
+  {
 
     $webformId = $webform_submission->getWebform()->getOriginalId();
 
@@ -306,7 +324,7 @@ class GrantsHandler extends WebformHandlerBase {
       $parsedCompensations = $this->parseCompensations();
 
       $bankAccountArray = [
-        (object) [
+        (object)[
           "ID" => "accountNumber",
           "label" => "Tilinumero",
           "value" => $this->submittedFormData['account_number'],
@@ -315,7 +333,7 @@ class GrantsHandler extends WebformHandlerBase {
       ];
 
       // Build object for json.
-      $compensationObject = (object) [
+      $compensationObject = (object)[
         "applicationInfoArray" => $this->parseApplicationInfo($webform_submission),
         "currentAddressInfoArray" => $this->parseCurrentAddressInfo(),
         "applicantInfoArray" => $this->parseApplicantInfo(),
@@ -332,7 +350,7 @@ class GrantsHandler extends WebformHandlerBase {
       $attachmentsInfoObject = [
         "attachmentsArray" => $this->parseAttachments($form),
       ];
-      $submitObject = (object) [
+      $submitObject = (object)[
         'compensation' => $compensationObject,
         'attachmentsInfo' => $attachmentsInfoObject,
       ];
@@ -352,8 +370,7 @@ class GrantsHandler extends WebformHandlerBase {
       if (getenv('BACKEND_MODE') === 'dev') {
         $this->messenger()
           ->addWarning($this->t('Backend DEV mode on, no posting to backend is done.'));
-      }
-      else {
+      } else {
 
         try {
           $client = \Drupal::httpClient();
@@ -383,8 +400,7 @@ class GrantsHandler extends WebformHandlerBase {
               $webform_submission->id()
             );
           }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $this->messenger()->addError($e->getMessage());
         }
 
@@ -400,7 +416,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @return bool
    *   If debug mode is on or not.
    */
-  protected function isDebug(): bool {
+  protected function isDebug(): bool
+  {
     return !empty($this->configuration['debug']);
   }
 
@@ -412,7 +429,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @param string $context1
    *   Additional parameter passed to the invoked method name.
    */
-  protected function debug($method_name, $context1 = NULL) {
+  protected function debug($method_name, $context1 = NULL)
+  {
     if (!empty($this->configuration['debug'])) {
       $t_args = [
         '@id' => $this->getHandlerId(),
@@ -428,15 +446,17 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state)
+  {
     parent::submitConfigurationForm($form, $form_state);
-    $this->configuration['debug'] = (bool) $form_state->getValue('debug');
+    $this->configuration['debug'] = (bool)$form_state->getValue('debug');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preprocessConfirmation(array &$variables) {
+  public function preprocessConfirmation(array &$variables)
+  {
     $this->debug(__FUNCTION__);
   }
 
@@ -446,7 +466,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @return array[]
    *   Parsed attchments.
    */
-  private function parseAttachments($form): array {
+  private function parseAttachments($form): array
+  {
 
     $attachmentsArray = [];
     foreach ($this->attachmentFieldNames as $attachmentFieldName) {
@@ -455,8 +476,7 @@ class GrantsHandler extends WebformHandlerBase {
 
       if (isset($form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"])) {
         $fileType = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"];
-      }
-      else {
+      } else {
         $fileType = '0';
       }
 
@@ -465,14 +485,15 @@ class GrantsHandler extends WebformHandlerBase {
       $args = [];
       if (isset($field[0]) && is_array($field[0])) {
         $args = $field;
-      }
-      else {
+      } else {
         $args[] = $field;
       }
 
       // Lppt args & create attachement field.
       foreach ($args as $fieldElement) {
-        $attachmentsArray[] = $this->getAttachmentByField($fieldElement, $descriptionValue, $fileType);
+        if (is_array($fieldElement)) {
+          $attachmentsArray[] = $this->getAttachmentByField($fieldElement, $descriptionValue, $fileType);
+        }
       }
     }
     return $attachmentsArray;
@@ -491,11 +512,12 @@ class GrantsHandler extends WebformHandlerBase {
    * @return \stdClass[]
    *   Data for JSON.
    */
-  private function getAttachmentByField(array $field, string $fieldDescription, string $fileType): array {
+  private function getAttachmentByField(array $field, string $fieldDescription, string $fileType): array
+  {
 
     $retval = [];
 
-    $retval[] = (object) [
+    $retval[] = (object)[
       "ID" => "description",
       "value" => (isset($field['description']) && $field['description'] !== "") ? $fieldDescription . ': ' . $field['description'] : $fieldDescription,
       "valueType" => "string",
@@ -506,33 +528,33 @@ class GrantsHandler extends WebformHandlerBase {
       // Add file id for easier usage in future.
       $this->attachmentFileIds[] = $field['attachment'];
 
-      $retval[] = (object) [
+      $retval[] = (object)[
         "ID" => "fileName",
         "value" => $file->getFilename(),
         "valueType" => "string",
       ];
       // @todo check isNewAttachement status
-      $retval[] = (object) [
+      $retval[] = (object)[
         "ID" => "isNewAttachment",
         "value" => 'true',
         "valueType" => "bool",
       ];
       // @todo check attachment fileType
-      $retval[] = (object) [
+      $retval[] = (object)[
         "ID" => "fileType",
-        "value" => (int) $fileType,
+        "value" => (int)$fileType,
         "valueType" => "int",
       ];
     }
     if (isset($field['isDeliveredLater'])) {
-      $retval[] = (object) [
+      $retval[] = (object)[
         "ID" => "isDeliveredLater",
         "value" => $field['isDeliveredLater'] === "1" ? 'true' : 'false',
         "valueType" => "bool",
       ];
     }
     if (isset($field['isIncludedInOtherFile'])) {
-      $retval[] = (object) [
+      $retval[] = (object)[
         "ID" => "isIncludedInOtherFile",
         "value" => $field['isIncludedInOtherFile'] === "1" ? 'true' : 'false',
         "valueType" => "bool",
@@ -548,18 +570,19 @@ class GrantsHandler extends WebformHandlerBase {
    * @return object[]
    *   Parsed objects for JSON request.
    */
-  private function parseBenefitsInfo(): array {
+  private function parseBenefitsInfo(): array
+  {
     $benefitsPremises = $this->submittedFormData['benefits_premises'];
     $benefitsLoans = $this->submittedFormData['benefits_loans'];
 
     return [
-      (object) [
+      (object)[
         "ID" => "premises",
         "label" => "Tilat, jotka kaupunki on antanut korvauksetta tai vuokrannut hakijan käyttöön (osoite, pinta-ala ja tiloista maksettava vuokra €/kk",
         "value" => $benefitsPremises,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "loans",
         "label" => "Kaupungilta saadut lainat ja/tai takaukset",
         "value" => $benefitsLoans,
@@ -574,39 +597,42 @@ class GrantsHandler extends WebformHandlerBase {
    * @return object[]
    *   Array of sender details for JSON.
    */
-  private function parseSenderInfo(): array {
+  private function parseSenderInfo(): array
+  {
 
     $userData = $this->userExternalData->getUserProfileData();
 
+    $dd = 'adsf';
+
     return [
-      (object) [
+      (object)[
         "ID" => "firstname",
         "label" => "Etunimi",
-        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["firstName"],
+        "value" => $userData["verifiedPersonalInformation"]["firstName"],
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "lastname",
         "label" => "Sukunimi",
-        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["lastName"],
+        "value" => $userData["verifiedPersonalInformation"]["lastName"],
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "personID",
         "label" => "Henkilötunnus",
-        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"],
+        "value" => $userData["verifiedPersonalInformation"]["nationalIdentificationNumber"],
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "userID",
         "label" => "Käyttäjätunnus",
-        "value" => $userData["myProfile"]["id"],
+        "value" => $userData["id"],
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "email",
         "label" => "Sähköposti",
-        "value" => $userData["myProfile"]["primaryEmail"]["email"],
+        "value" => $userData["primaryEmail"]["email"],
         "valueType" => "string",
       ],
     ];
@@ -618,7 +644,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @return object[]
    *   Activities objects for JSON.
    */
-  private function parseActivitiesInfo(): array {
+  private function parseActivitiesInfo(): array
+  {
     // Check.
     // @todo check business purpose.
     $businessPurpose = "Meidän toimintamme tarkoituksena on että ...";
@@ -633,49 +660,49 @@ class GrantsHandler extends WebformHandlerBase {
     $feeCommunity = $this->grantsHandlerConvertToFloat($this->submittedFormData['fee_community']);
 
     return [
-      (object) [
+      (object)[
         "ID" => "businessPurpose",
         "label" => "Toiminnan tarkoitus",
         "value" => $businessPurpose,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "communityPracticesBusiness",
         "label" => "Yhteisö harjoittaa liiketoimintaa",
         "value" => $communityPracticesBusiness,
         "valueType" => "bool",
       ],
-      (object) [
+      (object)[
         "ID" => "membersApplicantPersonGlobal",
         "label" => "Hakijayhteisö, henkilöjäseniä",
         "value" => $membersApplicantPersonGlobal,
         "valueType" => "int",
       ],
-      (object) [
+      (object)[
         "ID" => "membersApplicantPersonLocal",
         "label" => "Hakijayhteisö, helsinkiläisiä henkilöjäseniä",
         "value" => $membersApplicantPersonLocal,
         "valueType" => "int",
       ],
-      (object) [
+      (object)[
         "ID" => "membersApplicantCommunityGlobal",
         "label" => "Hakijayhteisö, yhteisöjäseniä",
         "value" => $membersApplicantCommunityGlobal,
         "valueType" => "int",
       ],
-      (object) [
+      (object)[
         "ID" => "membersApplicantCommunityLocal",
         "label" => "Hakijayhteisö, helsinkiläisiä yhteisöjäseniä",
         "value" => $membersApplicantCommunityLocal,
         "valueType" => "int",
       ],
-      (object) [
+      (object)[
         "ID" => "feePerson",
         "label" => "Jäsenmaksun suuruus, Henkiöjäsen euroa",
         "value" => $feePerson,
         "valueType" => "float",
       ],
-      (object) [
+      (object)[
         "ID" => "feeCommunity",
         "label" => "Jäsenmaksun suuruus, Yhteisöjäsen euroa",
         "value" => $feeCommunity,
@@ -690,7 +717,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @return object[]
    *   Address details objects for JSON.
    */
-  private function parseCurrentAddressInfo(): array {
+  private function parseCurrentAddressInfo(): array
+  {
 
     $contactPerson = $this->submittedFormData['contact_person'];
     $phoneNumber = $this->submittedFormData['contact_person_phone_number'];
@@ -700,37 +728,37 @@ class GrantsHandler extends WebformHandlerBase {
     $country = $this->submittedFormData['contact_person_country'];
 
     return [
-      (object) [
+      (object)[
         "ID" => "contactPerson",
         "label" => "Yhteyshenkilö",
         "value" => $contactPerson,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "phoneNumber",
         "label" => "Puhelinnumero",
         "value" => $phoneNumber,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "street",
         "label" => "Katuosoite",
         "value" => $street,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "city",
         "label" => "Postitoimipaikka",
         "value" => $city,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "postCode",
         "label" => "Postinumero",
         "value" => $postCode,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "country",
         "label" => "Maa",
         "value" => $country,
@@ -745,7 +773,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @return object[]
    *   Applicant objects for JSON.
    */
-  private function parseApplicantInfo(): array {
+  private function parseApplicantInfo(): array
+  {
 
     $applicantType = "" . $this->submittedFormData['applicant_type'];
     $companyNumber = $this->submittedFormData['company_number'];
@@ -758,55 +787,55 @@ class GrantsHandler extends WebformHandlerBase {
     $email = $this->submittedFormData['email'];
 
     return [
-      (object) [
+      (object)[
         "ID" => "applicantType",
         "label" => "Hakijan tyyppi",
         "value" => $applicantType,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "companyNumber",
         "label" => "Rekisterinumero",
         "value" => $companyNumber,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "communityOfficialName",
         "label" => "Yhteisön nimi",
         "value" => $communityOfficialName,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "communityOfficialNameShort",
         "label" => "Yhteisön lyhenne",
         "value" => $communityOfficialNameShort,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "registrationDate",
         "label" => "Rekisteröimispäivä",
         "value" => $registrationDate,
         "valueType" => "datetime",
       ],
-      (object) [
+      (object)[
         "ID" => "foundingYear",
         "label" => "Perustamisvuosi",
         "value" => $foundingYear,
         "valueType" => "int",
       ],
-      (object) [
+      (object)[
         "ID" => "home",
         "label" => "Kotipaikka",
         "value" => $home,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "homePage",
         "label" => "www-sivut",
         "value" => $webpage,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "email",
         "label" => "Sähköpostiosoite",
         "value" => $email,
@@ -825,7 +854,8 @@ class GrantsHandler extends WebformHandlerBase {
    *   Application details for JSON.
    */
   private function parseApplicationInfo(
-    WebformSubmission $webform_submission): array {
+    WebformSubmission $webform_submission): array
+  {
 
     $this->applicationType = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationType');
@@ -840,37 +870,37 @@ class GrantsHandler extends WebformHandlerBase {
     $actingYear = "" . $this->submittedFormData['acting_year'];
 
     return [
-      (object) [
+      (object)[
         "ID" => "applicationType",
         "label" => "Hakemustyyppi",
         "value" => $this->applicationType,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "applicationTypeID",
         "label" => "Hakemustyypin numero",
         "value" => $this->applicationTypeID,
         "valueType" => "int",
       ],
-      (object) [
+      (object)[
         "ID" => "formTimeStamp",
         "label" => "Hakemuksen/sanoman lähetyshetki",
         "value" => gmdate("Y-m-d\TH:i:s.v\Z"),
         "valueType" => "datetime",
       ],
-      (object) [
+      (object)[
         "ID" => "applicationNumber",
         "label" => "Hakemusnumero",
         "value" => $this->applicationNumber,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "status",
         "label" => "Tila",
         "value" => $status,
         "valueType" => "string",
       ],
-      (object) [
+      (object)[
         "ID" => "actingYear",
         "label" => "Hakemusvuosi",
         "value" => $actingYear,
@@ -885,7 +915,8 @@ class GrantsHandler extends WebformHandlerBase {
    * @return array[]
    *   Compensation details for JSON.
    */
-  private function parseCompensations(): array {
+  private function parseCompensations(): array
+  {
     $compensations = [];
     $compensationTotalAmount = 0.0;
 
@@ -1087,31 +1118,31 @@ class GrantsHandler extends WebformHandlerBase {
     $otherCompensationsTotal = 0;
     foreach ($this->submittedFormData['myonnetty_avustus'] as $otherCompensationsData) {
       $otherCompensations[] = [
-        (object) [
+        (object)[
           "ID" => "issuer",
           "label" => "Myöntäjä",
           "value" => $otherCompensationsData['issuer'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "issuerName",
           "label" => "Myöntäjän nimi",
           "value" => $otherCompensationsData['issuer_name'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "year",
           "label" => "Vuosi",
           "value" => $otherCompensationsData['year'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "amount",
           "label" => "Euroa",
           "value" => $this->grantsHandlerConvertToFloat($otherCompensationsData['amount']),
           "valueType" => "float",
         ],
-        (object) [
+        (object)[
           "ID" => "purpose",
           "label" => "Tarkoitus",
           "value" => $otherCompensationsData['purpose'],
@@ -1125,13 +1156,13 @@ class GrantsHandler extends WebformHandlerBase {
     $compensatiosArray = [];
     foreach ($compensations as $compensation) {
       $compensatiosArray[] = [
-        (object) [
+        (object)[
           "ID" => "subventionType",
           "label" => "Avustuslaji",
           "value" => $compensation['subventionType'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "amount",
           "label" => "Euroa",
           "value" => $compensation['amount'],
@@ -1141,32 +1172,33 @@ class GrantsHandler extends WebformHandlerBase {
     };
 
     $compensationPurpose = $this->submittedFormData['compensation_purpose'];
-    $compensationBoolean = ($this->submittedFormData['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
+//    $compensationBoolean = ($this->submittedFormData['compensation_boolean'] == "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna." ? 'true' : 'false');
     $compensationExplanation = $this->submittedFormData['compensation_explanation'];
 
     // @todo Apparently the boolean here is in wrong way, and probably needs to be flipped
-    $compensationInfoData = (object) [
+    $compensationInfoData = (object)[
       "generalInfoArray" => [
-        (object) [
+        (object)[
           "ID" => "totalAmount",
           "label" => "Haettavat avustukset yhteensä",
           "value" => $compensationTotalAmount,
           "valueType" => "float",
         ],
-        (object) [
-          "ID" => "noCompensationPreviousYear",
-          "label" => "En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna",
-          "value" => $compensationBoolean,
+        (object)[
+//          "ID" => "noCompensationPreviousYear",
+          "ID" => "compensationPreviousYear",
+          "label" => "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna",
+          "value" => $this->submittedFormData['compensation_boolean'],
           "valueType" => "string",
         ],
 
-        (object) [
+        (object)[
           "ID" => "purpose",
           "label" => "Haetun avustuksen käyttötarkoitus",
           "value" => $compensationPurpose,
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "explanation",
           "label" => "Selvitys edellisen avustuksen käytöstä",
           "value" => $compensationExplanation,
@@ -1176,9 +1208,9 @@ class GrantsHandler extends WebformHandlerBase {
       "compensationArray" => $compensatiosArray,
     ];
 
-    $otherCompensationsInfoData = (object) [
+    $otherCompensationsInfoData = (object)[
       "otherCompensationsArray" =>
-      $otherCompensations,
+        $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 
@@ -1199,29 +1231,30 @@ class GrantsHandler extends WebformHandlerBase {
    * @return array[]
    *   Application officials' objects for JSON.
    */
-  private function parseApplicationOfficials(): array {
+  private function parseApplicationOfficials(): array
+  {
     $applicantOfficialsData = [];
     foreach ($this->submittedFormData['applicant_officials'] as $official) {
       $applicantOfficialsData[] = [
-        (object) [
+        (object)[
           "ID" => "email",
           "label" => "Sähköposti",
           "value" => $official['official_email'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "role",
           "label" => "Rooli",
           "value" => $official['official_role'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "name",
           "label" => "Nimi",
           "value" => $official['official_name'],
           "valueType" => "string",
         ],
-        (object) [
+        (object)[
           "ID" => "phone",
           "label" => "Puhelinnumero",
           "value" => $official['official_phone'],

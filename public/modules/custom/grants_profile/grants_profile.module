@@ -10,12 +10,19 @@
  */
 
 function grants_profile_theme(): array {
+  $theme['view_application'] = [
+    'render element' => 'build',
+    'variables' => [
+      'application' => NULL,
+      'document' => NULL,
+    ]
+  ];
   $theme['own_profile'] = [
     'render element' => 'build',
     'variables' => [
       'content' => NULL,
       'company_select_form' => NULL,
-
+      'applications' => NULL
     ]
   ];
   $theme['own_addresses'] = [

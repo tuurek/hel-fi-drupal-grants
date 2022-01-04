@@ -68,7 +68,6 @@ elements: |-
         '#type': textfield
         '#title': 'Yhdistyksen tila'
         '#readonly': true
-        '#required': true
       community_status_special:
         '#type': textfield
         '#title': 'Yhdistyksen erityistilanne'
@@ -380,8 +379,8 @@ elements: |-
         '#type': radios
         '#title': 'Käyttöselvitys edellisenä vuonna saamastani avustuksesta'
         '#options':
-          'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
-          'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+          'false': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+          'true': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
         '#default_value': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
       markup:
         '#type': webform_markup

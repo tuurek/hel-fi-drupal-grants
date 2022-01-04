@@ -1,7 +1,29 @@
 uuid: 0399bf11-acf6-475b-9cac-b60f7cd3480b
 langcode: en
 status: true
-dependencies: {  }
+§dependencies:
+  config:
+    - media.type.file
+    - media.type.image
+    - media.type.remote_video
+    - media.type.soundcloud
+    - node.type.address
+    - node.type.landing_page
+    - node.type.page
+    - taxonomy.vocabulary.keywords
+  module:
+    - content_translation
+    - file
+    - helfi_api_base
+    - media
+    - node
+    - paragraphs
+    - path
+    - scheduler
+    - system
+    - taxonomy
+    - toolbar
+    - webform
 _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
@@ -62,6 +84,8 @@ permissions:
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
+  - 'view any unpublished landing_page content'
+  - 'view any unpublished page content'
   - 'view any webform submission'
   - 'view landing_page revisions'
   - 'view own unpublished content'
@@ -71,5 +95,3 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
-  - 'view any unpublished landing_page content'
-  - 'view any unpublished page content'

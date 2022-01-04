@@ -8,4 +8,17 @@
   <li><a href="/grants-profile/application-officials">Officials</a></li>
   <li><a href="/grants-profile/bank-accounts">Bank accounts</a></li>
 </ul>
+
+{% if applications %}
+  <ul class="company-address-list">
+    {% for key,item in applications %}
+      <li class="user-applications">
+        <a href="/grants-profile/applications/{{ item.id }}">
+          {{ item.transaction_id }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
 {{ content }}

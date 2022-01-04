@@ -1,7 +1,12 @@
 uuid: e28c46eb-0d46-4eb9-840b-5c3f3621de92
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - eu_cookie_compliance
+    - helfi_api_base
+    - media
+    - system
 _core:
   default_config_hash: EDyVdaROG6pYzyEct43c01Wq4gpATszrk-qR6gqnQ84
 id: anonymous
@@ -10,12 +15,12 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
+  - 'access content'
+  - 'display eu cookie compliance popup'
   - 'display eu cookie compliance popup'
   - 'entity print access bundle webform'
   - 'entity print access bundle yleisavustushakemus'
   - 'view media'
-  - 'view remote entities'
   - 'view media'
-  - 'display eu cookie compliance popup'
-  - 'access content'
+  - 'view remote entities'
   - 'view remote entities'

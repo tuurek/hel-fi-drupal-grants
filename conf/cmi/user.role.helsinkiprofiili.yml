@@ -1,9 +1,16 @@
 uuid: b81215c2-8134-4132-b93c-aa08338f5331
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - grants_profile
+    - webform
 id: helsinkiprofiili
 label: HelsinkiProfiili
 weight: 5
 is_admin: null
-permissions: {  }
+permissions:
+  - 'administer own grants_profile'
+  - 'edit own webform submission'
+  - 'view own grants_profile'
+  - 'view own webform submission'

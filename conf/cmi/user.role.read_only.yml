@@ -1,8 +1,12 @@
+uuid: c2e776b7-7900-4e42-ac79-768cdacd8193
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - paragraphs
+    - toolbar
 id: read_only
-label: 'Read only'
+label: 'Vain luku'
 weight: 4
 is_admin: null
 permissions:

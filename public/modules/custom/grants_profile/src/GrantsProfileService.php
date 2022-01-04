@@ -348,14 +348,16 @@ class GrantsProfileService
    * @return array
    *   Profiledata
    */
-  public function getGrantsProfile(string $businessId): array
+  public function getGrantsProfile(string $businessId, bool $refetch = false): array
   {
-    if ($this->isCached($businessId)) {
-      $document = $this->getFromCache($businessId);
-      if (!isset($document['id'])) {
-        $this->messenger->addStatus('Refetching document...');
-      } else {
-        return $document ?? [];
+    if ($refetch == false) {
+      if ($this->isCached($businessId)) {
+        $document = $this->getFromCache($businessId);
+        if (!isset($document['id'])) {
+          $this->messenger->addStatus('Refetching document...');
+        } else {
+          return $document ?? [];
+        }
       }
     }
 
@@ -390,7 +392,7 @@ class GrantsProfileService
     if (empty($searchDocuments)) {
       return $searchDocuments;
     }
-
+    // TODO: merge profiles if multiple is saved for some reason.
     return reset($searchDocuments);
   }
 
