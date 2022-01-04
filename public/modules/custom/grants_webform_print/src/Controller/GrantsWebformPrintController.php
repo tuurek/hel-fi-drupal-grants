@@ -46,7 +46,7 @@ class GrantsWebformPrintController extends ControllerBase {
   /**
    * Does the transformations for the Element array of the form.
    *
-   * @param $item
+   * @param mixed $item
    *   The reference to the item of the key-item pair.
    * @param string $key
    *   The key associated with the item above.
