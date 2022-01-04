@@ -66,13 +66,13 @@ elements: |-
       email:
         '#type': email
         '#title': Sähköpostiosoite
-      hakemuksen_yhteyshenkilo:
-        '#type': webform_section
-        '#title': 'Hakemuksen yhteyshenkilö'
-        contact_person:
-          '#type': textfield
-          '#title': Yhteyshenkilö
-          '#required': true
+    hakemuksen_yhteyshenkilo:
+      '#type': webform_section
+      '#title': 'Hakemuksen yhteyshenkilö'
+      contact_person:
+        '#type': textfield
+        '#title': Yhteyshenkilö
+        '#required': true
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -691,5 +691,5 @@ handlers:
     weight: 0
     settings:
       endpoint: 'This is a custom endpoint.'
-      debug: true
+      debug: false
 variants: {  }

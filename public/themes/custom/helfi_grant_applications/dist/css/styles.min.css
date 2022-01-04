@@ -2200,31 +2200,6 @@ input[type=submit].hds-button--small {
 .is-hidden {
   display: none; }
 
-.webform-progress-tracker-mobile, .webform-progress-tracker {
-  display: none !important; }
-
-.webform-print-wrapper-table {
-  overflow-x: visible;
-  overflow-x: initial;
-  border: 0;
-  margin: 0; }
-
-.webform-print-header, .webform-print-header-space, .webform-print-footer, .webform-print-footer-space {
-  height: 21mm;
-  background: white; }
-
-.webform-print-header {
-  position: fixed;
-  top: 0;
-  background: white;
-  border: 1px black solid; }
-
-.webform-print-footer {
-  position: fixed;
-  bottom: 0;
-  background: white;
-  border: 1px black solid; }
-
 .hero.hero--no-background {
   background: none; }
   .hero.hero--no-background .hero__category {
@@ -2676,6 +2651,53 @@ fieldset.grants-attachments--wrapper .form-managed-file {
     background: white;
     color: var(--border-color); }
   @media print{
+  .webform-progress-tracker-mobile, .webform-progress-tracker, .messages__container, header.header, nav.breadcrumb, .tools__container {
+    display: none !important; }
+  div.main-content {
+    margin: 0; }
+  .gin--horizontal-toolbar .dialog-off-canvas-main-canvas {
+    padding: 0 !important; }
+  .webform-print-wrapper-table {
+    overflow-x: visible;
+    overflow-x: initial;
+    border: 0;
+    margin: 0; }
+  .webform-print-header, .webform-print-header-space, .webform-print-footer, .webform-print-footer-space {
+    height: 21mm;
+    background: white; }
+  .webform-print-header {
+    position: fixed;
+    top: 0;
+    background: white;
+    border: 1px black solid; }
+  .webform-print-footer {
+    position: fixed;
+    bottom: 0;
+    background: white;
+    border: 1px black solid; }
+  .webform-print-wrapper-table .webform-section-flex-wrapper > .webform-section-wrapper {
+    padding: 0; }
+  .webform-print-wrapper-table ul {
+    margin: 0;
+    padding: 0; }
+    .webform-print-wrapper-table ul li {
+      list-style: none;
+      margin-top: 6mm; }
+  .webform-print-wrapper-table h2 {
+    width: 100% !important;
+    margin: 9mm 0 2mm !important;
+    padding: 0 !important;
+    min-width: 100%; }
+  .webform-print-wrapper-table label {
+    position: absolute;
+    top: -5mm;
+    left: 0mm; }
+  .webform-print-wrapper-table .webform-element {
+    position: relative;
+    border: 1px black solid;
+    top: 4mm;
+    padding: 2mm;
+    margin-bottom: 6mm; }
   .webform-print-wrapper-table thead {
     display: table-header-group; }
   .webform-print-wrapper-table tfoot {
