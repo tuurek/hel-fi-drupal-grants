@@ -4,5 +4,16 @@
  * Webform share page template override.
  */
 #}
-<header>AAAA</header>
-{{ page.content }}
+<table class="webform-print-wrapper-table">
+  <thead><tr><td>
+    <div class="webform-print-header-space">&nbsp;</div>
+  </td></tr></thead>
+  <tbody><tr><td>
+    <div class="webform-print-content">{{ page.content }}</div>
+  </td></tr></tbody>
+  <tfoot><tr><td>
+    <div class="webform-print-footer-space">&nbsp;</div>
+  </td></tr></tfoot>
+</table>
+<header class="webform-print-header">header</header>
+<footer class="webform-print-footer">footer</footer>
