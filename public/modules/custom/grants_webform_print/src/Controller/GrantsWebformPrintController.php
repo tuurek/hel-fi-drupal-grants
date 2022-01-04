@@ -64,7 +64,14 @@ class GrantsWebformPrintController extends ControllerBase {
     if (!str_contains($key, '#')) {
     }
   }
-  private function traverseWebform(&$webformArray) {
+
+  /**
+   * Traverse through a webform to make changes to fit the print styles.
+   *
+   * @param array $webformArray
+   *   The Webform in question.
+   */
+  private function traverseWebform(array &$webformArray) {
     foreach ($webformArray as $key => &$item) {
       if (is_array($item)) {
         $this->traverseWebform($item);
