@@ -8,6 +8,7 @@
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use \Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\helfi_yjdh\Exception\YjdhException;
 
 /**
@@ -24,8 +25,7 @@ function grants_handler_theme() {
 /**
  * Implements hook_entity_type_alter().
  */
-function grants_handler_entity_type_alter(array &$entity_types)
-{
+function grants_handler_entity_type_alter(array &$entity_types) {
   $entity_types['webform_submission']->setStorageClass('Drupal\grants_handler\GrantsHandlerSubmissionStorage');
 }
 
@@ -68,41 +68,96 @@ function grants_handler_entity_type_alter(array &$entity_types)
  */
 function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
   // Code here acts on all elements included in a webform.
-//  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
-//  $form_object = $form_state->getFormObject();
-//  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-//  $webform_submission = $form_object->getEntity();
-//  /** @var \Drupal\webform\WebformInterface $webform */
-//  $webform = $webform_submission->getWebform();
+  //  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
+  //  $form_object = $form_state->getFormObject();
+  //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
+  //  $webform_submission = $form_object->getEntity();
+  //  /** @var \Drupal\webform\WebformInterface $webform */
+  //  $webform = $webform_submission->getWebform();
 
   // Add custom data attributes to all elements.
-//  $element['#attributes']['data-custom'] = '{custom data goes here}';
+  //  $element['#attributes']['data-custom'] = '{custom data goes here}';
 }
 
+/**
+ * Implements hook_preprocess().
+ */
+function grants_handler_preprocess_webform(array &$variables) {
+  $r = 'asfd';
+}
 
 /**
  * Implements hook_form_alter().
  */
 function grants_handler_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
-  // Code here acts on all elements included in a webform.
-  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
-  $form_object = $form_state->getFormObject();
-  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  $webform_submission = $form_object->getEntity();
-  /** @var \Drupal\webform\WebformInterface $webform */
-  $webform = $webform_submission->getWebform();
+  //  // Code here acts on all elements included in a webform.
+  //  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
+  //  $form_object = $form_state->getFormObject();
+  //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
+  //  $webform_submission = $form_object->getEntity();
+  //  /** @var \Drupal\webform\WebformInterface $webform */
+  //  $webform = $webform_submission->getWebform();
+
+
+  if($form_id === 'webform_submission_yleisavustushakemus_edit_all_form') {
+    $d = 'adfs';
+  } else if (
+    $form_id === 'webform_submission_yleisavustushakemus_add_form') {
+    $options = CompensationsComposite::getOptionsForTypes();
+
+    // fast and dirty way to get this to ya form. must be fixed.
+    // attempt in comments
+    $element = $form["elements"]["2_avustustiedot"]["avustuslajit"]["subventions"];
+    if ($element['#webform_plugin_id'] == 'grants_compensations') {
+
+      $subventionTypes = $element["#subvention_type"];
+      $subventionTypesAmount = count($subventionTypes);
+      $form["elements"]["2_avustustiedot"]["avustuslajit"]["subventions"]['#cardinality'] = $subventionTypesAmount;
+
+      foreach ($subventionTypes as $key => $value) {
+        $form["elements"]["2_avustustiedot"]["avustuslajit"]["subventions"]['#default_value'][] = [
+          'subvention_type' => $options[$value],
+          'subvention_type_id' => $value,
+        ];
+      }
+    }
+
+    //    foreach ($form["elements"] as $elementName => $element) {
+    //      if (!str_contains($elementName, '#')) {
+    //        foreach ($element as $elementName2 => $element2) {
+    //          if (!str_contains($elementName2, '#')) {
+    //            foreach ($element2 as $elementName3 => $element3) {
+    //              if (!str_contains($elementName3, '#')) {
+    //                if ($element3['#type'] == 'grants_compensations') {
+    //                  $subventionTypes = $element3["#subvention_type"];
+    //                  $subventionTypesAmount = count($subventionTypes);
+    //                  $form['elements'][$elementName][$elementName2][$elementName3]['#cardinality'] = $subventionTypesAmount;
+    //
+    //                  foreach ($subventionTypes as $key => $value) {
+    //                    $form['elements'][$elementName][$elementName2][$elementName3]['#default_value'][] = [
+    //                      'subvention_type' => $options[$value],
+    //                      'subvention_type_id' => $value,
+    //                    ];
+    //                  }
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
 
 
 
-  if ($form_id === 'webform_submission_yleisavustushakemus_add_form') {
+
 
     /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $userExternalData */
     $userExternalData = \Drupal::service('helfi_helsinki_profiili.userdata');
     $profileData = $userExternalData->getUserProfileData();
 
     // if not authenticated let's not do anything. This is more for admin usage than
-    if ((null == $profileData) && !$userExternalData->isAuthenticatedExternally()) {
+    if ((NULL == $profileData) && !$userExternalData->isAuthenticatedExternally()) {
       \Drupal::messenger()->addWarning('No HelsinkiProfiili login found.');
       return;
     }
@@ -166,7 +221,7 @@ function company_select_callback(array &$form, FormStateInterface $form_state): 
 
   $regDate = new DrupalDateTime($selectedCompanyData['RegistryDate'], 'Europe/Helsinki');
 
-  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date_text"]["#value"] = $regDate->format('d.m.Y');
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = $regDate->format('d.m.Y');
 
   $foundingYearExplode = explode('-', $selectedCompanyData['RegistryDate']);
   $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];

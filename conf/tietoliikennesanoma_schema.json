@@ -1,0 +1,2070 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "compensation": {
+      "type": "object",
+      "properties": {
+        "applicationInfoArray": {
+          "description": "'Hakemuksen tiedot' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "applicationType",
+                  "applicationTypeID",
+                  "formTimeStamp",
+                  "applicationNumber",
+                  "status",
+                  "sector",
+                  "segment",
+                  "responsibilityArea",
+                  "responsibilitySubArea",
+                  "handler",
+                  "actingYear",
+                  "attachmentsReceived",
+                  "journalNumber"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "currentAddressInfoArray": {
+          "description": "'Osoite' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "contactPerson",
+                  "street",
+                  "city",
+                  "postCode",
+                  "country",
+                  "phoneNumber"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "applicantInfoArray": {
+          "description": "'Hakijan tiedot' section of the application",
+          "type": "array",
+          "items": {
+            "description": "One object contains information about one property of the applicant",
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "applicantType",
+                  "registerNumber",
+                  "companyNumber",
+                  "socialSecurityNumber",
+                  "lastname",
+                  "firstname",
+                  "communityOfficialName",
+                  "communityOfficialNameShort",
+                  "registrationDate",
+                  "foundingYear",
+                  "home",
+                  "email",
+                  "homePage",
+                  "isSportsClub"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "applicantOfficialsArray": {
+          "description": "'Toimihenkilöt' section of the application",
+          "type": "array",
+          "items": {
+            "description": "One item contains information of all of the properties of the official, as an array",
+            "type": "array",
+            "items": {
+              "description": "One item contains information about one property of the official, as an object",
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "description": "Identifies the data of the array item",
+                  "type": "string",
+                  "enum": [
+                    "email",
+                    "role",
+                    "name",
+                    "phone"
+                  ]
+                },
+                "label": {
+                  "desciption": "For future use, field's name in the UI",
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "valueType": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "int",
+                    "bool",
+                    "datetime",
+                    "float"
+                  ]
+                }
+              },
+              "required": [
+                "ID",
+                "value",
+                "valueType"
+              ]
+            }
+          }
+        },
+        "bankAccountArray": {
+          "description": "'Pankkiyhteys' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "accountNumber",
+                  "accountOwnerName",
+                  "socialSecurityNumber"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "compensationInfo": {
+          "description": "'Avustus' section of the application",
+          "type": "object",
+          "properties": {
+            "generalInfoArray": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "totalAmount",
+                      "explanation",
+                      "argument",
+                      "publicArgument",
+                      "explanationDone",
+                      "purposeAndLocation",
+                      "timeFrameBegin",
+                      "timeFrameEnd",
+                      "purpose",
+                      "description",
+                      "compensationPreviousYear"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            },
+            "compensationArray": {
+              "description": "Information about the compensation applied",
+              "type": "array",
+              "items": {
+                "description": "Contains information about one subvention type, all its properties in one item as an array",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the one applied subventionType",
+                      "type": "string",
+                      "enum": [
+                        "subventionType",
+                        "amount",
+                        "amountInLetters",
+                        "eventBegin",
+                        "eventEnd",
+                        "primaryArt",
+                        "purpose",
+                        "isFestival",
+                        "letterNumber",
+                        "letterDate",
+                        "supportTimeBegin",
+                        "supportTimeEnd",
+                        "studentName",
+                        "caretakerName",
+                        "caretakerAddress",
+                        "totalCosts"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            },
+            "previousYearArray": {
+              "description": "Information about previous year's compensation and how it's been used",
+              "type": "array",
+              "items": {
+                "description": "One item/subarray contains information for one subventionType",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item belonging to the subventionType",
+                      "type": "string",
+                      "enum": [
+                        "subventionType",
+                        "amount",
+                        "education",
+                        "camping",
+                        "recreational",
+                        "international",
+                        "salaries",
+                        "admin",
+                        "letterDate",
+                        "supportTimeBegin",
+                        "supportTimeEnd",
+                        "studentName",
+                        "caretakerName",
+                        "caretakerAddress",
+                        "totalCostsOfType"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    },
+                    "otherCostsArray": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "costType": {
+                            "type": "string"
+                          },
+                          "costAmount": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "costType",
+                          "costAmount"
+                        ]
+                      }
+                    }
+                  },
+                  "anyOf": [
+                    {
+                      "required": [
+                        "ID",
+                        "value",
+                        "valueType"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "otherCostsArray"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "previousYearTotalAmount": {
+              "type": "number"
+            },
+            "premisesCompensation": {
+              "description": "Information about premises compensation (rent costs, rent income)",
+              "type": "object",
+              "properties": {
+                "rentCostsArray": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ID": {
+                        "description": "Identifies the data of the array item",
+                        "type": "string",
+                        "enum": [
+                          "rentCostsHours",
+                          "rentCostsCost",
+                          "rentCostsDifferenceToNextYear"
+                        ]
+                      },
+                      "label": {
+                        "desciption": "For future use, field's name in the UI",
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "enum": [
+                          "string",
+                          "int",
+                          "bool",
+                          "datetime",
+                          "float"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                },
+                "rentIncomesArray": {
+                  "type": "array",
+                  "items": {
+                    "description": "contains values of one rentIncomesArray item, as an array",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "ID": {
+                          "description": "Identifies the data of the array item",
+                          "type": "string",
+                          "enum": [
+                            "premiseName",
+                            "dateBegin",
+                            "dateEnd",
+                            "tenantName",
+                            "hours",
+                            "sum"
+                          ]
+                        },
+                        "label": {
+                          "desciption": "For future use, field's name in the UI",
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        },
+                        "valueType": {
+                          "type": "string",
+                          "enum": [
+                            "string",
+                            "int",
+                            "bool",
+                            "datetime",
+                            "float"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "ID",
+                        "value",
+                        "valueType"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "compensationArray"
+          ]
+        },
+        "eventInfoArray": {
+          "description": "'Tapahtuman tiedot' and 'Kustannukset' (which is actually events info in application type 33) section of the application",
+          "type": "array",
+          "items": {
+            "description": "One item contains all the properties of an event, as an array",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "description": "Identifies the data of the array item. The array containts all the ID's that are needed for a specific application type's event, or it can contain only 'totalCosts' as summary of all the other array item cost values",
+                  "type": "string",
+                  "enum": [
+                    "eventName",
+                    "eventTargetGroup",
+                    "eventPlace",
+                    "eventContent",
+                    "isEventEquality",
+                    "eventEqualityText",
+                    "isEventCommunal",
+                    "eventCommunalText",
+                    "isEventEnvironment",
+                    "eventEnvironmentText",
+                    "isEventNewPeopleActivating",
+                    "eventNewPeopleActivatingText",
+                    "isEventWorkdayActivating",
+                    "eventWorkdayActivatingText",
+                    "eventBegin",
+                    "eventEnd",
+                    "weekDay",
+                    "timeOfDay",
+                    "numberOfTimes",
+                    "vehicleFromTo",
+                    "numberOfParticipants",
+                    "lengthPerDirectionInKm",
+                    "cost",
+                    "totalCosts",
+                    "dayCount",
+                    "premiereLocation",
+                    "firstPublicDate"
+                  ]
+                },
+                "label": {
+                  "desciption": "For future use, field's name in the UI",
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "valueType": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "int",
+                    "bool",
+                    "datetime",
+                    "float"
+                  ]
+                }
+              },
+              "required": [
+                "ID",
+                "value",
+                "valueType"
+              ]
+            }
+          }
+        },
+        "otherCompensationsInfo": {
+          "description": "'Muut saadut avustukset' section of the application",
+          "type": "object",
+          "properties": {
+            "otherCompensationsArray": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "issuer",
+                        "year",
+                        "amount",
+                        "issuerName",
+                        "purpose",
+                        "previousAmount"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            },
+            "otherCompensationsTotal": {
+              "type": "number"
+            },
+            "otherAppliedCompensationsArray": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "issuer",
+                        "year",
+                        "amount",
+                        "issuerName",
+                        "purpose",
+                        "previousAmount"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            },
+            "otherAppliedCompensationsTotal": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "otherCompensationsArray",
+            "otherCompensationsTotal"
+          ]
+        },
+        "orienteeringMapInfo": {
+          "description": "'Suunnistuskartta' section of the application",
+          "type": "object",
+          "properties": {
+            "orienteeringMapsArray": {
+              "description": "Contains the data for all the maps, one subarray per map",
+              "type": "array",
+              "items": {
+                "description": "One item/array contains the information for one map",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "mapName",
+                        "size",
+                        "voluntaryHours",
+                        "cost",
+                        "otherCompensations"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "activitiesInfoArray": {
+          "description": "'Toiminta' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "membersPersonGlobal",
+                  "membersPersonLocal",
+                  "membersCommunityGlobal",
+                  "membersCommunityLocal",
+                  "projectDescription",
+                  "activityGoal",
+                  "missionAndValues",
+                  "visionAndStrategy",
+                  "additionalDiversity",
+                  "additionalAccessibility",
+                  "additionalInvolvement",
+                  "actionAndArtQuality",
+                  "targetGroups",
+                  "partnersAndNetworks",
+                  "personnelAll",
+                  "personnelFullTime",
+                  "personnelPartTime",
+                  "personnelVoluntary",
+                  "businessPurpose",
+                  "communityPracticesBusiness",
+                  "businessIdea",
+                  "localUnemployedSupport",
+                  "actionEffect",
+                  "jobExperiments",
+                  "trainingAndGroups",
+                  "membersApplicantPersonLocal",
+                  "membersApplicantPersonGlobal",
+                  "membersApplicantCommunityLocal",
+                  "membersApplicantCommunityGlobal",
+                  "membersSubdivisionPersonLocal",
+                  "membersSubdivisionPersonGlobal",
+                  "membersSubdivisionCommunityLocal",
+                  "membersSubdivisionCommunityGlobal",
+                  "membersSubcommunityPersonLocal",
+                  "membersSubcommunityPersonGlobal",
+                  "membersSubcommunityCommunityLocal",
+                  "membersSubcommunityCommunityGlobal",
+                  "membersAge0to6YearsLocal",
+                  "membersAge0to6YearsGlobal",
+                  "membersAge7to28YearsLocal",
+                  "membersAge7to28YearsGlobal",
+                  "membersOthersLocal",
+                  "membersOthersGlobal",
+                  "membersSummaryLocal",
+                  "membersSummaryGlobal",
+                  "feeAge0To6Years",
+                  "feeAge7To28Years",
+                  "feeOthers",
+                  "feePerson",
+                  "feeCommunity",
+                  "lastYearActiveMembersVisits",
+                  "lastYearOtherMemberVisits",
+                  "youngPeopleParticipation"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "studentsInfoArray": {
+          "description": "'Oppilaat' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "pupilsChildhoodAll",
+                  "pupilsChildhoodGirls",
+                  "pupilsChildhoodBoys",
+                  "wideBasicStudiesAll",
+                  "wideBasicStudiesGirls",
+                  "wideBasicStudiesBoys",
+                  "wideAdvancedStudiesAll",
+                  "wideAdvancedStudiesGirls",
+                  "wideAdvancedStudiesBoys",
+                  "generalStudiesAll",
+                  "generalStudiesGirls",
+                  "generalStudiesBoys",
+                  "lessonsChildhood",
+                  "lessonsWideBasicStudies",
+                  "lessonsWideAdvancedStudies",
+                  "lessonsGeneralStudies",
+                  "personnelAll",
+                  "wayOfSelection",
+                  "personnelTeaching",
+                  "freeStudents",
+                  "selfAssessment",
+                  "feedback"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "participantsArray": {
+          "description": "'Osallistujat' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "adultsMale",
+                  "adultsFemale",
+                  "adultsAll",
+                  "juniorsMale",
+                  "juniorsFemale",
+                  "juniorsAll"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "hiredOfficialsArray": {
+          "description": "'Palkatut toimihenkilöt' section of the application",
+          "type": "array",
+          "items": {
+            "description": "One item per person",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "description": "Identifies the data of the array item",
+                  "type": "string",
+                  "enum": [
+                    "name",
+                    "job",
+                    "weeklyHours"
+                  ]
+                },
+                "label": {
+                  "desciption": "For future use, field's name in the UI",
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "valueType": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "int",
+                    "bool",
+                    "datetime",
+                    "float"
+                  ]
+                }
+              },
+              "required": [
+                "ID",
+                "value",
+                "valueType"
+              ]
+            }
+          }
+        },
+        "membershipsInfo": {
+          "description": "'Jäsenyydet järjestöissä tai muissa yhteisöissä' section of the application",
+          "type": "object",
+          "properties": {
+            "membershipsArray": {
+              "description": "Each item (array) in this array represents one membership",
+              "type": "array",
+              "items": {
+                "description": "One item contains all the properties of one membership, as an array",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "organizationName",
+                        "fee"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            },
+            "membershipsInfoArray": {
+              "description": "Other memberships related information as single properties, like total fees",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "membershipsFeesTotal"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            }
+          }
+        },
+        "membersInfo": {
+          "description": "'Aktiivit' or 'Seuran toimintatiedot' sections of the application: these are both actually information about members",
+          "type": "object",
+          "properties": {
+            "membersInfoArray": {
+              "description": "Information like member count, fees, coach count, represented as single properties",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "adultMale",
+                      "adultFemale",
+                      "adultAll",
+                      "juniorMale",
+                      "juniorFemale",
+                      "juniorAll",
+                      "menGlobal",
+                      "menLocal",
+                      "womenGlobal",
+                      "womenLocal",
+                      "boysGlobal",
+                      "boysLocal",
+                      "girlsGlobal",
+                      "girlsLocal",
+                      "activeFanciersMenGlobal",
+                      "activeFanciersMenLocal",
+                      "activeFanciersWomenGlobal",
+                      "activeFanciersWomenLocal",
+                      "activeFanciersBoysGlobal",
+                      "activeFanciersBoysLocal",
+                      "activeFanciersGirlsGlobal",
+                      "activeFanciersGirlsLocal",
+                      "feeAdults",
+                      "feeJuniors",
+                      "allCoaches",
+                      "level1to5Coaches"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            },
+            "clubSectionsArray": {
+              "description": "Each item (array) in this array represents one club section, ''",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "sectionName",
+                        "men",
+                        "women",
+                        "boys",
+                        "girls",
+                        "adultHours",
+                        "juniorHours"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "premisesInfo": {
+          "description": "'Toimi- ja kokoontumispaikat' section of the application",
+          "type": "object",
+          "properties": {
+            "premisesArray": {
+              "description": "Information about several premises, each as one item/array of this array",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "premiseName",
+                        "premiseAddress",
+                        "location",
+                        "streetAddress",
+                        "address",
+                        "postCode",
+                        "studentCount",
+                        "specialStudents",
+                        "groupCount",
+                        "specialGroups",
+                        "personnelCount",
+                        "totalRent",
+                        "rentTimeBegin",
+                        "rentTimeEnd",
+                        "free"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            },
+            "premiseSummaryArray": {
+              "description": "Summary information of the premises, as an array, one property per array item.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "premisesBaseInformation",
+                      "totalStudentCount",
+                      "totalSpecialStudentCount",
+                      "totalGroupCount",
+                      "totalSpecialGroupCount",
+                      "totalPersonnelCount",
+                      "totalRentCosts"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            }
+          }
+        },
+        "rentsInfo": {
+          "description": "'Vuokraselvitys' section of the application",
+          "type": "object",
+          "properties": {
+            "rentedPremisesArray": {
+              "description": "Information about several rented premise, each as one item/array of this array",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "premiseAddress",
+                        "premisePostalCode",
+                        "premisePostOffice",
+                        "rentSum",
+                        "usage",
+                        "daysPerWeek",
+                        "hoursPerDay",
+                        "lessorName",
+                        "lessorPhone",
+                        "lessorAddress",
+                        "lessorPostalCode",
+                        "lessorPostOffice"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            },
+            "rentsSummaryArray": {
+              "description": "Summary information of the premises, as an array, one property per array item.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "rentsInformation",
+                      "totalRentCosts"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            }
+          }
+        },
+        "benefitsInfoArray": {
+          "description": "'Saadut etuisuudet' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "benefits",
+                  "loansAndQuarantees",
+                  "premises",
+                  "loans"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "budgetInfo": {
+          "description": "'Talousarvio' section or budget like sections (like 'Palkkaselvitys') of the application",
+          "type": "object",
+          "properties": {
+            "budgetInfoArray": {
+              "description": "Information like 'cost total' or 'net value' represented as single properties",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "costsTotal",
+                      "incomeTotal",
+                      "netValue",
+                      "eventOtherAppliedSum",
+                      "eventOtherAppliedFrom",
+                      "eventOtherGrantedSum",
+                      "eventOtherGrantedFrom",
+                      "employeeSalaries",
+                      "socialSecurityCosts",
+                      "travelCosts",
+                      "totalEmployeeCosts"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            },
+            "incomeArray": {
+              "description": "Each item in this array represents one income line. The group in which it belongs in is identified by group name",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "incomeGroupName": {
+                    "description": "Identifies the income group this item belongs in. Like 'general', 'budgetForProjectAndDevelopment', 'budgetForOperatingAndArtsTeaching', etc.",
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "budgetForProjectAndDevelopment",
+                      "budgetForOperatingAndArtsTeaching"
+                    ]
+                  },
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "compensation",
+                      "customerFees",
+                      "donations",
+                      "entryFees",
+                      "otherCompensations",
+                      "sponsorships",
+                      "sales",
+                      "compensationFromCulturalAffairs",
+                      "otherCompensationFromCity",
+                      "otherCompensationType",
+                      "totalIncome",
+                      "incomeWithoutCompensations"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "incomeGroupName",
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            },
+            "otherIncomeArray": {
+              "description": "Each item in this array represents one income line. The group in which it belongs in is identified by group name. ID of the income is not restricted, as the applicant may write the type name by himself/herself.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "incomeGroupName": {
+                    "description": "Identifies the income group this item belongs in. Like 'general', 'budgetForProjectAndDevelopment', 'budgetForOperatingAndArtsTeaching', etc.",
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "budgetForProjectAndDevelopment",
+                      "budgetForOperatingAndArtsTeaching"
+                    ]
+                  },
+                  "ID": {
+                    "description": "Identifies the data of the array item. The applicant usually writes this for the income row as the name of the income",
+                    "type": "string"
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "incomeGroupName",
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            },
+            "costsArray": {
+              "description": "Each item (array) in this array represents one cost item.  The group in which it belongs in is identified by group name",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "costsGroupName": {
+                    "description": "Identifies the costs group this item belongs in. Like 'general', 'budgetForProjectAndDevelopment', 'budgetForOperatingAndArtsTeaching', etc.",
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "budgetForProjectAndDevelopment",
+                      "budgetForOperatingAndArtsTeaching",
+                      "servicesBreakdown",
+                      "suppliesBreakdown",
+                      "otherCostsBreakdown",
+                      "useOfCustomerFees"
+                    ]
+                  },
+                  "ID": {
+                    "description": "Identifies the data of the array item",
+                    "type": "string",
+                    "enum": [
+                      "salaries",
+                      "personnelSocialSecurityCosts",
+                      "rentSum",
+                      "materials",
+                      "transport",
+                      "food",
+                      "pr",
+                      "insurance",
+                      "snacks",
+                      "cleaning",
+                      "premisesService",
+                      "travel",
+                      "heating",
+                      "servicesTotal",
+                      "water",
+                      "electricity",
+                      "suppliesTotal",
+                      "admin",
+                      "accounting",
+                      "health",
+                      "otherCostsTotal",
+                      "services",
+                      "supplies",
+                      "useOfCustomerFeesTotal",
+                      "totalCosts",
+                      "netCosts",
+                      "performerFees",
+                      "otherFees",
+                      "personnelSideCosts",
+                      "generalCosts",
+                      "permits",
+                      "setsAndCostumes",
+                      "equipment",
+                      "premises",
+                      "security",
+                      "marketing",
+                      "costsWithoutDeferredItems",
+                      "generalCostsTotal",
+                      "allCostsTotal"
+                    ]
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "incomeGroupName",
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            },
+            "otherCostsOfGroupArray": {
+              "description": "Each item in this array represents one cost line. The group in which it belongs in is identified by group name. The ID of the cost is not restricted, as the applicant may write the type name by himself/herself.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "costsGroupName": {
+                    "description": "Identifies the costs group this item belongs in. Like 'general', 'budgetForProjectAndDevelopment', 'budgetForOperatingAndArtsTeaching', etc.",
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "budgetForProjectAndDevelopment",
+                      "budgetForOperatingAndArtsTeaching",
+                      "servicesBreakdown",
+                      "suppliesBreakdown",
+                      "otherCostsBreakdown",
+                      "useOfCustomerFees"
+                    ]
+                  },
+                  "ID": {
+                    "description": "Identifies the data of the array item. The applicant usually writes this for the cost row as the name of the income",
+                    "type": "string"
+                  },
+                  "label": {
+                    "desciption": "For future use, field's name in the UI",
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "valueType": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "int",
+                      "bool",
+                      "datetime",
+                      "float"
+                    ]
+                  }
+                },
+                "required": [
+                  "incomeGroupName",
+                  "ID",
+                  "value",
+                  "valueType"
+                ]
+              }
+            }
+          }
+        },
+        "invoicesInfo": {
+          "description": "'Laskut' section of the application",
+          "type": "object",
+          "properties": {
+            "invoicesArray": {
+              "description": "Information about several invoices, each as one item/array of this array",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "description": "Identifies the data of the array item",
+                      "type": "string",
+                      "enum": [
+                        "invoiceNumber",
+                        "invoiceDate",
+                        "invoiceSum",
+                        "invoiceCopy"
+                      ]
+                    },
+                    "label": {
+                      "desciption": "For future use, field's name in the UI",
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "valueType": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "int",
+                        "bool",
+                        "datetime",
+                        "float"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "ID",
+                    "value",
+                    "valueType"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "projectInfoArray": {
+          "description": "'Projektin tiedot' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "projectName",
+                  "goal",
+                  "startDate",
+                  "endDate",
+                  "location",
+                  "membersGlobal",
+                  "membersLocal",
+                  "membersYoungest",
+                  "membersOldest"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "additionalInformation": {
+          "description": "additional information about the application",
+          "type": "string"
+        },
+        "senderInfoArray": {
+          "description": "'Hakemuksen lähettäjä' section of the application",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "firstname",
+                  "lastname",
+                  "personID",
+                  "userID",
+                  "email"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        }
+      },
+      "required": [
+        "applicationInfoArray",
+        "currentAddressInfoArray",
+        "applicantInfoArray",
+        "applicantOfficialsArray",
+        "bankAccountArray",
+        "compensationInfo",
+        "senderInfoArray"
+      ]
+    },
+    "attachmentsInfo": {
+      "description": "'Liitteet' information from the portal",
+      "type": "object",
+      "properties": {
+        "attachmentsArray": {
+          "description": "Information about several attachments, each as one item/array of this array",
+          "type": "array",
+          "items": {
+            "description": "contains information about one attachment",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ID": {
+                  "description": "Identifies the data of the array item",
+                  "type": "string",
+                  "enum": [
+                    "description",
+                    "fileName",
+                    "fileType",
+                    "integrationID",
+                    "isDeliveredLater",
+                    "isIncludedInOtherFile",
+                    "isNewAttachment"
+                  ]
+                },
+                "value": {
+                  "type": "string"
+                },
+                "valueType": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "int",
+                    "bool"
+                  ]
+                }
+              },
+              "required": [
+                "ID",
+                "value",
+                "valueType"
+              ]
+            }
+          }
+        },
+        "generalInfoArray": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "extraInfo"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        }
+      }
+    },
+    "formUpdate": {
+      "description": "is not present if new application. If message is an update to an existing application, then this is true.",
+      "type": "boolean"
+    },
+    "statusUpdates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseID": {
+            "type": "string"
+          },
+          "citizenCaseStatus": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "eventCode": {
+            "type": "integer"
+          },
+          "eventSource": {
+            "type": "string"
+          },
+          "timeUpdated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseID": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "eventCode": {
+            "type": "integer"
+          },
+          "eventSource": {
+            "type": "string"
+          },
+          "timeUpdated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseID": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "sentBy": {
+            "type": "string"
+          },
+          "sendDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "fileName": {
+                  "type": "string"
+                },
+                "integrationID": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "compensation",
+    "attachmentsInfo"
+  ]
+}

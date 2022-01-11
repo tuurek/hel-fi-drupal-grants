@@ -2,31 +2,52 @@
 
 namespace Drupal\grants_handler;
 
+use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
+use Drupal\grants_metadata\AtvSchema;
+use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvService;
-use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class GrantsHandlerSubmissionStorage extends \Drupal\webform\WebformSubmissionStorage
-{
+/**
+ * Override loading of WF submission from data from ATV.
+ *
+ * This could be used overriding the saving as well,
+ * but for now this is enough.
+ */
+class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
-  /** @var AtvService */
-  protected $atvService;
+  /**
+   * Atv service object.
+   *
+   * @var \Drupal\helfi_atv\AtvService
+   */
+  protected AtvService $atvService;
+
+  protected ComplexDataDefinitionInterface $dataDefinition;
+
+  protected AtvSchema $atvSchema;
 
   /**
    * {@inheritdoc}
    */
   public static function createInstance(
-    ContainerInterface  $container,
-    EntityTypeInterface $entity_type): WebformSubmissionStorage|\Drupal\Core\Entity\EntityHandlerInterface
-  {
+    ContainerInterface $container,
+    EntityTypeInterface $entity_type): WebformSubmissionStorage|EntityHandlerInterface {
+
     /** @var WebformSubmissionStorage $instance */
     $instance = parent::createInstance($container, $entity_type);
 
+    /** @var AtvService atvService */
     $instance->atvService = $container->get('helfi_atv.atv_service');
 
+    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+    $instance->atvSchema = \Drupal::service('grants_metadata.atv_schema');
+
+    $instance->dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
     return $instance;
   }
@@ -37,30 +58,38 @@ class GrantsHandlerSubmissionStorage extends \Drupal\webform\WebformSubmissionSt
    * @param array $webform_submissions
    *   An array of webform submissions.
    */
-  protected function loadData(array &$webform_submissions)
-  {
+  protected function loadData(array &$webform_submissions) {
     parent::loadData($webform_submissions);
 
-    /** @var WebformSubmission $submission */
+    /** @var \Drupal\webform\Entity\WebformSubmission $submission */
     foreach ($webform_submissions as $submission) {
-//      $data = $this->getSubmission($submission->get('uuid')->value);
-      $data = $this->getSubmission('e5ed6430-4059-4284-859f-50137a1eee53');
-      $webForm = $submission->getWebform();
-//      $f = $webForm->getElementsDecodedAndFlattened();
 
-      $appData = $this->mapApplicationToSubmission($data);
+//      $documentContent = $this->getSubmission('e5ed6430-4059-4284-859f-50137a1eee53');
+      $document = $this->atvService->getDocument('e5ed6430-4059-4284-859f-50137a1eee53');
+      $documentContent = $this->atvSchema->getAtvDocumentContent($document);
 
-      $submission->setData($appData);
+      $appData = $this->atvSchema->documentContentToTypedData($documentContent, $this->dataDefinition);
+
+      $data = $appData->toArray();
+
+      $submission->setData($data);
     }
   }
 
-  protected function getSubmission($id)
-  {
+  /**
+   * Get submission from ATV.
+   *
+   * @param string $id
+   *   Document id.
+   *
+   * @return mixed
+   *   Submission data.
+   */
+  protected function getSubmission($id) {
 
-//    $document = $this->atvService->getDocument($id);
-//    $replaced = str_replace("'", "\"", $document['content']);
-//    $replaced = str_replace("False", "false", $replaced);
-
+    // $document = $this->atvService->getDocument($id);
+    // $replaced = str_replace("'", "\"", $document['content']);
+    // $replaced = str_replace("False", "false", $replaced);
     $replaced = '{
   "compensation": {
     "applicationInfoArray": [
@@ -605,88 +634,96 @@ class GrantsHandlerSubmissionStorage extends \Drupal\webform\WebformSubmissionSt
     return $decoded;
   }
 
-  protected function mapApplicationToSubmission($applicationData)
-  {
-
-    $applicationKeyValues = [
-      'account_number' => $applicationData["compensation"]["bankAccountArray"][0]["value"],
-      'acting_year' => $applicationData["compensation"]["applicationInfoArray"][5]["value"],
-      'additional_information' => $applicationData["compensation"]["additionalInformation"],
-//      'applicant_type' => $applicationData["compensation"]["applicationInfoArray"][1]["value"],
-      'applicant_type' => $applicationData["compensation"]["applicantInfoArray"][0]["value"],
-      'benefits_loans' => $applicationData["compensation"]["benefitsInfoArray"][1]["value"],
-      'benefits_premises' => $applicationData["compensation"]["benefitsInfoArray"][0]["value"],
-      'community_official_name' => $applicationData["compensation"]["applicantInfoArray"][2]["value"],
-      'community_official_name_short' => $applicationData["compensation"]["applicantInfoArray"][3]["value"],
-      'community_status' => '',
-      'community_status_special' => '',
-      'company_number' => $applicationData["compensation"]["applicantInfoArray"][1]["value"],
-      'company_select' => '',
-      'compensation_boolean' => $applicationData["compensation"]["compensationInfo"]["generalInfoArray"][1]["value"],
-      'compensation_explanation' => $applicationData["compensation"]["compensationInfo"]["generalInfoArray"][3]["value"],
-      'compensation_purpose' => $applicationData["compensation"]["compensationInfo"]["generalInfoArray"][2]["value"],
-      'contact_person' => $applicationData["compensation"]["currentAddressInfoArray"][0]["value"],
-      'contact_person_city' => $applicationData["compensation"]["currentAddressInfoArray"][4]["value"],
-      'contact_person_country' => $applicationData["compensation"]["currentAddressInfoArray"][5]["value"],
-      'contact_person_phone_number' => $applicationData["compensation"]["currentAddressInfoArray"][1]["value"],
-      'contact_person_post_code' => $applicationData["compensation"]["currentAddressInfoArray"][3]["value"],
-      'contact_person_street' => $applicationData["compensation"]["currentAddressInfoArray"][2]["value"],
-      'email' => $applicationData["compensation"]["applicantInfoArray"][8]["value"],
-      'fee_community' => $applicationData["compensation"]["activitiesInfoArray"][7]["value"],
-      'fee_person' => $applicationData["compensation"]["activitiesInfoArray"][6]["value"],
-      'founding_year' => $applicationData["compensation"]["applicantInfoArray"][5]["value"],
-      'home' => $applicationData["compensation"]["applicantInfoArray"][6]["value"],
-      'homepage' => $applicationData["compensation"]["applicantInfoArray"][7]["value"],
-      'members_applicant_community_global' => $applicationData["compensation"]["activitiesInfoArray"][2]["value"],
-      'members_applicant_community_local' => $applicationData["compensation"]["activitiesInfoArray"][3]["value"],
-      'members_applicant_person_global' => $applicationData["compensation"]["activitiesInfoArray"][4]["value"],
-      'members_applicant_person_local' => $applicationData["compensation"]["activitiesInfoArray"][5]["value"],
-      'olemme_hakeneet_avustuksia_muualta_kuin_helsingin_kaupungilta' => '',
-      'registration_date' => $applicationData["compensation"]["applicantInfoArray"][4]["value"],
-      'registration_date_text' => $applicationData["compensation"]["applicantInfoArray"][4]["value"],
-      'subventions_type_6' => $applicationData["compensation"]["compensationInfo"]["compensationArray"][0][0]["value"],
-      'subventions_type_6_sum' => $applicationData["compensation"]["compensationInfo"]["compensationArray"][0][1]["value"],
-
-    ];
-
-    foreach ($applicationData["compensation"]["applicantOfficialsArray"] as $applicationOfficial) {
-      if (!empty($applicationOfficial[0]['value'])) {
-        $officialArray = [
-          'official_name' => $applicationOfficial[2]['value'],
-          'official_role' => $applicationOfficial[1]['value'],
-          'official_email' => $applicationOfficial[0]['value'],
-          'official_phone' => $applicationOfficial[3]['value'],
-        ];
-        $applicationKeyValues['applicant_officials'][] = $officialArray;
-      }
-    }
-    // TODO: haetut avustukset??
-    foreach ($applicationData["compensation"]["otherCompensationsInfo"]["otherCompensationsArray"] as $otherCompensation) {
-      if (!empty($otherCompensation[0]['value'])) {
-        $officialArray = [
-          'issuer' => $otherCompensation[0]['value'],
-          'issuer_name' => $otherCompensation[1]['value'],
-          'year' => $otherCompensation[2]['value'],
-          'amount' => $otherCompensation[3]['value'],
-          'purpose' => $otherCompensation[4]['value'],
-        ];
-        $applicationKeyValues['myonnetty_avustus'][] = $officialArray;
-      }
-    }
-
-    if (empty($applicationData["compensation"]["otherCompensationsInfo"]["otherCompensationsArray"])) {
-      $applicationKeyValues['olemme_saaneet_muita_avustuksia'] = 'Ei';
-    } else {
-      $applicationKeyValues['olemme_saaneet_muita_avustuksia'] = 'Kyllä';
-    }
-
-    if (!empty($applicationKeyValues['compensation_explanation'])) {
-
-    }
-
-
-    return $applicationKeyValues;
-
-  }
+  /**
+   * Map ATV document to webform submission structure.
+   *
+   * @param array $applicationData
+   *   Data from ATV.
+   *
+   * @return array
+   *   Submission structured document
+   */
+//  protected function mapApplicationToSubmission(array $applicationData): array {
+//
+//    $applicationKeyValues = [
+//      'account_number' => $applicationData["compensation"]["bankAccountArray"][0]["value"],
+//      'acting_year' => $applicationData["compensation"]["applicationInfoArray"][5]["value"],
+//      'additional_information' => $applicationData["compensation"]["additionalInformation"],
+//      // 'applicant_type' => $applicationData["compensation"]
+//      // ["applicationInfoArray"][1]["value"],
+//      'applicant_type' => $applicationData["compensation"]["applicantInfoArray"][0]["value"],
+//      'benefits_loans' => $applicationData["compensation"]["benefitsInfoArray"][1]["value"],
+//      'benefits_premises' => $applicationData["compensation"]["benefitsInfoArray"][0]["value"],
+//      'community_official_name' => $applicationData["compensation"]["applicantInfoArray"][2]["value"],
+//      'community_official_name_short' => $applicationData["compensation"]["applicantInfoArray"][3]["value"],
+//      'community_status' => '',
+//      'community_status_special' => '',
+//      'company_number' => $applicationData["compensation"]["applicantInfoArray"][1]["value"],
+//      'company_select' => '',
+//      'compensation_boolean' => $applicationData["compensation"]["compensationInfo"]["generalInfoArray"][1]["value"],
+//      'compensation_explanation' => $applicationData["compensation"]["compensationInfo"]["generalInfoArray"][3]["value"],
+//      'compensation_purpose' => $applicationData["compensation"]["compensationInfo"]["generalInfoArray"][2]["value"],
+//      'contact_person' => $applicationData["compensation"]["currentAddressInfoArray"][0]["value"],
+//      'contact_person_city' => $applicationData["compensation"]["currentAddressInfoArray"][4]["value"],
+//      'contact_person_country' => $applicationData["compensation"]["currentAddressInfoArray"][5]["value"],
+//      'contact_person_phone_number' => $applicationData["compensation"]["currentAddressInfoArray"][1]["value"],
+//      'contact_person_post_code' => $applicationData["compensation"]["currentAddressInfoArray"][3]["value"],
+//      'contact_person_street' => $applicationData["compensation"]["currentAddressInfoArray"][2]["value"],
+//      'email' => $applicationData["compensation"]["applicantInfoArray"][8]["value"],
+//      'fee_community' => $applicationData["compensation"]["activitiesInfoArray"][7]["value"],
+//      'fee_person' => $applicationData["compensation"]["activitiesInfoArray"][6]["value"],
+//      'founding_year' => $applicationData["compensation"]["applicantInfoArray"][5]["value"],
+//      'home' => $applicationData["compensation"]["applicantInfoArray"][6]["value"],
+//      'homepage' => $applicationData["compensation"]["applicantInfoArray"][7]["value"],
+//      'members_applicant_community_global' => $applicationData["compensation"]["activitiesInfoArray"][2]["value"],
+//      'members_applicant_community_local' => $applicationData["compensation"]["activitiesInfoArray"][3]["value"],
+//      'members_applicant_person_global' => $applicationData["compensation"]["activitiesInfoArray"][4]["value"],
+//      'members_applicant_person_local' => $applicationData["compensation"]["activitiesInfoArray"][5]["value"],
+//      'olemme_hakeneet_avustuksia_muualta_kuin_helsingin_kaupungilta' => '',
+//      'registration_date' => $applicationData["compensation"]["applicantInfoArray"][4]["value"],
+//      'registration_date_text' => $applicationData["compensation"]["applicantInfoArray"][4]["value"],
+////      'subventions_type_6' => $applicationData["compensation"]["compensationInfo"]["compensationArray"][0][0]["value"],
+////      'subventions_type_6_sum' => $applicationData["compensation"]["compensationInfo"]["compensationArray"][0][1]["value"],
+//    ];
+//
+//    foreach ($applicationData["compensation"]["applicantOfficialsArray"] as $applicationOfficial) {
+//      if (!empty($applicationOfficial[0]['value'])) {
+//        $officialArray = [
+//          'official_name' => $applicationOfficial[2]['value'],
+//          'official_role' => $applicationOfficial[1]['value'],
+//          'official_email' => $applicationOfficial[0]['value'],
+//          'official_phone' => $applicationOfficial[3]['value'],
+//        ];
+//        $applicationKeyValues['applicant_officials'][] = $officialArray;
+//      }
+//    }
+//    // @todo haetut avustukset??
+//    foreach ($applicationData["compensation"]["otherCompensationsInfo"]["otherCompensationsArray"] as $otherCompensation) {
+//      if (!empty($otherCompensation[0]['value'])) {
+//        $officialArray = [
+//          'issuer' => $otherCompensation[0]['value'],
+//          'issuer_name' => $otherCompensation[1]['value'],
+//          'year' => $otherCompensation[2]['value'],
+//          'amount' => $otherCompensation[3]['value'],
+//          'purpose' => $otherCompensation[4]['value'],
+//        ];
+//        $applicationKeyValues['myonnetty_avustus'][] = $officialArray;
+//      }
+//    }
+//
+//    if (empty($applicationData["compensation"]["otherCompensationsInfo"]["otherCompensationsArray"])) {
+//      $applicationKeyValues['olemme_saaneet_muita_avustuksia'] = 'Ei';
+//    }
+//    else {
+//      $applicationKeyValues['olemme_saaneet_muita_avustuksia'] = 'Kyllä';
+//    }
+//
+//    if (!empty($applicationKeyValues['compensation_explanation'])) {
+//
+//    }
+//
+//    return $applicationKeyValues;
+//
+//  }
 
 }

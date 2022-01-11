@@ -19,23 +19,23 @@ class ApplicationOfficialDefinition extends ComplexDataDefinitionBase {
 
       $info['name'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('name')
+        ->setLabel('Nimi')
         ->addConstraint('NotBlank');
 
       $info['role'] = DataDefinition::create('integer')
         ->setRequired(TRUE)
-        ->setLabel('role')
+        ->setLabel('Rooli')
         ->addConstraint('NotBlank');
 
       $info['email'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('email')
+        ->setLabel('Sähköposti')
         ->addConstraint('NotBlank')
         ->addConstraint('Email');
 
       $info['phone'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('phone')
+        ->setLabel('Puhelinnumero')
         ->addConstraint('NotBlank');
 
     }
