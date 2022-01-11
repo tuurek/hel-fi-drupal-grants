@@ -19,9 +19,13 @@
     view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
   ]
 %}
+<button class="hds-button hds-button--primary" onClick="event.preventDefault();print();">
+  <span aria-hidden="true" class="hds-icon hds-icon--printer"></span>
+  <span class="hds-button__label">{{ 'Print filled form'|t }}</span>
+</button>
+
 <script>
 var body = document.body;
-
 body.classList.add("webform-submission-data-preview-page");
 </script>
 <table class="webform-print-wrapper-table">
