@@ -124,11 +124,12 @@ class GrantsAttachments extends WebformCompositeBase {
 
       $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
     }
-    $lines[] = $value["isDeliveredLater"] === '1' ?
-      $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render() : NULL;
-
-    $lines[] = $value["isIncludedInOtherFile"] === '1' ?
-      $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render() : NULL;
+    if ($value["isDeliveredLater"] === '1') {
+      $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
+    }
+    if ($value["isIncludedInOtherFile"] === '1') {
+      $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
+    }
     if ($value["description"] !== NULL) {
       $lines[] = $value["description"];
     }
