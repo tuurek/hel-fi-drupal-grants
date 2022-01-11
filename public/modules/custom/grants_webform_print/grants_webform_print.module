@@ -9,11 +9,23 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Render\Markup;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\webform\WebformInterface;
 use Drupal\grants_webform_print\GrantsWebformPrintPreRender;
 use Drupal\grants_webform_print\GrantsWebformPrintHelper;
+
+function grants_webform_print_preprocess_webform_container_base_html(&$variables) {
+  if ($variables['element']['#type'] == 'webform_section') {
+    $variables['element']['#attributes']['class'][] = "webform-preview-inner-section";
+  }
+  if ($variables['element']['#type'] == 'webform_wizard_page') {
+    $variables['value']['#type'] = 'webform_section';
+    unset($variables['value']['#open']);
+    $variables['element']['#type'] = 'webform_section';
+    $variables['element']['#webform_plugin_id'] = 'webform_section';
+  }
+}
 
 /**
  * Implements hook_webform_help_info().
@@ -196,6 +208,19 @@ function grants_webform_print_theme_suggestions_html(array $variables) {
  */
 function grants_webform_print_theme_suggestions_page(array $variables) {
   return (GrantsWebformPrintHelper::isPage()) ? ['page__grants_webform_print'] : [];
+}
+
+function grants_webform_print_preprocess_page(&$vars) {
+
+}
+
+function grants_webform_print_form_webform_submission_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+}
+
+function grants_webform_print_preprocess_webform_submission_data(&$vars){
+  $wf = $vars['webform_submission']->getWebform();
+  $vars["title"] = $wf->label();
 }
 
 /**

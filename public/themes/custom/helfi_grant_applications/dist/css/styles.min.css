@@ -2200,6 +2200,46 @@ input[type=submit].hds-button--small {
 .is-hidden {
   display: none; }
 
+.webform-submission-data-preview-page .webform-print-wrapper-table {
+  border: 0px transparent solid;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: visible;
+  overflow-x: initial; }
+  .webform-submission-data-preview-page .webform-print-wrapper-table thead, .webform-submission-data-preview-page .webform-print-wrapper-table tbody, .webform-submission-data-preview-page .webform-print-wrapper-table tfoot, .webform-submission-data-preview-page .webform-print-wrapper-table tr, .webform-submission-data-preview-page .webform-print-wrapper-table tbody tr:hover, .webform-submission-data-preview-page .webform-print-wrapper-table td, .webform-submission-data-preview-page .webform-print-wrapper-table td:first-child, .webform-submission-data-preview-page .webform-print-wrapper-table th {
+    border: 0;
+    background: transparent;
+    color: black; }
+  .webform-submission-data-preview-page .webform-print-wrapper-table ul {
+    margin: 0;
+    padding: 0; }
+    .webform-submission-data-preview-page .webform-print-wrapper-table ul li {
+      list-style: none;
+      margin-top: 6mm; }
+  .webform-submission-data-preview-page .webform-print-wrapper-table thead {
+    display: table-header-group; }
+  .webform-submission-data-preview-page .webform-print-wrapper-table tfoot {
+    display: table-footer-group; }
+  .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section {
+    border-top: 1px var(--color-black-20) solid;
+    padding-top: 64px; }
+    .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper {
+      display: block; }
+      .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > h2 {
+        width: 100% !important;
+        margin: 0mm 0 2mm !important;
+        padding: 0 !important;
+        min-width: 100%;
+        font-size: 36px !important;
+        font-weight: 500; }
+      .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper {
+        padding: 6mm 0; }
+        .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper label {
+          font-weight: 500; }
+
+.webform-print-header, .webform-print-footer {
+  display: none; }
+
 .hero.hero--no-background {
   background: none; }
   .hero.hero--no-background .hero__category {
@@ -2483,58 +2523,60 @@ fieldset.grants-attachments--wrapper .form-managed-file {
     color: var(--hdbt-color-black); }
     .webform-progress .webform-progress-tracker .progress-title[role="link"]:hover {
       text-decoration: none; }
-  .webform-progress .webform-progress-tracker .progress-step .progress-marker::after {
-    right: calc(-50% - 25px);
-    top: 25px;
-    height: 2px;
-    background: repeating-linear-gradient(90deg, var(--color-white), var(--color-white) 8px, rgba(0, 0, 0, 0.6) 1px, rgba(0, 0, 0, 0.6) 20px); }
-  .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
-    background-color: var(--color-white);
-    color: #121212;
-    color: var(--hdbt-color-black);
-    border: 2px #121212 solid;
-    border: 2px var(--hdbt-color-black) solid;
-    width: 55px;
-    height: 55px;
-    font-size: 24px;
-    margin-bottom: 16px;
-    font-weight: bold; }
-  .webform-progress .webform-progress-tracker .progress-step.is-active:hover .progress-marker::before {
-    background-color: #121212;
-    background-color: var(--hdbt-color-black);
-    color: var(--color-white);
-    border: 4px #121212 solid;
-    border: 4px var(--hdbt-color-black) solid; }
-  .webform-progress .webform-progress-tracker .progress-step.is-active .progress-marker::before {
-    background-color: #121212;
-    background-color: var(--hdbt-color-black);
-    color: var(--color-white);
-    border: 4px #121212 solid;
-    border: 4px var(--hdbt-color-black) solid; }
-  .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
-    background-color: var(--color-white);
-    color: #666;
-    border-color: #666; }
-  .webform-progress .webform-progress-tracker .progress-step:hover .progress-marker::before {
-    background-color: var(--color-white);
-    color: #666;
-    border-color: #666; }
-  .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete .progress-marker::before {
-    background-color: var(--color-white);
-    color: #121212;
-    color: var(--hdbt-color-black);
-    border: 4px #121212 solid;
-    border: 4px var(--hdbt-color-black) solid;
-    content: "L";
-    -webkit-transform: scale(-1, 1) rotate(-45deg);
-            transform: scale(-1, 1) rotate(-45deg);
-    font-size: 32px; }
-  .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete:hover .progress-marker::before {
-    background-color: var(--color-white);
-    color: #121212;
-    color: var(--hdbt-color-black);
-    border: 4px #121212 solid;
-    border: 4px var(--hdbt-color-black) solid; }
+  .webform-progress .webform-progress-tracker .progress-step {
+    margin-top: 0; }
+    .webform-progress .webform-progress-tracker .progress-step .progress-marker::after {
+      right: calc(-50% - 25px);
+      top: 25px;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--color-white), var(--color-white) 8px, rgba(0, 0, 0, 0.6) 1px, rgba(0, 0, 0, 0.6) 20px); }
+    .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
+      background-color: var(--color-white);
+      color: #121212;
+      color: var(--hdbt-color-black);
+      border: 2px #121212 solid;
+      border: 2px var(--hdbt-color-black) solid;
+      width: 55px;
+      height: 55px;
+      font-size: 24px;
+      margin-bottom: 16px;
+      font-weight: bold; }
+    .webform-progress .webform-progress-tracker .progress-step.is-active:hover .progress-marker::before {
+      background-color: #121212;
+      background-color: var(--hdbt-color-black);
+      color: var(--color-white);
+      border: 4px #121212 solid;
+      border: 4px var(--hdbt-color-black) solid; }
+    .webform-progress .webform-progress-tracker .progress-step.is-active .progress-marker::before {
+      background-color: #121212;
+      background-color: var(--hdbt-color-black);
+      color: var(--color-white);
+      border: 4px #121212 solid;
+      border: 4px var(--hdbt-color-black) solid; }
+    .webform-progress .webform-progress-tracker .progress-step .progress-marker::before {
+      background-color: var(--color-white);
+      color: #666;
+      border-color: #666; }
+    .webform-progress .webform-progress-tracker .progress-step:hover .progress-marker::before {
+      background-color: var(--color-white);
+      color: #666;
+      border-color: #666; }
+    .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete .progress-marker::before {
+      background-color: var(--color-white);
+      color: #121212;
+      color: var(--hdbt-color-black);
+      border: 4px #121212 solid;
+      border: 4px var(--hdbt-color-black) solid;
+      content: "L";
+      -webkit-transform: scale(-1, 1) rotate(-45deg);
+              transform: scale(-1, 1) rotate(-45deg);
+      font-size: 32px; }
+    .webform-progress .webform-progress-tracker .progress-step:not(.is-active).is-complete:hover .progress-marker::before {
+      background-color: var(--color-white);
+      color: #121212;
+      color: var(--hdbt-color-black);
+      border: 4px #121212 solid;
+      border: 4px var(--hdbt-color-black) solid; }
 
 .grant-applications--select-wrapper {
   --border-width: 2px;
@@ -2651,67 +2693,111 @@ fieldset.grants-attachments--wrapper .form-managed-file {
     background: white;
     color: var(--border-color); }
   @media print{
-  .webform-progress-tracker-mobile, .webform-progress-tracker, .messages__container, header.header, nav.breadcrumb, .tools__container {
+  .webform-submission-data-preview-page .webform-submission-data > section {
+    border-top: 0px var(--color-black-20) solid !important;
+    padding-top: 0 !important; }
+  .webform-submission-data-preview-page .webform-progress-tracker-mobile, .webform-submission-data-preview-page .webform-progress-tracker, .webform-submission-data-preview-page .messages__container, .webform-submission-data-preview-page header.header, .webform-submission-data-preview-page nav.breadcrumb, .webform-submission-data-preview-page .tools__container, .webform-submission-data-preview-page footer.footer, .webform-submission-data-preview-page .form-actions {
     display: none !important; }
-  div.main-content {
+  .webform-submission-data-preview-page div.main-content {
     margin: 0; }
-  .gin--horizontal-toolbar .dialog-off-canvas-main-canvas {
+  .webform-submission-data-preview-page .gin--horizontal-toolbar .dialog-off-canvas-main-canvas {
     padding: 0 !important; }
-  .webform-print-wrapper-table {
+  .webform-submission-data-preview-page .webform-preview section {
+    page-break-inside: avoid; }
+  .webform-submission-data-preview-page .webform-preview label {
+    position: absolute;
+    top: -6mm;
+    left: 0mm;
+    font-size: 10pt; }
+  .webform-submission-data-preview-page .webform-preview .webform-element {
+    position: relative;
+    border: 1px black solid;
+    top: 5mm;
+    padding: 2.5mm;
+    margin-bottom: 8mm; }
+  .webform-submission-data-preview-page .webform-preview .webform-multiple-table--operations {
+    display: none; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-wrapper-table {
     overflow-x: visible;
     overflow-x: initial;
     border: 0;
     margin: 0; }
-  .webform-print-header, .webform-print-header-space, .webform-print-footer, .webform-print-footer-space {
+  .webform-submission-data-preview-page .webform-preview .webform-print-header, .webform-submission-data-preview-page .webform-preview .webform-print-header-space {
     height: 21mm;
-    background: white; }
-  .webform-print-header {
+    background: white;
+    font-size: 9pt; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-footer, .webform-submission-data-preview-page .webform-preview .webform-print-footer-space {
+    height: 17mm;
+    background: white;
+    font-size: 9pt; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-header {
     position: fixed;
+    left: 0;
     top: 0;
     background: white;
-    border: 1px black solid; }
-  .webform-print-footer {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    min-width: 100%;
+    max-width: 100%;
+    z-index: 1000;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-bottom: 1px var(--color-black-40) solid; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-header svg {
+      height: 25mm;
+      width: 55mm;
+      display: block;
+      margin-right: 3mm;
+      color: black; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-header .webform-print-header-left-text {
+      text-align: left;
+      width: 100%;
+      color: var(--color-black-40); }
+    .webform-submission-data-preview-page .webform-preview .webform-print-header .webform-print-header-right-text {
+      text-align: right;
+      width: 100%;
+      color: var(--color-black-40); }
+  .webform-submission-data-preview-page .webform-preview .webform-print-footer {
     position: fixed;
     bottom: 0;
+    left: 0;
     background: white;
-    border: 1px black solid; }
-  .webform-print-wrapper-table .webform-section-flex-wrapper > .webform-section-wrapper {
-    padding: 0; }
-  .webform-print-wrapper-table ul {
-    margin: 0;
-    padding: 0; }
-    .webform-print-wrapper-table ul li {
-      list-style: none;
-      margin-top: 6mm; }
-  .webform-print-wrapper-table h2 {
-    width: 100% !important;
-    margin: 9mm 0 2mm !important;
-    padding: 0 !important;
-    min-width: 100%; }
-  .webform-print-wrapper-table label {
-    position: absolute;
-    top: -5mm;
-    left: 0mm; }
-  .webform-print-wrapper-table .webform-element {
-    position: relative;
-    border: 1px black solid;
-    top: 4mm;
-    padding: 2mm;
-    margin-bottom: 6mm; }
-  .webform-print-wrapper-table thead {
-    display: table-header-group; }
-  .webform-print-wrapper-table tfoot {
-    display: table-footer-group; }
-  .webform-print-wrapper-table button, .webform-print-wrapper-table input[type="submit"] {
-    display: none; }
-  .webform-print-wrapper-table .webform-print-content table, .webform-print-wrapper-table .webform-print-content thead, .webform-print-wrapper-table .webform-print-content tbody, .webform-print-wrapper-table .webform-print-content tfoot, .webform-print-wrapper-table .webform-print-content tr, .webform-print-wrapper-table .webform-print-content td, .webform-print-wrapper-table .webform-print-content td:first-child, .webform-print-wrapper-table .webform-print-content th {
-    display: inline;
-    border: 0;
-    background: transparent; }
-  .webform-print-wrapper-table .webform-print-content .webform-multiple-table--operations {
-    display: none; }
-  .webform-print-wrapper-table .webform-print-content .webform-section-flex-wrapper {
-    display: inline; } }
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    min-width: 100%;
+    max-width: 100%;
+    z-index: 1000;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-top: 1px var(--color-black-40) solid; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-footer svg {
+      height: 15mm;
+      width: 33mm;
+      display: block;
+      margin-right: 3mm;
+      color: black; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-footer .webform-print-footer-left-text {
+      text-align: left;
+      width: 100%;
+      color: var(--color-black-40); }
+    .webform-submission-data-preview-page .webform-preview .webform-print-footer .webform-print-footer-right-text {
+      text-align: right;
+      width: 100%;
+      color: var(--color-black-40); } }
   @media (min-width: 768px){
       .hero.hero--no-background .hero__category {
         font-size: 32px; }
