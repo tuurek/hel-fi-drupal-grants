@@ -9,7 +9,6 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\webform\WebformInterface;
 use Drupal\grants_webform_print\GrantsWebformPrintPreRender;
@@ -28,123 +27,10 @@ function grants_webform_print_preprocess_webform_container_base_html(&$variables
 }
 
 /**
- * Implements hook_webform_help_info().
- */
-function grants_webform_print_webform_help_info() {
-  $help = [];
-  $help['grants_webform_print_embed'] = [
-    'group' => 'share',
-    'title' => t('Share embed'),
-    'content' => t("The <strong>Share embed</strong> page provides code snippets that are used to embedded a webform in any website, webpage, and application."),
-    'routes' => [
-      // @see /admin/structure/webform/manage/{webform}/share
-      'entity.webform.share_embed',
-      // @see /node/{node}/webform/share
-      'entity.node.webform.share_embed',
-    ],
-  ];
-  $help['grants_webform_print_preview'] = [
-    'group' => 'share',
-    'title' => t('Share preview'),
-    'content' => t("The <strong>Share preview</strong> page allows site builders to preview an embedded webform."),
-    'routes' => [
-      // @see /admin/structure/webform/manage/{webform}/share/preview
-      'entity.webform.share_preview',
-      // @see /node/{node}/webform/share/preview
-      'entity.node.webform.share_preview',
-    ],
-  ];
-  $help['grants_webform_print_test'] = [
-    'group' => 'share',
-    'title' => t('Share test'),
-    'content' => t("The <strong>Share test</strong> page allows site builders to test an embedded webform."),
-    'routes' => [
-      // @see /admin/structure/webform/manage/{webform}/share/test
-      'entity.webform.share_test',
-      // @see /node/{node}/webform/share/test
-      'entity.node.webform.share_test',
-    ],
-  ];
-  return $help;
-}
-
-/**
- * Implements hook_local_tasks_alter().
- */
-function grants_webform_print_local_tasks_alter(&$local_tasks) {
-  // Remove webform share if the webform_node.module
-  // is not installed.
-  if (!\Drupal::moduleHandler()->moduleExists('webform_node')) {
-    unset(
-      $local_tasks['entity.node.webform.share'],
-      $local_tasks['entity.node.webform.share_embed'],
-      $local_tasks['entity.node.webform.share_preview'],
-      $local_tasks['entity.node.webform.share_test']
-    );
-  }
-}
-
-/**
- * Implements hook_menu_local_tasks_alter().
- */
-function grants_webform_print_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface $cacheability) {
-  // Allow webform query string parameters to be transferred
-  // from canonical to test URL.
-  $route_names = [
-    'entity.webform.share_embed', 'entity.webform.share_preview', 'entity.webform.share_test',
-  ];
-  if (in_array($route_name, $route_names)) {
-    if ($query = \Drupal::request()->query->all()) {
-      foreach ($route_names as $route_name) {
-        if (isset($data['tabs'][1][$route_name])) {
-          $url = &$data['tabs'][1][$route_name]['#link']['url'];
-          $url->setOption('query', $query);
-        }
-      }
-    }
-
-    // Query string to cache context webform canonical and test routes.
-    $cacheability->addCacheContexts(['url.query_args']);
-  }
-}
-
-/**
  * Implements hook_element_info_alter().
  */
 function grants_webform_print_element_info_alter(&$type) {
   $type['page']['#pre_render'][] = [GrantsWebformPrintPreRender::class, 'page'];
-}
-
-/**
- * Implements hook_entity_type_alter().
- */
-function grants_webform_print_entity_type_alter(array &$entity_types) {
-  if (isset($entity_types['webform'])) {
-    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $webform_entity_type */
-    $webform_entity_type = $entity_types['webform'];
-
-    // Add 'share-embed',  'share-preview', and 'share-test' to link templates.
-    $webform_entity_type->setLinkTemplate('share-embed', '/admin/structure/webform/manage/{webform}/share/embed');
-    $webform_entity_type->setLinkTemplate('share-preview', '/admin/structure/webform/manage/{webform}/share/preview');
-    $webform_entity_type->setLinkTemplate('share-test', '/admin/structure/webform/manage/{webform}/share/test');
-  }
-}
-
-/**
- * Implements hook_entity_operation().
- */
-function grants_webform_print_entity_operation(EntityInterface $entity) {
-  $operations = [];
-  if ($entity instanceof WebformInterface
-    && $entity->access('update')
-    && $entity->getSetting('share', TRUE)) {
-    $operations['share'] = [
-      'title' => t('Share'),
-      'url' => $entity->toUrl('share-embed'),
-      'weight' => 80,
-    ];
-  }
-  return $operations;
 }
 
 /**
@@ -171,8 +57,7 @@ function grants_webform_print_page_top(array &$page_top) {
   if (!GrantsWebformPrintHelper::isPage()) {
     return;
   }
-
-  // Remove the toolbar from the webform share page.
+  // Remove the toolbar from the webform print page.
   unset($page_top['toolbar']);
 }
 
@@ -210,14 +95,9 @@ function grants_webform_print_theme_suggestions_page(array $variables) {
   return (GrantsWebformPrintHelper::isPage()) ? ['page__grants_webform_print'] : [];
 }
 
-function grants_webform_print_preprocess_page(&$vars) {
-
-}
-
-function grants_webform_print_form_webform_submission_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-
-}
-
+/**
+ * Adds webform details to the preview page for printing
+ */
 function grants_webform_print_preprocess_webform_submission_data(&$vars){
   $wf = $vars['webform_submission']->getWebform();
   $vars["title"] = $wf->label();
@@ -237,20 +117,12 @@ function template_preprocess_html__grants_webform_print(&$variables) {
   $webform = \Drupal::routeMatch()->getParameter('webform');
 
   // Add html.webform-share-page-html class.
-  $variables['html_attributes']->addClass('webform-share-page-html');
+  $variables['html_attributes']->addClass('webform-print-page-html');
 
   // Add body.webform-share-page-body class.
   // @see grants_webform_print.page.css
   $variables['attributes'] += ['class' => []];
-  $variables['attributes']['class'][] = 'webform-share-page-body';
-
-  // Add custom page body attributes.
-  $body_attributes = ['class' => ['my-custom-class']];
-  if (isset($body_attributes['class'])) {
-    $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $body_attributes['class']);
-    unset($body_attributes['class']);
-  }
-  $variables['attributes'] = $body_attributes + $variables['attributes'];
+  $variables['attributes']['class'][] = 'webform-print-page-body';
 
   // Remove toolbar.module body classes.
   // @see toolbar_preprocess_html()
@@ -261,22 +133,6 @@ function template_preprocess_html__grants_webform_print(&$variables) {
       }
     }
     $variables['attributes']['class'] = array_values($variables['attributes']['class']);
-  }
-
-  // Prepend page title to the content because all blocks are hidden.
-  // @see grants_webform_print_block_access()
-  // @see https://drupal.stackexchange.com/questions/112757/how-can-i-get-the-page-title/112758
-  if ($webform->getSetting('share_title')) {
-    $request = \Drupal::request();
-    $route_match = \Drupal::routeMatch();
-    $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
-    $variables['page']['content']['page_title'] = [
-      '#type' => 'page_title',
-      '#title' => $title,
-      // Move page title before the message block (weight: 1000)
-      // @see \Drupal\block\Plugin\DisplayVariant\BlockPageVariant::build
-      '#weight' => -1001,
-    ];
   }
 }
 
