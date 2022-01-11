@@ -58,10 +58,12 @@
   }
 
   @media print {
+
     .webform-submission-data > section {
       border-top: 0px var(--color-black-20) solid !important;
       padding-top: 0 !important;
     }
+    .hds-notification,
     .webform-progress-tracker-mobile,
     .webform-progress-tracker,
     .messages__container,

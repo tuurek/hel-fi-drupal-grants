@@ -96,14 +96,6 @@ function grants_webform_print_theme_suggestions_page(array $variables) {
 }
 
 /**
- * Adds webform details to the preview page for printing
- */
-function grants_webform_print_preprocess_webform_submission_data(&$vars){
-  $wf = $vars['webform_submission']->getWebform();
-  $vars["title"] = $wf->label();
-}
-
-/**
  * Prepares variables for the webform share page HTML templates.
  */
 function template_preprocess_html__grants_webform_print(&$variables) {

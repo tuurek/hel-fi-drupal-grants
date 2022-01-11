@@ -2696,7 +2696,7 @@ fieldset.grants-attachments--wrapper .form-managed-file {
   .webform-submission-data-preview-page .webform-submission-data > section {
     border-top: 0px var(--color-black-20) solid !important;
     padding-top: 0 !important; }
-  .webform-submission-data-preview-page .webform-progress-tracker-mobile, .webform-submission-data-preview-page .webform-progress-tracker, .webform-submission-data-preview-page .messages__container, .webform-submission-data-preview-page header.header, .webform-submission-data-preview-page nav.breadcrumb, .webform-submission-data-preview-page .tools__container, .webform-submission-data-preview-page footer.footer, .webform-submission-data-preview-page .form-actions {
+  .webform-submission-data-preview-page .hds-notification, .webform-submission-data-preview-page .webform-progress-tracker-mobile, .webform-submission-data-preview-page .webform-progress-tracker, .webform-submission-data-preview-page .messages__container, .webform-submission-data-preview-page header.header, .webform-submission-data-preview-page nav.breadcrumb, .webform-submission-data-preview-page .tools__container, .webform-submission-data-preview-page footer.footer, .webform-submission-data-preview-page .form-actions {
     display: none !important; }
   .webform-submission-data-preview-page div.main-content {
     margin: 0; }
