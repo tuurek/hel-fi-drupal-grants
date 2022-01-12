@@ -5,6 +5,10 @@
  * Provides an example of a webform handler.
  */
 
+use Drupal\Core\Datetime\DrupalDateTime;
+use \Drupal\Core\Form\FormStateInterface;
+use Drupal\helfi_yjdh\Exception\YjdhException;
+
 /**
  * Implements hook_theme().
  */
@@ -14,4 +18,93 @@ function grants_handler_theme() {
       'variables' => ['settings' => NULL, 'handler' => []],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function grants_handler_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+
+  if ($form_id === 'webform_submission_yleisavustushakemus_add_form') {
+
+    /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $userExternalData */
+    $userExternalData = \Drupal::service('helfi_helsinki_profiili.userdata');
+    $profileData = $userExternalData->getUserProfileData();
+
+    // if not authenticated let's not do anything. This is more for admin usage than
+    if(!$userExternalData->isAuthenticatedExternally()) return;
+
+    /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhClient */
+    $yjdhClient = \Drupal::service('helfi_yjdh.client');
+    try {
+
+      $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
+
+      $form['#prefix'] = '<div id="form_wrap">';
+      $form['#suffix'] = '</div>';
+
+      $options = [];
+      foreach ($associationRoles['Role'] as $association) {
+        $options[$association['BusinessId']] = $association['AssociationNameInfo'][0]['AssociationName'];
+      }
+
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#options"] = $options;
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#ajax"] = [
+        'callback' => 'company_select_callback',
+        // don't forget :: when calling a class method.
+        'disable-refocus' => FALSE,
+        // Or TRUE to prevent re-focusing on the triggering element.
+        'event' => 'change',
+        'wrapper' => 'form_wrap',
+        // This element is updated with this AJAX callback.
+        'progress' => [
+          'type' => 'throbber',
+          'message' => 'Getting YTJ data',
+        ],
+      ];
+
+    } catch (YjdhException $e) {
+      \Drupal::messenger()
+        ->addError('Company data fetching failed: ' . $e->getMessage());
+    }
+
+
+  }
+}
+
+/**
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *
+ * @return array
+ */
+function company_select_callback(array &$form, FormStateInterface $form_state): array {
+
+  $yjdhService = \Drupal::service('helfi_yjdh.client');
+//  /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+//  $grantsProfileService = \Drupal::service('grants_profile.service');
+
+  $formInput = $form_state->getUserInput();
+
+  $selectedCompanyData = $yjdhService->getAssociationBasicInfo($formInput["company_select"]);
+
+//  $grantsProfileContent = $grantsProfileService->getGrantsProf-ileContent($formInput["company_select"]);
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData['BusinessId'];
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData['AssociationNameInfo'][0]['AssociationName'];
+
+  $regDate = new DrupalDateTime($selectedCompanyData['RegistryDate'], 'Europe/Helsinki');
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date_text"]["#value"] = $regDate->format('d.m.Y');
+
+  $foundingYearExplode = explode('-', $selectedCompanyData['RegistryDate']);
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData['Address'][0]['City'];
+
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"]["#value"] = $selectedCompanyData["AssociationStatus"];
+  $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"]["#value"] = $selectedCompanyData["AssociationSpecialCondition"];
+
+  return $form;
 }

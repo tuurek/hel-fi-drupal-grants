@@ -26,10 +26,13 @@
         "drupal/hdbt": "^1.0",
         "drupal/hdbt_admin": "^1.0",
         "drupal/helfi_ahjo": "^1.0",
+        "drupal/helfi_atv": "dev-develop",
         "drupal/helfi_hauki": "^1.0",
-        "drupal/helfi_platform_config": "^1.1",
+        "drupal/helfi_helsinki_profiili": "dev-develop",
+        "drupal/helfi_platform_config": "^2.0",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^2.0",
+        "drupal/helfi_yjdh": "dev-develop",
         "drupal/menu_link_attributes": "^1.2",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
@@ -90,6 +93,9 @@
             ],
             "drush/{$name}": [
                 "type:drupal-drush"
+            ],
+            "drush/Commands/{$name}": [
+                "type:drupal-drush"
             ]
         }
     },
@@ -98,10 +104,10 @@
             "type": "composer",
             "url": "https://repository.drupal.hel.ninja"
         },
-	{
-	    "type": "vcs",
-	    "url": "https://git.drupalcode.org/issue/entity_print-3217497"
-	},
+        {
+            "type": "vcs",
+            "url": "https://git.drupalcode.org/issue/entity_print-3217497"
+        },
         {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
@@ -115,6 +121,7 @@
         "post-update-cmd": [
             "@copy-commit-message-script"
         ],
-        "phpcs": "vendor/bin/phpcs public/modules/custom --standard=Drupal"
+        "phpcs": "vendor/bin/phpcs public/modules/custom --standard=Drupal",
+        "phpcbf": "vendor/bin/phpcbf public/modules/custom --standard=Drupal"
     }
 }

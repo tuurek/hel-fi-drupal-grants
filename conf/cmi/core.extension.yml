@@ -43,14 +43,17 @@ module:
   hdbt_admin_tools: 0
   hdbt_component_library: 0
   hdbt_content: 0
+  helfi_toc: 0
   helfi_api_base: 0
   helfi_content: 0
   helfi_example_content: 0
   helfi_gdpr_compliance: 0
+  helfi_helsinki_profiili: 0
   helfi_languages: 0
   helfi_media: 0
   helfi_platform_config: 0
   helfi_tunnistamo: 0
+  helfi_yjdh: 0
   image: 0
   image_style_quality: 0
   inline_form_errors: 0
@@ -92,6 +95,7 @@ module:
   token: 0
   token_filter: 0
   toolbar: 0
+  translatable_menu_link_uri: 0
   twig_tweak: 0
   update_helper: 0
   user: 0
@@ -106,6 +110,7 @@ module:
   eu_cookie_compliance: 11
   paragraphs: 11
   paragraphs_library: 11
+  minimal: 1000
 theme:
   stable9: 0
   claro: 0

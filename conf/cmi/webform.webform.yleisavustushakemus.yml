@@ -36,29 +36,52 @@ elements: |-
           2: '2'
           3: '3'
         '#required': true
+      company_select:
+        '#type': select
+        '#title': 'Company select'
+        '#options':
+          value: text1
       company_number:
         '#type': textfield
         '#title': Rekisterinumero
+        '#readonly': true
         '#required': true
       community_official_name:
         '#type': textfield
         '#title': 'Yhteisön nimi'
+        '#readonly': true
         '#required': true
       community_official_name_short:
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
         '#required': true
+      registration_date_text:
+        '#type': textfield
+        '#title': Rekisteröimispäivä
+        '#readonly': true
+        '#required': true
       registration_date:
         '#type': date
         '#title': Rekisteröimispäivä
+        '#disabled': true
+      community_status:
+        '#type': textfield
+        '#title': 'Yhdistyksen tila'
+        '#readonly': true
         '#required': true
+      community_status_special:
+        '#type': textfield
+        '#title': 'Yhdistyksen erityistilanne'
+        '#readonly': true
       founding_year:
         '#type': textfield
         '#title': Perustamisvuosi
+        '#readonly': true
         '#required': true
       home:
         '#type': textfield
         '#title': Kotipaikka
+        '#readonly': true
         '#required': true
       homepage:
         '#type': textfield
