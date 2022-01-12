@@ -39,6 +39,7 @@ module:
   grants_metadata: 0
   grants_profile: 0
   grants_user_fields: 0
+  grants_webform_print: 0
   grants_webform_summation_field: 0
   hal: 0
   hdbt_admin_editorial: 0

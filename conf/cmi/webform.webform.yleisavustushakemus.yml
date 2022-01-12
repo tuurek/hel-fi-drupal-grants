@@ -687,5 +687,5 @@ handlers:
     weight: 0
     settings:
       endpoint: 'This is a custom endpoint.'
-      debug: true
+      debug: false
 variants: {  }
