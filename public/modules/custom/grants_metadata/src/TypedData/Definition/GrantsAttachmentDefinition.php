@@ -23,8 +23,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'description',
-        ])
-      ;
+        ]);
 
       $info['filename'] = DataDefinition::create('string')
         ->setRequired(TRUE)
@@ -33,8 +32,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'fileName',
-        ])
-        ;
+        ]);
 
       $info['filetype'] = DataDefinition::create('integer')
         ->setRequired(TRUE)
@@ -43,8 +41,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'fileType',
-        ])
-        ;
+        ]);
 
       $info['integration_id'] = DataDefinition::create('string')
         ->setRequired(FALSE)
@@ -53,8 +50,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'integrationID',
-        ])
-        ;
+        ]);
 
       $info['is_delivered_later'] = DataDefinition::create('boolean')
         ->setRequired(TRUE)
@@ -63,8 +59,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'isDeliveredLater',
-        ])
-        ;
+        ]);
 
       $info['is_included_in_other_file'] = DataDefinition::create('boolean')
         ->setRequired(TRUE)
@@ -73,8 +68,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'isIncludedInOtherFile',
-        ])
-        ;
+        ]);
 
       $info['is_new_attachment'] = DataDefinition::create('boolean')
         ->setRequired(TRUE)
@@ -83,9 +77,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'isNewAttachment',
-        ])
-        ;
-
+        ]);
 
     }
     return $this->propertyDefinitions;

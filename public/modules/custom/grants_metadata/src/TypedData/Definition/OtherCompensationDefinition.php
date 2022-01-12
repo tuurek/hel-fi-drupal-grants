@@ -10,8 +10,6 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 class OtherCompensationDefinition extends ComplexDataDefinitionBase {
 
-
-
   /**
    * {@inheritdoc}
    */
@@ -22,12 +20,12 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
       $info['issuer'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('issuer')
-        ->setSetting('jsonPath',[
-            'compensation',
-            'otherCompensationsInfo',
-            'otherCompensationsArray',
-            'issuer',
-          ])
+        ->setSetting('jsonPath', [
+          'compensation',
+          'otherCompensationsInfo',
+          'otherCompensationsArray',
+          'issuer',
+        ])
         ->addConstraint('NotBlank');
 
       $info['issuer_name'] = DataDefinition::create('string')

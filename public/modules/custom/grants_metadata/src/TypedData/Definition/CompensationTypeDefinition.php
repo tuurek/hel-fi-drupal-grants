@@ -4,11 +4,13 @@ namespace Drupal\grants_metadata\TypedData\Definition;
 
 use Drupal\Core\TypedData\DataDefinition;
 
+/**
+ * Data definition for compensations.
+ */
 class CompensationTypeDefinition extends ApplicationDefinitionBase {
 
-
   /**
-   * Data definition for different subventions
+   * Data definition for different subventions.
    *
    *   "amountInLetters",
    *   "eventBegin",
@@ -26,6 +28,7 @@ class CompensationTypeDefinition extends ApplicationDefinitionBase {
    *   "totalCosts"
    *
    * @return array
+   *   Property definitions.
    */
   public function getPropertyDefinitions(): array {
     $info = parent::getPropertyDefinitions();
@@ -37,7 +40,7 @@ class CompensationTypeDefinition extends ApplicationDefinitionBase {
         'compensation',
         'compensationInfo',
         'compensationArray',
-        'subventionType'
+        'subventionType',
       ])
       ->addConstraint('NotBlank');
 
@@ -48,11 +51,11 @@ class CompensationTypeDefinition extends ApplicationDefinitionBase {
         'compensation',
         'compensationInfo',
         'compensationArray',
-        'amount'
+        'amount',
       ])
       ->addConstraint('NotBlank');
 
-    // And here we will add later fields as well
+    // And here we will add later fields as well.
     return $info;
   }
 

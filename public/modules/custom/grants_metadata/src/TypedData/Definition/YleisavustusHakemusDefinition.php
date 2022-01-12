@@ -2,41 +2,21 @@
 
 namespace Drupal\grants_metadata\TypedData\Definition;
 
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 
+/**
+ * Define Yleisavustushakemus data.
+ */
 class YleisavustusHakemusDefinition extends ApplicationDefinitionBase {
 
-
   /**
-   * Base data definitions for all
+   * Base data definitions for all.
    *
    * @return array
+   *   Property definitions.
    */
   public function getPropertyDefinitions(): array {
     $info = parent::getPropertyDefinitions();
-
-    //    $info['subventions_type_6'] = DataDefinition::create('string')
-    //      ->setRequired(TRUE)
-    //      ->setLabel('subventionType')
-    //      ->setSetting('jsonPath', [
-    //        'compensation',
-    //        'compensationInfo',
-    //        'compensationArray',
-    //        'subventionType'
-    //      ])
-    //      ->addConstraint('NotBlank');
-    //
-    //    $info['subventions_type_6_sum'] = DataDefinition::create('string')
-    //      ->setRequired(TRUE)
-    //      ->setLabel('amount')
-    //      ->setSetting('jsonPath', [
-    //        'compensation',
-    //        'compensationInfo',
-    //        'compensationArray',
-    //        'amount'
-    //      ])
-    //      ->addConstraint('NotBlank');
 
     $info['subventions'] = ListDataDefinition::create('grants_metadata_compensation_type')
       ->setRequired(FALSE)
@@ -45,8 +25,7 @@ class YleisavustusHakemusDefinition extends ApplicationDefinitionBase {
         'compensation',
         'compensationInfo',
         'compensationArray',
-      ])
-    ;
+      ]);
 
     return $info;
   }

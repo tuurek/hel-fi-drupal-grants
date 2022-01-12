@@ -3,10 +3,11 @@
 namespace Drupal\grants_handler\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite as CompensationsCompositeElement;
 use Drupal\webform\Element\WebformCompositeBase;
-use Drupal\webform\Utility\WebformElementHelper;
 
 /**
+ * Compensations webform component.
  *
  * @FormElement("grants_compensations")
  *
@@ -23,7 +24,6 @@ class CompensationsComposite extends WebformCompositeBase {
   }
 
   /**
-   *
    * {@inheritdoc}
    */
   public static function getCompositeElements(array $element): array {
@@ -42,7 +42,6 @@ class CompensationsComposite extends WebformCompositeBase {
       '#title' => t('Subvention amount'),
     ];
 
-
     return $elements;
   }
 
@@ -59,7 +58,7 @@ class CompensationsComposite extends WebformCompositeBase {
       'subvention_amount' => '',
     ];
 
-    $typeOptions = \Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite::getOptionsForTypes();
+    $typeOptions = CompensationsCompositeElement::getOptionsForTypes();
 
     if (isset($parent['subventionType']) && $parent['subventionType'] != "") {
       $retval['subvention_type_id'] = $parent['subventionType'];
@@ -79,6 +78,5 @@ class CompensationsComposite extends WebformCompositeBase {
 
     return $element;
   }
-
 
 }

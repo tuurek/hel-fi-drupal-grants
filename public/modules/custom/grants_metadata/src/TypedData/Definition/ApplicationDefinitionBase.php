@@ -7,12 +7,12 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 
 /**
- * Base class for data typing & mapping
+ * Base class for data typing & mapping.
  */
 abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
 
   /**
-   * Base data definitions for all
+   * Base data definitions for all.
    */
   public function getPropertyDefinitions(): array {
     if (!isset($this->propertyDefinitions)) {
@@ -237,7 +237,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'bankAccountArray',
           'accountNumber',
         ])
-        #->addConstraint('ValidIban')
+        // ->addConstraint('ValidIban')
         ->addConstraint('NotBlank');
 
       $info['compensation_purpose'] = DataDefinition::create('string')
@@ -426,7 +426,6 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
         ->setSetting('jsonPath', ['compensation', 'additionalInformation'])
         ->addConstraint('NotBlank');
 
-
       // Sender details.
       // @todo Maybe move this to custom definition?
       $info['sender_firstname'] = DataDefinition::create('string')
@@ -447,7 +446,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'lastname',
         ])
         ->addConstraint('NotBlank');
-      // TODO: Validate person id?
+      // @todo Validate person id?
       $info['sender_person_id'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('compensation=>senderInfoArray=>personID')
@@ -469,15 +468,12 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
         ->addConstraint('NotBlank')
         ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'email']);
 
-
-      // Attachments
+      // Attachments.
       $info['attachments'] = ListDataDefinition::create('grants_metadata_attachment')
         ->setRequired(TRUE)
         ->setLabel('attachmentsInfo=>attachmentsArray')
-        ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray'])
-        ->addConstraint('NotBlank');
-
-
+        ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
+      // ->addConstraint('NotBlank')
     }
 
     return $this->propertyDefinitions;

@@ -27,17 +27,26 @@ use Drupal\webform\WebformSubmissionInterface;
  */
 class CompensationsComposite extends WebformCompositeBase {
 
+  /**
+   * Compensation types.
+   *
+   * @var string[]
+   */
   protected static $optionsForTypes = [
     1 => 'Toiminta-avustus',
     6 => 'Yleisavustushakemus',
   ];
 
   /**
+   * Return options for different compensation types.
+   *
    * @return string[]
+   *   Compensation types.
    */
   public static function getOptionsForTypes(): array {
     return self::$optionsForTypes;
   }
+
   /**
    * {@inheritdoc}
    */
@@ -48,11 +57,11 @@ class CompensationsComposite extends WebformCompositeBase {
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
     return [
-        'subvention_type_id' => '',
-        'subvention_amount' => '',
-        'subvention_type' => ''
+      'subvention_type_id' => '',
+      'subvention_amount' => '',
+      'subvention_type' => '',
 
-      ] + parent::defineDefaultProperties();
+    ] + parent::defineDefaultProperties();
   }
 
   /**
@@ -68,7 +77,7 @@ class CompensationsComposite extends WebformCompositeBase {
     // @see \Drupal\webform\Plugin\WebformElement\TextBase::form
     $form['element']['subvention_type'] = [
       '#type' => 'select',
-      '#multiple' => true,
+      '#multiple' => TRUE,
       '#title' => $this->t('Grants type'),
       '#options' => self::$optionsForTypes,
     ];
@@ -76,8 +85,7 @@ class CompensationsComposite extends WebformCompositeBase {
     return $form;
   }
 
-
-    /**
+  /**
    * {@inheritdoc}
    */
   protected function formatHtmlItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
@@ -90,9 +98,7 @@ class CompensationsComposite extends WebformCompositeBase {
   protected function formatTextItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
     $value = $this->getValue($element, $webform_submission, $options);
 
-
     return [];
   }
 
 }
-

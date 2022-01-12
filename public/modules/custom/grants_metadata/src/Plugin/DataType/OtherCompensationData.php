@@ -15,12 +15,13 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  */
 class OtherCompensationData extends Map {
 
-
-
+  /**
+   * {@inheritdoc}
+   */
   public function getValue() {
     $retval = parent::getValue();
 
-    if(isset($retval['issuerName'])){
+    if (isset($retval['issuerName'])) {
       $retval['issuer_name'] = $retval['issuerName'];
       unset($retval['issuerName']);
     }
@@ -29,7 +30,10 @@ class OtherCompensationData extends Map {
   }
 
   /**
+   * Get values from parent.
+   *
    * @return array
+   *   The values.
    */
   public function getValues(): array {
     return $this->values;

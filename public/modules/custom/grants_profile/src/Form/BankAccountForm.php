@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\Exception\ReadOnlyException;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\grants_profile\GrantsProfileService;
 use Drupal\grants_profile\TypedData\Definition\BankAccountDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -51,7 +50,7 @@ class BankAccountForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $bank_account_id = NULL): array {
 
-    /** @var GrantsProfileService $grantsProfileService */
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
 
     $selectedBankAccount = $grantsProfileService->getBankAccount($bank_account_id);
@@ -132,7 +131,7 @@ class BankAccountForm extends FormBase {
     $bankAccountData = $storage['bankAccountData'];
     $bankAccountId = $form_state->getValue('bank_account_id');
 
-    /** @var GrantsProfileService $grantsProfileService */
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $grantsProfileService->saveBankAccount($bankAccountId, $bankAccountData->toArray());
     $grantsProfileService->saveGrantsProfile();

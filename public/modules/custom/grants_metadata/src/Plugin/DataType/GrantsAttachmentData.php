@@ -15,12 +15,23 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  */
 class GrantsAttachmentData extends Map {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue() {
+    $retval = parent::getValue();
 
-public function getValue() {
-  $retval = parent::getValue();
+    return $retval;
+  }
 
-  return $retval;
-}
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE) {
+    parent::setValue($values, $notify);
 
+    $d = 'asdf';
+
+  }
 
 }

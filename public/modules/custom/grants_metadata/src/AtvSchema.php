@@ -2,15 +2,14 @@
 
 namespace Drupal\grants_metadata;
 
-
+use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
-use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 
 /**
- * AtvSchema service.
+ * Map ATV documents to typed data.
  */
 class AtvSchema {
 
@@ -21,14 +20,15 @@ class AtvSchema {
    */
   protected TypedDataManager $typedDataManager;
 
+  /**
+   * Schema structure as parsed from schema file.
+   *
+   * @var array
+   */
   protected array $structure;
-
-  protected array $atvDocument;
-
 
   /**
    * Constructs an AtvShcema object.
-   *
    */
   public function __construct(TypedDataManager $typed_data_manager) {
 
@@ -42,13 +42,22 @@ class AtvSchema {
 
   }
 
-
   /**
+   * Map document structure to typed data object.
+   *
+   * @param array $documentContent
+   *   Document as array.
+   * @param \Drupal\Core\TypedData\ComplexDataDefinitionInterface $typedDataDefinition
+   *   Data definition for this document / application.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   Mapped dta from document.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function documentContentToTypedData(
-    $documentContent,
-    ComplexDataDefinitionInterface $typedDataDefinition):
-  TypedDataInterface {
+    array $documentContent,
+    ComplexDataDefinitionInterface $typedDataDefinition): TypedDataInterface {
 
     $propertyDefinitions = $typedDataDefinition->getPropertyDefinitions();
 
@@ -73,12 +82,17 @@ class AtvSchema {
   }
 
   /**
-   * @param $elementName
-   * @param $structure
+   * Get schema definition for single property.
    *
-   * @return mixed|void
+   * @param string $elementName
+   *   Name of the element.
+   * @param array $structure
+   *   Full schema structure.
+   *
+   * @return mixed
+   *   Schema for given property.
    */
-  protected function getPropertySchema($elementName, $structure) {
+  protected function getPropertySchema(string $elementName, array $structure): mixed {
 
     foreach ($structure['properties'] as $topLevelElement) {
       if ($topLevelElement['type'] == 'object') {
@@ -107,8 +121,10 @@ class AtvSchema {
                 foreach ($element0['properties'] as $k1 => $element1) {
                   if ($element1['type'] == 'array') {
                     if ($element1['items']['type'] == 'object') {
-                      if (is_array($element1['items']['properties']['ID']['enum']) && in_array($elementName, $element1['items']['properties']['ID']['enum'])) {
-                        return $element1['items'];
+                      if (!array_key_exists('enum', $element1['items']['properties']['ID'])) {
+                        if (is_array($element1['items']['properties']['ID']['enum']) && in_array($elementName, $element1['items']['properties']['ID']['enum'])) {
+                          return $element1['items'];
+                        }
                       }
                     }
                     else {
@@ -127,25 +143,35 @@ class AtvSchema {
         }
       }
     }
+    return NULL;
   }
 
   /**
+   * Generate document content JSON from typed data.
+   *
    * @param \Drupal\Core\TypedData\ComplexDataInterface $typedData
+   *   Typed data to export.
    *
    * @return array
+   *   Document structure based on schema.
    */
-  public function typedDataToDocumentContent(\Drupal\Core\TypedData\ComplexDataInterface $typedData): array {
+  public function typedDataToDocumentContent(ComplexDataInterface $typedData): array {
 
     $documentStructure = [];
 
     foreach ($typedData as $property) {
       $item = [];
       $definition = $property->getDataDefinition();
+      $jsonPath = $definition->getSetting('jsonPath');
+
+      if ($jsonPath == NULL) {
+        continue;
+      }
+
       $value = $property->getValue();
       $propertyName = $property->getName();
       $propertyLabel = $definition->getLabel();
       $propertyType = $definition->getDataType();
-      $jsonPath = $definition->getSetting('jsonPath');
 
       $numberOfItems = count($jsonPath);
 
@@ -177,8 +203,9 @@ class AtvSchema {
           ];
           $documentStructure[$jsonPath[0]][$jsonPath[1]][$jsonPath[2]][] = $valueArray;
           break;
+
         case 3:
-          if (is_array($value) && $this->numeric_keys($value)) {
+          if (is_array($value) && $this->numericKeys($value)) {
             foreach ($value as $k2 => $v2) {
               $fvalues = [];
               foreach ($v2 as $fname => $fvalue) {
@@ -208,8 +235,9 @@ class AtvSchema {
             }
           }
           break;
+
         case 2:
-          if (is_array($value) && $this->numeric_keys($value)) {
+          if (is_array($value) && $this->numericKeys($value)) {
             if ($propertyType == 'list') {
               foreach ($property as $itemIndex => $item) {
                 $fieldValues = [];
@@ -230,10 +258,6 @@ class AtvSchema {
                   elseif ($itemValueDefinitionType == 'boolean') {
                     $itemValueDefinitionType = 'bool';
                   }
-                  //                  else {
-                  //                    $itemValueDefinitionType = 'string';
-                  //                  }
-
                   $valueArray = [
                     'ID' => $itemName,
                     'value' => $itemValue,
@@ -262,10 +286,18 @@ class AtvSchema {
           }
 
           break;
+
         default:
           $d = 'asdf';
           break;
       }
+    }
+    try {
+      $an = $typedData->get('application_number')->getValue();
+      $documentStructure['formUpdate'] = 'true';
+    }
+    catch (\Exception $e) {
+      $documentStructure['formUpdate'] = 'false';
     }
     return $documentStructure;
   }
@@ -273,13 +305,13 @@ class AtvSchema {
   /**
    * Look for numeric keys in array, and return if they're found or not.
    *
-   * @param $array
-   *  Array to look in
+   * @param array $array
+   *   Array to look in.
    *
    * @return bool
-   *  Is there only numeric keys?
+   *   Is there only numeric keys?
    */
-  protected function numeric_keys($array): bool {
+  protected function numericKeys(array $array): bool {
     $non_numeric_key_found = FALSE;
 
     foreach (array_keys($array) as $key) {
@@ -293,34 +325,34 @@ class AtvSchema {
   /**
    * Get value from document content for given element / path.
    *
-   * @param $content
-   *  Decoded JSON content for document
-   * @param $pathArray
-   *  Path in JSONn document. From definition settings.
-   * @param $elementName
-   *  ELement name in JSON
+   * @param array $content
+   *   Decoded JSON content for document.
+   * @param array $pathArray
+   *   Path in JSONn document. From definition settings.
+   * @param string $elementName
+   *   ELement name in JSON.
    *
    * @return mixed
-   *  Parsed typed data structure
+   *   Parsed typed data structure.
    */
-  protected function getValueFromDocument($content, $pathArray, $elementName): mixed {
-    // Get new key to me evalued
+  protected function getValueFromDocument(array $content, array $pathArray, string $elementName): mixed {
+    // Get new key to me evalued.
     $newKey = array_shift($pathArray);
 
-    // If key exist in content array
+    // If key exist in content array.
     if (array_key_exists($newKey, $content)) {
-      // Get content for key
+      // Get content for key.
       $newContent = $content[$newKey];
       // And since we're not in root element, call self
-      // to drill down to desired element
+      // to drill down to desired element.
       return $this->getValueFromDocument($newContent, $pathArray, $elementName);
     }
-    // If we are at the root of content, and the given element exists
+    // If we are at the root of content, and the given element exists.
     elseif (array_key_exists($elementName, $content)) {
-      // If element is array
+      // If element is array.
       if (is_array($content[$elementName])) {
         $retval = [];
-        // we need to loop values and structure data in array as well
+        // We need to loop values and structure data in array as well.
         foreach ($content[$elementName] as $key => $value) {
           foreach ($value as $v) {
             $retval[$key][$v['ID']] = $v['value'];
@@ -328,22 +360,22 @@ class AtvSchema {
         }
         return $retval;
       }
-      // If element is not array
+      // If element is not array.
       else {
-        // return value as is
+        // Return value as is.
         return $content[$elementName];
       }
     }
     // If keys are numeric, we know that we need to decode the last
-    // item with id's / names in array
-    elseif ($this->numeric_keys($content)) {
-      // Loop content
+    // item with id's / names in array.
+    elseif ($this->numericKeys($content)) {
+      // Loop content.
       foreach ($content as $value) {
-        // if content is not array, it means that content is returnable as is
+        // If content is not array, it means that content is returnable as is.
         if (!is_array($value)) {
           return $value;
         }
-        // if value is an array, then we need to return desired element value
+        // If value is an array, then we need to return desired element value.
         if ($value['ID'] == $elementName) {
           $retval = $value['value'];
           return $retval;
@@ -351,7 +383,7 @@ class AtvSchema {
       }
     }
     else {
-      // if no item is specified with given name
+      // If no item is specified with given name.
       return NULL;
     }
     // shouldn't get here that often.
@@ -359,9 +391,15 @@ class AtvSchema {
   }
 
   /**
+   * Parse incorrect json string & decode.
+   *
+   * @param array $atvDocument
+   *   Document structure.
+   *
    * @return array
+   *   Decoded content.
    */
-  public function getAtvDocumentContent($atvDocument): array {
+  public function getAtvDocumentContent(array $atvDocument): array {
     if (is_string($atvDocument['content'])) {
       $replaced = str_replace("'", "\"", $atvDocument['content']);
       $replaced = str_replace("False", "false", $replaced);
@@ -372,12 +410,19 @@ class AtvSchema {
   }
 
   /**
+   * Set content item to given document.
+   *
    * @param array $atvDocument
+   *   Document.
+   * @param array $atvDocumentContent
+   *   Content.
+   *
+   * @return array
+   *   Added array.
    */
   public function setAtvDocumentContent(array $atvDocument, array $atvDocumentContent): array {
     $atvDocument['content'] = $atvDocumentContent;
     return $atvDocument;
   }
-
 
 }

@@ -4,8 +4,6 @@ namespace Drupal\grants_profile\Controller;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
-use Drupal\webform\Entity\WebformSubmission;
 
 /**
  * Returns responses for Grants Profile routes.
@@ -26,7 +24,7 @@ class GrantsProfileController extends ControllerBase {
   public function viewApplication(string $document_uuid): array {
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-//    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+    // $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
     $atvService = \Drupal::service('helfi_atv.atv_service');
@@ -34,20 +32,19 @@ class GrantsProfileController extends ControllerBase {
     $document = $atvService->getDocument($document_uuid);
     $content = $atvService->parseContent($document['content']);
 
-//    $content = $this->getSubmission('asdf');
-//
-//    $definition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
-//    $f = $definition->getPropertyDefinitions();
-//
-//    $wfSub = WebformSubmission::load(8);
-//    $wfData = $wfSub->getData();
-//
-//    $data = $atvSchema->documentContentToTypedData($content, $definition);
-//    $dataArray = $data->toArray();
-//    $violations = $data->validate();
-//
-//    $rr = $atvSchema->typedDataToDocumentContent($data);
-
+    // $content = $this->getSubmission('asdf');
+    //
+    //    $definition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+    //    $f = $definition->getPropertyDefinitions();
+    //
+    //    $wfSub = WebformSubmission::load(8);
+    //    $wfData = $wfSub->getData();
+    //
+    //    $data = $atvSchema->documentContentToTypedData($content, $definition);
+    //    $dataArray = $data->toArray();
+    //    $violations = $data->validate();
+    //
+    //    $rr = $atvSchema->typedDataToDocumentContent($data);
     $build['#application'] = $content;
     $build['#document'] = $document;
     $build['#theme'] = 'view_application';
@@ -715,6 +712,5 @@ class GrantsProfileController extends ControllerBase {
 
     return $decoded;
   }
-
 
 }

@@ -102,6 +102,49 @@ class GrantsAttachments extends WebformCompositeBase {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function getValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
+
+    if (!isset($element['#webform_key']) && isset($element['#value'])) {
+      return $element['#value'];
+    }
+
+    $webform_key = $element['#title'];
+
+    $data = $webform_submission->getData();
+    $value = NULL;
+    foreach ($data['attachments'] as $item) {
+      if ($item['description'] == $webform_key) {
+        $value = $item;
+      }
+    }
+
+    // Is value is NULL and there is a #default_value, then use it.
+    if ($value === NULL && isset($element['#default_value'])) {
+      $value = $element['#default_value'];
+    }
+
+    // Return multiple (delta) value or composite (composite_key) value.
+    if (is_array($value)) {
+      // Return $options['delta'] which is used by tokens.
+      // @see _webform_token_get_submission_value()
+      if (isset($options['delta'])) {
+        $value = $value[$options['delta']] ?? NULL;
+      }
+
+      // Return $options['composite_key'] which is used by composite elements.
+      // @see \Drupal\webform\Plugin\WebformElement\WebformCompositeBase::formatTableColumn
+      if ($value && isset($options['composite_key'])) {
+        $value = $value[$options['composite_key']] ?? NULL;
+      }
+    }
+
+    return $value;
+
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function formatHtmlItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
@@ -115,6 +158,10 @@ class GrantsAttachments extends WebformCompositeBase {
     $value = $this->getValue($element, $webform_submission, $options);
     $lines = [];
 
+    if (!is_array($value)) {
+      return [];
+    }
+
     if ($value['attachment'] !== NULL) {
       // Load file.
       /** @var \Drupal\file\FileInterface|null $file */
@@ -125,10 +172,10 @@ class GrantsAttachments extends WebformCompositeBase {
       $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
     }
 
-    $lines[] = $value["isDeliveredLater"] === '1' ?
+    $lines[] = ($value["isDeliveredLater"] === '1' || $value["isDeliveredLater"] === 'true') ?
       $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render() : NULL;
 
-    $lines[] = $value["isIncludedInOtherFile"] === '1' ?
+    $lines[] = ($value["isIncludedInOtherFile"] === '1' || $value["isIncludedInOtherFile"] === 'true') ?
       $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render() : NULL;
 
     return $lines;
