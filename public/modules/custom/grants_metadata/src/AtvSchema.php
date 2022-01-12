@@ -45,7 +45,7 @@ class AtvSchema {
   /**
    * Map document structure to typed data object.
    *
-   * @param array $documentContent
+   * @param array $document
    *   Document as array.
    * @param \Drupal\Core\TypedData\ComplexDataDefinitionInterface $typedDataDefinition
    *   Data definition for this document / application.
@@ -56,8 +56,15 @@ class AtvSchema {
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function documentContentToTypedData(
-    array $documentContent,
+    array $document,
     ComplexDataDefinitionInterface $typedDataDefinition): TypedDataInterface {
+
+    if (isset($document['content']) && is_array($document['content'])) {
+      $documentContent = $document['content'];
+    }
+    else {
+      $documentContent = $document;
+    }
 
     $propertyDefinitions = $typedDataDefinition->getPropertyDefinitions();
 
@@ -121,7 +128,7 @@ class AtvSchema {
                 foreach ($element0['properties'] as $k1 => $element1) {
                   if ($element1['type'] == 'array') {
                     if ($element1['items']['type'] == 'object') {
-                      if (!array_key_exists('enum', $element1['items']['properties']['ID'])) {
+                      if (array_key_exists('enum', $element1['items']['properties']['ID'])) {
                         if (is_array($element1['items']['properties']['ID']['enum']) && in_array($elementName, $element1['items']['properties']['ID']['enum'])) {
                           return $element1['items'];
                         }

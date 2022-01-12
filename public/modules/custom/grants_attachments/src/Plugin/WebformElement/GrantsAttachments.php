@@ -162,7 +162,7 @@ class GrantsAttachments extends WebformCompositeBase {
       return [];
     }
 
-    if ($value['attachment'] !== NULL) {
+    if (isset($value['attachment']) && $value['attachment'] !== NULL) {
       // Load file.
       /** @var \Drupal\file\FileInterface|null $file */
       $file = \Drupal::entityTypeManager()

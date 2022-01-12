@@ -19,19 +19,21 @@ class GrantsProfileController extends ControllerBase {
    * @return array
    *   Build for the page.
    *
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   *
    * @todo get webform submission from db, somehow.
    */
   public function viewApplication(string $document_uuid): array {
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-    // $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
     $atvService = \Drupal::service('helfi_atv.atv_service');
 
     $document = $atvService->getDocument($document_uuid);
-    $content = $atvService->parseContent($document['content']);
 
+    // $contentTyped = $atvSchema->documentContentToTypedData($document);
     // $content = $this->getSubmission('asdf');
     //
     //    $definition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
@@ -45,7 +47,7 @@ class GrantsProfileController extends ControllerBase {
     //    $violations = $data->validate();
     //
     //    $rr = $atvSchema->typedDataToDocumentContent($data);
-    $build['#application'] = $content;
+    $build['#application'] = $document['content'];
     $build['#document'] = $document;
     $build['#theme'] = 'view_application';
 

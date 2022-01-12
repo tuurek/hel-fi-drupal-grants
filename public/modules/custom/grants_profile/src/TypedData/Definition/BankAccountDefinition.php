@@ -20,7 +20,7 @@ class BankAccountDefinition extends ComplexDataDefinitionBase {
       $info['bank_account'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('bank_account')
-        ->addConstraint('NotBlank')
+      // ->addConstraint('NotBlank')
         ->addConstraint('ValidIban');
 
     }

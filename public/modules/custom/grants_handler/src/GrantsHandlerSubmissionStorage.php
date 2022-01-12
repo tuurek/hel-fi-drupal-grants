@@ -5,7 +5,6 @@ namespace Drupal\grants_handler;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvService;
@@ -26,13 +25,6 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
    * @var \Drupal\helfi_atv\AtvService
    */
   protected AtvService $atvService;
-
-  /**
-   * Webform data definition.
-   *
-   * @var \Drupal\Core\TypedData\ComplexDataDefinitionInterface
-   */
-  protected ComplexDataDefinitionInterface $dataDefinition;
 
   /**
    * Schema mapper.
@@ -57,8 +49,6 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
     $instance->atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
-    $instance->dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
-
     return $instance;
   }
 
@@ -71,6 +61,8 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   protected function loadData(array &$webform_submissions) {
     parent::loadData($webform_submissions);
 
+    $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+
     /** @var \Drupal\webform\Entity\WebformSubmission $submission */
     foreach ($webform_submissions as $submission) {
 
@@ -79,7 +71,7 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
       $document = $this->atvService->getDocument('e5ed6430-4059-4284-859f-50137a1eee53');
       $documentContent = $this->atvSchema->getAtvDocumentContent($document);
 
-      $appData = $this->atvSchema->documentContentToTypedData($documentContent, $this->dataDefinition);
+      $appData = $this->atvSchema->documentContentToTypedData($documentContent, $dataDefinition);
 
       $data = $appData->toArray();
 

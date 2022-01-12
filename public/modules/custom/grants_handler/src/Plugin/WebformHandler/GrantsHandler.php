@@ -224,11 +224,15 @@ class GrantsHandler extends WebformHandlerBase {
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
       // Loop through fieldnames and validate fields.
       foreach ($this->attachmentFieldNames as $fieldName) {
-        $this->validateAttachmentField(
-          $fieldName,
-          $form_state,
-          $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
-        );
+        $fValues = $form_state->getValue($fieldName);
+        if (isset($fValues['fileStatus']) && $fValues['fileStatus'] == 'new') {
+          $this->validateAttachmentField(
+            $fieldName,
+            $form_state,
+            $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
+          );
+        }
+
       }
     }
     $this->debug(__FUNCTION__);
@@ -327,6 +331,7 @@ class GrantsHandler extends WebformHandlerBase {
     $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
     $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+
     $typeManager = $dataDefinition->getTypedDataManager();
     $data = $typeManager->create($dataDefinition);
     $data->setValue($this->submittedFormData);
