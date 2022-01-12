@@ -1148,7 +1148,7 @@ class GrantsHandler extends WebformHandlerBase {
           "valueType" => "float",
         ],
         (object) [
-          "ID" => "noCompensationPreviousYear",
+          "ID" => "compensationPreviousYear",
           "label" => "En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna",
           "value" => $compensationBoolean,
           "valueType" => "string",

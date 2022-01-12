@@ -49,6 +49,7 @@
 
 
     .progress-step {
+      margin-top: 0;
       .progress-marker::after {
         right: calc(-50% - 25px);
         top: 25px;

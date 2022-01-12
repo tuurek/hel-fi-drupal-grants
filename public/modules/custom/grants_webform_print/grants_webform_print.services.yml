@@ -1,0 +1,6 @@
+services:
+  webform_print.theme_negotiator:
+    class: Drupal\grants_webform_print\Theme\GrantsWebformPrintThemeNegotiator
+    arguments: ['@config.factory']
+    tags:
+      - { name: theme_negotiator }
