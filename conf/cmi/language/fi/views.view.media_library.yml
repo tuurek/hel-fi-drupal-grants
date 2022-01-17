@@ -1,9 +1,12 @@
+label: 'Media library'
+description: 'Find and manage media.'
 display:
   default:
     display_title: Oletus
     display_options:
       exposed_form:
         options:
+          submit_button: 'Apply filters'
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Asc
@@ -46,6 +49,12 @@ display:
         created:
           expose:
             label: 'Uusin ensin'
+        name:
+          expose:
+            label: 'Name (A-Z)'
+        name_1:
+          expose:
+            label: 'Name (Z-A)'
       title: Media
       empty:
         area_text_custom:
@@ -59,8 +68,14 @@ display:
         name:
           separator: ', '
         edit_media:
+          alter:
+            text: 'Edit {{ name }}'
+            alt: 'Edit {{ name }}'
           text: Muokkaa
         delete_media:
+          alter:
+            text: 'Delete {{ name }}'
+            alt: 'Delete {{ name }}'
           text: Poista
   widget:
     display_title: Widgetti
@@ -79,6 +94,7 @@ display:
         display_link_table:
           label: Taulukko
   widget_table:
+    display_title: 'Widget (table)'
     display_options:
       fields:
         thumbnail__target_id:

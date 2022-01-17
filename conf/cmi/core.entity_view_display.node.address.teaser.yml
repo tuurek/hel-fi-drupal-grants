@@ -58,3 +58,4 @@ hidden:
   entity_print_view_pdf: true
   entity_print_view_word_docx: true
   langcode: true
+  toc_enabled: true

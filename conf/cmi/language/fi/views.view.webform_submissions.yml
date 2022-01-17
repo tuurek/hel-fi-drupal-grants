@@ -1,5 +1,7 @@
+label: 'Webform submissions'
 display:
   default:
+    display_title: Master
     display_options:
       exposed_form:
         options:
@@ -14,14 +16,17 @@ display:
             previous: ‹‹
             next: ››
             first: '« Ensimmäinen'
+            last: 'Last »'
           expose:
             items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options_all_label: '- Kaikki -'
             offset_label: Offset
       fields:
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         created:
           label: Luotu
@@ -32,18 +37,24 @@ display:
         view_webform_submission:
           label: Toimenpiteet
           text: näkymä
+      header:
+        result:
+          content: 'Displaying @start - @end of @total'
       arguments:
         in_draft:
           exception:
             title: Kaikki
+      title: 'Webform submissions'
   embed_administer:
     display_options:
       fields:
         webform_submission_bulk_form:
           action_title: Toiminto
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         sticky:
           label: Kiinnitetty
@@ -55,6 +66,7 @@ display:
           label: Luotu
           separator: ', '
         completed:
+          label: Completed
           separator: ', '
         remote_addr:
           label: 'IP osoite'
@@ -74,8 +86,10 @@ display:
         webform_submission_bulk_form:
           action_title: Toiminto
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         sticky:
           label: Kiinnitetty
@@ -87,6 +101,7 @@ display:
           label: Luotu
           separator: ', '
         completed:
+          label: Completed
           separator: ', '
         remote_addr:
           label: 'IP osoite'
@@ -108,8 +123,10 @@ display:
     display_options:
       fields:
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         sticky:
           label: Kiinnitetty
@@ -121,6 +138,7 @@ display:
           label: Luotu
           separator: ', '
         completed:
+          label: Completed
           separator: ', '
         remote_addr:
           label: 'IP osoite'

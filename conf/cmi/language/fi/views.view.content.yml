@@ -33,6 +33,7 @@ display:
             previous: '‹ Edellinen'
             next: 'Seuraava ›'
             first: '« Ensimmäinen'
+            last: 'Last »'
       filters:
         title:
           expose:
@@ -64,6 +65,7 @@ display:
         title: Sisältö
       tab_options:
         title: Sisältö
+        description: 'Find and manage content'
     display_title: Sivu
 label: Sisältö
 description: 'Etsi ja ylläpidä sisältöä.'

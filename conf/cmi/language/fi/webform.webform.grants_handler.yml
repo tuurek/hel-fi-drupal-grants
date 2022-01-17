@@ -1,0 +1,13 @@
+category: Example
+elements: |-
+  page_1:
+    '#type': webform_wizard_page
+    '#title': 'Page 1'
+    section:
+      '#type': webform_section
+      '#title': Section
+      value:
+        '#type': textfield
+        '#title': Value
+        '#required': true
+        '#description': 'Enter a value to displayed in a custom message.'

@@ -1,4 +1,5 @@
 label: Media
+description: 'Find and manage media.'
 display:
   default:
     display_title: Oletus
@@ -20,6 +21,7 @@ display:
             previous: '‹ Edellinen'
             next: 'Seuraava ›'
             first: '« Ensimmäinen'
+            last: 'Last »'
       fields:
         media_bulk_form:
           action_title: Toiminto
@@ -27,6 +29,7 @@ display:
           label: Pienoiskuva
           separator: ', '
         name:
+          label: 'Media name'
           separator: ', '
         bundle:
           label: Tyyppi
@@ -46,6 +49,9 @@ display:
         operations:
           label: Toimenpiteet
       filters:
+        name:
+          expose:
+            label: 'Media name'
         bundle:
           expose:
             label: Tyyppi
