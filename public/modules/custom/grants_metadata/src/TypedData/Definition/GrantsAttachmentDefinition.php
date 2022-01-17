@@ -23,56 +23,57 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'description',
-        ]);
+        ])
+      ;
 
-      $info['filename'] = DataDefinition::create('string')
+      $info['fileName'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('fileName')
+        ->setLabel('File name.')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
           'fileName',
         ]);
 
-      $info['filetype'] = DataDefinition::create('integer')
+      $info['fileType'] = DataDefinition::create('integer')
         ->setRequired(TRUE)
-        ->setLabel('fileType')
+        ->setLabel('File type.')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
           'fileType',
         ]);
 
-      $info['integration_id'] = DataDefinition::create('string')
+      $info['integrationID'] = DataDefinition::create('string')
         ->setRequired(FALSE)
-        ->setLabel('integrationID')
+        ->setLabel('Integration ID')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
           'integrationID',
         ]);
 
-      $info['is_delivered_later'] = DataDefinition::create('boolean')
+      $info['isDeliveredLater'] = DataDefinition::create('boolean')
         ->setRequired(TRUE)
-        ->setLabel('isDeliveredLater')
+        ->setLabel('Is delivered later')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
           'isDeliveredLater',
         ]);
 
-      $info['is_included_in_other_file'] = DataDefinition::create('boolean')
+      $info['isIncludedInOtherFile'] = DataDefinition::create('boolean')
         ->setRequired(TRUE)
-        ->setLabel('isIncludedInOtherFile')
+        ->setLabel('In in other attachment')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
           'isIncludedInOtherFile',
         ]);
 
-      $info['is_new_attachment'] = DataDefinition::create('boolean')
+      $info['isNewAttachment'] = DataDefinition::create('boolean')
         ->setRequired(TRUE)
-        ->setLabel('isNewAttachment')
+        ->setLabel('Attachment is new')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',

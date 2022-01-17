@@ -7,6 +7,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\webform\Entity\WebformSubmission;
 
 /**
  * Map ATV documents to typed data.
@@ -56,7 +57,7 @@ class AtvSchema {
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function documentContentToTypedData(
-    array $document,
+    array                          $document,
     ComplexDataDefinitionInterface $typedDataDefinition): TypedDataInterface {
 
     if (isset($document['content']) && is_array($document['content'])) {
@@ -161,21 +162,33 @@ class AtvSchema {
    *
    * @return array
    *   Document structure based on schema.
+   * @throws \Exception
    */
-  public function typedDataToDocumentContent(ComplexDataInterface $typedData): array {
+  public function typedDataToDocumentContent(
+    ComplexDataInterface $typedData,
+    WebformSubmission $webformSubmission): array {
 
     $documentStructure = [];
 
+    /** @var  $property */
     foreach ($typedData as $property) {
       $item = [];
       $definition = $property->getDataDefinition();
       $jsonPath = $definition->getSetting('jsonPath');
+      $requiredInJson = $definition->getSetting('requiredInJson');
+      $defaultValue = $definition->getSetting('defaultValue');
 
       if ($jsonPath == NULL) {
         continue;
       }
 
       $value = $property->getValue();
+
+      // if value is null, try to set default value from config
+      if ($value == NULL) {
+        $value = $defaultValue;
+      }
+
       $propertyName = $property->getName();
       $propertyLabel = $definition->getLabel();
       $propertyType = $definition->getDataType();
@@ -184,6 +197,10 @@ class AtvSchema {
 
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
+
+      if ($elementName == 'subvention_type' || $elementName == 'compensationArray') {
+        $d = 'asdf';
+      }
 
       $schema = $this->getPropertySchema($elementName, $this->structure);
 
@@ -213,23 +230,44 @@ class AtvSchema {
 
         case 3:
           if (is_array($value) && $this->numericKeys($value)) {
-            foreach ($value as $k2 => $v2) {
-              $fvalues = [];
-              foreach ($v2 as $fname => $fvalue) {
-                $valueArray = [
-                  'ID' => $fname,
-                  'value' => $fvalue,
-                  'valueType' => $valueTypeString,
-                  'label' => $propertyLabel,
-                ];
-                $fvalues[] = $valueArray;
+            if (empty($value)) {
+              if($requiredInJson == true){
+                $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
               }
-              $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName][$k2] = $fvalues;
+            }
+            else {
+              foreach ($value as $k2 => $v2) {
+                $fvalues = [];
+                $elementNames = $schema["items"]["items"]["properties"]["ID"]["enum"];
+                foreach ($v2 as $fname => $fvalue) {
+                  if (in_array($fname, $elementNames)) {
+                    $valueArray = [
+                      'ID' => $fname,
+                      'value' => $fvalue,
+                      'valueType' => $valueTypeString,
+                      'label' => $propertyLabel,
+                    ];
+                    $fvalues[] = $valueArray;
+                  } else {
+                    $d = 'asdf';
+//                    throw new \Exception('Keyname not found');
+                  }
+
+                }
+                $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName][$k2] = $fvalues;
+              }
             }
           }
           else {
             if ($schema['type'] == 'number') {
-              $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
+              if ($value == NULL) {
+                if ($requiredInJson == TRUE) {
+                  $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
+                }
+              }
+              else {
+                $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
+              }
             }
             else {
               $valueArray = [
@@ -254,8 +292,6 @@ class AtvSchema {
                 foreach ($itemValueDefinitions as $itemName => $itemValueDefinition) {
                   $itemValueDefinitionLabel = $itemValueDefinition->getLabel();
                   $itemValueDefinitionType = $itemValueDefinition->getDataType();
-                  $itemValue = $propertyItem[$itemName];
-
                   if ($itemValueDefinitionType == 'integer') {
                     $itemValueDefinitionType = 'int';
                   }
@@ -265,13 +301,22 @@ class AtvSchema {
                   elseif ($itemValueDefinitionType == 'boolean') {
                     $itemValueDefinitionType = 'bool';
                   }
-                  $valueArray = [
-                    'ID' => $itemName,
-                    'value' => $itemValue,
-                    'valueType' => $itemValueDefinitionType,
-                    'label' => $itemValueDefinitionLabel,
-                  ];
-                  $fieldValues[] = $valueArray;
+                  if (isset($propertyItem[$itemName])) {
+                    $itemValue = $propertyItem[$itemName];
+                    $idValue = $itemName;
+                    $valueArray = [
+                      'ID' => $idValue,
+                      'value' => $itemValue,
+                      'valueType' => $itemValueDefinitionType,
+                      'label' => $itemValueDefinitionLabel,
+                    ];
+                    $fieldValues[] = $valueArray;
+                  }
+                  else {
+                    // probably no need to do anything in this else?
+                    $idValue = $itemValueDefinitionLabel;
+                    $d = 'asd';
+                  }
                 }
                 $documentStructure[$jsonPath[0]][$elementName][$itemIndex] = $fieldValues;
               }
@@ -301,11 +346,15 @@ class AtvSchema {
     }
     try {
       $an = $typedData->get('application_number')->getValue();
-      $documentStructure['formUpdate'] = 'true';
+//      $documentStructure['formUpdate'] = 'true';
+    } catch (\Exception $e) {
+//      $documentStructure['formUpdate'] = 'false';
     }
-    catch (\Exception $e) {
-      $documentStructure['formUpdate'] = 'false';
+
+    if (!array_key_exists('attachmentsInfo', $documentStructure)) {
+      $documentStructure['attachmentsInfo'] = [];
     }
+
     return $documentStructure;
   }
 

@@ -29,15 +29,20 @@ class CompensationsComposite extends WebformCompositeBase {
   public static function getCompositeElements(array $element): array {
     $elements = [];
 
-    $elements['subvention_type_id'] = [
-      '#type' => 'hidden',
-    ];
-    $elements['subvention_type'] = [
+//    $elements['subvention_type_id'] = [
+//      '#type' => 'hidden',
+//    ];
+    $elements['subventionTypeTitle'] = [
       '#type' => 'textfield',
+      '#title' => t('Subvention Name'),
+      '#attributes' => ['readonly' => 'readonly'],
+    ];
+    $elements['subventionType'] = [
+      '#type' => 'hidden',
       '#title' => t('Subvention type'),
       '#attributes' => ['readonly' => 'readonly'],
     ];
-    $elements['subvention_amount'] = [
+    $elements['amount'] = [
       '#type' => 'textfield',
       '#title' => t('Subvention amount'),
     ];
@@ -52,22 +57,28 @@ class CompensationsComposite extends WebformCompositeBase {
 
     $parent = parent::valueCallback($element, $input, $form_state);
 
+    $entity = $form_state->getFormObject()->getEntity();
+
+    if (!empty($parent)) {
+      return $parent;
+    }
+
     $retval = [
-      'subvention_type_id' => '',
-      'subvention_type' => '',
-      'subvention_amount' => '',
+      'subventionType' => '',
+      'amount' => '',
+      'subventionTypeName' => '',
     ];
 
     $typeOptions = CompensationsCompositeElement::getOptionsForTypes();
 
     if (isset($parent['subventionType']) && $parent['subventionType'] != "") {
-      $retval['subvention_type_id'] = $parent['subventionType'];
-      $retval['subvention_amount'] = $parent['amount'];
-      $retval['subvention_type'] = $typeOptions[$parent['subventionType']];
+//      $retval['subvention_type_id'] = $parent['subventionType'];
+      $retval['subventionType'] = $parent['subventionType'];
+      $retval['amount'] = $parent['amount'];
+//      $retval['subventionType'] = $typeOptions[$parent['subventionType']];
 
-      return $retval;
     }
-    return $parent;
+    return $retval;
   }
 
   /**

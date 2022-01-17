@@ -258,7 +258,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'compensation',
           'compensationInfo',
           'generalInfoArray',
-          'noCompensationPreviousYear',
+          'compensationPreviousYear',
         ])
         ->addConstraint('NotBlank');
 
@@ -271,6 +271,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'generalInfoArray',
           'totalAmount',
         ])
+        ->setSetting('valueCallback','callback_function')
         ->addConstraint('NotBlank');
 
       $info['compensation_explanation'] = DataDefinition::create('string')
@@ -292,7 +293,8 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'otherCompensationsInfo',
           'otherCompensationsArray',
         ])
-        ->addConstraint('NotBlank');
+        ->setSetting('requiredInJson', true)
+        ;
 
       $info['haettu_avustus_tieto'] = ListDataDefinition::create('grants_metadata_other_compensation')
         ->setRequired(TRUE)
@@ -302,7 +304,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'otherCompensationsInfo',
           'otherAppliedCompensationsArray',
         ])
-        ->addConstraint('NotBlank');
+        ;
 
       $info['myonnetty_avustus_total'] = DataDefinition::create('float')
         ->setRequired(TRUE)
@@ -319,7 +321,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
         ->setLabel('otherCompensationsInfo=>otherAppliedCompensationsTotal')
         ->setSetting('jsonPath', [
           'compensation',
-          'otherAppliedCompensationsArray',
+          'otherCompensationsInfo',
           'otherAppliedCompensationsTotal',
         ])
         ->addConstraint('NotBlank');
@@ -402,12 +404,13 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
 
       $info['business_purpose'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('activitiesInfoArray=>businessPurpose')
+        ->setLabel('businessPurpose')
         ->setSetting('jsonPath', [
           'compensation',
           'activitiesInfoArray',
           'businessPurpose',
         ])
+        ->setSetting('defaultValue','Lorem Ipsum Doler est...')
         ->addConstraint('NotBlank');
 
       $info['community_practices_business'] = DataDefinition::create('boolean')
@@ -418,6 +421,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
           'activitiesInfoArray',
           'communityPracticesBusiness',
         ])
+        ->setSetting('defaultValue',FALSE)
         ->addConstraint('NotBlank');
 
       $info['additional_information'] = DataDefinition::create('string')
@@ -427,10 +431,10 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
         ->addConstraint('NotBlank');
 
       // Sender details.
-      // @todo Maybe move this to custom definition?
+      // @todo Maybe move sender info to custom definition?
       $info['sender_firstname'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('compensation=>senderInfoArray=>firstname')
+        ->setLabel('firstname')
         ->setSetting('jsonPath', [
           'compensation',
           'senderInfoArray',
@@ -439,7 +443,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
         ->addConstraint('NotBlank');
       $info['sender_lastname'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('compensation=>senderInfoArray=>lastname')
+        ->setLabel('lastname')
         ->setSetting('jsonPath', [
           'compensation',
           'senderInfoArray',
@@ -449,7 +453,7 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
       // @todo Validate person id?
       $info['sender_person_id'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('compensation=>senderInfoArray=>personID')
+        ->setLabel('personID')
         ->setSetting('jsonPath', [
           'compensation',
           'senderInfoArray',
@@ -458,13 +462,13 @@ abstract class ApplicationDefinitionBase extends ComplexDataDefinitionBase {
         ->addConstraint('NotBlank');
       $info['sender_user_id'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('compensation=>senderInfoArray=>userID')
+        ->setLabel('userID')
         ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'userID'])
         ->addConstraint('NotBlank');
 
       $info['sender_email'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('compensation=>senderInfoArray=>email')
+        ->setLabel('Email')
         ->addConstraint('NotBlank')
         ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'email']);
 

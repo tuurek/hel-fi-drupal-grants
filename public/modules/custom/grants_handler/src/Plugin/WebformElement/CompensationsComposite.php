@@ -56,12 +56,19 @@ class CompensationsComposite extends WebformCompositeBase {
     //
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
-    return [
-      'subvention_type_id' => '',
-      'subvention_amount' => '',
-      'subvention_type' => '',
 
-    ] + parent::defineDefaultProperties();
+    $parent = parent::defineDefaultProperties();
+
+    return [
+      'amount' => '',
+      'subventionType' => '',
+      'subventionTypeName' => '',
+    ] + $parent;
+  }
+
+  public function getValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
+    $retval = parent::getValue($element, $webform_submission, $options);
+    return $retval;
   }
 
   /**
@@ -75,7 +82,7 @@ class CompensationsComposite extends WebformCompositeBase {
     //
     // @see \Drupal\webform\Plugin\WebformElementBase::form
     // @see \Drupal\webform\Plugin\WebformElement\TextBase::form
-    $form['element']['subvention_type'] = [
+    $form['element']['subventionType'] = [
       '#type' => 'select',
       '#multiple' => TRUE,
       '#title' => $this->t('Grants type'),

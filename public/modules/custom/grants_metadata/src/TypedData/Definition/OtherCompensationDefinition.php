@@ -28,7 +28,7 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
         ])
         ->addConstraint('NotBlank');
 
-      $info['issuer_name'] = DataDefinition::create('string')
+      $info['issuerName'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('issuerName')
         ->setSetting('jsonPath', [

@@ -26,6 +26,7 @@ function grants_handler_theme() {
  * Implements hook_entity_type_alter().
  */
 function grants_handler_entity_type_alter(array &$entity_types) {
+  // Add our custom handler for webform
   $entity_types['webform_submission']->setStorageClass('Drupal\grants_handler\GrantsHandlerSubmissionStorage');
 }
 
@@ -69,21 +70,91 @@ function grants_handler_entity_type_alter(array &$entity_types) {
 function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
   // Code here acts on all elements included in a webform.
   //  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
-  //  $form_object = $form_state->getFormObject();
+//    $form_object = $form_state->getFormObject();
   //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  //  $webform_submission = $form_object->getEntity();
+//    $webform_submission = $form_object->getEntity();
   //  /** @var \Drupal\webform\WebformInterface $webform */
-  //  $webform = $webform_submission->getWebform();
+//    $webform = $webform_submission->getWebform();
 
   // Add custom data attributes to all elements.
-  //  $element['#attributes']['data-custom'] = '{custom data goes here}';
+//   $element['#attributes']['data-custom'] = '{custom data goes here}';
+
+
+//  if (isset($element['#webform_key']) && $element['#webform_key'] == 'subventions') {
+//    /** @var \Drupal\webform\Entity\WebformSubmission $WfSubmission */
+//    $WfSubmission = $form_state->getFormObject()->getEntity();
+//    $formInput = $form_state->getUserInput();
+//
+//    $typeNames = CompensationsComposite::getOptionsForTypes();
+//    $subventionTypes = $element['#subvention_type'];
+//    if ($WfSubmission->isNew()) {
+//      $defaultValues = [];
+//      $inputItems = $formInput["subventions"]["items"] ?? [];
+//      foreach ($subventionTypes as $id => $typeId) {
+//        $itemFound = FALSE;
+//        // If this item is not already been added to user input array
+//        foreach ($inputItems as $sKey => $sItem) {
+//          if (isset($sItem['_item_']) && $sItem['_item_']['subventionType'] == (string)$id) {
+//            $itemFound = $sKey;
+//          }
+//        }
+//        // then we want to add default values.
+//        if ($itemFound == FALSE) {
+//          $defaultValues[] = [
+//            'subventionTypeTitle' => $typeNames[$id],
+//            'subventionType' => $typeId,
+//            'amount' => ''
+//          ];
+//        } else {
+//          $defaultValues = $inputItems[$itemFound]['_item_'];
+//          $d = 'asdf';
+//        }
+//
+//      }
+//      $element['#default_value'] = $defaultValues;
+//    }
+//    else {
+//      $added = [];
+//      $defaultValues = [];
+//      foreach ($element['#default_value'] as $key => $value) {
+//        if(!isset($element['#default_value'][$key]['subventionTypeTitle'])){
+//          $element['#default_value'][$key]['subventionTypeTitle'] = $typeNames[$value['subventionType']];
+//        }
+//        $added[] = $value['subventionType'];
+//      }
+//      foreach ($subventionTypes as $id => $typeName) {
+//        $defaultValues = [
+//          'subventionTypeTitle' => $typeNames[$id],
+//          'subventionType' => $typeName,
+//          'amount' => ''
+//        ];
+//        if (!in_array($id, $added)) {
+//          $element['#default_value'][] = $defaultValues;
+//        }
+//      }
+//    }
+//    $d = 'ads';
+//  }
 }
 
 /**
  * Implements hook_preprocess().
  */
 function grants_handler_preprocess_webform(array &$variables) {
-  $r = 'asfd';
+  /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+  $grantsProfileService = \Drupal::service('grants_profile.service');
+  $selectedCompany = $grantsProfileService->getSelectedCompany();
+
+  $currentUser = \Drupal::currentUser();
+
+  if ($selectedCompany == NULL && in_array('HelsinkiProfiili',$currentUser->getRoles())) {
+    \Drupal::messenger()
+      ->addError(t('You need to select company you\'re acting behalf of.'));
+    $url = \Drupal\Core\Url::fromRoute('grants_profile.show')->setAbsolute()->toString();
+    $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
+    $response->send();
+    return;
+  }
 }
 
 /**
@@ -91,110 +162,41 @@ function grants_handler_preprocess_webform(array &$variables) {
  */
 function grants_handler_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
-  //  // Code here acts on all elements included in a webform.
-  //  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
-  //  $form_object = $form_state->getFormObject();
-  //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  //  $webform_submission = $form_object->getEntity();
-  //  /** @var \Drupal\webform\WebformInterface $webform */
-  //  $webform = $webform_submission->getWebform();
-
-
   if($form_id === 'webform_submission_yleisavustushakemus_edit_all_form') {
     $d = 'adfs';
   } else if (
     $form_id === 'webform_submission_yleisavustushakemus_add_form') {
-    $options = CompensationsComposite::getOptionsForTypes();
 
-    // fast and dirty way to get this to ya form. must be fixed.
-    // attempt in comments
-    $element = $form["elements"]["2_avustustiedot"]["avustuslajit"]["subventions"];
-    if ($element['#webform_plugin_id'] == 'grants_compensations') {
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $grantsProfileService = \Drupal::service('grants_profile.service');
+    $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-      $subventionTypes = $element["#subvention_type"];
-      $subventionTypesAmount = count($subventionTypes);
-      $form["elements"]["2_avustustiedot"]["avustuslajit"]["subventions"]['#cardinality'] = $subventionTypesAmount;
+    if ($selectedCompany != NULL) {
+      $yjdhService = \Drupal::service('helfi_yjdh.client');
+      $selectedCompanyData = $yjdhService->getAssociationBasicInfo($selectedCompany);
 
-      foreach ($subventionTypes as $key => $value) {
-        $form["elements"]["2_avustustiedot"]["avustuslajit"]["subventions"]['#default_value'][] = [
-          'subvention_type' => $options[$value],
-          'subvention_type_id' => $value,
-        ];
-      }
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData['BusinessId'];
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData['AssociationNameInfo'][0]['AssociationName'];
+
+      $regDate = new DrupalDateTime($selectedCompanyData['RegistryDate'], 'Europe/Helsinki');
+
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = $regDate->format('d.m.Y');
+
+      $foundingYearExplode = explode('-', $selectedCompanyData['RegistryDate']);
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
+
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData['Address'][0]['City'];
+
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"]["#value"] = $selectedCompanyData["AssociationStatus"];
+      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"]["#value"] = $selectedCompanyData["AssociationSpecialCondition"];
     }
-
-    //    foreach ($form["elements"] as $elementName => $element) {
-    //      if (!str_contains($elementName, '#')) {
-    //        foreach ($element as $elementName2 => $element2) {
-    //          if (!str_contains($elementName2, '#')) {
-    //            foreach ($element2 as $elementName3 => $element3) {
-    //              if (!str_contains($elementName3, '#')) {
-    //                if ($element3['#type'] == 'grants_compensations') {
-    //                  $subventionTypes = $element3["#subvention_type"];
-    //                  $subventionTypesAmount = count($subventionTypes);
-    //                  $form['elements'][$elementName][$elementName2][$elementName3]['#cardinality'] = $subventionTypesAmount;
-    //
-    //                  foreach ($subventionTypes as $key => $value) {
-    //                    $form['elements'][$elementName][$elementName2][$elementName3]['#default_value'][] = [
-    //                      'subvention_type' => $options[$value],
-    //                      'subvention_type_id' => $value,
-    //                    ];
-    //                  }
-    //                }
-    //              }
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
-
-
-
-
-
-    /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $userExternalData */
-    $userExternalData = \Drupal::service('helfi_helsinki_profiili.userdata');
-    $profileData = $userExternalData->getUserProfileData();
-
-    // if not authenticated let's not do anything. This is more for admin usage than
-    if ((NULL == $profileData) && !$userExternalData->isAuthenticatedExternally()) {
-      \Drupal::messenger()->addWarning('No HelsinkiProfiili login found.');
-      return;
-    }
-
-    /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhClient */
-    $yjdhClient = \Drupal::service('helfi_yjdh.client');
-    try {
-
-      $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
-
-      $form['#prefix'] = '<div id="form_wrap">';
-      $form['#suffix'] = '</div>';
-
-      $options = [];
-      foreach ($associationRoles['Role'] as $association) {
-        $options[$association['BusinessId']] = $association['AssociationNameInfo'][0]['AssociationName'];
-      }
-
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#options"] = $options;
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_select"]["#ajax"] = [
-        'callback' => 'company_select_callback',
-        // don't forget :: when calling a class method.
-        'disable-refocus' => FALSE,
-        // Or TRUE to prevent re-focusing on the triggering element.
-        'event' => 'change',
-        'wrapper' => 'form_wrap',
-        // This element is updated with this AJAX callback.
-        'progress' => [
-          'type' => 'throbber',
-          'message' => 'Getting YTJ data',
-        ],
-      ];
-
-    } catch (YjdhException $e) {
+    else {
       \Drupal::messenger()
-        ->addError('Company data fetching failed: ' . $e->getMessage());
+        ->addError(t("You don't have company selected, no fields are prepopulated"));
     }
+
+
+
   }
 }
 

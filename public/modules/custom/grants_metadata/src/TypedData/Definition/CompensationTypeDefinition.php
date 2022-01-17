@@ -33,7 +33,7 @@ class CompensationTypeDefinition extends ApplicationDefinitionBase {
   public function getPropertyDefinitions(): array {
     $info = parent::getPropertyDefinitions();
 
-    $info['subvention_type'] = DataDefinition::create('string')
+    $info['subventionType'] = DataDefinition::create('string')
       ->setRequired(TRUE)
       ->setLabel('subventionType')
       ->setSetting('jsonPath', [
@@ -44,7 +44,7 @@ class CompensationTypeDefinition extends ApplicationDefinitionBase {
       ])
       ->addConstraint('NotBlank');
 
-    $info['subvention_amount'] = DataDefinition::create('float')
+    $info['amount'] = DataDefinition::create('float')
       ->setRequired(TRUE)
       ->setLabel('amount')
       ->setSetting('jsonPath', [

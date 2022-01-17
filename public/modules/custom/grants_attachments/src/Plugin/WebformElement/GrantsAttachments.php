@@ -3,6 +3,7 @@
 namespace Drupal\grants_attachments\Plugin\WebformElement;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -37,13 +38,13 @@ class GrantsAttachments extends WebformCompositeBase {
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
     return [
-      'multiple' => '',
-      'size' => '',
-      'minlength' => '',
-      'maxlength' => '',
-      'placeholder' => '',
-      'filetype' => '',
-    ] + parent::defineDefaultProperties();
+        'multiple' => '',
+        'size' => '',
+        'minlength' => '',
+        'maxlength' => '',
+        'placeholder' => '',
+        'filetype' => '',
+      ] + parent::defineDefaultProperties();
   }
 
   /**
@@ -114,9 +115,41 @@ class GrantsAttachments extends WebformCompositeBase {
 
     $data = $webform_submission->getData();
     $value = NULL;
-    foreach ($data['attachments'] as $item) {
-      if ($item['description'] == $webform_key) {
-        $value = $item;
+
+    if (isset($data['attachments'])) {
+      foreach ($data['attachments'] as $item) {
+        if ($item['description'] == $webform_key) {
+          $value = $item;
+        }
+      }
+    }
+    else {
+      foreach (GrantsHandler::getAttachmentFieldNames() as $fieldName) {
+        $fieldData = $data[$fieldName];
+
+        // $element["#webform_parents"][2]
+        if (in_array($fieldName, $element["#webform_parents"])) {
+          $value = $fieldData;
+//          if (isset($fieldData['description'])) {
+//            $value = $fieldData;
+//            //          if ($fieldData['description'] == $webform_key) {
+//            //            $value = $fieldData;
+//            //            break;
+//            //          }
+//          }
+//          elseif ($fieldName == 'muu_liite') {
+//            $d = 'asdf';
+//            //          // Muu liite.
+//            //          $value = [];
+//            //          foreach ($data[$fieldName] as $key => $fieldValue) {
+//            //            if (is_numeric($key)) {
+//            //              $value[] = $fieldValue;
+//            //            }
+//            //          }
+//          }
+        }
+
+
       }
     }
 

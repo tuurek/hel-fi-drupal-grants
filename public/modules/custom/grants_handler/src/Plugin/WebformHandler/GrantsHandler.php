@@ -51,7 +51,7 @@ class GrantsHandler extends WebformHandlerBase {
    *
    * @todo get field names from form where field type is attachment.
    */
-  private array $attachmentFieldNames = [
+  protected static array $attachmentFieldNames = [
     'vahvistettu_tilinpaatos',
     'vahvistettu_toimintakertomus',
     'vahvistettu_tilin_tai_toiminnantarkastuskertomus',
@@ -164,6 +164,16 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Get file fields.
+   *
+   * @return string[]
+   *  Attachment fields.
+   */
+  public static function getAttachmentFieldNames(): array {
+    return self::$attachmentFieldNames;
+  }
+
+  /**
    * Convert EUR format value to "double" .
    */
   private function grantsHandlerConvertToFloat(string $value): string {
@@ -212,18 +222,12 @@ class GrantsHandler extends WebformHandlerBase {
     // @todo Is parent::validateForm needed in validateForm?
     parent::validateForm($form, $form_state, $webform_submission);
 
-    $this->applicationType = $webform_submission->getWebform()
-      ->getThirdPartySetting('grants_metadata', 'applicationType');
-    $this->applicationTypeID = $webform_submission->getWebform()
-      ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
-    $this->applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
-
     // Get current page.
     $currentPage = $form["progress"]["#current_page"];
     // Only validate set forms.
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
       // Loop through fieldnames and validate fields.
-      foreach ($this->attachmentFieldNames as $fieldName) {
+      foreach (self::$attachmentFieldNames as $fieldName) {
         $fValues = $form_state->getValue($fieldName);
         if (isset($fValues['fileStatus']) && $fValues['fileStatus'] == 'new') {
           $this->validateAttachmentField(
@@ -304,6 +308,17 @@ class GrantsHandler extends WebformHandlerBase {
     // and set it to class private variable.
     $this->submittedFormData = $webform_submission->getData();
 
+    $this->submittedFormData['subventions'] = [
+      [
+        'subventionType' => '6',
+        'amount' => '300'
+      ],
+      [
+        'subventionType' => '1',
+        'amount' => '400'
+      ]
+    ];
+
     // Do not save form data if we have debug set up.
     if (!empty($this->configuration['debug'])) {
       // Set submission data to empty.
@@ -317,13 +332,41 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
+    $this->applicationType = $webform_submission->getWebform()
+      ->getThirdPartySetting('grants_metadata', 'applicationType');
+    $this->applicationTypeID = $webform_submission->getWebform()
+      ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
+
+    //    $this->applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
+    $this->applicationNumber = "DRUPAL-" . sprintf('%08d', rand(100,1000));
+
+    if ($webform_submission->isDefaultRevision()) {
+      $this->submittedFormData['status'] = 'DRAFT';
+      $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
+      $this->submittedFormData['application_type'] = $this->applicationType;
+      $this->submittedFormData['application_number'] = $this->applicationNumber;
+    }
+
+    $this->submittedFormData['form_timestamp'] = (string)$webform_submission->getCreatedTime();
+
+    // set sender information after save so no accidental saving of personal data
+    // TODO: Think about how sender info should be parsed, maybe in own
+    $userData = $this->userExternalData->getUserProfileData();
+    $this->submittedFormData['sender_firstname'] = $userData["verifiedPersonalInformation"]["firstName"];
+    $this->submittedFormData['sender_lastname'] = $userData["verifiedPersonalInformation"]["lastName"];
+    $this->submittedFormData['sender_person_id'] = $userData["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+    $this->submittedFormData['sender_user_id'] = $userData["id"];
+    $this->submittedFormData['sender_email'] = $userData["primaryEmail"]["email"];
 
   }
 
   /**
    * {@inheritdoc}
    */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+  public function confirmForm(
+    array &$form,
+    FormStateInterface $form_state,
+    WebformSubmissionInterface $webform_submission) {
 
     $webformId = $webform_submission->getWebform()->getOriginalId();
 
@@ -334,9 +377,11 @@ class GrantsHandler extends WebformHandlerBase {
 
     $typeManager = $dataDefinition->getTypedDataManager();
     $data = $typeManager->create($dataDefinition);
+
     $data->setValue($this->submittedFormData);
 
-    $appDocument = $atvSchema->typedDataToDocumentContent($data);
+
+    $appDocument = $atvSchema->typedDataToDocumentContent($data, $webform_submission);
 
     $oldDocument = $this->atvService->getDocument('asdfasfasfasdf');
     $oldContent = $atvSchema->getAtvDocumentContent($oldDocument);
@@ -389,9 +434,15 @@ class GrantsHandler extends WebformHandlerBase {
               $this->isDebug()
             );
 
+            $body = $res->getBody()->getContents();
+
+            $this->messenger->addStatus($body);
+
+            // TÄHÄN TSEKKAA RESULTTI
+
             // @todo print message for every attachment
             $this->messenger()
-              ->addStatus('Grant application saved and attachments saved');
+              ->addStatus('Grant application saved and attachments saved, see application status from [omat_sivut]');
 
             $this->attachmentRemover->removeGrantAttachments(
               $this->attachmentFileIds,
@@ -467,7 +518,7 @@ class GrantsHandler extends WebformHandlerBase {
   private function parseAttachments($form): array {
 
     $attachmentsArray = [];
-    foreach ($this->attachmentFieldNames as $attachmentFieldName) {
+    foreach (self::$attachmentFieldNames as $attachmentFieldName) {
       $field = $this->submittedFormData[$attachmentFieldName];
       $descriptionValue = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#title"];
 
@@ -521,7 +572,7 @@ class GrantsHandler extends WebformHandlerBase {
       "valueType" => "string",
     ];
 
-    if (isset($field['attachment']) && $field['attachment'] !== NULL) {
+    if (isset($field['attachment']) && $field['attachment'] !== NULL && !empty($field['attachment'])) {
       $file = File::load($field['attachment']);
       // Add file id for easier usage in future.
       $this->attachmentFileIds[] = $field['attachment'];

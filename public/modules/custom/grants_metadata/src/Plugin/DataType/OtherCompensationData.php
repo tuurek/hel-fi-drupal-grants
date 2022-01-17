@@ -23,7 +23,10 @@ class OtherCompensationData extends Map {
 
     if (isset($retval['issuerName'])) {
       $retval['issuer_name'] = $retval['issuerName'];
-      unset($retval['issuerName']);
+//      unset($retval['issuerName']);
+    }
+    if (isset($retval['issuer_name'])) {
+      $retval['issuerName'] = $retval['issuer_name'];
     }
 
     return $retval;
