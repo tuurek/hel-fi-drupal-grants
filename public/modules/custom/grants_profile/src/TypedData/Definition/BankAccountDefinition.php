@@ -17,10 +17,10 @@ class BankAccountDefinition extends ComplexDataDefinitionBase {
     if (!isset($this->propertyDefinitions)) {
       $info = &$this->propertyDefinitions;
 
-      $info['bank_account'] = DataDefinition::create('string')
+      $info['bankAccount'] = DataDefinition::create('string')
         ->setRequired(TRUE)
-        ->setLabel('bank_account')
-      // ->addConstraint('NotBlank')
+        ->setLabel('bankAccount')
+        ->setSetting('jsonPath', ['grantsProfile', 'bankAccountsArray', 'bankAccount'])
         ->addConstraint('ValidIban');
 
     }

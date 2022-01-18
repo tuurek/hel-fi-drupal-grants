@@ -198,10 +198,6 @@ class AtvSchema {
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
 
-      if ($elementName == 'subvention_type' || $elementName == 'compensationArray') {
-        $d = 'asdf';
-      }
-
       $schema = $this->getPropertySchema($elementName, $this->structure);
 
       if ($propertyType == 'integer') {

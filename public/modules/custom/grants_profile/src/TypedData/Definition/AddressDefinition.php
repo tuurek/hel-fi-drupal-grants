@@ -20,19 +20,25 @@ class AddressDefinition extends ComplexDataDefinitionBase {
       $info['street'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('street')
+        ->setSetting('jsonPath', ['grantsProfile', 'addressesArray', 'street'])
         ->addConstraint('NotBlank');
 
       $info['city'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('city')
+        ->setSetting('jsonPath', ['grantsProfile', 'addressesArray', 'city'])
         ->addConstraint('NotBlank');
+
       $info['post_code'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('Post code')
+        ->setSetting('jsonPath', ['grantsProfile', 'addressesArray', 'post_code'])
         ->addConstraint('NotBlank');
+
       $info['country'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('Country')
+        ->setSetting('jsonPath', ['grantsProfile', 'addressesArray', 'country'])
         ->addConstraint('NotBlank');
 
     }
