@@ -1,4 +1,4 @@
-# Finnish translation of City of Helsinki Gratns
+# Finnish translation of City of Helsinki Grants Attachment Module
 #
 msgid ""
 msgstr ""
