@@ -7,6 +7,9 @@ fieldset.grants-attachments--wrapper {
     margin-bottom: var(--spacing-2-xs);
   }
 
+  .form-item--error-message {
+    width: 100%;
+  }
   .grants-applications-managed_file {
     position:relative;
     label {

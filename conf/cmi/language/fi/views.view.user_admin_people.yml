@@ -17,6 +17,7 @@ display:
             previous: '‹ Edellinen'
             next: 'Seuraava ›'
             first: '« Ensimmäinen'
+            last: 'Last »'
           expose:
             items_per_page_label: 'Merkintöjä sivua kohti'
             items_per_page_options_all_label: '- Kaikki -'

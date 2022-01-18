@@ -1,0 +1,44 @@
+# Finnish translation of City of Helsinki Grants Handler Module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-01-18 16:58+0300\n"
+"PO-Revision-Date: 2022-01-18 16:58+0300\n"
+"Last-Translator: Petri Leinonen <ext.petri.leinonen@hel.fi>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+msgid "Development settings"
+msgstr "Kehitysasetukset"
+
+msgid "Enable debugging"
+msgstr "Debuggaus päälle"
+
+msgid "If checked, every handler method invoked will be displayed onscreen to all users."
+msgstr "Jos tämä on valittu, kaikki käsittelijän metodikutsut näytetään ruudulla kaikille käyttäjille."
+
+msgid "@fieldname field is required"
+msgstr "@fieldname -kenttä on pakollinen"
+
+msgid "@fieldname has file added, it cannot be added later."
+msgstr "@fieldname sisältää liitetiedoston, joten sitä ei voi myös lähettää myöhemmin"
+
+msgid "@fieldname has file added, it cannot belong to other file."
+msgstr "@fieldname sisältää liitetiedoston, joten se ei voi myös sisältyä toiseen tiedostoon."
+
+msgid "DEBUG: Endpoint:: @endpoint"
+msgstr "DEBUG: Endpoint:: @endpoint"
+
+msgid "DEBUG: Sent JSON: @myJSON"
+msgstr "DEBUG: Lähetetty JSON-sanoma: @myJSON"
+
+msgid "Backend DEV mode on, no posting to backend is done."
+msgstr "Taustajärjestelmän DEV-moodi päällä, mitään tietoja ei tallenneta Taustajärjestelmään"
+
+msgid "Invoked @id: @class_name:@method_name @context1"
+msgstr "Kutsuttu @id: @class_name:@method_name @context1"

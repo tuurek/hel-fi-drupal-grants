@@ -53,3 +53,4 @@ hidden:
   entity_print_view_word_docx: true
   langcode: true
   links: true
+  toc_enabled: true
