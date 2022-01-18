@@ -10,7 +10,6 @@
         "ext-json": "*",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.6.7",
-        "dompdf/dompdf": "^1.0",
         "druidfi/omen": "^0.2.0",
         "drupal/api_tools": "^1.0",
         "drupal/config_filter": "^2.2",
@@ -38,9 +37,7 @@
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
         "drupal/webform_views": "^5.0@alpha",
-        "drush/drush": "^10.4",
-        "mikehaertl/phpwkhtmltopdf": "~2.1",
-        "tecnickcom/tcpdf": "~6"
+        "drush/drush": "^10.4"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
