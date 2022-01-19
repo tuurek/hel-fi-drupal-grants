@@ -18,7 +18,7 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
       $info = &$this->propertyDefinitions;
 
       $info['issuer'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
+//        ->setRequired(TRUE)
         ->setLabel('issuer')
         ->setSetting('jsonPath', [
           'compensation',
@@ -26,10 +26,11 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsArray',
           'issuer',
         ])
-        ->addConstraint('NotBlank');
+//        ->addConstraint('NotBlank')
+      ;
 
       $info['issuerName'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
+//        ->setRequired(TRUE)
         ->setLabel('issuerName')
         ->setSetting('jsonPath', [
           'compensation',
@@ -37,10 +38,11 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsArray',
           'issuerName',
         ])
-        ->addConstraint('NotBlank');
+//        ->addConstraint('NotBlank')
+      ;
 
       $info['year'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
+//        ->setRequired(TRUE)
         ->setLabel('year')
         ->setSetting('jsonPath', [
           'compensation',
@@ -48,9 +50,10 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsArray',
           'year',
         ])
-        ->addConstraint('NotBlank');
+//        ->addConstraint('NotBlank')
+      ;
 
-      $info['amount'] = DataDefinition::create('float')
+      $info['amount'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('amount')
         ->setSetting('jsonPath', [
@@ -59,7 +62,8 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsArray',
           'amount',
         ])
-        ->addConstraint('NotBlank');
+//        ->addConstraint('NotBlank')
+      ;
 
       $info['purpose'] = DataDefinition::create('string')
         ->setRequired(TRUE)
@@ -70,7 +74,8 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsArray',
           'purpose',
         ])
-        ->addConstraint('NotBlank');
+//        ->addConstraint('NotBlank')
+      ;
 
     }
     return $this->propertyDefinitions;

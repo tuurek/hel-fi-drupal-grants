@@ -2,12 +2,13 @@
 
 namespace Drupal\grants_metadata\TypedData\Definition;
 
+use Drupal\Core\TypedData\ComplexDataDefinitionBase;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Data definition for compensations.
  */
-class CompensationTypeDefinition extends ApplicationDefinitionBase {
+class CompensationTypeDefinition extends ComplexDataDefinitionBase {
 
   /**
    * Data definition for different subventions.
@@ -31,32 +32,36 @@ class CompensationTypeDefinition extends ApplicationDefinitionBase {
    *   Property definitions.
    */
   public function getPropertyDefinitions(): array {
-    $info = parent::getPropertyDefinitions();
+    if (!isset($this->propertyDefinitions)) {
 
-    $info['subventionType'] = DataDefinition::create('string')
-      ->setRequired(TRUE)
-      ->setLabel('subventionType')
-      ->setSetting('jsonPath', [
-        'compensation',
-        'compensationInfo',
-        'compensationArray',
-        'subventionType',
-      ])
-      ->addConstraint('NotBlank');
+      $info = &$this->propertyDefinitions;
 
-    $info['amount'] = DataDefinition::create('float')
-      ->setRequired(TRUE)
-      ->setLabel('amount')
-      ->setSetting('jsonPath', [
-        'compensation',
-        'compensationInfo',
-        'compensationArray',
-        'amount',
-      ])
-      ->addConstraint('NotBlank');
+      $info['subventionType'] = DataDefinition::create('string')
+        ->setLabel('subventionType')
+        ->setSetting('jsonPath', [
+          'compensation',
+          'compensationInfo',
+          'compensationArray',
+          'subventionType',
+        ])
+        //      ->setRequired(TRUE)
+        //      ->addConstraint('NotBlank')
+      ;
 
+      $info['amount'] = DataDefinition::create('float')
+        ->setLabel('amount')
+        ->setSetting('jsonPath', [
+          'compensation',
+          'compensationInfo',
+          'compensationArray',
+          'amount',
+        ])
+        //      ->setRequired(TRUE)
+        //      ->addConstraint('NotBlank')
+      ;
+    }
     // And here we will add later fields as well.
-    return $info;
+    return $this->propertyDefinitions;
   }
 
 }

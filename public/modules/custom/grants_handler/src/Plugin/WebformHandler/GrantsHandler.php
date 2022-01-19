@@ -176,10 +176,10 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Convert EUR format value to "double" .
    */
-  private function grantsHandlerConvertToFloat(string $value): string {
+  private function grantsHandlerConvertToFloat(string $value): float {
     $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
     $value = (float) $value;
-    return "" . $value;
+    return $value;
   }
 
   /**
@@ -211,6 +211,34 @@ class GrantsHandler extends WebformHandlerBase {
     return $this->setSettingsParents($form);
   }
 
+  protected function setTotals() {
+
+    if (isset($this->submittedFormData['myonnetty_avustus']) &&
+      is_array($this->submittedFormData['myonnetty_avustus'])) {
+      $tempTotal = 0;
+      foreach ($this->submittedFormData['myonnetty_avustus'] as $key => $item) {
+        $amount = $this->grantsHandlerConvertToFloat($item['amount']);
+        $tempTotal += $amount;
+      }
+      $this->submittedFormData['myonnetty_avustus_total'] = $tempTotal;
+    }
+
+    if (isset($this->submittedFormData['haettu_avustus_tieto']) &&
+      is_array($this->submittedFormData['haettu_avustus_tieto'])) {
+      $tempTotal = 0;
+      foreach ($this->submittedFormData['haettu_avustus_tieto'] as $item) {
+        $amount = $this->grantsHandlerConvertToFloat($item['amount']);
+        $tempTotal += $amount;
+      }
+      $this->submittedFormData['haettu_avustus_tieto_total'] = $tempTotal;
+
+    }
+
+    // todo: proerly get amount
+    $this->submittedFormData['compensation_total_amount'] = $tempTotal;
+
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -219,8 +247,54 @@ class GrantsHandler extends WebformHandlerBase {
     FormStateInterface $form_state,
     WebformSubmissionInterface $webform_submission
   ) {
+
+    $this->submittedFormData = $form_state->getValues();
+
+    $this->setTotals();
+
+    $this->applicationType = $webform_submission->getWebform()
+      ->getThirdPartySetting('grants_metadata', 'applicationType');
+    $this->applicationTypeID = $webform_submission->getWebform()
+      ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
+
+    //    $this->applicationNumber = "DRUPAL-" . sprintf('%08d', $webform_submission->id());
+    $this->applicationNumber = "DRUPAL-" . sprintf('%08d', rand(100,1000));
+
+    if ($webform_submission->isDefaultRevision()) {
+      $this->submittedFormData['status'] = 'DRAFT';
+      $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
+      $this->submittedFormData['application_type'] = $this->applicationType;
+      $this->submittedFormData['application_number'] = $this->applicationNumber;
+    }
+
+    $this->submittedFormData['form_timestamp'] = (string)$webform_submission->getCreatedTime();
+
+    // set sender information after save so no accidental saving of personal data
+    // TODO: Think about how sender info should be parsed, maybe in own
+    $userData = $this->userExternalData->getUserProfileData();
+    $this->submittedFormData['sender_firstname'] = $userData["verifiedPersonalInformation"]["firstName"];
+    $this->submittedFormData['sender_lastname'] = $userData["verifiedPersonalInformation"]["lastName"];
+    $this->submittedFormData['sender_person_id'] = $userData["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+    $this->submittedFormData['sender_user_id'] = $userData["id"];
+    $this->submittedFormData['sender_email'] = $userData["primaryEmail"]["email"];
+
+
     // @todo Is parent::validateForm needed in validateForm?
-    parent::validateForm($form, $form_state, $webform_submission);
+//    parent::validateForm($form, $form_state, $webform_submission);
+
+
+    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+
+    $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+
+    $typeManager = $dataDefinition->getTypedDataManager();
+    $data = $typeManager->create($dataDefinition);
+
+    $data->setValue($this->submittedFormData);
+    $violations = $data->validate();
+
+    $vd = $data->toArray();
 
     // Get current page.
     $currentPage = $form["progress"]["#current_page"];

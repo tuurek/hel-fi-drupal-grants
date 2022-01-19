@@ -2,12 +2,15 @@
 
 namespace Drupal\grants_metadata\TypedData\Definition;
 
+use Drupal\Core\TypedData\ComplexDataDefinitionBase;
 use Drupal\Core\TypedData\ListDataDefinition;
 
 /**
  * Define Yleisavustushakemus data.
  */
-class YleisavustusHakemusDefinition extends ApplicationDefinitionBase {
+class YleisavustusHakemusDefinition extends ComplexDataDefinitionBase {
+
+  use ApplicationDefinitionTrait;
 
   /**
    * Base data definitions for all.
@@ -16,18 +19,28 @@ class YleisavustusHakemusDefinition extends ApplicationDefinitionBase {
    *   Property definitions.
    */
   public function getPropertyDefinitions(): array {
-    $info = parent::getPropertyDefinitions();
+    if (!isset($this->propertyDefinitions)) {
 
-    $info['subventions'] = ListDataDefinition::create('grants_metadata_compensation_type')
-      ->setRequired(FALSE)
-      ->setLabel('compensationArray')
-      ->setSetting('jsonPath', [
-        'compensation',
-        'compensationInfo',
-        'compensationArray',
-      ]);
+      $info = &$this->propertyDefinitions;
 
-    return $info;
+      foreach($this->getBaseProperties() as $key => $property) {
+        $info[$key] = $property;
+      }
+
+      $info['subventions'] = ListDataDefinition::create('grants_metadata_compensation_type')
+        ->setLabel('compensationArray')
+        ->setSetting('jsonPath', [
+          'compensation',
+          'compensationInfo',
+          'compensationArray',
+        ]);
+    }
+    return $this->propertyDefinitions;
+  }
+
+  public function getPropertyDefinition($name) {
+    $retval = parent::getPropertyDefinition($name);
+    return $retval;
   }
 
 }
