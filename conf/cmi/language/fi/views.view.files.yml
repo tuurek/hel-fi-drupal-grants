@@ -1,4 +1,5 @@
 label: Tiedostot
+description: 'Find and manage files.'
 display:
   default:
     display_title: Oletus

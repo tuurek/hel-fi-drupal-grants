@@ -1,3 +1,4 @@
+label: 'Scheduled content'
 display:
   default:
     display_options:
@@ -22,6 +23,7 @@ display:
           label: Titel
           separator: ', '
         type:
+          label: 'Content Type'
           separator: ', '
         name:
           label: Författare
@@ -33,8 +35,10 @@ display:
             format_custom_false: 'Ej publicerad'
           separator: ', '
         publish_on:
+          label: 'Publish on'
           separator: ', '
         unpublish_on:
+          label: 'Unpublish on'
           separator: ', '
         operations:
           label: Funktioner
@@ -58,12 +62,19 @@ display:
         langcode:
           expose:
             label: Språk
+      title: 'Scheduled Content'
+    display_title: Master
   overview:
     display_options:
+      menu:
+        title: Scheduled
       tab_options:
         title: Innehåll
+    display_title: 'Content Overview'
   user_page:
     display_options:
+      menu:
+        title: Scheduled
       tab_options:
         title: Innehåll
       arguments:

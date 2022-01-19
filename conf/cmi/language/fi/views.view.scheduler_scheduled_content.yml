@@ -1,3 +1,5 @@
+label: 'Scheduled content'
+description: 'Find and manage scheduled content.'
 display:
   default:
     display_options:
@@ -22,6 +24,7 @@ display:
           label: Otsikko
           separator: ', '
         type:
+          label: 'Content Type'
           separator: ', '
         name:
           label: Tekijä
@@ -33,8 +36,10 @@ display:
             format_custom_false: Julkaisematon
           separator: ', '
         publish_on:
+          label: 'Publish on'
           separator: ', '
         unpublish_on:
+          label: 'Unpublish on'
           separator: ', '
         operations:
           label: Toimenpiteet
@@ -58,12 +63,23 @@ display:
         langcode:
           expose:
             label: Kieli
+      title: 'Scheduled Content'
+      empty:
+        area_text_custom:
+          content: 'No scheduled content.'
+    display_title: Master
   overview:
     display_options:
+      menu:
+        title: Scheduled
       tab_options:
         title: Sisältö
+      display_description: 'Overview of all scheduled content, as a tab on main ''content admin'' page'
+    display_title: 'Content Overview'
   user_page:
     display_options:
+      menu:
+        title: Scheduled
       tab_options:
         title: Sisältö
       arguments:
