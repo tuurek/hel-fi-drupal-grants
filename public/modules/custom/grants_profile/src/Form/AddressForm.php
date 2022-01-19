@@ -52,7 +52,7 @@ class AddressForm extends FormBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
 
-    $selectedAddress = $grantsProfileService->getAddress($address_id);
+    $selectedAddress = $grantsProfileService->getAddress($address_id, $address_id);
 
     $form['street'] = [
       '#type' => 'textfield',
@@ -66,11 +66,11 @@ class AddressForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $selectedAddress['city'],
     ];
-    $form['post_code'] = [
+    $form['postCode'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Post code'),
       '#required' => TRUE,
-      '#default_value' => $selectedAddress['post_code'],
+      '#default_value' => $selectedAddress['postCode'],
     ];
     $form['country'] = [
       '#type' => 'textfield',
@@ -108,7 +108,7 @@ class AddressForm extends FormBase {
     $values = [
       'street' => $tempValues['street'],
       'city' => $tempValues['city'],
-      'post_code' => $tempValues['post_code'],
+      'postCode' => $tempValues['postCode'],
       'country' => $tempValues['country'],
     ];
     try {
@@ -156,7 +156,7 @@ class AddressForm extends FormBase {
 
     $this->messenger()->addStatus($this->t('Address has been saved.'));
 
-    $form_state->setRedirect('grants_profile.company_addresses');
+    $form_state->setRedirect('grants_profile.show');
   }
 
 }

@@ -4,6 +4,8 @@ namespace Drupal\grants_profile\Controller;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
+use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 
 /**
  * Returns responses for Grants Profile routes.
@@ -33,20 +35,6 @@ class GrantsProfileController extends ControllerBase {
 
     $document = $atvService->getDocument($document_uuid);
 
-    // $contentTyped = $atvSchema->documentContentToTypedData($document);
-    // $content = $this->getSubmission('asdf');
-    //
-    //    $definition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
-    //    $f = $definition->getPropertyDefinitions();
-    //
-    //    $wfSub = WebformSubmission::load(8);
-    //    $wfData = $wfSub->getData();
-    //
-    //    $data = $atvSchema->documentContentToTypedData($content, $definition);
-    //    $dataArray = $data->toArray();
-    //    $violations = $data->validate();
-    //
-    //    $rr = $atvSchema->typedDataToDocumentContent($data);
     $build['#application'] = $document['content'];
     $build['#document'] = $document;
     $build['#theme'] = 'view_application';
@@ -70,16 +58,21 @@ class GrantsProfileController extends ControllerBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    /** @var \Drupal\helfi_atv\AtvService $atvService */
-    $atvService = \Drupal::service('helfi_atv.atv_service');
+    $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
-    $userApplications = $atvService->searchDocuments(
-      [
-        'type' => 'mysterious form',
-        'business_id' => '1234567-8',
-      ]);
+//    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+//    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+//
+//    $atvSchema->setSchema(getenv('ATV_SCHEMA_PROFILE_PATH'));
+//    $dataDefinition = GrantsProfileDefinition::create('grants_profile_profile');
+//    $typeManager = $dataDefinition->getTypedDataManager();
+////    $typedProfileData = $typeManager->create($dataDefinition);
+//    $profileData = $atvSchema->documentContentToTypedData($profile,$dataDefinition);
+////    $ddd = $dd->getValue();
+////    $ddd = $atvSchema->typedDataToDocumentContent($dd);
+////    $dddd = Json::encode($ddd);
 
-    $build['#applications'] = $userApplications;
+    $build['#profile'] = $profile;
 
     $build['#theme'] = 'own_profile';
     $build['#content'] = [

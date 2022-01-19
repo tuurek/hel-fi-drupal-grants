@@ -22,7 +22,7 @@ function grants_profile_theme(): array {
     'variables' => [
       'content' => NULL,
       'company_select_form' => NULL,
-      'applications' => NULL
+      'profile' => NULL
     ]
   ];
   $theme['own_addresses'] = [

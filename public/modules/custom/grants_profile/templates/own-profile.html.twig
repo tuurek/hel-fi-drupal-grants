@@ -3,12 +3,6 @@
 
 <p>{{ company_select_form }}</p>
 
-<ul>
-  <li><a href="/grants-profile/address">Addresses</a></li>
-  <li><a href="/grants-profile/application-officials">Officials</a></li>
-  <li><a href="/grants-profile/bank-accounts">Bank accounts</a></li>
-</ul>
-
 {% if applications %}
   <ul class="company-address-list">
     {% for key,item in applications %}
@@ -21,4 +15,50 @@
   </ul>
 {% endif %}
 
-{{ content }}
+<p>
+    <h4>Addresses</h4>
+    {% if profile.addresses %}
+        <ul class="company-address-list">
+            {% for key,item in profile.addresses %}
+                <li class="user-applications">
+                    <a href="/grants-profile/address/{{ key }}">
+                        {{ item.street }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <a href="/grants-profile/address/new">New Address</a>
+</p>
+<p>
+    <h4>Officials</h4>
+    {% if profile.officials %}
+        <ul class="company-address-list">
+            {% for key,item in profile.officials %}
+                <li class="user-applications">
+                    <a href="/grants-profile/application-officials/{{ key }}">
+                        {{ item.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <a href="/grants-profile/application-officials/new">New Official</a>
+</p>
+<p>
+    <h4>Bank Accounts</h4>
+    {% if profile.bankAccounts %}
+        <ul class="company-address-list">
+            {% for key,item in profile.bankAccounts %}
+                <li class="user-applications">
+                    <a href="/grants-profile/bank-accounts/{{ key }}">
+                        {{ item.bankAccount }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <a href="/grants-profile/bank-accounts/new">New Bank Account</a>
+</p>
+
+{{ dump(profile) }}

@@ -5,41 +5,51 @@
     "grantsProfile": {
       "type": "object",
       "properties": {
-        "companyNameShort": {
-          "description": "companyNameShort",
-          "type": "string"
-        },
-        "companyName": {
-          "description": "companyName",
-          "type": "string"
-        },
-        "companyHome": {
-          "description": "companyHome",
-          "type": "string"
-        },
-        "companyHomePage": {
-          "description": "companyHomePage",
-          "type": "string"
-        },
-        "companyEmail": {
-          "description": "companyEmail",
-          "type": "string"
-        },
-        "companyStatus": {
-          "description": "companyStatus",
-          "type": "string"
-        },
-        "companyStatusSpecial": {
-          "description": "companyStatusSpecial",
-          "type": "string"
-        },
-        "businessPurpose": {
-          "description": "businessPurpose",
-          "type": "string"
-        },
-        "foundingYear": {
-          "description": "foundingYear",
-          "type": "int"
+        "profileInfoArray": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "companyNameShort",
+                  "companyName",
+                  "companyHome",
+                  "companyHomePage",
+                  "companyEmail",
+                  "companyStatus",
+                  "companyStatusSpecial",
+                  "businessPurpose",
+                  "foundingYear"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
         },
         "officialsArray": {
           "description": "Company officials",
@@ -164,6 +174,7 @@
         }
       },
       "required": [
+        "profileInfoArray",
         "officialsArray",
         "addressesArray",
         "bankAccountsArray"

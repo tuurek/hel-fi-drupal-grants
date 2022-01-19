@@ -55,14 +55,14 @@ class BankAccountForm extends FormBase {
 
     $selectedBankAccount = $grantsProfileService->getBankAccount($bank_account_id);
 
-    $form['bank_account'] = [
+    $form['bankAccount'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Bank account'),
       '#required' => TRUE,
-      '#default_value' => $selectedBankAccount['bank_account'],
+      '#default_value' => $selectedBankAccount['bankAccount'],
     ];
 
-    $form['bank_account_id'] = [
+    $form['bankAccount_id'] = [
       '#type' => 'hidden',
       '#value' => $bank_account_id,
     ];
@@ -90,7 +90,7 @@ class BankAccountForm extends FormBase {
     // Get & set values from form.
     $tempValues = $form_state->getValues();
     $values = [
-      'bank_account' => $tempValues['bank_account'],
+      'bankAccount' => $tempValues['bankAccount'],
     ];
     try {
       // Set values.
@@ -129,7 +129,7 @@ class BankAccountForm extends FormBase {
     }
 
     $bankAccountData = $storage['bankAccountData'];
-    $bankAccountId = $form_state->getValue('bank_account_id');
+    $bankAccountId = $form_state->getValue('bankAccount_id');
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -138,7 +138,7 @@ class BankAccountForm extends FormBase {
 
     $this->messenger()->addStatus($this->t('Bank account has been saved.'));
 
-    $form_state->setRedirect('grants_profile.bank_account');
+    $form_state->setRedirect('grants_profile.show');
   }
 
 }

@@ -28,6 +28,8 @@ class AtvSchema {
    */
   protected array $structure;
 
+  protected string $atvSchemaPath;
+
   /**
    * Constructs an AtvShcema object.
    */
@@ -35,12 +37,15 @@ class AtvSchema {
 
     $this->typedDataManager = $typed_data_manager;
 
-    $schemaPath = getenv('ATV_SCHEMA_PATH');
+  }
+
+  public function setSchema($schemaPath){
+
+//    $schemaPath = getenv('ATV_SCHEMA_PATH');
     $jsonString = file_get_contents($schemaPath);
     $jsonStructure = Json::decode($jsonString);
 
     $this->structure = $jsonStructure;
-
   }
 
   /**
@@ -166,7 +171,7 @@ class AtvSchema {
    */
   public function typedDataToDocumentContent(
     ComplexDataInterface $typedData,
-    WebformSubmission $webformSubmission): array {
+    WebformSubmission $webformSubmission = null): array {
 
     $documentStructure = [];
 
@@ -401,13 +406,18 @@ class AtvSchema {
     }
     // If we are at the root of content, and the given element exists.
     elseif (array_key_exists($elementName, $content)) {
+      $thisElement = $content[$elementName];
       // If element is array.
-      if (is_array($content[$elementName])) {
+      if (is_array($thisElement)) {
         $retval = [];
         // We need to loop values and structure data in array as well.
         foreach ($content[$elementName] as $key => $value) {
           foreach ($value as $v) {
-            $retval[$key][$v['ID']] = $v['value'];
+            if (is_array($v)) {
+              if (array_key_exists('value', $v)) {
+                $retval[$key][$v['ID']] = $v['value'];
+              }
+            }
           }
         }
         return $retval;

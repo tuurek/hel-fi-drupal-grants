@@ -21,7 +21,9 @@ class BankAccountDefinition extends ComplexDataDefinitionBase {
         ->setRequired(TRUE)
         ->setLabel('bankAccount')
         ->setSetting('jsonPath', ['grantsProfile', 'bankAccountsArray', 'bankAccount'])
-        ->addConstraint('ValidIban');
+        ->addConstraint('NotEmptyValue')
+        ->addConstraint('ValidIban')
+      ;
 
     }
     return $this->propertyDefinitions;

@@ -170,7 +170,7 @@ class ApplicationOfficialForm extends FormBase {
 
     $this->messenger()->addStatus($this->t('Official has been saved.'));
 
-    $form_state->setRedirect('grants_profile.application_official');
+    $form_state->setRedirect('grants_profile.show');
   }
 
 }

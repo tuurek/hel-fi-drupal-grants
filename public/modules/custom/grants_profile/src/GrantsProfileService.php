@@ -7,6 +7,8 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\TempStoreException;
+use Drupal\grants_metadata\AtvSchema;
+use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 
@@ -44,6 +46,13 @@ class GrantsProfileService {
   protected HelsinkiProfiiliUserData $helsinkiProfiili;
 
   /**
+   * ATV Schema mapper
+   *
+   * @var \Drupal\grants_metadata\AtvSchema
+   */
+  protected AtvSchema $atvSchema;
+
+  /**
    * Constructs a GrantsProfileService object.
    *
    * @param \Drupal\helfi_atv\AtvService $helfi_atv
@@ -56,15 +65,17 @@ class GrantsProfileService {
    *   Access to Helsinki profiili data.
    */
   public function __construct(
-    AtvService $helfi_atv,
-    PrivateTempStoreFactory $tempstore,
-    MessengerInterface $messenger,
-    HelsinkiProfiiliUserData $helsinkiProfiiliUserData
+    AtvService               $helfi_atv,
+    PrivateTempStoreFactory  $tempstore,
+    MessengerInterface       $messenger,
+    HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
+    AtvSchema                $atv_schema
   ) {
     $this->helfiAtv = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
     $this->messenger = $messenger;
     $this->helsinkiProfiili = $helsinkiProfiiliUserData;
+    $this->atvSchema = $atv_schema;
   }
 
   /**
@@ -118,10 +129,10 @@ class GrantsProfileService {
   /**
    * Transaction ID for new profile.
    *
-   * @todo This can probaably be hardcoded.
-   *
    * @return string
    *   Transaction ID
+   * @todo This can probaably be hardcoded.
+   *
    */
   protected function newProfileTransactionId(): string {
     return 'eb30af1d9d654ebc98287ca25f231bf6';
@@ -158,7 +169,6 @@ class GrantsProfileService {
     $selectedCompany = $this->tempStore->get('selected_company');
     // Get grants profile.
     $grantsProfile = $this->getGrantsProfile($selectedCompany['business_id']);
-
     $payloadData = [
       'content' => $grantsProfile['content'],
     ];
@@ -192,7 +202,7 @@ class GrantsProfileService {
     $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
 
     if ($address_id == 'new') {
-      $nextId = count($addresses) + 1;
+      $nextId = count($addresses);
     }
     else {
       $nextId = $address_id;
@@ -216,14 +226,14 @@ class GrantsProfileService {
     $selectedCompany = $this->tempStore->get('selected_company');
     $profileContent = $this->getGrantsProfileContent($selectedCompany['business_id']);
 
-    if (isset($profileContent['addresses'][$address_id])) {
-      return $profileContent['addresses'][$address_id];
+    if (isset($profileContent["addresses"][$address_id])) {
+      return $profileContent["addresses"][$address_id];
     }
     else {
       return [
         'street' => '',
         'city' => '',
-        'post_code' => '',
+        'postCode' => '',
         'country' => '',
       ];
     }
@@ -268,12 +278,12 @@ class GrantsProfileService {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
 
-    if (isset($profileContent['bank_accounts'][$bank_account_id])) {
-      return $profileContent['bank_accounts'][$bank_account_id];
+    if (isset($profileContent["bankAccounts"][$bank_account_id])) {
+      return $profileContent["bankAccounts"][$bank_account_id];
     }
     else {
       return [
-        'bank_account' => '',
+        'bankAccount' => '',
       ];
     }
   }
@@ -292,7 +302,7 @@ class GrantsProfileService {
     $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
 
     if ($official_id == 'new') {
-      $nextId = count($officials) + 1;
+      $nextId = count($officials);
     }
     else {
       $nextId = $official_id;
@@ -314,17 +324,17 @@ class GrantsProfileService {
   public function saveBankAccount(string $bank_account_id, array $bank_account) {
     $selectedCompany = $this->getSelectedCompany();
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
-    $bankAccounts = (isset($profileContent['bank_accounts']) && $profileContent['bank_accounts'] !== NULL) ? $profileContent['bank_accounts'] : [];
+    $bankAccounts = (isset($profileContent['bankAccounts']) && $profileContent['bankAccounts'] !== NULL) ? $profileContent['bankAccounts'] : [];
 
     if ($bank_account_id == 'new') {
-      $nextId = count($bankAccounts) + 1;
+      $nextId = count($bankAccounts);
     }
     else {
       $nextId = $bank_account_id;
     }
 
     $bankAccounts[$nextId] = $bank_account;
-    $profileContent['bank_accounts'] = $bankAccounts;
+    $profileContent['bankAccounts'] = $bankAccounts;
     $this->setToCache($selectedCompany, $profileContent);
   }
 
@@ -333,12 +343,16 @@ class GrantsProfileService {
    *
    * @param string $businessId
    *   What business data is fetched.
+   * @param bool $refetch
+   *   If true, data is fetched always.
    *
    * @return array
    *   Content
    */
-  public function getGrantsProfileContent(string $businessId): array {
-    if ($this->isCached($businessId)) {
+  public function getGrantsProfileContent(string $businessId, bool $refetch = FALSE): array {
+
+
+    if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
       if (is_string($profileData['content'])) {
         // @todo when content is proper json, remove str_replace
@@ -347,13 +361,141 @@ class GrantsProfileService {
       return $profileData['content'];
     }
 
-    $profileData = $this->getGrantsProfile($businessId);
-    if (isset($profileData['content']) && is_string($profileData['content'])) {
-      // @todo when content is proper json, remove str_replace
-      return Json::decode(str_replace("'", "\"", $profileData['content']));
-    }
+
+    $content = Json::decode($this->getDemoContent());
+
+    $dataDefinition = GrantsProfileDefinition::create('grants_profile_profile');
+    $profileData = $this->atvSchema->documentContentToTypedData($content, $dataDefinition)
+      ->toArray();
+
     return $profileData;
 
+
+    //
+    //    $profileData = $this->getGrantsProfile($businessId);
+    //    if (isset($profileData['content']) && is_string($profileData['content'])) {
+    //      // @todo when content is proper json, remove str_replace
+    //      return Json::decode(str_replace("'", "\"", $profileData['content']));
+    //    }
+    //    return $profileData;
+
+  }
+
+  private function getDemoContent() {
+    return '{
+  "grantsProfile": {
+    "profileInfoArray": [
+      {
+        "ID": "companyName",
+        "label": "Company name",
+        "value": "Testiyritys",
+        "valueType": "string"
+      },
+      {
+        "ID": "companyNameShort",
+        "label": "xx",
+        "value": "TYY",
+        "valueType": "string"
+      },
+      {
+        "ID": "companyHome",
+        "label": "home",
+        "value": "Helsinki",
+        "valueType": "string"
+      },
+      {
+        "ID": "companyHomePage",
+        "label": "Homepage",
+        "value": "htps://www.yle.fi",
+        "valueType": "string"
+      },
+      {
+        "ID": "companyEmail",
+        "label": "Email",
+        "value": "testi@email.com",
+        "valueType": "string"
+      },
+      {
+        "ID": "foundingYear",
+        "label": "Perustusvuosi",
+        "value": "2022",
+        "valueType": "int"
+      }
+    ],
+    "officialsArray": [
+      [
+        {
+          "ID": "name",
+          "label": "Nimi",
+          "value": "Koko Nimi",
+          "valueType": "string"
+        },
+        {
+          "ID": "role",
+          "label": "Rooli",
+          "value": "2",
+          "valueType": "string"
+        },
+        {
+          "ID": "email",
+          "label": "Sähköposti",
+          "value": "kolo@mail.com",
+          "valueType": "string"
+        },
+        {
+          "ID": "phone",
+          "label": "Puhelinnumero",
+          "value": "09-616527788",
+          "valueType": "string"
+        }
+      ]
+    ],
+    "addressesArray": [
+    [
+      {
+        "ID": "street",
+        "label": "Katuosoite",
+        "value": "Sannikontie",
+        "valueType": "string"
+      },
+      {
+        "ID": "phoneNumber",
+        "label": "Puhelinnumero",
+        "value": "+358404040404",
+        "valueType": "string"
+      },
+      {
+        "ID": "city",
+        "label": "Postitoimipaikka",
+        "value": "Kouvola",
+        "valueType": "string"
+      },
+      {
+        "ID": "postCode",
+        "label": "Postinumero",
+        "value": "46400",
+        "valueType": "string"
+      },
+      {
+        "ID": "country",
+        "label": "Maa",
+        "value": "Suomi",
+        "valueType": "string"
+      }
+    ]
+    ],
+    "bankAccountsArray": [
+      [
+       {
+        "ID": "bankAccount",
+        "label": "Bank account",
+        "value": "FI985763984657",
+        "valueType": "string"
+      }
+      ]
+    ]
+  }
+}';
   }
 
   /**
@@ -403,6 +545,7 @@ class GrantsProfileService {
 
     $searchParams = [
       'business_id' => $businessId,
+      'transaction_id' => $businessId,
       'type' => 'grants_profile',
     ];
 
@@ -495,8 +638,7 @@ class GrantsProfileService {
         $this->tempStore->set($key, $grantsProfile);
         return TRUE;
       }
-    }
-    catch (TempStoreException $e) {
+    } catch (TempStoreException $e) {
       return FALSE;
     }
   }
