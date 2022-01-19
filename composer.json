@@ -38,10 +38,7 @@
         "drupal/webform_rest": "^4.0",
         "drupal/webform_views": "^5.0@alpha",
         "drush/drush": "^10.4",
-        "globalcitizen/php-iban": "^4.1",
-        "mikehaertl/phpwkhtmltopdf": "~2.1",
-        "tecnickcom/tcpdf": "~6"
-        "drush/drush": "^10.4"
+        "globalcitizen/php-iban": "^4.1"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
