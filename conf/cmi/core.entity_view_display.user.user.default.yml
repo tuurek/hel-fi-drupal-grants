@@ -2,14 +2,6 @@ uuid: a51cf46c-1d5f-4b16-8a2e-4134dcab5154
 langcode: fi
 status: true
 dependencies:
-  config:
-    - field.field.user.user.field_address
-    - field.field.user.user.field_kotipaikka
-    - field.field.user.user.field_lyhenne
-    - field.field.user.user.field_perustamisvuosi
-    - field.field.user.user.field_rekisterointipaiva
-    - field.field.user.user.field_virallinen_nimi
-    - field.field.user.user.field_y_tunnus
   module:
     - datetime
     - user
