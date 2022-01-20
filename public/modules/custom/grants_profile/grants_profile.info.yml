@@ -8,4 +8,5 @@ dependencies:
   - helfi_tunnistamo
   - helfi_atv
   - helfi_helsinki_profiili
+  - grants_metadata
 
