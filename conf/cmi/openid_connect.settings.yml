@@ -5,7 +5,7 @@ connect_existing_users: false
 override_registration_settings: true
 end_session_enabled: true
 user_login_display: below
-redirect_login: ''
+redirect_login: /grants-profile
 redirect_logout: ''
 userinfo_mappings:
   timezone: zoneinfo
