@@ -1,21 +1,23 @@
-
 <p>This could be front page for grants profile data</p>
 
 <p>{{ company_select_form }}</p>
 
 {% if applications %}
-  <ul class="company-address-list">
-    {% for key,item in applications %}
-      <li class="user-applications">
-        <a href="/grants-profile/applications/{{ item.id }}">
-          {{ item.transaction_id }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+    <ul class="company-address-list">
+        {% for key,item in applications %}
+            <li class="user-applications">
+                <a href="/grants-profile/applications/{{ item.id }}">
+                    {{ item.transaction_id }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endif %}
 
-<p>
+
+{% if profile %}
+
+    <p>
     <h4>Addresses</h4>
     {% if profile.addresses %}
         <ul class="company-address-list">
@@ -29,8 +31,8 @@
         </ul>
     {% endif %}
     <a href="/grants-profile/address/new">New Address</a>
-</p>
-<p>
+    </p>
+    <p>
     <h4>Officials</h4>
     {% if profile.officials %}
         <ul class="company-address-list">
@@ -44,8 +46,8 @@
         </ul>
     {% endif %}
     <a href="/grants-profile/application-officials/new">New Official</a>
-</p>
-<p>
+    </p>
+    <p>
     <h4>Bank Accounts</h4>
     {% if profile.bankAccounts %}
         <ul class="company-address-list">
@@ -59,6 +61,8 @@
         </ul>
     {% endif %}
     <a href="/grants-profile/bank-accounts/new">New Bank Account</a>
-</p>
+    </p>
 
-{{ dump(profile) }}
+    {{ dump(profile) }}
+{% endif %}
+

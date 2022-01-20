@@ -58,7 +58,14 @@ class GrantsProfileController extends ControllerBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+    if ($selectedCompany != NULL) {
+      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+      $build['#profile'] = $profile;
+    }
+    else {
+      $this->messenger()->addError($this->t('No profile data available, select company'));
+    }
+
 
 //    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
 //    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
@@ -72,7 +79,7 @@ class GrantsProfileController extends ControllerBase {
 ////    $ddd = $atvSchema->typedDataToDocumentContent($dd);
 ////    $dddd = Json::encode($ddd);
 
-    $build['#profile'] = $profile;
+
 
     $build['#theme'] = 'own_profile';
     $build['#content'] = [

@@ -348,9 +348,9 @@ class GrantsProfileService {
    *
    * @return array
    *   Content
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function getGrantsProfileContent(string $businessId, bool $refetch = FALSE): array {
-
 
     if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);

@@ -1,4 +1,14 @@
 services:
+  grants_profile.user_redirect.service:
+    class: Drupal\grants_profile\UserRedirect
+    arguments: [ '@request_stack', '@current_user' ]
+
   grants_profile.service:
     class: Drupal\grants_profile\GrantsProfileService
-    arguments: ['@helfi_atv.atv_service', '@tempstore.private', '@messenger', '@helfi_helsinki_profiili.userdata', '@grants_metadata.atv_schema']
+    arguments: [ '@helfi_atv.atv_service', '@tempstore.private', '@messenger', '@helfi_helsinki_profiili.userdata', '@grants_metadata.atv_schema' ]
+
+  grants_profile.middleware:
+    class: Drupal\grants_profile\GrantsProfileMiddleware
+    tags:
+      - { name: http_middleware, priority: 1000 }
+    arguments: [ '@current_user' ]
