@@ -75,6 +75,18 @@ $settings['file_private_path'] = 'sites/default/files/private';
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 $settings['install_profile'] = 'minimal';
 
+
+set_error_handler(['Drupal\error_page\ErrorPageErrorHandler', 'handleError']);
+set_exception_handler([
+  'Drupal\error_page\ErrorPageErrorHandler',
+  'handleException',
+]);
+// Log the UUID in the Drupal logs.
+$settings['error_page']['uuid'] = TRUE;
+// Your templates are located in path/to/templates, one level above the webroot.
+$settings['error_page']['template_dir'] = DRUPAL_ROOT . '/../error_templates';
+
+
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
   $reverse_proxy_address = explode(',', $reverse_proxy_address);
 
