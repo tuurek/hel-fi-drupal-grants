@@ -2200,41 +2200,41 @@ input[type=submit].hds-button--small {
 .is-hidden {
   display: none; }
 
-.webform-submission-data-preview-page .webform-print-wrapper-table, .webform-print-page .webform-print-wrapper-table {
+.webform-submission-data-preview-page .webform-print-wrapper-table, .webform-print-page-html .webform-print-wrapper-table {
   border: 0px transparent solid;
   width: 100%;
   max-width: 100%;
   overflow-x: visible;
   overflow-x: initial; }
-  .webform-submission-data-preview-page .webform-print-wrapper-table thead, .webform-submission-data-preview-page .webform-print-wrapper-table tbody, .webform-submission-data-preview-page .webform-print-wrapper-table tfoot, .webform-submission-data-preview-page .webform-print-wrapper-table tr, .webform-submission-data-preview-page .webform-print-wrapper-table tbody tr:hover, .webform-submission-data-preview-page .webform-print-wrapper-table td, .webform-submission-data-preview-page .webform-print-wrapper-table td:first-child, .webform-submission-data-preview-page .webform-print-wrapper-table th, .webform-print-page .webform-print-wrapper-table thead, .webform-print-page .webform-print-wrapper-table tbody, .webform-print-page .webform-print-wrapper-table tfoot, .webform-print-page .webform-print-wrapper-table tr, .webform-print-page .webform-print-wrapper-table tbody tr:hover, .webform-print-page .webform-print-wrapper-table td, .webform-print-page .webform-print-wrapper-table td:first-child, .webform-print-page .webform-print-wrapper-table th {
+  .webform-submission-data-preview-page .webform-print-wrapper-table thead, .webform-submission-data-preview-page .webform-print-wrapper-table tbody, .webform-submission-data-preview-page .webform-print-wrapper-table tfoot, .webform-submission-data-preview-page .webform-print-wrapper-table tr, .webform-submission-data-preview-page .webform-print-wrapper-table tbody tr:hover, .webform-submission-data-preview-page .webform-print-wrapper-table td, .webform-submission-data-preview-page .webform-print-wrapper-table td:first-child, .webform-submission-data-preview-page .webform-print-wrapper-table th, .webform-print-page-html .webform-print-wrapper-table thead, .webform-print-page-html .webform-print-wrapper-table tbody, .webform-print-page-html .webform-print-wrapper-table tfoot, .webform-print-page-html .webform-print-wrapper-table tr, .webform-print-page-html .webform-print-wrapper-table tbody tr:hover, .webform-print-page-html .webform-print-wrapper-table td, .webform-print-page-html .webform-print-wrapper-table td:first-child, .webform-print-page-html .webform-print-wrapper-table th {
     border: 0;
     background: transparent;
     color: black; }
-  .webform-submission-data-preview-page .webform-print-wrapper-table ul, .webform-print-page .webform-print-wrapper-table ul {
+  .webform-submission-data-preview-page .webform-print-wrapper-table ul, .webform-print-page-html .webform-print-wrapper-table ul {
     margin: 0;
     padding: 0; }
-    .webform-submission-data-preview-page .webform-print-wrapper-table ul li, .webform-print-page .webform-print-wrapper-table ul li {
+    .webform-submission-data-preview-page .webform-print-wrapper-table ul li, .webform-print-page-html .webform-print-wrapper-table ul li {
       list-style: none;
       margin-top: 6mm; }
-  .webform-submission-data-preview-page .webform-print-wrapper-table thead, .webform-print-page .webform-print-wrapper-table thead {
+  .webform-submission-data-preview-page .webform-print-wrapper-table thead, .webform-print-page-html .webform-print-wrapper-table thead {
     display: table-header-group; }
-  .webform-submission-data-preview-page .webform-print-wrapper-table tfoot, .webform-print-page .webform-print-wrapper-table tfoot {
+  .webform-submission-data-preview-page .webform-print-wrapper-table tfoot, .webform-print-page-html .webform-print-wrapper-table tfoot {
     display: table-footer-group; }
-  .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section, .webform-print-page .webform-print-wrapper-table .webform-submission-data > section {
+  .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section, .webform-print-page-html .webform-print-wrapper-table .webform-submission-data > section {
     border-top: 1px var(--color-black-20) solid;
     padding-top: 64px; }
-    .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper, .webform-print-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper {
+    .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper, .webform-print-page-html .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper {
       display: block; }
-      .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > h2, .webform-print-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > h2 {
+      .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > h2, .webform-print-page-html .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > h2 {
         width: 100% !important;
         margin: 0mm 0 2mm !important;
         padding: 0 !important;
         min-width: 100%;
         font-size: 36px !important;
         font-weight: 500; }
-      .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper, .webform-print-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper {
+      .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper, .webform-print-page-html .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper {
         padding: 6mm 0; }
-        .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper label, .webform-print-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper label {
+        .webform-submission-data-preview-page .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper label, .webform-print-page-html .webform-print-wrapper-table .webform-submission-data > section > .webform-section-flex-wrapper > .webform-section-wrapper label {
           font-weight: 500; }
 
 .webform-print-header, .webform-print-footer {
@@ -2476,6 +2476,9 @@ input[type=submit].hds-button--small {
 
 fieldset.grants-attachments--wrapper legend {
   margin-bottom: var(--spacing-2-xs); }
+
+fieldset.grants-attachments--wrapper .form-item--error-message {
+  width: 100%; }
 
 fieldset.grants-attachments--wrapper .grants-applications-managed_file {
   position: relative; }
@@ -2731,44 +2734,44 @@ fieldset.grants-attachments--wrapper .form-managed-file {
     background: white;
     color: var(--border-color); }
   @media print{
-  .webform-submission-data-preview-page .webform-submission-data > section, .webform-print-page .webform-submission-data > section {
+  .webform-submission-data-preview-page .webform-submission-data > section, .webform-print-page-html .webform-submission-data > section {
     border-top: 0px var(--color-black-20) solid !important;
     padding-top: 0 !important; }
-  .webform-submission-data-preview-page .hds-notification, .webform-submission-data-preview-page .webform-progress-tracker-mobile, .webform-submission-data-preview-page .webform-progress-tracker, .webform-submission-data-preview-page .messages__container, .webform-submission-data-preview-page header.header, .webform-submission-data-preview-page nav.breadcrumb, .webform-submission-data-preview-page .tools__container, .webform-submission-data-preview-page footer.footer, .webform-submission-data-preview-page button, .webform-submission-data-preview-page .form-actions, .webform-print-page .hds-notification, .webform-print-page .webform-progress-tracker-mobile, .webform-print-page .webform-progress-tracker, .webform-print-page .messages__container, .webform-print-page header.header, .webform-print-page nav.breadcrumb, .webform-print-page .tools__container, .webform-print-page footer.footer, .webform-print-page button, .webform-print-page .form-actions {
+  .webform-submission-data-preview-page .hds-notification, .webform-submission-data-preview-page .webform-progress-tracker-mobile, .webform-submission-data-preview-page .webform-progress-tracker, .webform-submission-data-preview-page .messages__container, .webform-submission-data-preview-page header.header, .webform-submission-data-preview-page nav.breadcrumb, .webform-submission-data-preview-page .tools__container, .webform-submission-data-preview-page footer.footer, .webform-submission-data-preview-page button, .webform-submission-data-preview-page .form-actions, .webform-print-page-html .hds-notification, .webform-print-page-html .webform-progress-tracker-mobile, .webform-print-page-html .webform-progress-tracker, .webform-print-page-html .messages__container, .webform-print-page-html header.header, .webform-print-page-html nav.breadcrumb, .webform-print-page-html .tools__container, .webform-print-page-html footer.footer, .webform-print-page-html button, .webform-print-page-html .form-actions {
     display: none !important; }
-  .webform-submission-data-preview-page div.main-content, .webform-print-page div.main-content {
+  .webform-submission-data-preview-page div.main-content, .webform-print-page-html div.main-content {
     margin: 0; }
-  .webform-submission-data-preview-page .gin--horizontal-toolbar .dialog-off-canvas-main-canvas, .webform-print-page .gin--horizontal-toolbar .dialog-off-canvas-main-canvas {
+  .webform-submission-data-preview-page .gin--horizontal-toolbar .dialog-off-canvas-main-canvas, .webform-print-page-html .gin--horizontal-toolbar .dialog-off-canvas-main-canvas {
     padding: 0 !important; }
-  .webform-submission-data-preview-page .webform-preview section, .webform-print-page .webform-preview section {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-multiple-add, .webform-print-page-html .webform-print-page-body .webform-multiple-add {
+    display: none; }
+  .webform-submission-data-preview-page .webform-print-page-body .hds-text-input .hds-text-input__input[readonly], .webform-submission-data-preview-page .webform-print-page-body .hds-text-input .hds-text-input__input, .webform-print-page-html .webform-print-page-body .hds-text-input .hds-text-input__input[readonly], .webform-print-page-html .webform-print-page-body .hds-text-input .hds-text-input__input {
+    border: 2px black solid; }
+  .webform-submission-data-preview-page .webform-print-page-body section, .webform-print-page-html .webform-print-page-body section {
     page-break-inside: avoid; }
-  .webform-submission-data-preview-page .webform-preview label, .webform-print-page .webform-preview label {
-    position: absolute;
-    top: -6mm;
-    left: 0mm;
+  .webform-submission-data-preview-page .webform-print-page-body label, .webform-print-page-html .webform-print-page-body label {
     font-size: 10pt; }
-  .webform-submission-data-preview-page .webform-preview .webform-element, .webform-print-page .webform-preview .webform-element {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-element, .webform-print-page-html .webform-print-page-body .webform-element {
     position: relative;
     border: 1px black solid;
-    top: 5mm;
     padding: 2.5mm;
     margin-bottom: 8mm; }
-  .webform-submission-data-preview-page .webform-preview .webform-multiple-table--operations, .webform-print-page .webform-preview .webform-multiple-table--operations {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-multiple-table--operations, .webform-print-page-html .webform-print-page-body .webform-multiple-table--operations {
     display: none; }
-  .webform-submission-data-preview-page .webform-preview .webform-print-wrapper-table, .webform-print-page .webform-preview .webform-print-wrapper-table {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-print-wrapper-table, .webform-print-page-html .webform-print-page-body .webform-print-wrapper-table {
     overflow-x: visible;
     overflow-x: initial;
     border: 0;
     margin: 0; }
-  .webform-submission-data-preview-page .webform-preview .webform-print-header, .webform-submission-data-preview-page .webform-preview .webform-print-header-space, .webform-print-page .webform-preview .webform-print-header, .webform-print-page .webform-preview .webform-print-header-space {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-print-header, .webform-submission-data-preview-page .webform-print-page-body .webform-print-header-space, .webform-print-page-html .webform-print-page-body .webform-print-header, .webform-print-page-html .webform-print-page-body .webform-print-header-space {
     height: 21mm;
     background: white;
     font-size: 9pt; }
-  .webform-submission-data-preview-page .webform-preview .webform-print-footer, .webform-submission-data-preview-page .webform-preview .webform-print-footer-space, .webform-print-page .webform-preview .webform-print-footer, .webform-print-page .webform-preview .webform-print-footer-space {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-print-footer, .webform-submission-data-preview-page .webform-print-page-body .webform-print-footer-space, .webform-print-page-html .webform-print-page-body .webform-print-footer, .webform-print-page-html .webform-print-page-body .webform-print-footer-space {
     height: 17mm;
     background: white;
     font-size: 9pt; }
-  .webform-submission-data-preview-page .webform-preview .webform-print-header, .webform-print-page .webform-preview .webform-print-header {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-print-header, .webform-print-page-html .webform-print-page-body .webform-print-header {
     position: fixed;
     left: 0;
     top: 0;
@@ -2788,21 +2791,21 @@ fieldset.grants-attachments--wrapper .form-managed-file {
         -ms-flex-align: center;
             align-items: center;
     border-bottom: 1px var(--color-black-40) solid; }
-    .webform-submission-data-preview-page .webform-preview .webform-print-header svg, .webform-print-page .webform-preview .webform-print-header svg {
+    .webform-submission-data-preview-page .webform-print-page-body .webform-print-header svg, .webform-print-page-html .webform-print-page-body .webform-print-header svg {
       height: 25mm;
       width: 55mm;
       display: block;
       margin-right: 3mm;
       color: black; }
-    .webform-submission-data-preview-page .webform-preview .webform-print-header .webform-print-header-left-text, .webform-print-page .webform-preview .webform-print-header .webform-print-header-left-text {
+    .webform-submission-data-preview-page .webform-print-page-body .webform-print-header .webform-print-header-left-text, .webform-print-page-html .webform-print-page-body .webform-print-header .webform-print-header-left-text {
       text-align: left;
       width: 100%;
       color: var(--color-black-40); }
-    .webform-submission-data-preview-page .webform-preview .webform-print-header .webform-print-header-right-text, .webform-print-page .webform-preview .webform-print-header .webform-print-header-right-text {
+    .webform-submission-data-preview-page .webform-print-page-body .webform-print-header .webform-print-header-right-text, .webform-print-page-html .webform-print-page-body .webform-print-header .webform-print-header-right-text {
       text-align: right;
       width: 100%;
       color: var(--color-black-40); }
-  .webform-submission-data-preview-page .webform-preview .webform-print-footer, .webform-print-page .webform-preview .webform-print-footer {
+  .webform-submission-data-preview-page .webform-print-page-body .webform-print-footer, .webform-print-page-html .webform-print-page-body .webform-print-footer {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -2822,17 +2825,111 @@ fieldset.grants-attachments--wrapper .form-managed-file {
         -ms-flex-align: center;
             align-items: center;
     border-top: 1px var(--color-black-40) solid; }
-    .webform-submission-data-preview-page .webform-preview .webform-print-footer svg, .webform-print-page .webform-preview .webform-print-footer svg {
+    .webform-submission-data-preview-page .webform-print-page-body .webform-print-footer svg, .webform-print-page-html .webform-print-page-body .webform-print-footer svg {
       height: 15mm;
       width: 33mm;
       display: block;
       margin-right: 3mm;
       color: black; }
-    .webform-submission-data-preview-page .webform-preview .webform-print-footer .webform-print-footer-left-text, .webform-print-page .webform-preview .webform-print-footer .webform-print-footer-left-text {
+    .webform-submission-data-preview-page .webform-print-page-body .webform-print-footer .webform-print-footer-left-text, .webform-print-page-html .webform-print-page-body .webform-print-footer .webform-print-footer-left-text {
       text-align: left;
       width: 100%;
       color: var(--color-black-40); }
-    .webform-submission-data-preview-page .webform-preview .webform-print-footer .webform-print-footer-right-text, .webform-print-page .webform-preview .webform-print-footer .webform-print-footer-right-text {
+    .webform-submission-data-preview-page .webform-print-page-body .webform-print-footer .webform-print-footer-right-text, .webform-print-page-html .webform-print-page-body .webform-print-footer .webform-print-footer-right-text {
+      text-align: right;
+      width: 100%;
+      color: var(--color-black-40); }
+  .webform-submission-data-preview-page .webform-preview label, .webform-print-page-html .webform-preview label {
+    position: absolute;
+    top: -6mm;
+    left: 0mm;
+    font-size: 10pt; }
+  .webform-submission-data-preview-page .webform-preview .webform-element, .webform-print-page-html .webform-preview .webform-element {
+    position: relative;
+    border: 1px black solid;
+    top: 5mm;
+    padding: 2.5mm;
+    margin-bottom: 8mm; }
+  .webform-submission-data-preview-page .webform-preview .webform-multiple-table--operations, .webform-print-page-html .webform-preview .webform-multiple-table--operations {
+    display: none; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-wrapper-table, .webform-print-page-html .webform-preview .webform-print-wrapper-table {
+    overflow-x: visible;
+    overflow-x: initial;
+    border: 0;
+    margin: 0; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-header, .webform-submission-data-preview-page .webform-preview .webform-print-header-space, .webform-print-page-html .webform-preview .webform-print-header, .webform-print-page-html .webform-preview .webform-print-header-space {
+    height: 21mm;
+    background: white;
+    font-size: 9pt; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-footer, .webform-submission-data-preview-page .webform-preview .webform-print-footer-space, .webform-print-page-html .webform-preview .webform-print-footer, .webform-print-page-html .webform-preview .webform-print-footer-space {
+    height: 17mm;
+    background: white;
+    font-size: 9pt; }
+  .webform-submission-data-preview-page .webform-preview .webform-print-header, .webform-print-page-html .webform-preview .webform-print-header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: white;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    min-width: 100%;
+    max-width: 100%;
+    z-index: 1000;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-bottom: 1px var(--color-black-40) solid; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-header svg, .webform-print-page-html .webform-preview .webform-print-header svg {
+      height: 25mm;
+      width: 55mm;
+      display: block;
+      margin-right: 3mm;
+      color: black; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-header .webform-print-header-left-text, .webform-print-page-html .webform-preview .webform-print-header .webform-print-header-left-text {
+      text-align: left;
+      width: 100%;
+      color: var(--color-black-40); }
+    .webform-submission-data-preview-page .webform-preview .webform-print-header .webform-print-header-right-text, .webform-print-page-html .webform-preview .webform-print-header .webform-print-header-right-text {
+      text-align: right;
+      width: 100%;
+      color: var(--color-black-40); }
+  .webform-submission-data-preview-page .webform-preview .webform-print-footer, .webform-print-page-html .webform-preview .webform-print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: white;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    min-width: 100%;
+    max-width: 100%;
+    z-index: 1000;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-top: 1px var(--color-black-40) solid; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-footer svg, .webform-print-page-html .webform-preview .webform-print-footer svg {
+      height: 15mm;
+      width: 33mm;
+      display: block;
+      margin-right: 3mm;
+      color: black; }
+    .webform-submission-data-preview-page .webform-preview .webform-print-footer .webform-print-footer-left-text, .webform-print-page-html .webform-preview .webform-print-footer .webform-print-footer-left-text {
+      text-align: left;
+      width: 100%;
+      color: var(--color-black-40); }
+    .webform-submission-data-preview-page .webform-preview .webform-print-footer .webform-print-footer-right-text, .webform-print-page-html .webform-preview .webform-print-footer .webform-print-footer-right-text {
       text-align: right;
       width: 100%;
       color: var(--color-black-40); } }
