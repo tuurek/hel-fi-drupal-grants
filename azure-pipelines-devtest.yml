@@ -5,8 +5,7 @@
 trigger:
   branches:
     include:
-    - release/*
-    - refs/tags/*
+    - develop
   paths:
     exclude:
     - README.md
@@ -34,4 +33,4 @@ resources:
     name: avustusasiointi/avustusasiointi-pipelines
 
 extends:
-  template: azure-pipelines-drupal-release.yml@drupal-helfi
+  template: azure-pipelines-drupal-devtest.yml@avustusasiointi-pipelines
