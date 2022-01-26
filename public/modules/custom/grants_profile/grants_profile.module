@@ -63,6 +63,7 @@ function grants_profile_theme(): array {
     'variables' => [
       'content' => NULL,
       'company_select_form' => NULL,
+      'grants_profile_form' => NULL,
       'profile' => NULL
     ]
   ];

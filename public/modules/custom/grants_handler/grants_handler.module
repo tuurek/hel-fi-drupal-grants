@@ -162,6 +162,7 @@ function grants_handler_preprocess_webform(array &$variables) {
  */
 function grants_handler_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
+
   if($form_id === 'webform_submission_yleisavustushakemus_edit_all_form') {
     $d = 'adfs';
   } else if (

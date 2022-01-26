@@ -134,7 +134,7 @@ class BankAccountForm extends FormBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $grantsProfileService->saveBankAccount($bankAccountId, $bankAccountData->toArray());
-    $grantsProfileService->saveGrantsProfile();
+    $grantsProfileService->saveGrantsProfileAtv();
 
     $this->messenger()->addStatus($this->t('Bank account has been saved.'));
 

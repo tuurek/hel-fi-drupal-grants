@@ -271,12 +271,17 @@ class GrantsHandler extends WebformHandlerBase {
 
     // set sender information after save so no accidental saving of personal data
     // TODO: Think about how sender info should be parsed, maybe in own
-    $userData = $this->userExternalData->getUserProfileData();
-    $this->submittedFormData['sender_firstname'] = $userData["verifiedPersonalInformation"]["firstName"];
-    $this->submittedFormData['sender_lastname'] = $userData["verifiedPersonalInformation"]["lastName"];
-    $this->submittedFormData['sender_person_id'] = $userData["verifiedPersonalInformation"]["nationalIdentificationNumber"];
-    $this->submittedFormData['sender_user_id'] = $userData["id"];
-    $this->submittedFormData['sender_email'] = $userData["primaryEmail"]["email"];
+    $userProfileData = $this->userExternalData->getUserProfileData();
+    $userData = $this->userExternalData->getUserData();
+
+    $this->submittedFormData['sender_firstname'] = $userProfileData["verifiedPersonalInformation"]["firstName"];
+    $this->submittedFormData['sender_lastname'] = $userProfileData["verifiedPersonalInformation"]["lastName"];
+    $this->submittedFormData['sender_person_id'] = $userProfileData["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+
+    $this->submittedFormData['sender_user_id'] = $userData["sid"];
+//    $this->submittedFormData['sender_user_id'] = $userData["sub"];
+
+    $this->submittedFormData['sender_email'] = $userProfileData["primaryEmail"]["email"];
 
 
     // @todo Is parent::validateForm needed in validateForm?

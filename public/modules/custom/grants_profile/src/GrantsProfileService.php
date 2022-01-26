@@ -11,6 +11,7 @@ use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use Drupal\helfi_yjdh\YjdhClient;
 
 /**
  * Handle all profile functionality.
@@ -52,6 +53,8 @@ class GrantsProfileService {
    */
   protected AtvSchema $atvSchema;
 
+  protected YjdhClient $yjdhClient;
+
   /**
    * Constructs a GrantsProfileService object.
    *
@@ -69,13 +72,15 @@ class GrantsProfileService {
     PrivateTempStoreFactory  $tempstore,
     MessengerInterface       $messenger,
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
-    AtvSchema                $atv_schema
+    AtvSchema                $atv_schema,
+    YjdhClient               $yjdhClient
   ) {
     $this->helfiAtv = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
     $this->messenger = $messenger;
     $this->helsinkiProfiili = $helsinkiProfiiliUserData;
     $this->atvSchema = $atv_schema;
+    $this->yjdhClient = $yjdhClient;
   }
 
   /**
@@ -92,6 +97,7 @@ class GrantsProfileService {
     $newProfile = [];
     $selectedCompany = $this->getSelectedCompany();
     $userProfile = $this->helsinkiProfiili->getUserProfileData();
+    $userData = $this->helsinkiProfiili->getUserData();
 
     // If data is already in profile format, use that as is.
     if (isset($data['content'])) {
@@ -104,7 +110,7 @@ class GrantsProfileService {
 
     $newProfile['type'] = 'grants_profile';
     $newProfile['business_id'] = $selectedCompany;
-    $newProfile['user_id'] = $userProfile['id'];
+    $newProfile['user_id'] = $userData["sub"];
 
     $newProfile['transaction_id'] = $this->newProfileTransactionId();
     $newProfile['tos_record_id'] = $this->newProfileTosRecordId();
@@ -135,7 +141,8 @@ class GrantsProfileService {
    *
    */
   protected function newProfileTransactionId(): string {
-    return 'eb30af1d9d654ebc98287ca25f231bf6';
+    $selectedCompany = $this->getSelectedCompany();
+    return $selectedCompany;
   }
 
   /**
@@ -158,33 +165,32 @@ class GrantsProfileService {
     return 'eb30af1d9d654ebc98287ca25f231bf6';
   }
 
+  public function saveGrantsProfile($data) {
+    // Get selected company.
+    $selectedCompany = $this->tempStore->get('selected_company');
+    $this->setToCache($selectedCompany['business_id'], $data);
+  }
+
   /**
    * Format data from tempstore & save document back to ATV.
    *
    * @return bool|null
    *   Did save succeed?
    */
-  public function saveGrantsProfile(): ?bool {
+  public function saveGrantsProfileAtv(): ?bool {
     // Get selected company.
     $selectedCompany = $this->tempStore->get('selected_company');
     // Get grants profile.
     $grantsProfile = $this->getGrantsProfile($selectedCompany['business_id']);
-    $payloadData = [
-      'content' => $grantsProfile['content'],
-    ];
 
-    // If we don't have profile, one needs to be created.
     if (!isset($grantsProfile['id'])) {
-      $this->messenger->addError('No profile saved');
-
-      $newProfile = $this->newProfile($payloadData);
-
-      return FALSE;
-    }
-    else {
+      return $this->helfiAtv->postDocument($grantsProfile);
+    } else {
+      $payloadData = [
+        'content' => $grantsProfile['content'],
+      ];
 
       return $this->helfiAtv->patchDocument($grantsProfile['id'], $payloadData);
-
     }
   }
 
@@ -222,9 +228,9 @@ class GrantsProfileService {
    * @return string[]
    *   Array containing address or new address
    */
-  public function getAddress(string $address_id): array {
+  public function getAddress(string $address_id, $refetch = FALSE): array {
     $selectedCompany = $this->tempStore->get('selected_company');
-    $profileContent = $this->getGrantsProfileContent($selectedCompany['business_id']);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['business_id'], $refetch);
 
     if (isset($profileContent["addresses"][$address_id])) {
       return $profileContent["addresses"][$address_id];
@@ -361,23 +367,61 @@ class GrantsProfileService {
       return $profileData['content'];
     }
 
+    $profileData = $this->getGrantsProfile($businessId, $refetch);
 
-    $content = Json::decode($this->getDemoContent());
+    if (isset($profileData['content'])) {
+      if (is_string($profileData['content'])) {
+        $profileContent = Json::decode($profileData['content']);
+      } else {
+        $profileContent = $profileData['content'];
+      }
+    } else {
+      $profileContent = [];
+    }
 
-    $dataDefinition = GrantsProfileDefinition::create('grants_profile_profile');
-    $profileData = $this->atvSchema->documentContentToTypedData($content, $dataDefinition)
-      ->toArray();
+    // TODO: see if there's a better way to get readonly parameters from yrtti/ytj than here.
+    $assosiationDetails = $this->yjdhClient->getAssociationBasicInfo($businessId);
+    $companyDetails = $this->yjdhClient->getCompany($businessId);
+    if ($companyDetails == NULL && !empty($assosiationDetails)) {
+      $profileContent["companyName"] = $assosiationDetails["AssociationNameInfo"][0]["AssociationName"];
+      $profileContent["companyStatus"] = $assosiationDetails["AssociationStatus"];
+      $profileContent["companyStatusSpecial"] = $assosiationDetails["AssociationSpecialCondition"];
+      $profileContent["registrationDate"] = $assosiationDetails["RegistryDate"];
+      $profileContent["companyHome"] = $assosiationDetails["Address"][0]["City"];
+    }
 
-    return $profileData;
+    if (!isset($profileContent['foundingYear'])) {
+      $profileContent['foundingYear'] = NULL;
+    }
+    if (!isset($profileContent['companyNameShort'])) {
+      $profileContent['companyNameShort'] = NULL;
+    }
+    if (!isset($profileContent['companyHomePage'])) {
+      $profileContent['companyHomePage'] = NULL;
+    }
+    if (!isset($profileContent['companyEmail'])) {
+      $profileContent['companyEmail'] = NULL;
+    }
+    if (!isset($profileContent['businessPurpose'])) {
+      $profileContent['businessPurpose'] = NULL;
+    }
+
+    if (!isset($profileContent['addresses'])) {
+      $profileContent['addresses'] = [];
+    }
+    if (!isset($profileContent['officials'])) {
+      $profileContent['officials'] = [];
+    }
+    if (!isset($profileContent['bankAccounts'])) {
+      $profileContent['bankAccounts'] = [];
+    }
 
 
-    //
-    //    $profileData = $this->getGrantsProfile($businessId);
-    //    if (isset($profileData['content']) && is_string($profileData['content'])) {
-    //      // @todo when content is proper json, remove str_replace
-    //      return Json::decode(str_replace("'", "\"", $profileData['content']));
-    //    }
-    //    return $profileData;
+    if (isset($profileContent) && is_string($profileContent)) {
+      // @todo when content is proper json, remove str_replace
+      return Json::decode(str_replace("'", "\"", $profileContent));
+    }
+    return $profileContent;
 
   }
 
@@ -513,19 +557,35 @@ class GrantsProfileService {
     if ($refetch == FALSE) {
       if ($this->isCached($businessId)) {
         $document = $this->getFromCache($businessId);
-        if (!isset($document['id'])) {
-          $this->messenger->addStatus('Refetching document...');
-        }
-        else {
-          return $document ?? [];
-        }
+        return $document;
+//        if (!isset($document['id'])) {
+//          $this->messenger->addStatus('Refetching document...');
+//        }
+//        else {
+//          return $document ?? [];
+//        }
       }
     }
 
-    $profileData = $this->getGrantsProfileFromAtv($businessId);
-    if (!empty($profileData)) {
-      $this->setToCache($businessId, $profileData);
-      return $profileData;
+    // Get profile document from ATV
+    $profileDocument = $this->getGrantsProfileFromAtv($businessId);
+
+
+
+    // If document does not exist in ATV -> we need to create one.
+    if (empty($profileDocument)) {
+      // Initialize new profile
+      $profileDocument = $this->newProfile([]);
+    }
+
+    if(is_string($profileDocument['content'])){
+      $profileDocument['content'] = Json::decode($profileDocument['content']);
+    }
+
+
+    if (!empty($profileDocument)) {
+      $this->setToCache($businessId, $profileDocument);
+      return $profileDocument;
     }
     else {
       return $document ?? [];

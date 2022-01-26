@@ -166,7 +166,7 @@ class ApplicationOfficialForm extends FormBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $grantsProfileService->saveOfficial($applicationOfficialId, $applicationOfficialData->toArray());
-    $grantsProfileService->saveGrantsProfile();
+    $grantsProfileService->saveGrantsProfileAtv();
 
     $this->messenger()->addStatus($this->t('Official has been saved.'));
 

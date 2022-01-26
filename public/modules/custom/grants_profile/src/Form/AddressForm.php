@@ -52,7 +52,7 @@ class AddressForm extends FormBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
 
-    $selectedAddress = $grantsProfileService->getAddress($address_id, $address_id);
+    $selectedAddress = $grantsProfileService->getAddress($address_id);
 
     $form['street'] = [
       '#type' => 'textfield',
@@ -152,7 +152,8 @@ class AddressForm extends FormBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $grantsProfileService->saveAddress($addressId, $addressData->toArray());
-    $grantsProfileService->saveGrantsProfile();
+
+    $grantsProfileService->saveGrantsProfileAtv();
 
     $this->messenger()->addStatus($this->t('Address has been saved.'));
 

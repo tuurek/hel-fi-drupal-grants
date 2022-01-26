@@ -54,13 +54,18 @@ class GrantsProfileController extends ControllerBase {
       ->getForm('Drupal\grants_profile\Form\CompanySelectForm');
     $build['#company_select_form'] = $form;
 
+    $gpForm = \Drupal::formBuilder()
+      ->getForm('Drupal\grants_profile\Form\GrantsProfileForm');
+    $build['#grants_profile_form'] = $gpForm;
+
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     if ($selectedCompany != NULL) {
-      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, true);
       $build['#profile'] = $profile;
+
     }
     else {
       $this->messenger()->addError($this->t('No profile data available, select company'));
