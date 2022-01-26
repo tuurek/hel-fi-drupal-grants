@@ -33,4 +33,4 @@ resources:
     name: avustusasiointi/avustusasiointi-pipelines
 
 extends:
-  template: azure-pipelines-drupal-devtest.yml@avustusasiointi-pipelines
+  template: azure-pipelines-drupal-test.yml@avustusasiointi-pipelines
