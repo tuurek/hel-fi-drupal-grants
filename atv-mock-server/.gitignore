@@ -75,4 +75,4 @@ typings/
 # FuseBox cache
 .fusebox/
 
-#data/v1/documents.json
+data/v1/documents.json
