@@ -6,6 +6,14 @@ grants_profile.show:
   requirements:
     _permission: 'view own grants_profile'
 
+grants_profile.select_company:
+  path: '/select-company'
+  defaults:
+    _title: 'Select company'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::selectCompany'
+  requirements:
+    _permission: 'view own grants_profile'
+
 grants_profile.view_application:
   path: '/grants-profile/applications/{document_uuid}'
   defaults:

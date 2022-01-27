@@ -3,12 +3,15 @@
 namespace Drupal\grants_profile;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
+use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\helfi_yjdh\YjdhClient;
@@ -17,6 +20,11 @@ use Drupal\helfi_yjdh\YjdhClient;
  * Handle all profile functionality.
  */
 class GrantsProfileService {
+
+  use StringTranslationTrait;
+
+  const DOCUMENT_STATUS_NEW = 'DRAFT';
+  const DOCUMENT_STATUS_SAVED = 'READY';
 
   /**
    * The helfi_atv service.
@@ -53,7 +61,17 @@ class GrantsProfileService {
    */
   protected AtvSchema $atvSchema;
 
+  /**
+   * @var \Drupal\helfi_yjdh\YjdhClient
+   */
   protected YjdhClient $yjdhClient;
+
+  /**
+   * Logger.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
 
   /**
    * Constructs a GrantsProfileService object.
@@ -73,7 +91,8 @@ class GrantsProfileService {
     MessengerInterface       $messenger,
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
     AtvSchema                $atv_schema,
-    YjdhClient               $yjdhClient
+    YjdhClient               $yjdhClient,
+    LoggerChannelFactory $loggerFactory
   ) {
     $this->helfiAtv = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
@@ -81,6 +100,7 @@ class GrantsProfileService {
     $this->helsinkiProfiili = $helsinkiProfiiliUserData;
     $this->atvSchema = $atv_schema;
     $this->yjdhClient = $yjdhClient;
+    $this->logger = $loggerFactory->get('helfi_atv');
   }
 
   /**
@@ -111,6 +131,7 @@ class GrantsProfileService {
     $newProfile['type'] = 'grants_profile';
     $newProfile['business_id'] = $selectedCompany;
     $newProfile['user_id'] = $userData["sub"];
+    $newProfile['status'] = self::DOCUMENT_STATUS_NEW;
 
     $newProfile['transaction_id'] = $this->newProfileTransactionId();
     $newProfile['tos_record_id'] = $this->newProfileTosRecordId();
@@ -184,6 +205,7 @@ class GrantsProfileService {
     $grantsProfile = $this->getGrantsProfile($selectedCompany['business_id']);
 
     if (!isset($grantsProfile['id'])) {
+      $grantsProfile['status'] = self::DOCUMENT_STATUS_SAVED;
       return $this->helfiAtv->postDocument($grantsProfile);
     } else {
       $payloadData = [
@@ -344,41 +366,8 @@ class GrantsProfileService {
     $this->setToCache($selectedCompany, $profileContent);
   }
 
-  /**
-   * Get "content" array from document in ATV.
-   *
-   * @param string $businessId
-   *   What business data is fetched.
-   * @param bool $refetch
-   *   If true, data is fetched always.
-   *
-   * @return array
-   *   Content
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
-   */
-  public function getGrantsProfileContent(string $businessId, bool $refetch = FALSE): array {
 
-    if ($refetch === FALSE && $this->isCached($businessId)) {
-      $profileData = $this->getFromCache($businessId);
-      if (is_string($profileData['content'])) {
-        // @todo when content is proper json, remove str_replace
-        return Json::decode(str_replace("'", "\"", $profileData['content']));
-      }
-      return $profileData['content'];
-    }
-
-    $profileData = $this->getGrantsProfile($businessId, $refetch);
-
-    if (isset($profileData['content'])) {
-      if (is_string($profileData['content'])) {
-        $profileContent = Json::decode($profileData['content']);
-      } else {
-        $profileContent = $profileData['content'];
-      }
-    } else {
-      $profileContent = [];
-    }
-
+  public function initGrantsProfile($businessId, $profileContent) {
     // TODO: see if there's a better way to get readonly parameters from yrtti/ytj than here.
     $assosiationDetails = $this->yjdhClient->getAssociationBasicInfo($businessId);
     $companyDetails = $this->yjdhClient->getCompany($businessId);
@@ -416,6 +405,50 @@ class GrantsProfileService {
       $profileContent['bankAccounts'] = [];
     }
 
+    return $profileContent;
+
+  }
+
+  /**
+   * Get "content" array from document in ATV.
+   *
+   * @param string $businessId
+   *   What business data is fetched.
+   * @param bool $refetch
+   *   If true, data is fetched always.
+   *
+   * @return array
+   *   Content
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   */
+  public function getGrantsProfileContent(string $businessId, bool $refetch = FALSE): array {
+
+    if ($refetch === FALSE && $this->isCached($businessId)) {
+      $profileData = $this->getFromCache($businessId);
+      if (is_string($profileData['content'])) {
+        // @todo when content is proper json, remove str_replace
+        return Json::decode(str_replace("'", "\"", $profileData['content']));
+      }
+      // if, for some reason cache has empty content, let's init fields.
+      if (empty($profileData['content'])) {
+        return $this->initGrantsProfile($businessId, $profileData['content']);
+      }
+      return $profileData['content'];
+    }
+
+    $profileData = $this->getGrantsProfile($businessId, $refetch);
+
+    if (isset($profileData['content'])) {
+      if (is_string($profileData['content'])) {
+        $profileContent = Json::decode($profileData['content']);
+      } else {
+        $profileContent = $profileData['content'];
+      }
+    } else {
+      $profileContent = [];
+    }
+
+    $profileContent = $this->initGrantsProfile($businessId, $profileContent);
 
     if (isset($profileContent) && is_string($profileContent)) {
       // @todo when content is proper json, remove str_replace
@@ -568,12 +601,11 @@ class GrantsProfileService {
     }
 
     // Get profile document from ATV
-    $profileDocument = $this->getGrantsProfileFromAtv($businessId);
-
-
-
-    // If document does not exist in ATV -> we need to create one.
-    if (empty($profileDocument)) {
+    try {
+      $profileDocument = $this->getGrantsProfileFromAtv($businessId);
+    } catch (AtvDocumentNotFoundException $e) {
+      $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.',['%s' => $businessId]));
+      $this->logger->info($this->t('Grants profile not found for %s, new profile created.',['%s' => $businessId]));
       // Initialize new profile
       $profileDocument = $this->newProfile([]);
     }
@@ -600,6 +632,7 @@ class GrantsProfileService {
    *
    * @return array
    *   Profile data
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    */
   private function getGrantsProfileFromAtv(string $businessId): array {
 

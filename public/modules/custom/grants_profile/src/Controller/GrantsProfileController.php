@@ -6,6 +6,8 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
+use http\Url;
+use Laminas\Diactoros\Response\RedirectResponse;
 
 /**
  * Returns responses for Grants Profile routes.
@@ -43,48 +45,46 @@ class GrantsProfileController extends ControllerBase {
   }
 
   /**
-   * Builds the response.
-   *
    * @return array
-   *   Data to render
    */
-  public function ownProfile(): array {
-
+  public function selectCompany(): array {
     $form = \Drupal::formBuilder()
       ->getForm('Drupal\grants_profile\Form\CompanySelectForm');
     $build['#company_select_form'] = $form;
 
-    $gpForm = \Drupal::formBuilder()
-      ->getForm('Drupal\grants_profile\Form\GrantsProfileForm');
-    $build['#grants_profile_form'] = $gpForm;
+    $build['#theme'] = 'company_select';
+    $build['#content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('It works!'),
+    ];
+    return $build;
 
+  }
+
+  /**
+   * Builds the response.
+   *
+   * @return array|\Laminas\Diactoros\Response\RedirectResponse
+   *   Data to render
+   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   */
+  public function ownProfile(): array|RedirectResponse {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    if ($selectedCompany != NULL) {
-      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, true);
-      $build['#profile'] = $profile;
-
+    if ($selectedCompany == NULL) {
+      $this->messenger()->addError($this->t('No profile data available, select company'), true);
+      return new RedirectResponse('/select-company');
     }
     else {
-      $this->messenger()->addError($this->t('No profile data available, select company'));
+      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, true);
+      $build['#profile'] = $profile;
     }
 
-
-//    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-//    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
-//
-//    $atvSchema->setSchema(getenv('ATV_SCHEMA_PROFILE_PATH'));
-//    $dataDefinition = GrantsProfileDefinition::create('grants_profile_profile');
-//    $typeManager = $dataDefinition->getTypedDataManager();
-////    $typedProfileData = $typeManager->create($dataDefinition);
-//    $profileData = $atvSchema->documentContentToTypedData($profile,$dataDefinition);
-////    $ddd = $dd->getValue();
-////    $ddd = $atvSchema->typedDataToDocumentContent($dd);
-////    $dddd = Json::encode($ddd);
-
-
+    $gpForm = \Drupal::formBuilder()
+      ->getForm('Drupal\grants_profile\Form\GrantsProfileForm');
+    $build['#grants_profile_form'] = $gpForm;
 
     $build['#theme'] = 'own_profile';
     $build['#content'] = [

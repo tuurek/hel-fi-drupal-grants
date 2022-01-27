@@ -1,6 +1,6 @@
-<p>This could be front page for grants profile data</p>
+<p>Grants profile page. View / edit saved profile data</p>
 
-<p>{{ company_select_form }}</p>
+<p>{{ dump(profile) }}</p>
 <hr />
 <p>{{ grants_profile_form }}</p>
 <hr />
@@ -16,7 +16,7 @@
     </ul>
 {% endif %}
 
-    {{ dump(profile) }}
+
 
 {#{% if profile %}#}
 

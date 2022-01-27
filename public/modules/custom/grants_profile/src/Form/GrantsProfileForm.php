@@ -53,8 +53,24 @@ class GrantsProfileForm extends FormBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
-    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, true);
 
+    $grantsProfileDocument = $grantsProfileService->getGrantsProfile($selectedCompany, TRUE);
+
+    // if profile is new init data
+    if ($grantsProfileDocument['status'] == 'DRAFT') {
+      if (empty($grantsProfileDocument['content'])) {
+        $grantsProfileContent = $grantsProfileService->initGrantsProfile($selectedCompany, []);
+      }
+      else {
+        $grantsProfileContent = $grantsProfileDocument['content'];
+      }
+    }
+    else {
+      // else get data from document
+      $grantsProfileContent = $grantsProfileDocument['content'];
+    }
+
+    // set profile content for other fields than this form
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);
 
     $form['foundingYear'] = [
@@ -90,127 +106,126 @@ class GrantsProfileForm extends FormBase {
 
     $adressMarkup = '<ul>';
     foreach ($grantsProfileContent["addresses"] as $key => $address) {
-      $adressMarkup .= '<li><a href="/grants-profile/address/'.$key.'">' . $address['street'] . '</a></li>';
+      $adressMarkup .= '<li><a href="/grants-profile/address/' . $key . '">' . $address['street'] . '</a></li>';
     }
     $adressMarkup .= '</ul>';
 
     $form['address_markup'] = [
       '#type' => 'markup',
       '#markup' => $adressMarkup,
-      '#suffix' => '<div><a href="/grants-profile/address/new">New Address</a></div>'
+      '#suffix' => '<div><a href="/grants-profile/address/new">New Address</a></div>',
     ];
 
     $bankAccountMarkup = '<ul>';
     foreach ($grantsProfileContent["bankAccounts"] as $key => $address) {
-      $bankAccountMarkup .= '<li><a href="/grants-profile/bank-accounts/'.$key.'">' . $address['bankAccount'] . '</a></li>';
+      $bankAccountMarkup .= '<li><a href="/grants-profile/bank-accounts/' . $key . '">' . $address['bankAccount'] . '</a></li>';
     }
     $bankAccountMarkup .= '</ul>';
 
     $form['bankAccount_markup'] = [
       '#type' => 'markup',
       '#markup' => $bankAccountMarkup,
-      '#suffix' => '<div><a href="/grants-profile/bank-accounts/new">New Bank account</a></div>'
+      '#suffix' => '<div><a href="/grants-profile/bank-accounts/new">New Bank account</a></div>',
     ];
 
     $officialsMarkup = '<ul>';
     foreach ($grantsProfileContent["officials"] as $key => $address) {
-      $officialsMarkup .= '<li><a href="/grants-profile/application-officials/'.$key.'">' . $address['name'] . '</a></li>';
+      $officialsMarkup .= '<li><a href="/grants-profile/application-officials/' . $key . '">' . $address['name'] . '</a></li>';
     }
     $officialsMarkup .= '</ul>';
 
     $form['officials_markup'] = [
       '#type' => 'markup',
       '#markup' => $officialsMarkup,
-      '#suffix' => '<div><a href="/grants-profile/application-officials/new">New official</a></div>'
+      '#suffix' => '<div><a href="/grants-profile/application-officials/new">New official</a></div>',
     ];
 
-//    $form['addresses'] = [
-//      '#type' => 'multivalue',
-//      '#title' => $this->t('Addresses'),
-//      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-//      '#default_value' => $grantsProfile['addresses'],
-//      'street' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Street'),
-//        '#required' => TRUE,
-//      ],
-//      'city' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('City'),
-//        '#required' => TRUE,
-//      ],
-//      'postCode' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Post code'),
-//        '#required' => TRUE,
-//      ],
-//      'country' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('City'),
-//        '#required' => TRUE,
-//      ],
-//      'address_id' => [
-//        '#type' => 'hidden',
-//        '#value' => 124,
-//      ],
-//    ];
-//
-//    $form['bankAccounts'] = [
-//      '#type' => 'multivalue',
-//      '#title' => $this->t('Bank accounts'),
-//      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-//      '#default_value' => $grantsProfile['bankAccounts'],
-//      'bankAccount' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Bank account'),
-//        '#required' => TRUE,
-//      ],
-//      'bankAccount_id' => [
-//        '#type' => 'hidden',
-//        '#value' => 123,
-//      ],
-//    ];
-//
-//    $form['officials'] = [
-//      '#type' => 'multivalue',
-//      '#title' => $this->t('Application officials'),
-//      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-////      '#default_value' => $grantsProfile['officials'],
-////      '#max_delta' => MultiValue::CARDINALITY_UNLIMITED,
-//      'name' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Name'),
-//        '#required' => TRUE,
-//      ],
-//      'role' => [
-//        '#type' => 'select',
-//        '#title' => $this->t('Role'),
-//        '#required' => TRUE,
-//        '#options' => [
-//          1 => $this->t('Puheenjohtaja'),
-//          2 => $this->t('Taloudesta vastaava'),
-//          3 => $this->t('Sihteeri'),
-//          4 => $this->t('Toiminnanjohtaja'),
-//          5 => $this->t('Varapuheenjohtaja'),
-//          6 => $this->t('Muu'),
-//        ],
-//      ],
-//      'email' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Email'),
-//        '#required' => TRUE,
-//      ],
-//      'phone' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Phone'),
-//        '#required' => TRUE,
-//      ],
-//      'official_id' => [
-//        '#type' => 'hidden',
-//        '#value' => 123,
-//      ],
-//    ];
-
+    //    $form['addresses'] = [
+    //      '#type' => 'multivalue',
+    //      '#title' => $this->t('Addresses'),
+    //      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
+    //      '#default_value' => $grantsProfile['addresses'],
+    //      'street' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('Street'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'city' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('City'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'postCode' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('Post code'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'country' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('City'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'address_id' => [
+    //        '#type' => 'hidden',
+    //        '#value' => 124,
+    //      ],
+    //    ];
+    //
+    //    $form['bankAccounts'] = [
+    //      '#type' => 'multivalue',
+    //      '#title' => $this->t('Bank accounts'),
+    //      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
+    //      '#default_value' => $grantsProfile['bankAccounts'],
+    //      'bankAccount' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('Bank account'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'bankAccount_id' => [
+    //        '#type' => 'hidden',
+    //        '#value' => 123,
+    //      ],
+    //    ];
+    //
+    //    $form['officials'] = [
+    //      '#type' => 'multivalue',
+    //      '#title' => $this->t('Application officials'),
+    //      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
+    ////      '#default_value' => $grantsProfile['officials'],
+    ////      '#max_delta' => MultiValue::CARDINALITY_UNLIMITED,
+    //      'name' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('Name'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'role' => [
+    //        '#type' => 'select',
+    //        '#title' => $this->t('Role'),
+    //        '#required' => TRUE,
+    //        '#options' => [
+    //          1 => $this->t('Puheenjohtaja'),
+    //          2 => $this->t('Taloudesta vastaava'),
+    //          3 => $this->t('Sihteeri'),
+    //          4 => $this->t('Toiminnanjohtaja'),
+    //          5 => $this->t('Varapuheenjohtaja'),
+    //          6 => $this->t('Muu'),
+    //        ],
+    //      ],
+    //      'email' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('Email'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'phone' => [
+    //        '#type' => 'textfield',
+    //        '#title' => $this->t('Phone'),
+    //        '#required' => TRUE,
+    //      ],
+    //      'official_id' => [
+    //        '#type' => 'hidden',
+    //        '#value' => 123,
+    //      ],
+    //    ];
 
 
     $form['actions'] = [
@@ -235,9 +250,13 @@ class GrantsProfileForm extends FormBase {
       return;
     }
 
-    $grantsProfileContent = $storage['grantsProfileContent'];
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    //    $grantsProfileService = \Drupal::service('grants_profile.service');
+    //    $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     $values = $form_state->getValues();
+
+    $grantsProfileContent = $storage['grantsProfileContent'];
 
     foreach ($grantsProfileContent as $key => $value) {
       if (array_key_exists($key, $values)) {
@@ -266,16 +285,12 @@ class GrantsProfileForm extends FormBase {
       // Move addressData object to form_state storage.
       $form_state->setStorage(['grantsProfileData' => $grantsProfileData]);
     }
-
-    $d = 'asdf';
-
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->messenger()->addStatus($this->t('The message has been sent.'));
 
     $storage = $form_state->getStorage();
     if (!isset($storage['grantsProfileData'])) {
@@ -287,6 +302,7 @@ class GrantsProfileForm extends FormBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
+    $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     $profileDataArray = $grantsProfileData->toArray();
 
@@ -294,11 +310,12 @@ class GrantsProfileForm extends FormBase {
 
     $success = $grantsProfileService->saveGrantsProfileAtv();
 
+    if ($success == TRUE) {
+      $this->messenger()
+        ->addStatus($this->t('Grantsprofile for company number %s saved and can be used in grant applications', ['%s' => $selectedCompany]));
+    }
 
-    $d = 'asdf';
-
-
-    //    $form_state->setRedirect('<front>');
+    $form_state->setRedirect('grants_profile.show');
   }
 
 }

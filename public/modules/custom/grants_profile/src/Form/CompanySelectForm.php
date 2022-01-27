@@ -80,6 +80,9 @@ class CompanySelectForm extends FormBase {
     $grantsProfileService->setSelectedCompany($selectedCompany);
 
     $this->messenger()->addStatus($this->t('Selected company has been set.'));
+
+    $form_state->setRedirect('grants_profile.show');
+
   }
 
 }

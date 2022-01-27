@@ -62,9 +62,15 @@ function grants_profile_theme(): array {
     'render element' => 'build',
     'variables' => [
       'content' => NULL,
-      'company_select_form' => NULL,
       'grants_profile_form' => NULL,
       'profile' => NULL
+    ]
+  ];
+  $theme['company_select'] = [
+    'render element' => 'build',
+    'variables' => [
+      'content' => NULL,
+      'company_select_form' => NULL,
     ]
   ];
   $theme['own_addresses'] = [

@@ -11,7 +11,8 @@ services:
         '@messenger',
         '@helfi_helsinki_profiili.userdata',
         '@grants_metadata.atv_schema',
-        '@helfi_yjdh.client'
+        '@helfi_yjdh.client',
+        '@logger.factory'
     ]
 
   grants_profile.middleware:
