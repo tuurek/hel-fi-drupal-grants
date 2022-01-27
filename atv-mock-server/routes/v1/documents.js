@@ -39,8 +39,8 @@ const documentRoutes = (app, fs) => {
             if (err) {
                 throw err;
             }
-            
-            dataObject = JSON.parse(data)
+
+            let dataObject = JSON.parse(data)
             const dataArray = Object.keys(dataObject).map(function(k){return dataObject[k]});
 
             const retval = dataArray
@@ -50,30 +50,34 @@ const documentRoutes = (app, fs) => {
                     return item.type == type
                 })
                 .map(item => item)
-               .filter(item => {
-                if(item.business_id === undefined) return false
-                return item.business_id === business_id
-               })
-               .filter(item => {
-                if(item.transaction_id === undefined) return false
-                return item.transaction_id === business_id
-               })
+                .filter(item => {
+                    if(item.business_id === undefined) return false
+                    return item.business_id === business_id
+                })
+                .filter(item => {
+                    if(item.transaction_id === undefined) return false
+                    return item.transaction_id === business_id
+                })
 
-            const responseData = {
-                "count": retval.length,
-                "next": null,
-                "previous": null,
-                "results": retval
+            if(retval.length === 0) {
+                res.sendStatus(404);
+            } else {
+                const responseData = {
+                    "count": retval.length,
+                    "next": null,
+                    "previous": null,
+                    "results": retval
+                }
+
+                res.send(responseData);
             }
-
-            res.send(responseData);
         });
     });
 
 
     // GET SINGLE
     app.get('/v1/documents/:id', (req, res) => {
-        
+
         // add the new user
         const documentId = req.params["id"];
 
@@ -82,50 +86,49 @@ const documentRoutes = (app, fs) => {
                 throw err;
             }
 
-            dataArray = JSON.parse(data)
+            const dataObject = JSON.parse(data)
+            const dataArray = Object.keys(dataObject).map(function(k){return dataObject[k]});
 
-        
-            document = dataArray.filter(item => item.id == documentId)
-
+            document = dataArray.filter(item => item.id === documentId)
 
             if(document.length === 0) {
-                res.send404()
+                res.sendStatus(404);
             } else {
                 res.send(JSON.stringify(document));
             }
 
-            
+
         });
     });
 
     // CREATE
     app.post('/v1/documents/', (req, res) => {
+        console.log('POST', req.body)
 
         readFile(data => {
-            const newDocumentId = uuidv4()
+                const newDocumentId = uuidv4()
 
-            console.log(req.body)
 
-            // newData = JSON.parse(req.body)
+                // newData = JSON.parse(req.body)
 
-            newData = req.body
+                newData = req.body
 
-            newData.created_at = '2022-01-24T11:44:02.400224+02:00'
-            newData.updated_at = '2022-01-24T11:44:02.400224+02:00'
-            newData.locked_after = "2023-08-01T03:00:00+03:00"
-            newData.tos_record_id = 'eb30af1d9d654ebc98287ca25f231bf6'
-            newData.tos_function_id = 'eb30af1d9d654ebc98287ca25f231bf6'
-            newData.content = req.body.content.replace('\t','')
-            newData.content = newData.content.replace('\n','')
-            newData.id = newDocumentId
+                newData.created_at = '2022-01-24T11:44:02.400224+02:00'
+                newData.updated_at = '2022-01-24T11:44:02.400224+02:00'
+                newData.locked_after = "2023-08-01T03:00:00+03:00"
+                newData.tos_record_id = 'eb30af1d9d654ebc98287ca25f231bf6'
+                newData.tos_function_id = 'eb30af1d9d654ebc98287ca25f231bf6'
+                newData.content = req.body.content.replace('\t','')
+                newData.content = newData.content.replace('\n','')
+                newData.id = newDocumentId
 
-            // add the new user
-            data[newDocumentId] = req.body;
+                // add the new user
+                data[newDocumentId] = req.body;
 
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send(data[newDocumentId]);
-            });
-        },
+                writeFile(JSON.stringify(data, null, 2), () => {
+                    res.status(200).send(data[newDocumentId]);
+                });
+            },
             true);
     });
 
@@ -134,44 +137,41 @@ const documentRoutes = (app, fs) => {
     // CREATE
     app.patch('/v1/documents/:id', (req, res) => {
 
-        console.log('BODY',req.body)
+        console.log('PATCH',req.body)
         // add the new user
         const documentId = req.params["id"];
 
-
         readFile(data => {
-            
-            const document = data[documentId]
 
-            const patchContent = req.body
+                const document = data[documentId]
 
-            console.log(patchContent)
+                const patchContent = req.body
 
-            // let content
+                // let content
 
-            // if(typeof document.content === 'string') {
-            //     content = JSON.parse(document.content)
-            // } else {
-            //     content = document.content
-            // }
-             
-            
-            // for (const [key, value] of Object.entries(req.body.content)) {
-            //     content[key] = value
-            //   }
+                // if(typeof document.content === 'string') {
+                //     content = JSON.parse(document.content)
+                // } else {
+                //     content = document.content
+                // }
 
-            // console.log(content,dataArray)
 
-            document.content = JSON.stringify(patchContent.content)
-            data[documentId] = document
-            
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send(data[documentId]);
-            });
-        },
+                // for (const [key, value] of Object.entries(req.body.content)) {
+                //     content[key] = value
+                //   }
+
+                // console.log(content,dataArray)
+
+                document.content = JSON.stringify(patchContent.content)
+                data[documentId] = document
+
+                writeFile(JSON.stringify(data, null, 2), () => {
+                    res.status(200).send(data[documentId]);
+                });
+            },
             true);
 
-            res.status(200).send({});
+        res.status(200).send({});
     });
 
     // UPDATE
@@ -182,12 +182,12 @@ const documentRoutes = (app, fs) => {
 
         readFile(data => {
 
-            data[documentId] = req.body;
+                data[documentId] = req.body;
 
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send(data[documentId]);
-            });
-        },
+                writeFile(JSON.stringify(data, null, 2), () => {
+                    res.status(200).send(data[documentId]);
+                });
+            },
             true);
     });
 
@@ -197,14 +197,14 @@ const documentRoutes = (app, fs) => {
 
         readFile(data => {
 
-            // delete the user
-            const userId = req.params["id"];
-            delete data[userId];
+                // delete the user
+                const userId = req.params["id"];
+                delete data[userId];
 
-            writeFile(JSON.stringify(data, null, 2), () => {
-                res.status(200).send(`users id:${userId} removed`);
-            });
-        },
+                writeFile(JSON.stringify(data, null, 2), () => {
+                    res.status(200).send(`users id:${userId} removed`);
+                });
+            },
             true);
     });
 };

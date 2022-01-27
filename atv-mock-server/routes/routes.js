@@ -1,5 +1,6 @@
 // import other routes
 const userRoutes = require('./users');
+const documentRoutes = require('./v1/documents')
 
 const appRouter = (app, fs) => {
 
@@ -10,6 +11,8 @@ const appRouter = (app, fs) => {
 
     // // other routes
     userRoutes(app, fs);
+    // // other routes
+    documentRoutes(app, fs);
 
 };
 

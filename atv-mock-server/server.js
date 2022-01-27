@@ -3,8 +3,18 @@ const bodyParser = require('body-parser');
 const app = express();
 const fs = require('fs');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+/** Require multer */
+var multer = require('multer');
+var upload = multer();
+
+
+app.use(express.json());
+app.use(express.urlencoded());
+
+// for parsing multipart/form-data
+app.use(upload.array());
+
+
 
 const routes = require('./routes/routes.js')(app, fs);
 
