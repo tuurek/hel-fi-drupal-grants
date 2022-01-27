@@ -32,7 +32,7 @@ class CompanySelectForm extends FormBase {
 
     /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhClient */
     $yjdhClient = \Drupal::service('helfi_yjdh.client');
-    $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
+    $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
 
     $options = [];
     foreach ($associationRoles['Role'] as $association) {

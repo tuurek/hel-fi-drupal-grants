@@ -610,10 +610,9 @@ class GrantsProfileService {
       $profileDocument = $this->newProfile([]);
     }
 
-    if(is_string($profileDocument['content'])){
+    if(isset($profileDocument['content']) && is_string($profileDocument['content'])){
       $profileDocument['content'] = Json::decode($profileDocument['content']);
     }
-
 
     if (!empty($profileDocument)) {
       $this->setToCache($businessId, $profileDocument);

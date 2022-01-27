@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
 
 
-
 /**
  * OpenID Connect post authorize hook.
  *
@@ -34,6 +33,7 @@ use Drupal\user\UserInterface;
  *   - sub:            The remote user identifier.
  *
  * @ingroup openid_connect_api
+ * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function grants_profile_openid_connect_post_authorize(UserInterface $account, array $context) {
 
