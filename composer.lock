@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6f41cda9009ef3d617fe8b66b833c28",
+    "content-hash": "218fbe55a327ea353c12adc42994f692",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -4978,16 +4978,16 @@
         },
         {
             "name": "drupal/helfi_tunnistamo",
-            "version": "dev-UHF-3813",
+            "version": "2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-tunnistamo.git",
-                "reference": "89329a504b0d706c36ecb5ccc44d7e324fe99c66"
+                "reference": "9c946089d704430dda4e741092db1b6db0b0fe81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-tunnistamo/zipball/89329a504b0d706c36ecb5ccc44d7e324fe99c66",
-                "reference": "89329a504b0d706c36ecb5ccc44d7e324fe99c66",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-tunnistamo/zipball/9c946089d704430dda4e741092db1b6db0b0fe81",
+                "reference": "9c946089d704430dda4e741092db1b6db0b0fe81",
                 "shasum": ""
             },
             "require": {
@@ -5003,10 +5003,10 @@
             ],
             "description": "Tunnistamo integration",
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-tunnistamo/tree/UHF-3813",
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-tunnistamo/tree/2.0.2",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-tunnistamo/issues"
             },
-            "time": "2021-12-21T11:08:06+00:00"
+            "time": "2022-01-31T13:21:47+00:00"
         },
         {
             "name": "drupal/helfi_yjdh",
@@ -16476,7 +16476,6 @@
         "drupal/entity_print": 20,
         "drupal/helfi_atv": 20,
         "drupal/helfi_helsinki_profiili": 20,
-        "drupal/helfi_tunnistamo": 20,
         "drupal/helfi_yjdh": 20,
         "drupal/multivalue_form_element": 10,
         "drupal/webform_views": 15

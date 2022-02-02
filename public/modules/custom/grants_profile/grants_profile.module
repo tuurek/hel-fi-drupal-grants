@@ -38,7 +38,7 @@ use Drupal\user\UserInterface;
 function grants_profile_openid_connect_post_authorize(UserInterface $account, array $context) {
 
   // if no adgroups, then add user to HelsinkiProfiili Role
-  if (isset($context['user_data']['ad_groups']) && empty($context['user_data']['ad_groups'])) {
+  if (!isset($context['user_data']['ad_groups']) || empty($context['user_data']['ad_groups'])) {
     \Drupal::logger('helsinki_profiili')
       ->info(t('User %s added & assign them a HelsinkiProfiili Role',
         ['%s' => $account->getAccountName()]));
