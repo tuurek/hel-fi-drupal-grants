@@ -1,0 +1,7 @@
+form_tool_webform_parameters.settings_form:
+  path: '/admin/config/system/form-tool-webform-parameters'
+  defaults:
+    _title: 'Hel.fi Form Tool Webform Parameters settings'
+    _form: 'Drupal\form_tool_webform_parameters\Form\SettingsForm'
+  requirements:
+    _permission: 'administer form_tool_webform_parameters configuration'

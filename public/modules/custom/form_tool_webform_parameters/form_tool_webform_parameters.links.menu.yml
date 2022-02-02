@@ -1,0 +1,6 @@
+form_tool_webform_parameters.settings_form:
+  title: Hel.fi Form Tool Webform Parameters
+  description: Configure Hel.fi Form Tool Webform Parameters.
+  parent: system.admin_config_system
+  route_name: form_tool_webform_parameters.settings_form
+  weight: 10

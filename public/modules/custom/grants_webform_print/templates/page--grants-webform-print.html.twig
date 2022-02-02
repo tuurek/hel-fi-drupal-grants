@@ -4,32 +4,4 @@
  * Webform share page template override.
  */
 #}
-<table class="webform-print-wrapper-table">
-  <thead><tr><td>
-    <div class="webform-print-header-space">&nbsp;</div>
-  </td></tr></thead>
-  <tbody><tr><td>
-    <div class="webform-print-content">{{ page.content }}</div>
-  </td></tr></tbody>
-  <tfoot><tr><td>
-    <div class="webform-print-footer-space">&nbsp;</div>
-  </td></tr></tfoot>
-</table>
-<header class="webform-print-header">
-  {{ helsinki_logo|raw }}
-    <div class="webform-print-header-left-text">
-  </div>
-  <div class="webform-print-header-right-text">
-  {{ title }}
-  </div>
-</header>
-<footer class="webform-print-footer">
-  {{ helsinki_logo|raw }}
-  <div class="webform-print-footer-left-text">
-  &copy; Helsingin kaupunki 2022 |
-  <a href="https://www.hel.fi">www.hel.fi</a>
-  </div>
-  <div class="webform-print-footer-right-text">
-
-  </div>
-</footer>
+{{ page.content }}

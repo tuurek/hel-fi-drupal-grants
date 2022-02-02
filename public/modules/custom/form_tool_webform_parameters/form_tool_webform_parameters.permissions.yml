@@ -1,0 +1,4 @@
+administer form_tool_webform_parameters configuration:
+  title: 'Administer form_tool_webform_parameters configuration'
+  description: 'Optional description.'
+  restrict access: true
