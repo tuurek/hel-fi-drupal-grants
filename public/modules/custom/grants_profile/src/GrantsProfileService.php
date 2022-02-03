@@ -12,9 +12,11 @@ use Drupal\Core\TempStore\TempStoreException;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\helfi_yjdh\YjdhClient;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Handle all profile functionality.
@@ -419,7 +421,6 @@ class GrantsProfileService {
    *
    * @return array
    *   Content
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function getGrantsProfileContent(string $businessId, bool $refetch = FALSE): array {
 
@@ -641,7 +642,11 @@ class GrantsProfileService {
       'type' => 'grants_profile',
     ];
 
-    $searchDocuments = $this->helfiAtv->searchDocuments($searchParams);
+    try {
+      $searchDocuments = $this->helfiAtv->searchDocuments($searchParams);
+    } catch (AtvFailedToConnectException|GuzzleException $e) {
+      throw new AtvDocumentNotFoundException('Not found');
+    }
 
     if (empty($searchDocuments)) {
       return $searchDocuments;
