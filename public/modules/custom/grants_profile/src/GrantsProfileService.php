@@ -375,6 +375,7 @@ class GrantsProfileService {
     $companyDetails = $this->yjdhClient->getCompany($businessId);
     if ($companyDetails == NULL && !empty($assosiationDetails)) {
       $profileContent["companyName"] = $assosiationDetails["AssociationNameInfo"][0]["AssociationName"];
+      $profileContent["businessId"] = $assosiationDetails["BusinessId"];
       $profileContent["companyStatus"] = $assosiationDetails["AssociationStatus"];
       $profileContent["companyStatusSpecial"] = $assosiationDetails["AssociationSpecialCondition"];
       $profileContent["registrationDate"] = $assosiationDetails["RegistryDate"];

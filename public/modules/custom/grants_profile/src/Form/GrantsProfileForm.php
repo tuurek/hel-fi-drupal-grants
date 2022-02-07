@@ -72,7 +72,6 @@ class GrantsProfileForm extends FormBase {
 
     // set profile content for other fields than this form
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);
-
     $form['foundingYear'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Founding year'),

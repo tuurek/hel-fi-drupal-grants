@@ -1,5 +1,12 @@
 <p>Grants profile page. View / edit saved profile data</p>
-
+<h2>{{ profile.companyName }}</h2>
+<div>
+<div>{{ profile.companyHome }}</div>
+<div>{{ profile.businessId }}</div>
+<div>{{ profile.registrationDate }}</div>
+<div>{{ profile.companyStatus }}</div>
+<div>{{ profile.companyStatusSpecial }}</div>
+</div>
 <p>{{ dump(profile) }}</p>
 <hr />
 <p>{{ grants_profile_form }}</p>
