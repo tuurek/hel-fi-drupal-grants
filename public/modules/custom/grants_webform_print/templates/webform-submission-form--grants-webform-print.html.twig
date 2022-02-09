@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a webform submission form.
+ *
+ * Available variables:
+ * - form: The webform submission form.
+ *
+ * @ingroup themeable
+ */
+#}
+<table class="webform-print-wrapper-table">
+  <thead><tr><td>
+    <div class="webform-print-header-space">&nbsp;</div>
+  </td></tr></thead>
+  <tbody><tr><td>
+    <div class="webform-print-content">
+    {{ form }}
+    </div>
+  </td></tr></tbody>
+  <tfoot><tr><td>
+    <div class="webform-print-footer-space">&nbsp;</div>
+  </td></tr></tfoot>
+</table>
+<header class="webform-print-header">
+  {{ helsinki_logo|raw }}
+    <div class="webform-print-header-left-text">
+  </div>
+  <div class="webform-print-header-right-text">
+  {{ metadata.applicationType }}
+  </div>
+</header>
+<footer class="webform-print-footer">
+  {{ helsinki_logo|raw }}
+  <div class="webform-print-footer-left-text">
+  &copy; Helsingin kaupunki 2022 |
+  <a href="https://www.hel.fi">www.hel.fi</a>
+  </div>
+  <div class="webform-print-footer-right-text">
+
+  </div>
+</footer>
