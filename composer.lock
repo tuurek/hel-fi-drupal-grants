@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd5fdad25823226472df576fe2ae255e",
+    "content-hash": "218fbe55a327ea353c12adc42994f692",
     "packages": [
         {
             "name": "City-of-Helsinki/php-hauki-client",
@@ -5015,12 +5015,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh.git",
-                "reference": "158edf28bf4b0f27a4189a04bcad80fa3b7bf7e8"
+                "reference": "a86b4ab6d6d1c027d94ce2626c3eb5a852c3eaf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-yjdh/zipball/158edf28bf4b0f27a4189a04bcad80fa3b7bf7e8",
-                "reference": "158edf28bf4b0f27a4189a04bcad80fa3b7bf7e8",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-yjdh/zipball/a86b4ab6d6d1c027d94ce2626c3eb5a852c3eaf0",
+                "reference": "a86b4ab6d6d1c027d94ce2626c3eb5a852c3eaf0",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -5036,7 +5036,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-yjdh/issues"
             },
-            "time": "2021-12-30T09:19:27+00:00"
+            "time": "2022-02-03T10:11:23+00:00"
         },
         {
             "name": "drupal/image_style_quality",
