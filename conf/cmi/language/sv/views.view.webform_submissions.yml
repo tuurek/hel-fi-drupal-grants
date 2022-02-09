@@ -22,8 +22,10 @@ display:
             offset_label: Kompensera
       fields:
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         created:
           label: Skapad
@@ -47,8 +49,10 @@ display:
         webform_submission_bulk_form:
           action_title: Åtgärd
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         sticky:
           label: Klistrad
@@ -60,6 +64,7 @@ display:
           label: Skapad
           separator: ', '
         completed:
+          label: Completed
           separator: ', '
         remote_addr:
           label: IP-adress
@@ -79,8 +84,10 @@ display:
         webform_submission_bulk_form:
           action_title: Åtgärd
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         sticky:
           label: Klistrad
@@ -92,6 +99,7 @@ display:
           label: Skapad
           separator: ', '
         completed:
+          label: Completed
           separator: ', '
         remote_addr:
           label: IP-adress
@@ -113,8 +121,10 @@ display:
     display_options:
       fields:
         sid:
+          label: '#'
           separator: ', '
         in_draft:
+          label: Draft
           separator: ', '
         sticky:
           label: Klistrad
@@ -126,6 +136,7 @@ display:
           label: Skapad
           separator: ', '
         completed:
+          label: Completed
           separator: ', '
         remote_addr:
           label: IP-adress

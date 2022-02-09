@@ -1,5 +1,5 @@
 label: Media
-description: 'Find and manage media.'
+description: 'Etsi ja ylläpidä mediatiedostoja.'
 display:
   default:
     display_title: Oletus
@@ -12,13 +12,13 @@ display:
           label: Pienoiskuva
           separator: ', '
         name:
-          label: 'Media name'
+          label: 'Mediatiedoston nimi'
           separator: ', '
         bundle:
           label: Tyyppi
           separator: ', '
         uid:
-          label: Tekijä
+          label: Kirjoittaja
           separator: ', '
         status:
           label: Tila
@@ -44,18 +44,18 @@ display:
             offset_label: Offset
       exposed_form:
         options:
-          submit_button: Suodatus
+          submit_button: Suodata
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Asc
           sort_desc_label: Desc
       empty:
         area_text_custom:
-          content: 'Ei mediaa saatavilla.'
+          content: 'Ei mediatiedostoja saatavilla.'
       filters:
         name:
           expose:
-            label: 'Media name'
+            label: 'Mediatiedoston nimi'
         bundle:
           expose:
             label: Tyyppi

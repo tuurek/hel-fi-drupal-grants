@@ -15,13 +15,13 @@ bundle: webform
 mode: default
 content:
   field_webform:
+    type: webform_entity_reference_select
     weight: 0
+    region: content
     settings:
       default_data: true
       webforms: {  }
     third_party_settings: {  }
-    type: webform_entity_reference_select
-    region: content
 hidden:
   created: true
   status: true

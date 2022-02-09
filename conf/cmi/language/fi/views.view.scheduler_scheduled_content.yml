@@ -1,11 +1,11 @@
-label: 'Scheduled content'
-description: 'Find and manage scheduled content.'
+label: 'Ajastettu sisältö'
+description: 'Etsi ja ylläpidä ajastettua sisältöä.'
 display:
   default:
     display_options:
       exposed_form:
         options:
-          submit_button: Suodatus
+          submit_button: Suodata
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Asc
@@ -27,7 +27,7 @@ display:
           label: 'Content Type'
           separator: ', '
         name:
-          label: Tekijä
+          label: Kirjoittaja
           separator: ', '
         status:
           label: Tila
@@ -63,10 +63,10 @@ display:
         langcode:
           expose:
             label: Kieli
-      title: 'Scheduled Content'
+      title: 'Ajastettu sisältö'
       empty:
         area_text_custom:
-          content: 'No scheduled content.'
+          content: 'Ei vielä ajastettua sisältöä.'
     display_title: Master
   overview:
     display_options:
@@ -74,8 +74,8 @@ display:
         title: Scheduled
       tab_options:
         title: Sisältö
-      display_description: 'Overview of all scheduled content, as a tab on main ''content admin'' page'
-    display_title: 'Content Overview'
+      display_description: 'Yleiskatsaus koko ajoitetusta sisällöstä.'
+    display_title: Sisältö
   user_page:
     display_options:
       menu:

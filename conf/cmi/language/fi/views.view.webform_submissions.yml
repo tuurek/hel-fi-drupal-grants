@@ -39,7 +39,7 @@ display:
           text: näkymä
       header:
         result:
-          content: 'Displaying @start - @end of @total'
+          content: 'Näytetään @start - @end / @total'
       arguments:
         in_draft:
           exception:

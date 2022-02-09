@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
   admin_toolbar: 0
   admin_toolbar_tools: 0
@@ -44,6 +46,7 @@ module:
   hdbt_component_library: 0
   hdbt_content: 0
   helfi_api_base: 0
+  helfi_charts: 0
   helfi_content: 0
   helfi_example_content: 0
   helfi_gdpr_compliance: 0
@@ -84,6 +87,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  role_delegation: 0
   scheduler: 0
   select2: 0
   select2_icon: 0
@@ -118,8 +122,5 @@ theme:
   hdbt: 0
   gin: 0
   hdbt_admin: 0
-  helfi_grants: 0
   helfi_grant_applications: 0
 profile: minimal
-_core:
-  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

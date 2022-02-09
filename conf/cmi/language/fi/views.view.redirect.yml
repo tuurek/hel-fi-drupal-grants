@@ -1,12 +1,12 @@
 label: Redirect
-description: 'List of redirects'
+description: Uudelleenohjaukset
 display:
   default:
     display_title: Master
     display_options:
       exposed_form:
         options:
-          submit_button: Suodatus
+          submit_button: Suodata
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Asc
@@ -39,9 +39,9 @@ display:
             label: Osoitteeseen
         status_code:
           expose:
-            label: 'Status code'
+            label: Tilakoodi
           group_info:
-            label: 'Status code'
+            label: Tilakoodi
             group_items:
               1:
                 title: '300 Multiple Choices'

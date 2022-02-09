@@ -30,7 +30,6 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       text: text
       columns: columns
@@ -40,25 +39,30 @@ settings:
       list_of_links: list_of_links
       content_cards: content_cards
       webform: webform
+      chart: chart
+    negate: 0
     target_bundles_drag_drop:
       accordion:
-        enabled: true
         weight: -25
+        enabled: true
       accordion_item:
         weight: -20
         enabled: false
       banner:
         weight: -16
         enabled: false
+      chart:
+        weight: 25
+        enabled: true
       columns:
-        enabled: true
         weight: -26
+        enabled: true
       content_cards:
-        enabled: true
         weight: -21
-      gallery:
         enabled: true
+      gallery:
         weight: -23
+        enabled: true
       gallery_slide:
         weight: -19
         enabled: false
@@ -66,21 +70,21 @@ settings:
         weight: -18
         enabled: false
       image:
-        enabled: true
         weight: -24
+        enabled: true
       liftup_with_image:
         weight: -15
         enabled: false
       list_of_links:
-        enabled: true
         weight: -22
+        enabled: true
       list_of_links_item:
         weight: -17
         enabled: false
       text:
-        enabled: true
         weight: -27
-      webform:
         enabled: true
+      webform:
         weight: 15
+        enabled: true
 field_type: entity_reference_revisions

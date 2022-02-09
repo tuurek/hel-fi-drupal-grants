@@ -73,3 +73,6 @@ permissions:
   - 'view unpublished paragraphs'
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'
+  - 'create helfi_chart media'
+  - 'delete own helfi_chart media'
+  - 'edit own helfi_chart media'

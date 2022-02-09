@@ -10,7 +10,7 @@ display:
           label: Sisältötyyppi
           separator: ', '
         name:
-          label: Tekijä
+          label: Kirjoittaja
         status:
           label: Tila
           settings:
@@ -30,7 +30,7 @@ display:
             last: 'Last »'
       exposed_form:
         options:
-          submit_button: Suodatus
+          submit_button: Suodata
           reset_button_label: Palauta
           exposed_sorts_label: Lajittele
           sort_asc_label: Asc
@@ -66,6 +66,6 @@ display:
         title: Sisältö
       tab_options:
         title: Sisältö
-        description: 'Find and manage content'
+        description: 'Etsi ja hallitse sisältöä'
 label: Sisältö
 description: 'Etsi ja ylläpidä sisältöä.'
