@@ -1,0 +1,17 @@
+.grants-profile {
+  .hds-icon {
+    color: green;
+    vertical-align: middle;
+  }
+  &-wrapper {
+    display: flex;
+    width: 100%;
+    h4 {
+      margin: 0;
+      font-size: var(--fontsize-body-m);
+    }
+    &-item {
+      padding: 10px;
+    }
+  }
+}
