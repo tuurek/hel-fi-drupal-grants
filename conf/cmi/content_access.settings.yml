@@ -5,5 +5,6 @@ content_access_roles_gids:
   authenticated: 2
   admin: 3
   content_producer: 4
+  helsinkiprofiili: 5
 content_access_node_type:
   address: 'a:2:{s:8:"view_own";a:3:{i:0;s:13:"authenticated";i:1;s:5:"admin";i:2;s:16:"content_producer";}s:4:"view";a:0:{}}'

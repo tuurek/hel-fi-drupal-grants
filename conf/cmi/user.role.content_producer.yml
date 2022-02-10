@@ -1,29 +1,7 @@
 uuid: 0399bf11-acf6-475b-9cac-b60f7cd3480b
 langcode: en
 status: true
-§dependencies:
-  config:
-    - media.type.file
-    - media.type.image
-    - media.type.remote_video
-    - media.type.soundcloud
-    - node.type.address
-    - node.type.landing_page
-    - node.type.page
-    - taxonomy.vocabulary.keywords
-  module:
-    - content_translation
-    - file
-    - helfi_api_base
-    - media
-    - node
-    - paragraphs
-    - path
-    - scheduler
-    - system
-    - taxonomy
-    - toolbar
-    - webform
+dependencies: {  }
 _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
