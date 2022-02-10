@@ -1,0 +1,21 @@
+uuid: 40c91592-53b9-4c98-b5a2-9c95e872a9c2
+langcode: fi
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_y_tunnus
+field_name: field_y_tunnus
+entity_type: user
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

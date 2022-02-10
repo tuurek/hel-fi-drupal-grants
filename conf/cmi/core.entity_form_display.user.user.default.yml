@@ -13,69 +13,69 @@ mode: default
 content:
   account:
     weight: -10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_address:
+    type: entity_reference_autocomplete
     weight: 37
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_kotipaikka:
+    type: string_textfield
     weight: 34
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_lyhenne:
+    type: string_textfield
     weight: 36
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_perustamisvuosi:
+    type: number
     weight: 33
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
   field_rekisterointipaiva:
+    type: datetime_default
     weight: 35
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_virallinen_nimi:
+    type: string_textfield
     weight: 32
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_y_tunnus:
+    type: string_textfield
     weight: 31
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   language:
     weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   path:
     type: path
     weight: 30

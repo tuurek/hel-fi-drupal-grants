@@ -7,7 +7,7 @@ display:
         title:
           label: Otsikko
         name:
-          label: Tekijä
+          label: Kirjoittaja
         changed:
           label: 'Viimeksi päivitetty'
       pager:

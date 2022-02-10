@@ -1,0 +1,21 @@
+uuid: 271a8d89-e24d-4dd2-bfb0-652dba87122f
+langcode: fi
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_virallinen_nimi
+field_name: field_virallinen_nimi
+entity_type: user
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
