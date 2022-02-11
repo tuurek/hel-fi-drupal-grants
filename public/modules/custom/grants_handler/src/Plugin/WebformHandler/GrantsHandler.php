@@ -579,35 +579,38 @@ class GrantsHandler extends WebformHandlerBase {
       (object) [
         "ID" => "firstname",
         "label" => "Etunimi",
-//        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["firstName"],
+    // "value" => $userData["myProfile"]
+        // ["verifiedPersonalInformation"]["firstName"],
         "value" => 'Etunimi',
         "valueType" => "string",
       ],
       (object) [
         "ID" => "lastname",
         "label" => "Sukunimi",
-//        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["lastName"],
+      // "value" => $userData["myProfile"]
+        // ["verifiedPersonalInformation"]["lastName"],
         "value" => 'Sukunimi',
         "valueType" => "string",
       ],
       (object) [
         "ID" => "personID",
         "label" => "Henkilötunnus",
-//        "value" => $userData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"],
+      // "value" => $userData["myProfile"]["verifiedPersonalInformation"]
+        // ["nationalIdentificationNumber"],
         "value" => '243234-342',
         "valueType" => "string",
       ],
       (object) [
         "ID" => "userID",
         "label" => "Käyttäjätunnus",
-//        "value" => $userData["myProfile"]["id"],
+      // "value" => $userData["myProfile"]["id"],
         "value" => 'dfasdfadsf-asdfasdfafs-sdfasfasf-asfdasdf',
         "valueType" => "string",
       ],
       (object) [
         "ID" => "email",
         "label" => "Sähköposti",
-//        "value" => $userData["myProfile"]["primaryEmail"]["email"],
+      // "value" => $userData["myProfile"]["primaryEmail"]["email"],
         "value" => 'sahko@posti.fi',
         "valueType" => "string",
       ],
