@@ -1,0 +1,4 @@
+tabs:
+  version: 1.x
+  js:
+    js/tabs.js: {}

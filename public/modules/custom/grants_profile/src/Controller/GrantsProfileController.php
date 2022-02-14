@@ -91,6 +91,8 @@ class GrantsProfileController extends ControllerBase {
       '#type' => 'item',
       '#markup' => $this->t('It works!'),
     ];
+    $build['#title'] = $profile['companyName'];
+    $build['#attached']['library'][] = 'grants_profile/tabs';
     return $build;
   }
 

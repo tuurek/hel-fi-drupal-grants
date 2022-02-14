@@ -1,108 +1,127 @@
-<div class="grants-profile">
-  <p>Grants profile page. View / edit saved profile data</p>
-  <h2>{{ "Basic Information"|t }}</h2>
-  <h3>{{ profile.companyName }}</h3>
-  <h4>{{ "Company name"|t }}</h4>
-  <div class="grants-profile-item grants-profile-company-name">{{ profile.companyName }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
-
-  <hr/>
-  <div class="grants-profile-wrapper">
-    <div class="grants-profile-wrapper-item">
-      <h4>{{ "Business ID"|t }}</h4>
-      <div class="grants-profile-item">{{ profile.businessId }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
-    </div>
-    <div class="grants-profile-wrapper-item">
-      <h4>{{ "Company Location"|t }}</h4>
-      <div class="grants-profile-item">{{ profile.companyHome }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
-    </div>
-    <div class="grants-profile-wrapper-item">
-      <h4>{{ "Registration Date"|t }}</h4>
-      <div class="grants-profile-item">{{ profile.registrationDate }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
-    </div>
-    <div class="grants-profile-wrapper-item">
-      <h4>{{ "Company Status"|t }}</h4>
-      <div class="grants-profile-item">{{ profile.companyStatus }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
-    </div>
-    <div class="grants-profile-wrapper-item">
-      <h4>{{ "Special Status"|t }}</h4>
-      <div class="grants-profile-item">{{ profile.companyStatusSpecial }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
-    </div>
-  </div>
-  <hr/>
-
-  <div class="grants-profile-prh-info">
-    <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> {{ "Marked fields habe been retreived from PRH and cannot be edited."|t }}
-  </div>
-  <div class="grants-profile-more">
-    <h2>{{ "Extra Information" }}</h2>
-    {{ "Extra information text"|t }}
-  </div>
-  {#  <p>{{ dump(profile) }}</p> #}
-  <hr />
-  <p>{{ grants_profile_form }}</p>
-  <hr />
-  {% if applications %}
-    <ul class="company-address-list">
-      {% for key,item in applications %}
-        <li class="user-applications">
-          <a href="/grants-profile/applications/{{ item.id }}">
-            {{ item.transaction_id }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+<div class="container">
+  <h1>{{ title }}</h1>
 </div>
+<div class="tabs container">
+  <div class="tabs__tablist">
+    <div role="tablist" aria-label="Entertainment">
+      <button type="button" role="tab" aria-selected="true" aria-controls="info-tab" id="info"><span>{{ "Company information"|t }}</span></button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="applications-tab" id="messages" tabindex="-1"><span>{{ "Company applications"|t }}</span></button>
+    </div>
+  </div>
+  <div tabindex="0" role="tabpanel" id="info-tab" aria-labelledby="info">
+
+    <div class="grants-profile">
+      <div class="grants-profile-basicinfo">
+        <div class="container">
+          <h3>{{ "Company information"|t }}</h3>
+          <p>{{ "Avustusten hakeminen edellyttää yhteisön tietojen täydentämistä. Tehdessäsi avustushakemuksia antamasi tiedot täytetää niihin automaattisesti."|t }}</p>
+          <h4>{{ "Basic Information"|t }}</h4>
+          <hr />
+          <div class="grants-profile-wrapper">
+            <div class="grants-profile-wrapper-item">
+              <h5>{{ "Company name"|t }}</h5>
+              <div class="grants-profile-item grants-profile-company-name">{{ profile.companyName }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
+            </div>      </div>
+          <hr/>
+          <div class="grants-profile-wrapper">
+            <div class="grants-profile-wrapper-item">
+              <h5>{{ "Business ID"|t }}</h5>
+              <div class="grants-profile-item">{{ profile.businessId }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
+            </div>
+            <div class="grants-profile-wrapper-item">
+              <h5>{{ "Company Location"|t }}</h5>
+              <div class="grants-profile-item">{{ profile.companyHome }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
+            </div>
+            <div class="grants-profile-wrapper-item">
+              <h5>{{ "Registration Date"|t }}</h5>
+              <div class="grants-profile-item">{{ profile.registrationDate|date('d.m.Y') }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
+            </div>
+            <div class="grants-profile-wrapper-item">
+              <h5>{{ "Company Status"|t }}</h5>
+              <div class="grants-profile-item">{{ profile.companyStatus }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
+            </div>
+            <div class="grants-profile-wrapper-item">
+              <h5>{{ "Special Status"|t }}</h5>
+              <div class="grants-profile-item">{{ profile.companyStatusSpecial }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
+            </div>
+          </div>
+          <hr/>
+
+          <div class="grants-profile-prh-info">
+            <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> {{ "Marked fields habe been retreived from PRH and cannot be edited."|t }}
+          </div>
+        </div>
+      </div>
+      <div class="grants-profile-extrainfo">
+        <div class="container">
+          {{ grants_profile_form }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div tabindex="0" role="tabpanel" id="applications-tab" aria-labelledby="applications" class="is-hidden">
+    {% if applications %}
+      <ul class="company-address-list">
+        {% for key,item in applications %}
+          <li class="user-applications">
+            <a href="/grants-profile/applications/{{ item.id }}">
+              {{ item.transaction_id }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+  {#{% if profile %}#}
+
+  {#    <p>#}
+  {#    <h4>Addresses</h4>#}
+  {#    {% if profile.addresses %}#}
+  {#        <ul class="company-address-list">#}
+  {#            {% for key,item in profile.addresses %}#}
+  {#                <li class="user-applications">#}
+  {#                    <a href="/grants-profile/address/{{ key }}">#}
+  {#                        {{ item.street }}#}
+  {#                    </a>#}
+  {#                </li>#}
+  {#            {% endfor %}#}
+  {#        </ul>#}
+  {#    {% endif %}#}
+  {#    <a href="/grants-profile/address/new">New Address</a>#}
+  {#    </p>#}
+  {#    <p>#}
+  {#    <h4>Officials</h4>#}
+  {#    {% if profile.officials %}#}
+  {#        <ul class="company-address-list">#}
+  {#            {% for key,item in profile.officials %}#}
+  {#                <li class="user-applications">#}
+  {#                    <a href="/grants-profile/application-officials/{{ key }}">#}
+  {#                        {{ item.name }}#}
+  {#                    </a>#}
+  {#                </li>#}
+  {#            {% endfor %}#}
+  {#        </ul>#}
+  {#    {% endif %}#}
+  {#    <a href="/grants-profile/application-officials/new">New Official</a>#}
+  {#    </p>#}
+  {#    <p>#}
+  {#    <h4>Bank Accounts</h4>#}
+  {#    {% if profile.bankAccounts %}#}
+  {#        <ul class="company-address-list">#}
+  {#            {% for key,item in profile.bankAccounts %}#}
+  {#                <li class="user-applications">#}
+  {#                    <a href="/grants-profile/bank-accounts/{{ key }}">#}
+  {#                        {{ item.bankAccount }}#}
+  {#                    </a>#}
+  {#                </li>#}
+  {#            {% endfor %}#}
+  {#        </ul>#}
+  {#    {% endif %}#}
+  {#    <a href="/grants-profile/bank-accounts/new">New Bank Account</a>#}
+  {#    </p>#}
 
 
-{#{% if profile %}#}
+  {#{% endif %}#}
 
-{#    <p>#}
-{#    <h4>Addresses</h4>#}
-{#    {% if profile.addresses %}#}
-{#        <ul class="company-address-list">#}
-{#            {% for key,item in profile.addresses %}#}
-{#                <li class="user-applications">#}
-{#                    <a href="/grants-profile/address/{{ key }}">#}
-{#                        {{ item.street }}#}
-{#                    </a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-{#    <a href="/grants-profile/address/new">New Address</a>#}
-{#    </p>#}
-{#    <p>#}
-{#    <h4>Officials</h4>#}
-{#    {% if profile.officials %}#}
-{#        <ul class="company-address-list">#}
-{#            {% for key,item in profile.officials %}#}
-{#                <li class="user-applications">#}
-{#                    <a href="/grants-profile/application-officials/{{ key }}">#}
-{#                        {{ item.name }}#}
-{#                    </a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-{#    <a href="/grants-profile/application-officials/new">New Official</a>#}
-{#    </p>#}
-{#    <p>#}
-{#    <h4>Bank Accounts</h4>#}
-{#    {% if profile.bankAccounts %}#}
-{#        <ul class="company-address-list">#}
-{#            {% for key,item in profile.bankAccounts %}#}
-{#                <li class="user-applications">#}
-{#                    <a href="/grants-profile/bank-accounts/{{ key }}">#}
-{#                        {{ item.bankAccount }}#}
-{#                    </a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#    {% endif %}#}
-{#    <a href="/grants-profile/bank-accounts/new">New Bank Account</a>#}
-{#    </p>#}
-
-
-{#{% endif %}#}
-
+</div>

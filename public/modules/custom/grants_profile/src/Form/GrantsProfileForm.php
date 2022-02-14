@@ -72,71 +72,136 @@ class GrantsProfileForm extends FormBase {
 
     // set profile content for other fields than this form
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);
-    $form['foundingYear'] = [
+    $form['foundingYearWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Founding year'),
+    ];
+    $form['foundingYearWrapper']['foundingYear'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Founding year'),
       '#required' => TRUE,
       '#default_value' => $grantsProfileContent['foundingYear'],
     ];
-    $form['companyNameShort'] = [
+    $form['companyNameShortWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company short name'),
+    ];
+    $form['companyNameShortWrapper']['companyNameShort'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Company short name'),
       '#required' => TRUE,
       '#default_value' => $grantsProfileContent['companyNameShort'],
     ];
-    $form['companyHomePage'] = [
+    $form['companyHomePageWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company www address'),
+    ];
+    $form['companyHomePageWrapper']['companyHomePage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Company www address'),
       '#required' => TRUE,
       '#default_value' => $grantsProfileContent['companyHomePage'],
     ];
-    $form['companyEmail'] = [
+    $form['companyEmailWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company email'),
+    ];
+    $form['companyEmailWrapper']['companyEmail'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Company email'),
       '#required' => TRUE,
       '#default_value' => $grantsProfileContent['companyEmail'],
     ];
-    $form['businessPurpose'] = [
-      '#type' => 'textarea',
+    $form['businessPurposeWrapper'] = [
+      '#type' => 'webform_section',
       '#title' => $this->t('Business Purpose'),
+    ];
+    $form['businessPurposeWrapper']['businessPurpose'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Description of business purpose'),
       '#required' => TRUE,
       '#default_value' => $grantsProfileContent['businessPurpose'],
     ];
-
-    $adressMarkup = '<ul>';
-    foreach ($grantsProfileContent["addresses"] as $key => $address) {
-      $adressMarkup .= '<li><a href="/grants-profile/address/' . $key . '">' . $address['street'] . '</a></li>';
+    $addressMarkup = '<p>'.$this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.").'</p>';
+    if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
+      $addressMarkup .= '<ul>';
+      foreach ($grantsProfileContent["addresses"] as $key => $address) {
+        $addressMarkup .= '<li><a href="/grants-profile/address/' . $key . '">' . $address['street'] . '</a></li>';
+      }
+      $addressMarkup .= '</ul>';
+    } else {
+      $addressMarkup .= '
+    <section aria-label="Notification" class="hds-notification hds-notification--alert">
+      <div class="hds-notification__content">
+        <div class="hds-notification__label" role="heading" aria-level="2">
+          <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+          <span>'.$this->t('Add at least one address').'</span>
+        </div>
+      </div>
+    </section>';
     }
-    $adressMarkup .= '</ul>';
+    $addressMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/address/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
+<span class="hds-button__label">'.$this->t('New Address').'</span></a></div>';
+    $addressMarkup = '<div>'.$addressMarkup.'</div>';
 
-    $form['address_markup'] = [
+    $form['addressWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company Addresses'),
+    ];
+    $form['addressWrapper']['address_markup'] = [
       '#type' => 'markup',
-      '#markup' => $adressMarkup,
-      '#suffix' => '<div><a href="/grants-profile/address/new">New Address</a></div>',
+      '#markup' => $addressMarkup,
     ];
 
-    $bankAccountMarkup = '<ul>';
-    foreach ($grantsProfileContent["bankAccounts"] as $key => $address) {
-      $bankAccountMarkup .= '<li><a href="/grants-profile/bank-accounts/' . $key . '">' . $address['bankAccount'] . '</a></li>';
-    }
-    $bankAccountMarkup .= '</ul>';
+    $bankAccountMarkup = '<p>'.$this->t('You can add several bank accounts to your company. The bank account must be a Finnish IBAN account number.').'</p>';
+    $bankAccountMarkup .= '<p>'.$this->t("The information you give are usable when making grants applications. If a grant is given to an application, it is paid to the account number you've given on the application").'</p>';
 
-    $form['bankAccount_markup'] = [
+    if (is_array($grantsProfileContent["bankAccounts"]) && count($grantsProfileContent["bankAccounts"]) > 0) {
+      $bankAccountMarkup .= '<ul>';
+      foreach ($grantsProfileContent["bankAccounts"] as $key => $address) {
+        $bankAccountMarkup .= '<li><a href="/grants-profile/bank-accounts/' . $key . '">' . $address['bankAccount'] . '</a></li>';
+      }
+      $bankAccountMarkup .= '</ul>';
+    } else {
+      $bankAccountMarkup .= '
+    <section aria-label="Notification" class="hds-notification hds-notification--alert">
+      <div class="hds-notification__content">
+        <div class="hds-notification__label" role="heading" aria-level="2">
+          <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+          <span>'.$this->t('Add at least one account number').'</span>
+        </div>
+      </div>
+    </section>';
+    }
+    $bankAccountMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/bank-accounts/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
+<span class="hds-button__label">'.$this->t('New Bank account').'</span></a></div>';
+    $bankAccountMarkup = '<div>'.$bankAccountMarkup.'</div>';
+    $form['bankAccountWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company Bank Accounts'),
+    ];
+    $form['bankAccountWrapper']['bankAccount_markup'] = [
       '#type' => 'markup',
       '#markup' => $bankAccountMarkup,
-      '#suffix' => '<div><a href="/grants-profile/bank-accounts/new">New Bank account</a></div>',
     ];
-
-    $officialsMarkup = '<ul>';
+    $officialsMarkup = '<p>'.$this->t('Report the names and contact information of officials, such as the chairperson, secretary, etc.').'</p>';
+    $officialsMarkup .= '<p>'.$this->t("The information you give are usable during grants applciations.").'</p>';
+    $officialsMarkup .= '<ul>';
     foreach ($grantsProfileContent["officials"] as $key => $address) {
       $officialsMarkup .= '<li><a href="/grants-profile/application-officials/' . $key . '">' . $address['name'] . '</a></li>';
     }
     $officialsMarkup .= '</ul>';
+    $officialsMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/application-officials/new">
+<span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span><span class="hds-button__label">'.$this->t('New official').'</span></a></div>';
+    $officialsMarkup = '<div>'.$officialsMarkup.'</div>';
 
-    $form['officials_markup'] = [
+    $form['officialsWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company officials'),
+    ];
+    $form['officialsWrapper']['officials_markup'] = [
       '#type' => 'markup',
       '#markup' => $officialsMarkup,
-      '#suffix' => '<div><a href="/grants-profile/application-officials/new">New official</a></div>',
     ];
 
     //    $form['addresses'] = [
