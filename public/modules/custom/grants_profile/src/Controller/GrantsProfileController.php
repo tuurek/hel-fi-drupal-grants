@@ -4,9 +4,6 @@ namespace Drupal\grants_profile\Controller;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
-use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
-use http\Url;
 use Laminas\Diactoros\Response\RedirectResponse;
 
 /**
@@ -45,7 +42,10 @@ class GrantsProfileController extends ControllerBase {
   }
 
   /**
+   * Show company select form.
+   *
    * @return array
+   *   Build data.
    */
   public function selectCompany(): array {
     $form = \Drupal::formBuilder()
@@ -66,6 +66,7 @@ class GrantsProfileController extends ControllerBase {
    *
    * @return array|\Laminas\Diactoros\Response\RedirectResponse
    *   Data to render
+   *
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function ownProfile(): array|RedirectResponse {
@@ -74,11 +75,11 @@ class GrantsProfileController extends ControllerBase {
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     if ($selectedCompany == NULL) {
-      $this->messenger()->addError($this->t('No profile data available, select company'), true);
+      $this->messenger()->addError($this->t('No profile data available, select company'), TRUE);
       return new RedirectResponse('/select-company');
     }
     else {
-      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, true);
+      $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
       $build['#profile'] = $profile;
     }
 

@@ -30,13 +30,23 @@ class CompanySelectForm extends FormBase {
     $userExternalData = \Drupal::service('helfi_helsinki_profiili.userdata');
     $profileData = $userExternalData->getUserProfileData();
 
-    if(isset($profileData["myProfile"])) {
+    if (isset($profileData["myProfile"])) {
       $profileData = $profileData["myProfile"];
     }
 
     /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhClient */
     $yjdhClient = \Drupal::service('helfi_yjdh.client');
-    $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
+
+    // Make sure we have ID to search with. Remove when tunnistamo works.
+    // @todo Remove hard coded hetu when tunnistamo works reliably.
+    if (isset($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"])) {
+      $associationRoles = $yjdhClient->roleSearchWithSsn($profileData["verifiedPersonalInformation"]["nationalIdentificationNumber"]);
+    }
+    else {
+      $associationRoles = $yjdhClient->roleSearchWithSsn('210281-9988');
+      $this->messenger()
+        ->addStatus('No profiilidata, preset social security used');
+    }
 
     $options = [];
     foreach ($associationRoles['Role'] as $association) {

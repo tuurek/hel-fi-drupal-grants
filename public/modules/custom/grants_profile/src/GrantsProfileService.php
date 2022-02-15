@@ -2,7 +2,8 @@
 
 namespace Drupal\grants_profile;
 
-use Drupal\Component\Serialization\Json;
+use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -10,7 +11,7 @@ use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\grants_metadata\AtvSchema;
-use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
+use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
@@ -57,13 +58,15 @@ class GrantsProfileService {
   protected HelsinkiProfiiliUserData $helsinkiProfiili;
 
   /**
-   * ATV Schema mapper
+   * ATV Schema mapper.
    *
    * @var \Drupal\grants_metadata\AtvSchema
    */
   protected AtvSchema $atvSchema;
 
   /**
+   * Access to YTJ / Yrtti.
+   *
    * @var \Drupal\helfi_yjdh\YjdhClient
    */
   protected YjdhClient $yjdhClient;
@@ -73,7 +76,7 @@ class GrantsProfileService {
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactory
    */
-  protected $logger;
+  protected LoggerChannelFactory|LoggerChannelInterface|LoggerChannel $logger;
 
   /**
    * Constructs a GrantsProfileService object.
@@ -86,14 +89,20 @@ class GrantsProfileService {
    *   Show messages to user.
    * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helsinkiProfiiliUserData
    *   Access to Helsinki profiili data.
+   * @param \Drupal\grants_metadata\AtvSchema $atv_schema
+   *   Atv chema mapper.
+   * @param \Drupal\helfi_yjdh\YjdhClient $yjdhClient
+   *   Access to yjdh data.
+   * @param \Drupal\Core\Logger\LoggerChannelFactory $loggerFactory
+   *   Logger service.
    */
   public function __construct(
-    AtvService               $helfi_atv,
-    PrivateTempStoreFactory  $tempstore,
-    MessengerInterface       $messenger,
+    AtvService $helfi_atv,
+    PrivateTempStoreFactory $tempstore,
+    MessengerInterface $messenger,
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
-    AtvSchema                $atv_schema,
-    YjdhClient               $yjdhClient,
+    AtvSchema $atv_schema,
+    YjdhClient $yjdhClient,
     LoggerChannelFactory $loggerFactory
   ) {
     $this->helfiAtv = $helfi_atv;
@@ -114,62 +123,55 @@ class GrantsProfileService {
    * @return array
    *   New profile
    */
-  public function newProfile(array $data): array {
+  public function newProfile(array $data): AtvDocument {
 
-    $newProfile = [];
+    $newProfileData = [];
     $selectedCompany = $this->getSelectedCompany();
     $userProfile = $this->helsinkiProfiili->getUserProfileData();
     $userData = $this->helsinkiProfiili->getUserData();
 
     // If data is already in profile format, use that as is.
     if (isset($data['content'])) {
-      $newProfile = $data;
+      $newProfileData = $data;
     }
     else {
       // Or create new content field.
-      $newProfile['content'] = $data;
+      $newProfileData['content'] = $data;
     }
 
-    $newProfile['type'] = 'grants_profile';
-    $newProfile['business_id'] = $selectedCompany;
-    $newProfile['user_id'] = $userData["sub"];
-    $newProfile['status'] = self::DOCUMENT_STATUS_NEW;
+    $newProfileData['type'] = 'grants_profile';
+    $newProfileData['business_id'] = $selectedCompany;
+    $newProfileData['user_id'] = $userData["sub"];
+    $newProfileData['status'] = self::DOCUMENT_STATUS_NEW;
 
-    $newProfile['transaction_id'] = $this->newProfileTransactionId();
-    $newProfile['tos_record_id'] = $this->newProfileTosRecordId();
-    $newProfile['tos_function_id'] = $this->newProfileTosFunctionId();
+    $newProfileData['tos_record_id'] = $this->newProfileTosRecordId();
+    $newProfileData['tos_function_id'] = $this->newProfileTosFunctionId();
 
-    $newProfile['metadata'] = $this->newProfileMetadata();
-    return $newProfile;
-  }
-
-  /**
-   * Metadata fields for new profile.
-   *
-   * @return string[]
-   *   Array containing metadata.
-   */
-  protected function newProfileMetadata(): array {
-    return [
-      'metadata-field' => 'metadata-value',
+    $newProfileData['metadata'] = [
+      'business_id' => $selectedCompany,
     ];
+
+    return $this->helfiAtv->createDocument($newProfileData);
   }
 
   /**
    * Transaction ID for new profile.
    *
+   * @todo Maybe these are Document level stuff?
+   *
    * @return string
    *   Transaction ID
-   * @todo This can probaably be hardcoded.
    *
+   * @todo This can probaably be hardcoded.
    */
-  protected function newProfileTransactionId(): string {
-    $selectedCompany = $this->getSelectedCompany();
-    return $selectedCompany;
+  protected function newTransactionId($transactionId): string {
+    return md5($transactionId);
   }
 
   /**
    * TOS ID.
+   *
+   * @todo Maybe these are Document level stuff?
    *
    * @return string
    *   TOS id
@@ -181,6 +183,8 @@ class GrantsProfileService {
   /**
    * Function Id.
    *
+   * @todo Maybe these are Document level stuff?
+   *
    * @return string
    *   New function ID.
    */
@@ -188,7 +192,13 @@ class GrantsProfileService {
     return 'eb30af1d9d654ebc98287ca25f231bf6';
   }
 
-  public function saveGrantsProfile($data) {
+  /**
+   * Saves grants profile to cache.
+   *
+   * @param array|AtvDocument $data
+   *   Profile data.
+   */
+  public function saveGrantsProfile(array|AtvDocument $data) {
     // Get selected company.
     $selectedCompany = $this->tempStore->get('selected_company');
     $this->setToCache($selectedCompany['business_id'], $data);
@@ -197,24 +207,35 @@ class GrantsProfileService {
   /**
    * Format data from tempstore & save document back to ATV.
    *
-   * @return bool|null
+   * @return bool|AtvDocument
    *   Did save succeed?
+   *
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function saveGrantsProfileAtv(): ?bool {
+  public function saveGrantsProfileAtv(): bool|AtvDocument {
     // Get selected company.
     $selectedCompany = $this->tempStore->get('selected_company');
     // Get grants profile.
-    $grantsProfile = $this->getGrantsProfile($selectedCompany['business_id']);
+    $grantsProfileDocument = $this->getGrantsProfile($selectedCompany['business_id']);
 
-    if (!isset($grantsProfile['id'])) {
-      $grantsProfile['status'] = self::DOCUMENT_STATUS_SAVED;
-      return $this->helfiAtv->postDocument($grantsProfile);
-    } else {
+    $transactionId = $this->newTransactionId(time());
+
+    if ($grantsProfileDocument->isNew()) {
+      $grantsProfileDocument->setStatus(self::DOCUMENT_STATUS_SAVED);
+      $grantsProfileDocument->setTransactionId($transactionId);
+      $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
+      return $this->helfiAtv->postDocument($grantsProfileDocument);
+    }
+    else {
       $payloadData = [
-        'content' => $grantsProfile['content'],
+        'content' => $grantsProfileDocument->getContent(),
+        'metadata' => $grantsProfileDocument->getMetadata(),
+        'transaction_id' => $this->newTransactionId($transactionId),
       ];
-
-      return $this->helfiAtv->patchDocument($grantsProfile['id'], $payloadData);
+      $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
+      return $this->helfiAtv->patchDocument($grantsProfileDocument->getId(), $payloadData);
     }
   }
 
@@ -248,6 +269,8 @@ class GrantsProfileService {
    *
    * @param string $address_id
    *   Address id to fetch.
+   * @param bool $refetch
+   *   Refetch data from ATV.
    *
    * @return string[]
    *   Array containing address or new address
@@ -368,12 +391,24 @@ class GrantsProfileService {
     $this->setToCache($selectedCompany, $profileContent);
   }
 
-
-  public function initGrantsProfile($businessId, $profileContent) {
-    // TODO: see if there's a better way to get readonly parameters from yrtti/ytj than here.
+  /**
+   * Make sure we have needed fields in our profile document.
+   *
+   * @param string $businessId
+   *   Business id for profile data.
+   * @param array $profileContent
+   *   Profile content.
+   *
+   * @return array
+   *   Profile content with required fields.
+   */
+  public function initGrantsProfile(string $businessId, array $profileContent): array {
+    // @todo see if there's a better way to get readonly parameters from yrtti/ytj than here.
     $assosiationDetails = $this->yjdhClient->getAssociationBasicInfo($businessId);
-    $companyDetails = $this->yjdhClient->getCompany($businessId);
-    if ($companyDetails == NULL && !empty($assosiationDetails)) {
+
+    // $companyDetails = $this->yjdhClient->getCompany($businessId);
+    // $companyDetails == NULL &&
+    if (!empty($assosiationDetails)) {
       $profileContent["companyName"] = $assosiationDetails["AssociationNameInfo"][0]["AssociationName"];
       $profileContent["businessId"] = $assosiationDetails["BusinessId"];
       $profileContent["companyStatus"] = $assosiationDetails["AssociationStatus"];
@@ -427,154 +462,13 @@ class GrantsProfileService {
 
     if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
-      if (is_string($profileData['content'])) {
-        // @todo when content is proper json, remove str_replace
-        return Json::decode(str_replace("'", "\"", $profileData['content']));
-      }
-      // if, for some reason cache has empty content, let's init fields.
-      if (empty($profileData['content'])) {
-        return $this->initGrantsProfile($businessId, $profileData['content']);
-      }
-      return $profileData['content'];
+      return $profileData->getContent();
     }
 
     $profileData = $this->getGrantsProfile($businessId, $refetch);
 
-    if (isset($profileData['content'])) {
-      if (is_string($profileData['content'])) {
-        $profileContent = Json::decode($profileData['content']);
-      } else {
-        $profileContent = $profileData['content'];
-      }
-    } else {
-      $profileContent = [];
-    }
+    return $this->initGrantsProfile($businessId, $profileData->getContent());
 
-    $profileContent = $this->initGrantsProfile($businessId, $profileContent);
-
-    if (isset($profileContent) && is_string($profileContent)) {
-      // @todo when content is proper json, remove str_replace
-      return Json::decode(str_replace("'", "\"", $profileContent));
-    }
-    return $profileContent;
-
-  }
-
-  private function getDemoContent() {
-    return '{
-  "grantsProfile": {
-    "profileInfoArray": [
-      {
-        "ID": "companyName",
-        "label": "Company name",
-        "value": "Testiyritys",
-        "valueType": "string"
-      },
-      {
-        "ID": "companyNameShort",
-        "label": "xx",
-        "value": "TYY",
-        "valueType": "string"
-      },
-      {
-        "ID": "companyHome",
-        "label": "home",
-        "value": "Helsinki",
-        "valueType": "string"
-      },
-      {
-        "ID": "companyHomePage",
-        "label": "Homepage",
-        "value": "htps://www.yle.fi",
-        "valueType": "string"
-      },
-      {
-        "ID": "companyEmail",
-        "label": "Email",
-        "value": "testi@email.com",
-        "valueType": "string"
-      },
-      {
-        "ID": "foundingYear",
-        "label": "Perustusvuosi",
-        "value": "2022",
-        "valueType": "int"
-      }
-    ],
-    "officialsArray": [
-      [
-        {
-          "ID": "name",
-          "label": "Nimi",
-          "value": "Koko Nimi",
-          "valueType": "string"
-        },
-        {
-          "ID": "role",
-          "label": "Rooli",
-          "value": "2",
-          "valueType": "string"
-        },
-        {
-          "ID": "email",
-          "label": "Sähköposti",
-          "value": "kolo@mail.com",
-          "valueType": "string"
-        },
-        {
-          "ID": "phone",
-          "label": "Puhelinnumero",
-          "value": "09-616527788",
-          "valueType": "string"
-        }
-      ]
-    ],
-    "addressesArray": [
-    [
-      {
-        "ID": "street",
-        "label": "Katuosoite",
-        "value": "Sannikontie",
-        "valueType": "string"
-      },
-      {
-        "ID": "phoneNumber",
-        "label": "Puhelinnumero",
-        "value": "+358404040404",
-        "valueType": "string"
-      },
-      {
-        "ID": "city",
-        "label": "Postitoimipaikka",
-        "value": "Kouvola",
-        "valueType": "string"
-      },
-      {
-        "ID": "postCode",
-        "label": "Postinumero",
-        "value": "46400",
-        "valueType": "string"
-      },
-      {
-        "ID": "country",
-        "label": "Maa",
-        "value": "Suomi",
-        "valueType": "string"
-      }
-    ]
-    ],
-    "bankAccountsArray": [
-      [
-       {
-        "ID": "bankAccount",
-        "label": "Bank account",
-        "value": "FI985763984657",
-        "valueType": "string"
-      }
-      ]
-    ]
-  }
-}';
   }
 
   /**
@@ -585,35 +479,26 @@ class GrantsProfileService {
    * @param bool $refetch
    *   Force refetching of the data.
    *
-   * @return array
+   * @return \Drupal\helfi_atv\AtvDocument
    *   Profiledata
    */
-  public function getGrantsProfile(string $businessId, bool $refetch = FALSE): array {
+  public function getGrantsProfile(string $businessId, bool $refetch = FALSE): AtvDocument {
     if ($refetch == FALSE) {
       if ($this->isCached($businessId)) {
         $document = $this->getFromCache($businessId);
         return $document;
-//        if (!isset($document['id'])) {
-//          $this->messenger->addStatus('Refetching document...');
-//        }
-//        else {
-//          return $document ?? [];
-//        }
       }
     }
 
-    // Get profile document from ATV
+    // Get profile document from ATV.
     try {
       $profileDocument = $this->getGrantsProfileFromAtv($businessId);
-    } catch (AtvDocumentNotFoundException $e) {
-      $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.',['%s' => $businessId]));
-      $this->logger->info($this->t('Grants profile not found for %s, new profile created.',['%s' => $businessId]));
-      // Initialize new profile
-      $profileDocument = $this->newProfile([]);
     }
-
-    if(isset($profileDocument['content']) && is_string($profileDocument['content'])){
-      $profileDocument['content'] = Json::decode($profileDocument['content']);
+    catch (AtvDocumentNotFoundException $e) {
+      $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
+      $this->logger->info($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
+      // Initialize new profile.
+      $profileDocument = $this->newProfile([]);
     }
 
     if (!empty($profileDocument)) {
@@ -631,26 +516,27 @@ class GrantsProfileService {
    * @param string $businessId
    *   Id to be fetched.
    *
-   * @return array
+   * @return \Drupal\helfi_atv\AtvDocument|bool
    *   Profile data
+   *
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    */
-  private function getGrantsProfileFromAtv(string $businessId): array {
+  private function getGrantsProfileFromAtv(string $businessId): AtvDocument|bool {
 
     $searchParams = [
       'business_id' => $businessId,
-      'transaction_id' => $businessId,
       'type' => 'grants_profile',
     ];
 
     try {
       $searchDocuments = $this->helfiAtv->searchDocuments($searchParams);
-    } catch (AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvFailedToConnectException | GuzzleException $e) {
       throw new AtvDocumentNotFoundException('Not found');
     }
 
     if (empty($searchDocuments)) {
-      return $searchDocuments;
+      return FALSE;
     }
     // @todo merge profiles if multiple is saved for some reason.
     return reset($searchDocuments);
@@ -700,10 +586,10 @@ class GrantsProfileService {
    * @param string $key
    *   Key to fetch from tempstore.
    *
-   * @return array|null
+   * @return array|\Drupal\helfi_atv\AtvDocument|null
    *   Data in cache or null
    */
-  private function getFromCache(string $key): ?array {
+  private function getFromCache(string $key): array|AtvDocument|NULL {
     $retval = !empty($this->tempStore->get($key)) ? $this->tempStore->get($key) : NULL;
     return $retval;
   }
@@ -713,15 +599,20 @@ class GrantsProfileService {
    *
    * @param string $key
    *   Used key for caching.
-   * @param array $data
+   * @param array|\Drupal\helfi_atv\AtvDocument $data
    *   Cached data.
    *
    * @return bool
    *   Did save succeed?
    */
-  private function setToCache(string $key, array $data): bool {
+  private function setToCache(string $key, array|AtvDocument $data): bool {
 
     try {
+
+      if (gettype($data) == 'object') {
+        $this->tempStore->set($key, $data);
+        return TRUE;
+      }
       if (isset($data['content'])) {
         $this->tempStore->set($key, $data);
         return TRUE;
@@ -732,11 +623,12 @@ class GrantsProfileService {
       }
       else {
         $grantsProfile = $this->getGrantsProfile($key);
-        $grantsProfile['content'] = $data;
+        $grantsProfile->setContent($data);
         $this->tempStore->set($key, $grantsProfile);
         return TRUE;
       }
-    } catch (TempStoreException $e) {
+    }
+    catch (TempStoreException $e) {
       return FALSE;
     }
   }

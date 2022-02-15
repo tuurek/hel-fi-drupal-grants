@@ -6,7 +6,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
-use Drupal\multivalue_form_element\Element\MultiValue;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,6 +45,7 @@ class GrantsProfileForm extends FormBase {
 
   /**
    * {@inheritdoc}
+   *
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
@@ -54,23 +54,9 @@ class GrantsProfileForm extends FormBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    $grantsProfileDocument = $grantsProfileService->getGrantsProfile($selectedCompany, TRUE);
+    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
-    // if profile is new init data
-    if ($grantsProfileDocument['status'] == 'DRAFT') {
-      if (empty($grantsProfileDocument['content'])) {
-        $grantsProfileContent = $grantsProfileService->initGrantsProfile($selectedCompany, []);
-      }
-      else {
-        $grantsProfileContent = $grantsProfileDocument['content'];
-      }
-    }
-    else {
-      // else get data from document
-      $grantsProfileContent = $grantsProfileDocument['content'];
-    }
-
-    // set profile content for other fields than this form
+    // Set profile content for other fields than this form.
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);
     $form['foundingYearWrapper'] = [
       '#type' => 'webform_section',
@@ -122,27 +108,28 @@ class GrantsProfileForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $grantsProfileContent['businessPurpose'],
     ];
-    $addressMarkup = '<p>'.$this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.").'</p>';
+    $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
       $addressMarkup .= '<ul>';
       foreach ($grantsProfileContent["addresses"] as $key => $address) {
         $addressMarkup .= '<li><a href="/grants-profile/address/' . $key . '">' . $address['street'] . '</a></li>';
       }
       $addressMarkup .= '</ul>';
-    } else {
+    }
+    else {
       $addressMarkup .= '
     <section aria-label="Notification" class="hds-notification hds-notification--alert">
       <div class="hds-notification__content">
         <div class="hds-notification__label" role="heading" aria-level="2">
           <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
-          <span>'.$this->t('Add at least one address').'</span>
+          <span>' . $this->t('Add at least one address') . '</span>
         </div>
       </div>
     </section>';
     }
     $addressMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/address/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
-<span class="hds-button__label">'.$this->t('New Address').'</span></a></div>';
-    $addressMarkup = '<div>'.$addressMarkup.'</div>';
+<span class="hds-button__label">' . $this->t('New Address') . '</span></a></div>';
+    $addressMarkup = '<div>' . $addressMarkup . '</div>';
 
     $form['addressWrapper'] = [
       '#type' => 'webform_section',
@@ -153,8 +140,8 @@ class GrantsProfileForm extends FormBase {
       '#markup' => $addressMarkup,
     ];
 
-    $bankAccountMarkup = '<p>'.$this->t('You can add several bank accounts to your company. The bank account must be a Finnish IBAN account number.').'</p>';
-    $bankAccountMarkup .= '<p>'.$this->t("The information you give are usable when making grants applications. If a grant is given to an application, it is paid to the account number you've given on the application").'</p>';
+    $bankAccountMarkup = '<p>' . $this->t('You can add several bank accounts to your company. The bank account must be a Finnish IBAN account number.') . '</p>';
+    $bankAccountMarkup .= '<p>' . $this->t("The information you give are usable when making grants applications. If a grant is given to an application, it is paid to the account number you've given on the application") . '</p>';
 
     if (is_array($grantsProfileContent["bankAccounts"]) && count($grantsProfileContent["bankAccounts"]) > 0) {
       $bankAccountMarkup .= '<ul>';
@@ -162,20 +149,21 @@ class GrantsProfileForm extends FormBase {
         $bankAccountMarkup .= '<li><a href="/grants-profile/bank-accounts/' . $key . '">' . $address['bankAccount'] . '</a></li>';
       }
       $bankAccountMarkup .= '</ul>';
-    } else {
+    }
+    else {
       $bankAccountMarkup .= '
     <section aria-label="Notification" class="hds-notification hds-notification--alert">
       <div class="hds-notification__content">
         <div class="hds-notification__label" role="heading" aria-level="2">
           <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
-          <span>'.$this->t('Add at least one account number').'</span>
+          <span>' . $this->t('Add at least one account number') . '</span>
         </div>
       </div>
     </section>';
     }
     $bankAccountMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/bank-accounts/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
-<span class="hds-button__label">'.$this->t('New Bank account').'</span></a></div>';
-    $bankAccountMarkup = '<div>'.$bankAccountMarkup.'</div>';
+<span class="hds-button__label">' . $this->t('New Bank account') . '</span></a></div>';
+    $bankAccountMarkup = '<div>' . $bankAccountMarkup . '</div>';
     $form['bankAccountWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Company Bank Accounts'),
@@ -184,16 +172,16 @@ class GrantsProfileForm extends FormBase {
       '#type' => 'markup',
       '#markup' => $bankAccountMarkup,
     ];
-    $officialsMarkup = '<p>'.$this->t('Report the names and contact information of officials, such as the chairperson, secretary, etc.').'</p>';
-    $officialsMarkup .= '<p>'.$this->t("The information you give are usable during grants applciations.").'</p>';
+    $officialsMarkup = '<p>' . $this->t('Report the names and contact information of officials, such as the chairperson, secretary, etc.') . '</p>';
+    $officialsMarkup .= '<p>' . $this->t("The information you give are usable during grants applciations.") . '</p>';
     $officialsMarkup .= '<ul>';
     foreach ($grantsProfileContent["officials"] as $key => $address) {
       $officialsMarkup .= '<li><a href="/grants-profile/application-officials/' . $key . '">' . $address['name'] . '</a></li>';
     }
     $officialsMarkup .= '</ul>';
     $officialsMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/application-officials/new">
-<span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span><span class="hds-button__label">'.$this->t('New official').'</span></a></div>';
-    $officialsMarkup = '<div>'.$officialsMarkup.'</div>';
+<span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span><span class="hds-button__label">' . $this->t('New official') . '</span></a></div>';
+    $officialsMarkup = '<div>' . $officialsMarkup . '</div>';
 
     $form['officialsWrapper'] = [
       '#type' => 'webform_section',
@@ -203,94 +191,6 @@ class GrantsProfileForm extends FormBase {
       '#type' => 'markup',
       '#markup' => $officialsMarkup,
     ];
-
-    //    $form['addresses'] = [
-    //      '#type' => 'multivalue',
-    //      '#title' => $this->t('Addresses'),
-    //      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-    //      '#default_value' => $grantsProfile['addresses'],
-    //      'street' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('Street'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'city' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('City'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'postCode' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('Post code'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'country' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('City'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'address_id' => [
-    //        '#type' => 'hidden',
-    //        '#value' => 124,
-    //      ],
-    //    ];
-    //
-    //    $form['bankAccounts'] = [
-    //      '#type' => 'multivalue',
-    //      '#title' => $this->t('Bank accounts'),
-    //      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-    //      '#default_value' => $grantsProfile['bankAccounts'],
-    //      'bankAccount' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('Bank account'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'bankAccount_id' => [
-    //        '#type' => 'hidden',
-    //        '#value' => 123,
-    //      ],
-    //    ];
-    //
-    //    $form['officials'] = [
-    //      '#type' => 'multivalue',
-    //      '#title' => $this->t('Application officials'),
-    //      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-    ////      '#default_value' => $grantsProfile['officials'],
-    ////      '#max_delta' => MultiValue::CARDINALITY_UNLIMITED,
-    //      'name' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('Name'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'role' => [
-    //        '#type' => 'select',
-    //        '#title' => $this->t('Role'),
-    //        '#required' => TRUE,
-    //        '#options' => [
-    //          1 => $this->t('Puheenjohtaja'),
-    //          2 => $this->t('Taloudesta vastaava'),
-    //          3 => $this->t('Sihteeri'),
-    //          4 => $this->t('Toiminnanjohtaja'),
-    //          5 => $this->t('Varapuheenjohtaja'),
-    //          6 => $this->t('Muu'),
-    //        ],
-    //      ],
-    //      'email' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('Email'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'phone' => [
-    //        '#type' => 'textfield',
-    //        '#title' => $this->t('Phone'),
-    //        '#required' => TRUE,
-    //      ],
-    //      'official_id' => [
-    //        '#type' => 'hidden',
-    //        '#value' => 123,
-    //      ],
-    //    ];
-
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -315,9 +215,8 @@ class GrantsProfileForm extends FormBase {
     }
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-    //    $grantsProfileService = \Drupal::service('grants_profile.service');
-    //    $selectedCompany = $grantsProfileService->getSelectedCompany();
-
+    // $grantsProfileService = \Drupal::service('grants_profile.service');
+    // $selectedCompany = $grantsProfileService->getSelectedCompany();
     $values = $form_state->getValues();
 
     $grantsProfileContent = $storage['grantsProfileContent'];
@@ -328,8 +227,7 @@ class GrantsProfileForm extends FormBase {
       }
     }
 
-    // TODO: täytyy laittaa storageen tuo profile
-
+    // @todo täytyy laittaa storageen tuo profile
     $grantsProfileDefinition = GrantsProfileDefinition::create('grants_profile_profile');
     // Create data object.
     $grantsProfileData = $this->typedDataManager->create($grantsProfileDefinition);

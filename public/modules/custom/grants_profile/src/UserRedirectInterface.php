@@ -22,6 +22,8 @@ interface UserRedirectInterface {
   /**
    * Set Login destination parameter to do redirect.
    *
+   * @param string $url
+   *   Url.
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *   User account to set destination for.
    */
@@ -30,6 +32,8 @@ interface UserRedirectInterface {
   /**
    * Set Logout destination parameter to do redirect.
    *
+   * @param string $url
+   *   Url.
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *   User account to set destination for.
    */

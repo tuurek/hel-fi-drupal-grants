@@ -68,6 +68,7 @@
         // Activate last tab
         activateTab(tabs[tabs.length - 1]);
         break;
+
       case keys.home:
         event.preventDefault();
         // Activate first tab
@@ -92,6 +93,7 @@
       case keys.right:
         determineOrientation(event);
         break;
+
       case keys.delete:
         determineDeletable(event);
         break;

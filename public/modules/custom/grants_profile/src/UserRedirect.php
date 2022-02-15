@@ -53,7 +53,7 @@ class UserRedirect implements UserRedirectInterface {
   /**
    * {@inheritdoc}
    */
-  public function setLogoutRedirection(string $url,AccountInterface $account = NULL) {
+  public function setLogoutRedirection(string $url, AccountInterface $account = NULL) {
     $this->prepareDestination($url, $account);
   }
 
@@ -84,8 +84,6 @@ class UserRedirect implements UserRedirectInterface {
         }
       }
     }
-    return;
-
   }
 
   /**
