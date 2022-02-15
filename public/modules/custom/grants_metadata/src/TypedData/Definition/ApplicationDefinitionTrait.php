@@ -2,7 +2,6 @@
 
 namespace Drupal\grants_metadata\TypedData\Definition;
 
-use Drupal\Core\TypedData\ComplexDataDefinitionBase;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 
@@ -10,8 +9,6 @@ use Drupal\Core\TypedData\ListDataDefinition;
  * Base class for data typing & mapping.
  */
 trait ApplicationDefinitionTrait {
-
-
 
   /**
    * Base data definitions for all.
@@ -25,8 +22,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'applicantType',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['company_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -36,8 +32,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'companyNumber',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['community_official_name'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -47,8 +42,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'communityOfficialName',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['community_official_name_short'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -58,8 +52,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'communityOfficialNameShort',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['registration_date'] = DataDefinition::create('datetime_iso8601')
       // ->setRequired(TRUE)
@@ -69,8 +62,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'registrationDate',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['founding_year'] = DataDefinition::create('integer')
       // ->setRequired(TRUE)
@@ -80,15 +72,13 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'foundingYear',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['home'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('Kotipaikka')
       ->setSetting('jsonPath', ['compensation', 'applicantInfoArray', 'home'])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['homepage'] = DataDefinition::create('uri')
       // ->setRequired(TRUE)
@@ -98,8 +88,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'homePage',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['email'] = DataDefinition::create('email')
       // ->setRequired(TRUE)
@@ -109,9 +98,8 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'email',
       ])
-       ->addConstraint('NotBlank')
-       ->addConstraint('Email')
-    ;
+      ->addConstraint('NotBlank')
+      ->addConstraint('Email');
 
     $info['applicant_officials'] = ListDataDefinition::create('grants_profile_application_official')
       // ->setRequired(TRUE)
@@ -126,8 +114,7 @@ trait ApplicationDefinitionTrait {
         'currentAddressInfoArray',
         'contactPerson',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['contact_person_phone_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -137,8 +124,7 @@ trait ApplicationDefinitionTrait {
         'currentAddressInfoArray',
         'phoneNumber',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['contact_person_street'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -148,8 +134,7 @@ trait ApplicationDefinitionTrait {
         'currentAddressInfoArray',
         'street',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['contact_person_city'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -159,8 +144,7 @@ trait ApplicationDefinitionTrait {
         'currentAddressInfoArray',
         'city',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['contact_person_post_code'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -170,8 +154,7 @@ trait ApplicationDefinitionTrait {
         'currentAddressInfoArray',
         'postCode',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['contact_person_country'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -181,8 +164,7 @@ trait ApplicationDefinitionTrait {
         'currentAddressInfoArray',
         'country',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['application_type'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -192,8 +174,7 @@ trait ApplicationDefinitionTrait {
         'applicationInfoArray',
         'applicationType',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['application_type_id'] = DataDefinition::create('string')
       ->setLabel('Application type id')
@@ -204,8 +185,7 @@ trait ApplicationDefinitionTrait {
       ])
       // ->setRequired(TRUE)
       ->addConstraint('NotBlank')
-      ->addConstraint('NotEmptyValue')
-    ;
+      ->addConstraint('NotEmptyValue');
 
     $info['form_timestamp'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -215,8 +195,7 @@ trait ApplicationDefinitionTrait {
         'applicationInfoArray',
         'formTimeStamp',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['application_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -226,8 +205,7 @@ trait ApplicationDefinitionTrait {
         'applicationInfoArray',
         'applicationNumber',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['status'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -237,8 +215,7 @@ trait ApplicationDefinitionTrait {
         'applicationInfoArray',
         'status',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['acting_year'] = DataDefinition::create('integer')
       // ->setRequired(TRUE)
@@ -248,8 +225,7 @@ trait ApplicationDefinitionTrait {
         'applicationInfoArray',
         'actingYear',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['account_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -259,8 +235,7 @@ trait ApplicationDefinitionTrait {
         'bankAccountArray',
         'accountNumber',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['compensation_purpose'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -271,8 +246,7 @@ trait ApplicationDefinitionTrait {
         'generalInfoArray',
         'purpose',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['compensation_boolean'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -283,8 +257,7 @@ trait ApplicationDefinitionTrait {
         'generalInfoArray',
         'compensationPreviousYear',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['compensation_total_amount'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -295,9 +268,8 @@ trait ApplicationDefinitionTrait {
         'generalInfoArray',
         'totalAmount',
       ])
-      ->setSetting('valueCallback','callback_function')
-       ->addConstraint('NotBlank')
-    ;
+      ->setSetting('valueCallback', 'callback_function')
+      ->addConstraint('NotBlank');
 
     $info['compensation_explanation'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -308,8 +280,7 @@ trait ApplicationDefinitionTrait {
         'generalInfoArray',
         'explanation',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['myonnetty_avustus'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
@@ -319,8 +290,7 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherCompensationsArray',
       ])
-      ->setSetting('requiredInJson', true)
-    ;
+      ->setSetting('requiredInJson', TRUE);
 
     $info['haettu_avustus_tieto'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
@@ -329,8 +299,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'otherCompensationsInfo',
         'otherAppliedCompensationsArray',
-      ])
-    ;
+      ]);
 
     $info['myonnetty_avustus_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
@@ -340,8 +309,7 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherCompensationsTotal',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['haettu_avustus_tieto_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
@@ -351,16 +319,13 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherAppliedCompensationsTotal',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['benefits_loans'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('benefitsInfoArray=>loans')
-      ->setSetting('jsonPath', ['compensation', 'benefitsInfoArray', 'loans'])
-      // ->addConstraint('NotBlank')
-    ;
-
+      ->setSetting('jsonPath', ['compensation', 'benefitsInfoArray', 'loans']);
+    // ->addConstraint('NotBlank')
     $info['benefits_premises'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('benefitsInfoArray=>premises')
@@ -369,8 +334,7 @@ trait ApplicationDefinitionTrait {
         'benefitsInfoArray',
         'premises',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['fee_person'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -380,8 +344,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feePerson',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['fee_community'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -391,8 +354,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feeCommunity',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['members_applicant_person_local'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -402,8 +364,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'membersApplicantPersonLocal',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['members_applicant_person_global'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -413,8 +374,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'membersApplicantPersonGlobal',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['members_applicant_community_local'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -424,8 +384,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'membersApplicantCommunityLocal',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['members_applicant_community_global'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -435,8 +394,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'membersApplicantCommunityGlobal',
       ])
-       ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['business_purpose'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -446,10 +404,8 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'businessPurpose',
       ])
-      ->setSetting('defaultValue','Lorem Ipsum Doler est...')
-      // ->addConstraint('NotBlank')
-    ;
-
+      ->setSetting('defaultValue', 'Lorem Ipsum Doler est...');
+    // ->addConstraint('NotBlank')
     $info['community_practices_business'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
       ->setLabel('activitiesInfoArray=>communityPracticesBusiness')
@@ -458,17 +414,13 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'communityPracticesBusiness',
       ])
-      ->setSetting('defaultValue',FALSE)
-      // ->addConstraint('NotBlank')
-    ;
-
+      ->setSetting('defaultValue', FALSE);
+    // ->addConstraint('NotBlank')
     $info['additional_information'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('additionalInformation')
-      ->setSetting('jsonPath', ['compensation', 'additionalInformation'])
-      // ->addConstraint('NotBlank')
-    ;
-
+      ->setSetting('jsonPath', ['compensation', 'additionalInformation']);
+    // ->addConstraint('NotBlank')
     // Sender details.
     // @todo Maybe move sender info to custom definition?
     $info['sender_firstname'] = DataDefinition::create('string')
@@ -478,9 +430,8 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'senderInfoArray',
         'firstname',
-      ])
-      // ->addConstraint('NotBlank')
-    ;
+      ]);
+    // ->addConstraint('NotBlank')
     $info['sender_lastname'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('lastname')
@@ -488,9 +439,8 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'senderInfoArray',
         'lastname',
-      ])
-      // ->addConstraint('NotBlank')
-    ;
+      ]);
+    // ->addConstraint('NotBlank')
     // @todo Validate person id?
     $info['sender_person_id'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -499,30 +449,24 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'senderInfoArray',
         'personID',
-      ])
-      // ->addConstraint('NotBlank')
-    ;
+      ]);
+    // ->addConstraint('NotBlank')
     $info['sender_user_id'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('userID')
-      ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'userID'])
-      // ->addConstraint('NotBlank')
-    ;
-
+      ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'userID']);
+    // ->addConstraint('NotBlank')
     $info['sender_email'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('Email')
-      ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'email'])
-      //        ->addConstraint('NotBlank')
-    ;
-
+      ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'email']);
+    // ->addConstraint('NotBlank')
     // Attachments.
     $info['attachments'] = ListDataDefinition::create('grants_metadata_attachment')
       // ->setRequired(TRUE)
       ->setLabel('attachmentsInfo=>attachmentsArray')
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
     // ->addConstraint('NotBlank')
-
     return $info;
   }
 

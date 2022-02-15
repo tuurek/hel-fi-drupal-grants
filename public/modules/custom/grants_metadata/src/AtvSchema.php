@@ -28,6 +28,11 @@ class AtvSchema {
    */
   protected array $structure;
 
+  /**
+   * Path to schema file.
+   *
+   * @var string
+   */
   protected string $atvSchemaPath;
 
   /**
@@ -39,9 +44,15 @@ class AtvSchema {
 
   }
 
-  public function setSchema($schemaPath){
+  /**
+   * Load json schema file.
+   *
+   * @param string $schemaPath
+   *   Path to schema file.
+   */
+  public function setSchema(string $schemaPath) {
 
-//    $schemaPath = getenv('ATV_SCHEMA_PATH');
+    // $schemaPath = getenv('ATV_SCHEMA_PATH');
     $jsonString = file_get_contents($schemaPath);
     $jsonStructure = Json::decode($jsonString);
 
@@ -62,7 +73,7 @@ class AtvSchema {
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function documentContentToTypedData(
-    array                          $document,
+    array $document,
     ComplexDataDefinitionInterface $typedDataDefinition): TypedDataInterface {
 
     if (isset($document['content']) && is_array($document['content'])) {
@@ -164,20 +175,19 @@ class AtvSchema {
    *
    * @param \Drupal\Core\TypedData\ComplexDataInterface $typedData
    *   Typed data to export.
+   * @param \Drupal\webform\Entity\WebformSubmission|null $webformSubmission
+   *   Form submission entity.
    *
    * @return array
    *   Document structure based on schema.
-   * @throws \Exception
    */
   public function typedDataToDocumentContent(
     ComplexDataInterface $typedData,
-    WebformSubmission $webformSubmission = null): array {
+    WebformSubmission $webformSubmission = NULL): array {
 
     $documentStructure = [];
 
-    /** @var  $property */
     foreach ($typedData as $property) {
-      $item = [];
       $definition = $property->getDataDefinition();
       $jsonPath = $definition->getSetting('jsonPath');
       $requiredInJson = $definition->getSetting('requiredInJson');
@@ -189,7 +199,7 @@ class AtvSchema {
 
       $value = $property->getValue();
 
-      // if value is null, try to set default value from config
+      // If value is null, try to set default value from config.
       if ($value == NULL) {
         $value = $defaultValue;
       }
@@ -232,7 +242,7 @@ class AtvSchema {
         case 3:
           if (is_array($value) && $this->numericKeys($value)) {
             if (empty($value)) {
-              if($requiredInJson == true){
+              if ($requiredInJson == TRUE) {
                 $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
               }
             }
@@ -249,9 +259,10 @@ class AtvSchema {
                       'label' => $propertyLabel,
                     ];
                     $fvalues[] = $valueArray;
-                  } else {
+                  }
+                  else {
                     $d = 'asdf';
-//                    throw new \Exception('Keyname not found');
+                    // Throw new \Exception('Keyname not found');.
                   }
 
                 }
@@ -314,7 +325,7 @@ class AtvSchema {
                     $fieldValues[] = $valueArray;
                   }
                   else {
-                    // probably no need to do anything in this else?
+                    // Probably no need to do anything in this else?
                     $idValue = $itemValueDefinitionLabel;
                     $d = 'asd';
                   }
@@ -347,9 +358,10 @@ class AtvSchema {
     }
     try {
       $an = $typedData->get('application_number')->getValue();
-//      $documentStructure['formUpdate'] = 'true';
-    } catch (\Exception $e) {
-//      $documentStructure['formUpdate'] = 'false';
+      // $documentStructure['formUpdate'] = 'true';
+    }
+    catch (\Exception $e) {
+      // $documentStructure['formUpdate'] = 'false';
     }
 
     if (!array_key_exists('attachmentsInfo', $documentStructure)) {

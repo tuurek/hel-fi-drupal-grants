@@ -56,7 +56,6 @@ class CompensationsComposite extends WebformCompositeBase {
     //
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
-
     $parent = parent::defineDefaultProperties();
 
     return [
@@ -66,6 +65,9 @@ class CompensationsComposite extends WebformCompositeBase {
     ] + $parent;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
     $retval = parent::getValue($element, $webform_submission, $options);
     return $retval;

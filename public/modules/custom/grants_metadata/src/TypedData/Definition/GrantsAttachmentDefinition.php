@@ -23,8 +23,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'description',
-        ])
-      ;
+        ]);
 
       $info['fileName'] = DataDefinition::create('string')
         ->setRequired(TRUE)

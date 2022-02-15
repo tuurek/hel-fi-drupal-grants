@@ -23,7 +23,7 @@ class YleisavustusHakemusDefinition extends ComplexDataDefinitionBase {
 
       $info = &$this->propertyDefinitions;
 
-      foreach($this->getBaseProperties() as $key => $property) {
+      foreach ($this->getBaseProperties() as $key => $property) {
         $info[$key] = $property;
       }
 
@@ -38,6 +38,15 @@ class YleisavustusHakemusDefinition extends ComplexDataDefinitionBase {
     return $this->propertyDefinitions;
   }
 
+  /**
+   * Override property definition.
+   *
+   * @param string $name
+   *   Property name.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface|void|null
+   *   Property definition.
+   */
   public function getPropertyDefinition($name) {
     $retval = parent::getPropertyDefinition($name);
     return $retval;

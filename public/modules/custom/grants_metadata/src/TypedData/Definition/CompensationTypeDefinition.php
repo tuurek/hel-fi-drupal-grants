@@ -43,11 +43,9 @@ class CompensationTypeDefinition extends ComplexDataDefinitionBase {
           'compensationInfo',
           'compensationArray',
           'subventionType',
-        ])
-        //      ->setRequired(TRUE)
-        //      ->addConstraint('NotBlank')
-      ;
-
+        ]);
+      // ->setRequired(TRUE)
+      // ->addConstraint('NotBlank')
       $info['amount'] = DataDefinition::create('float')
         ->setLabel('amount')
         ->setSetting('jsonPath', [
@@ -55,10 +53,9 @@ class CompensationTypeDefinition extends ComplexDataDefinitionBase {
           'compensationInfo',
           'compensationArray',
           'amount',
-        ])
-        //      ->setRequired(TRUE)
-        //      ->addConstraint('NotBlank')
-      ;
+        ]);
+      // ->setRequired(TRUE)
+      // ->addConstraint('NotBlank')
     }
     // And here we will add later fields as well.
     return $this->propertyDefinitions;

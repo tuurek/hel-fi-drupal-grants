@@ -38,13 +38,13 @@ class GrantsAttachments extends WebformCompositeBase {
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
     return [
-        'multiple' => '',
-        'size' => '',
-        'minlength' => '',
-        'maxlength' => '',
-        'placeholder' => '',
-        'filetype' => '',
-      ] + parent::defineDefaultProperties();
+      'multiple' => '',
+      'size' => '',
+      'minlength' => '',
+      'maxlength' => '',
+      'placeholder' => '',
+      'filetype' => '',
+    ] + parent::defineDefaultProperties();
   }
 
   /**
@@ -130,25 +130,24 @@ class GrantsAttachments extends WebformCompositeBase {
         // $element["#webform_parents"][2]
         if (in_array($fieldName, $element["#webform_parents"])) {
           $value = $fieldData;
-//          if (isset($fieldData['description'])) {
-//            $value = $fieldData;
-//            //          if ($fieldData['description'] == $webform_key) {
-//            //            $value = $fieldData;
-//            //            break;
-//            //          }
-//          }
-//          elseif ($fieldName == 'muu_liite') {
-//            $d = 'asdf';
-//            //          // Muu liite.
-//            //          $value = [];
-//            //          foreach ($data[$fieldName] as $key => $fieldValue) {
-//            //            if (is_numeric($key)) {
-//            //              $value[] = $fieldValue;
-//            //            }
-//            //          }
-//          }
+          // If (isset($fieldData['description'])) {
+          // $value = $fieldData;
+          // //          if ($fieldData['description'] == $webform_key) {
+          // //            $value = $fieldData;
+          // //            break;
+          // //          }
+          // }
+          // elseif ($fieldName == 'muu_liite') {
+          // $d = 'asdf';
+          // //          // Muu liite.
+          // //          $value = [];
+          // //          foreach ($data[$fieldName] as $key => $fieldValue) {
+          // //            if (is_numeric($key)) {
+          // //              $value[] = $fieldValue;
+          // //            }
+          // //          }
+          // }.
         }
-
 
       }
     }

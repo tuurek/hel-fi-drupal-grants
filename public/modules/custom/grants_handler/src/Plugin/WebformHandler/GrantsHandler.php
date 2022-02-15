@@ -48,7 +48,7 @@ class GrantsHandler extends WebformHandlerBase {
    *
    * @todo get field names from form where field type is attachment.
    */
-  private array $attachmentFieldNames = [
+  private static array $attachmentFieldNames = [
     'vahvistettu_tilinpaatos',
     'vahvistettu_toimintakertomus',
     'vahvistettu_tilin_tai_toiminnantarkastuskertomus',
@@ -183,7 +183,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Only validate set forms.
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
       // Loop through fieldnames and validate fields.
-      foreach ($this->attachmentFieldNames as $fieldName) {
+      foreach (self::$attachmentFieldNames as $fieldName) {
         $this->validateAttachmentField(
           $fieldName,
           $form_state,
@@ -563,6 +563,16 @@ class GrantsHandler extends WebformHandlerBase {
         "valueType" => "string",
       ],
     ];
+  }
+
+  /**
+   * Get file fields.
+   *
+   * @return string[]
+   *  Attachment fields.
+   */
+  public static function getAttachmentFieldNames(): array {
+    return self::$attachmentFieldNames;
   }
 
   /**
@@ -1182,7 +1192,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $otherCompensationsInfoData = (object) [
       "otherCompensationsArray" =>
-        $otherCompensations,
+      $otherCompensations,
       "otherCompensationsTotal" => $otherCompensationsTotal . "",
     ];
 

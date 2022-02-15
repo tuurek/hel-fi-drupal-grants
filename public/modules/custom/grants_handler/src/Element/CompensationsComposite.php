@@ -29,9 +29,9 @@ class CompensationsComposite extends WebformCompositeBase {
   public static function getCompositeElements(array $element): array {
     $elements = [];
 
-//    $elements['subvention_type_id'] = [
-//      '#type' => 'hidden',
-//    ];
+    // $elements['subvention_type_id'] = [
+    // '#type' => 'hidden',
+    // ];
     $elements['subventionTypeTitle'] = [
       '#type' => 'textfield',
       '#title' => t('Subvention Name'),
@@ -72,11 +72,10 @@ class CompensationsComposite extends WebformCompositeBase {
     $typeOptions = CompensationsCompositeElement::getOptionsForTypes();
 
     if (isset($parent['subventionType']) && $parent['subventionType'] != "") {
-//      $retval['subvention_type_id'] = $parent['subventionType'];
+      // $retval['subvention_type_id'] = $parent['subventionType'];
       $retval['subventionType'] = $parent['subventionType'];
       $retval['amount'] = $parent['amount'];
-//      $retval['subventionType'] = $typeOptions[$parent['subventionType']];
-
+      // $retval['subventionType'] = $typeOptions[$parent['subventionType']];
     }
     return $retval;
   }

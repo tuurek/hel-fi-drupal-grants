@@ -18,41 +18,35 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
       $info = &$this->propertyDefinitions;
 
       $info['issuer'] = DataDefinition::create('string')
-//        ->setRequired(TRUE)
+      // ->setRequired(TRUE)
         ->setLabel('issuer')
         ->setSetting('jsonPath', [
           'compensation',
           'otherCompensationsInfo',
           'otherCompensationsArray',
           'issuer',
-        ])
-//        ->addConstraint('NotBlank')
-      ;
-
+        ]);
+      // ->addConstraint('NotBlank')
       $info['issuerName'] = DataDefinition::create('string')
-//        ->setRequired(TRUE)
+      // ->setRequired(TRUE)
         ->setLabel('issuerName')
         ->setSetting('jsonPath', [
           'compensation',
           'otherCompensationsInfo',
           'otherCompensationsArray',
           'issuerName',
-        ])
-//        ->addConstraint('NotBlank')
-      ;
-
+        ]);
+      // ->addConstraint('NotBlank')
       $info['year'] = DataDefinition::create('string')
-//        ->setRequired(TRUE)
+      // ->setRequired(TRUE)
         ->setLabel('year')
         ->setSetting('jsonPath', [
           'compensation',
           'otherCompensationsInfo',
           'otherCompensationsArray',
           'year',
-        ])
-//        ->addConstraint('NotBlank')
-      ;
-
+        ]);
+      // ->addConstraint('NotBlank')
       $info['amount'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('amount')
@@ -61,10 +55,8 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsInfo',
           'otherCompensationsArray',
           'amount',
-        ])
-//        ->addConstraint('NotBlank')
-      ;
-
+        ]);
+      // ->addConstraint('NotBlank')
       $info['purpose'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('purpose')
@@ -73,10 +65,8 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
           'otherCompensationsInfo',
           'otherCompensationsArray',
           'purpose',
-        ])
-//        ->addConstraint('NotBlank')
-      ;
-
+        ]);
+      // ->addConstraint('NotBlank')
     }
     return $this->propertyDefinitions;
   }
