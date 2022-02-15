@@ -51,6 +51,16 @@ if (isset($_SERVER['WODBY_APP_NAME'])) {
 $config['openid_connect.client.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
 $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
 
+if(getenv('APP_ENV') == 'production'){
+  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = true;
+  $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://api.hel.fi/sso';
+} else {
+  if(getenv('APP_ENV') == 'development') {
+    $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://tunnistamo.test.hel.ninja';
+  }
+  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = false;
+}
+
 // Drupal route(s).
 $routes = (getenv('DRUPAL_ROUTES')) ? explode(',', getenv('DRUPAL_ROUTES')) : [];
 

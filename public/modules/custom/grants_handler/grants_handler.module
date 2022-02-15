@@ -70,71 +70,71 @@ function grants_handler_entity_type_alter(array &$entity_types) {
 function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
   // Code here acts on all elements included in a webform.
   //  /** @var \Drupal\webform\WebformSubmissionForm $form_object */
-//    $form_object = $form_state->getFormObject();
+  //    $form_object = $form_state->getFormObject();
   //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-//    $webform_submission = $form_object->getEntity();
+  //    $webform_submission = $form_object->getEntity();
   //  /** @var \Drupal\webform\WebformInterface $webform */
-//    $webform = $webform_submission->getWebform();
+  //    $webform = $webform_submission->getWebform();
 
   // Add custom data attributes to all elements.
-//   $element['#attributes']['data-custom'] = '{custom data goes here}';
+  //   $element['#attributes']['data-custom'] = '{custom data goes here}';
 
 
-//  if (isset($element['#webform_key']) && $element['#webform_key'] == 'subventions') {
-//    /** @var \Drupal\webform\Entity\WebformSubmission $WfSubmission */
-//    $WfSubmission = $form_state->getFormObject()->getEntity();
-//    $formInput = $form_state->getUserInput();
-//
-//    $typeNames = CompensationsComposite::getOptionsForTypes();
-//    $subventionTypes = $element['#subvention_type'];
-//    if ($WfSubmission->isNew()) {
-//      $defaultValues = [];
-//      $inputItems = $formInput["subventions"]["items"] ?? [];
-//      foreach ($subventionTypes as $id => $typeId) {
-//        $itemFound = FALSE;
-//        // If this item is not already been added to user input array
-//        foreach ($inputItems as $sKey => $sItem) {
-//          if (isset($sItem['_item_']) && $sItem['_item_']['subventionType'] == (string)$id) {
-//            $itemFound = $sKey;
-//          }
-//        }
-//        // then we want to add default values.
-//        if ($itemFound == FALSE) {
-//          $defaultValues[] = [
-//            'subventionTypeTitle' => $typeNames[$id],
-//            'subventionType' => $typeId,
-//            'amount' => ''
-//          ];
-//        } else {
-//          $defaultValues = $inputItems[$itemFound]['_item_'];
-//          $d = 'asdf';
-//        }
-//
-//      }
-//      $element['#default_value'] = $defaultValues;
-//    }
-//    else {
-//      $added = [];
-//      $defaultValues = [];
-//      foreach ($element['#default_value'] as $key => $value) {
-//        if(!isset($element['#default_value'][$key]['subventionTypeTitle'])){
-//          $element['#default_value'][$key]['subventionTypeTitle'] = $typeNames[$value['subventionType']];
-//        }
-//        $added[] = $value['subventionType'];
-//      }
-//      foreach ($subventionTypes as $id => $typeName) {
-//        $defaultValues = [
-//          'subventionTypeTitle' => $typeNames[$id],
-//          'subventionType' => $typeName,
-//          'amount' => ''
-//        ];
-//        if (!in_array($id, $added)) {
-//          $element['#default_value'][] = $defaultValues;
-//        }
-//      }
-//    }
-//    $d = 'ads';
-//  }
+  //  if (isset($element['#webform_key']) && $element['#webform_key'] == 'subventions') {
+  //    /** @var \Drupal\webform\Entity\WebformSubmission $WfSubmission */
+  //    $WfSubmission = $form_state->getFormObject()->getEntity();
+  //    $formInput = $form_state->getUserInput();
+  //
+  //    $typeNames = CompensationsComposite::getOptionsForTypes();
+  //    $subventionTypes = $element['#subvention_type'];
+  //    if ($WfSubmission->isNew()) {
+  //      $defaultValues = [];
+  //      $inputItems = $formInput["subventions"]["items"] ?? [];
+  //      foreach ($subventionTypes as $id => $typeId) {
+  //        $itemFound = FALSE;
+  //        // If this item is not already been added to user input array
+  //        foreach ($inputItems as $sKey => $sItem) {
+  //          if (isset($sItem['_item_']) && $sItem['_item_']['subventionType'] == (string)$id) {
+  //            $itemFound = $sKey;
+  //          }
+  //        }
+  //        // then we want to add default values.
+  //        if ($itemFound == FALSE) {
+  //          $defaultValues[] = [
+  //            'subventionTypeTitle' => $typeNames[$id],
+  //            'subventionType' => $typeId,
+  //            'amount' => ''
+  //          ];
+  //        } else {
+  //          $defaultValues = $inputItems[$itemFound]['_item_'];
+  //          $d = 'asdf';
+  //        }
+  //
+  //      }
+  //      $element['#default_value'] = $defaultValues;
+  //    }
+  //    else {
+  //      $added = [];
+  //      $defaultValues = [];
+  //      foreach ($element['#default_value'] as $key => $value) {
+  //        if(!isset($element['#default_value'][$key]['subventionTypeTitle'])){
+  //          $element['#default_value'][$key]['subventionTypeTitle'] = $typeNames[$value['subventionType']];
+  //        }
+  //        $added[] = $value['subventionType'];
+  //      }
+  //      foreach ($subventionTypes as $id => $typeName) {
+  //        $defaultValues = [
+  //          'subventionTypeTitle' => $typeNames[$id],
+  //          'subventionType' => $typeName,
+  //          'amount' => ''
+  //        ];
+  //        if (!in_array($id, $added)) {
+  //          $element['#default_value'][] = $defaultValues;
+  //        }
+  //      }
+  //    }
+  //    $d = 'ads';
+  //  }
 }
 
 /**
@@ -147,10 +147,12 @@ function grants_handler_preprocess_webform(array &$variables) {
 
   $currentUser = \Drupal::currentUser();
 
-  if ($selectedCompany == NULL && in_array('HelsinkiProfiili',$currentUser->getRoles())) {
+  if ($selectedCompany == NULL && in_array('HelsinkiProfiili', $currentUser->getRoles())) {
     \Drupal::messenger()
       ->addError(t('You need to select company you\'re acting behalf of.'));
-    $url = \Drupal\Core\Url::fromRoute('grants_profile.show')->setAbsolute()->toString();
+    $url = \Drupal\Core\Url::fromRoute('grants_profile.show')
+      ->setAbsolute()
+      ->toString();
     $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
     $response->send();
     return;
@@ -162,43 +164,35 @@ function grants_handler_preprocess_webform(array &$variables) {
  */
 function grants_handler_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
+  /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+  $grantsProfileService = \Drupal::service('grants_profile.service');
+  $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-  if($form_id === 'webform_submission_yleisavustushakemus_edit_all_form') {
-    $d = 'adfs';
-  } else if (
-    $form_id === 'webform_submission_yleisavustushakemus_add_form') {
+  if ($selectedCompany != NULL) {
+    /** @var \Drupal\helfi_yjdh\YjdhClient $yjdhService */
+    $yjdhService = \Drupal::service('helfi_yjdh.client');
+    $selectedCompanyData = $yjdhService->getAssociationBasicInfo($selectedCompany);
 
-    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-    $grantsProfileService = \Drupal::service('grants_profile.service');
-    $selectedCompany = $grantsProfileService->getSelectedCompany();
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData['BusinessId'];
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData['AssociationNameInfo'][0]['AssociationName'];
 
-    if ($selectedCompany != NULL) {
-      $yjdhService = \Drupal::service('helfi_yjdh.client');
-      $selectedCompanyData = $yjdhService->getAssociationBasicInfo($selectedCompany);
+    $regDate = new DrupalDateTime($selectedCompanyData['RegistryDate'], 'Europe/Helsinki');
 
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompanyData['BusinessId'];
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $selectedCompanyData['AssociationNameInfo'][0]['AssociationName'];
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = $regDate->format('d.m.Y');
 
-      $regDate = new DrupalDateTime($selectedCompanyData['RegistryDate'], 'Europe/Helsinki');
+    $foundingYearExplode = explode('-', $selectedCompanyData['RegistryDate']);
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
 
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = $regDate->format('d.m.Y');
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData['Address'][0]['City'];
 
-      $foundingYearExplode = explode('-', $selectedCompanyData['RegistryDate']);
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
-
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $selectedCompanyData['Address'][0]['City'];
-
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"]["#value"] = $selectedCompanyData["AssociationStatus"];
-      $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"]["#value"] = $selectedCompanyData["AssociationSpecialCondition"];
-    }
-    else {
-      \Drupal::messenger()
-        ->addError(t("You don't have company selected, no fields are prepopulated"));
-    }
-
-
-
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"]["#value"] = $selectedCompanyData["AssociationStatus"];
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"]["#value"] = $selectedCompanyData["AssociationSpecialCondition"];
   }
+  else {
+    \Drupal::messenger()
+      ->addError(t("You don't have company selected, no fields are prepopulated"));
+  }
+
 }
 
 /**
