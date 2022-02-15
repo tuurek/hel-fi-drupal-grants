@@ -7,3 +7,11 @@ RUN composer install --no-progress --profile --prefer-dist --no-interaction --no
 # Copy deploy script
 COPY docker/openshift/entrypoints/90-deploy.sh /entrypoints
 RUN chmod +x /entrypoints/90-deploy.sh
+
+# Make files writable on testing environments.
+# TODO: Remove in production
+RUN chgrp -R 0 /var/www/html/public/modules && chmod g+w -R /var/www/html/public/modules
+
+# Helper to run commands
+RUN alias ll='ls -lah'
+
