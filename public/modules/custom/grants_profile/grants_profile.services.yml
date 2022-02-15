@@ -14,9 +14,3 @@ services:
         '@helfi_yjdh.client',
         '@logger.factory'
     ]
-
-  grants_profile.middleware:
-    class: Drupal\grants_profile\GrantsProfileMiddleware
-    tags:
-      - { name: http_middleware, priority: 1000 }
-    arguments: [ '@current_user' ]
