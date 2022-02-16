@@ -4,6 +4,11 @@ namespace Drupal\grants_profile\Controller;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
+use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
+use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\helfi_atv\AtvFailedToConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use Laminas\Diactoros\Response\RedirectResponse;
 
 /**
@@ -26,16 +31,26 @@ class GrantsProfileController extends ControllerBase {
    */
   public function viewApplication(string $document_uuid): array {
 
-    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
-
     /** @var \Drupal\helfi_atv\AtvService $atvService */
     $atvService = \Drupal::service('helfi_atv.atv_service');
 
-    $document = $atvService->getDocument($document_uuid);
+    try {
+      $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
-    $build['#application'] = $document['content'];
-    $build['#document'] = $document;
+      $results = $atvService->searchDocuments(['transaction_id' => $document_uuid]);
+      /** @var \Drupal\helfi_atv\AtvDocument $document */
+      $document = reset($results);
+      /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+      $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+      $submissionData = $atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+
+      // @todo Set up some way to show data. Is webformSubmission needed?
+      $build['#application'] = $submissionData->getValue();
+
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+    }
+
     $build['#theme'] = 'view_application';
 
     return $build;
@@ -66,8 +81,6 @@ class GrantsProfileController extends ControllerBase {
    *
    * @return array|\Laminas\Diactoros\Response\RedirectResponse
    *   Data to render
-   *
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function ownProfile(): array|RedirectResponse {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
@@ -75,12 +88,40 @@ class GrantsProfileController extends ControllerBase {
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     if ($selectedCompany == NULL) {
-      $this->messenger()->addError($this->t('No profile data available, select company'), TRUE);
+      $this->messenger()
+        ->addError($this->t('No profile data available, select company'), TRUE);
       return new RedirectResponse('/select-company');
     }
     else {
       $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
+      /** @var \Drupal\helfi_atv\AtvService $atvService */
+      $atvService = \Drupal::service('helfi_atv.atv_service');
+
+      try {
+        // @todo Fix application search when ATV supports better methods.
+        $applicationDocuments = $atvService->searchDocuments([
+          'type' => 'mysterious form',
+          // 'business_id' => $selectedCompany,
+          'business_id' => '1234567-8',
+        ]);
+        $applications = [];
+        /** @var \Drupal\helfi_atv\AtvDocument $document */
+        foreach ($applicationDocuments as $document) {
+          $transactionId = $document->getTransactionId();
+          if (str_contains($transactionId, 'GRANTS-' . GrantsHandler::getAppEnv())) {
+            $applications[] = (object) [
+              'transaction_id' => $transactionId,
+            ];
+          }
+        }
+        $build['#applications'] = $applications;
+
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      }
+
       $build['#profile'] = $profile;
+
     }
 
     $gpForm = \Drupal::formBuilder()

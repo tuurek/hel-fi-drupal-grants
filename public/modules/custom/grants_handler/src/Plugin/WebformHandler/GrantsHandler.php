@@ -186,6 +186,39 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Return Application environment shortcode.
+   *
+   * @return string
+   *   Shortcode from current environment.
+   */
+  public static function getAppEnv(): string {
+    $appEnv = getenv('APP_ENV');
+
+    if ($appEnv == 'development') {
+      $appParam = 'DEV';
+    }
+    else {
+      if ($appEnv == 'production') {
+        $appParam = 'PROD';
+      }
+      else {
+        if ($appEnv == 'testing') {
+          $appParam = 'TEST';
+        }
+        else {
+          if ($appEnv == 'staging') {
+            $appParam = 'STAGE';
+          }
+          else {
+            $appParam = 'LOCAL';
+          }
+        }
+      }
+    }
+    return $appParam;
+  }
+
+  /**
    * Convert EUR format value to "double" .
    *
    * @param string $value
@@ -269,31 +302,9 @@ class GrantsHandler extends WebformHandlerBase {
    * @return string
    *   Generated number.
    */
-  public function createApplicationNumber(WebformSubmission $submission): string {
+  public static function createApplicationNumber(WebformSubmission $submission): string {
 
-    $appEnv = getenv('APP_ENV');
-
-    if ($appEnv == 'development') {
-      $appParam = 'DEV';
-    }
-    else {
-      if ($appEnv == 'production') {
-        $appParam = 'PROD';
-      }
-      else {
-        if ($appEnv == 'testing') {
-          $appParam = 'TEST';
-        }
-        else {
-          if ($appEnv == 'staging') {
-            $appParam = 'STAGE';
-          }
-          else {
-            $appParam = 'LOCAL';
-          }
-        }
-      }
-    }
+    $appParam = self::getAppEnv();
 
     return 'GRANTS-' . $appParam . '-' . sprintf('%08d', $submission->id());
   }
@@ -462,7 +473,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     if ($webform_submission->isDefaultRevision()) {
 
-      $this->applicationNumber = $this->createApplicationNumber($webform_submission);
+      $this->applicationNumber = self::createApplicationNumber($webform_submission);
       $this->submittedFormData['form_timestamp'] = (string) $webform_submission->getCreatedTime();
 
       $this->submittedFormData['status'] = 'DRAFT';

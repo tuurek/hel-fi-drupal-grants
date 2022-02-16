@@ -4,6 +4,7 @@ namespace Drupal\grants_handler;
 
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvService;
@@ -69,16 +70,26 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
     /** @var \Drupal\webform\Entity\WebformSubmission $submission */
     foreach ($webform_submissions as $submission) {
+      $applicationNumber = '';
+      try {
+        $applicationNumber = GrantsHandler::createApplicationNumber($submission);
+        $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
+        $document = reset($results);
 
-      // $documentContent =
-      // $this->getSubmission('e5ed6430-4059-4284-859f-50137a1eee53');
-      $document = $this->atvService->getDocument('e5ed6430-4059-4284-859f-50137a1eee53');
+        $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
 
-      $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+        $data = $appData->toArray();
 
-      $data = $appData->toArray();
+        $submission->setData($data);
+      }
+      catch (\Exception $exception) {
+        $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
+          ->error('Document ' . $applicationNumber .
+            ' not found when loading WebformSubmission: ' .
+            $submission->uuid() . '. Error: ' . $exception->getMessage());
+        $submission->setData([]);
+      }
 
-      $submission->setData($data);
     }
   }
 
