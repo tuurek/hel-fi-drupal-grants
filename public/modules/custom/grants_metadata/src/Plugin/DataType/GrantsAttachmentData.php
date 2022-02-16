@@ -25,13 +25,13 @@ class GrantsAttachmentData extends Map {
   }
 
   /**
-   * {@inheritdoc}
+   * Get values from parent.
+   *
+   * @return array
+   *   The values.
    */
-  public function setValue($values, $notify = TRUE) {
-    parent::setValue($values, $notify);
-
-    $d = 'asdf';
-
+  public function getValues(): array {
+    return $this->values;
   }
 
 }

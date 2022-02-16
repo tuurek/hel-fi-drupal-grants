@@ -173,20 +173,18 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'applicationInfoArray',
         'applicationType',
-      ])
-      ->addConstraint('NotBlank');
-
+      ]);
+    // ->addConstraint('NotBlank')
     $info['application_type_id'] = DataDefinition::create('string')
       ->setLabel('Application type id')
       ->setSetting('jsonPath', [
         'compensation',
         'applicationInfoArray',
         'applicationTypeID',
-      ])
-      // ->setRequired(TRUE)
-      ->addConstraint('NotBlank')
-      ->addConstraint('NotEmptyValue');
-
+      ]);
+    // ->setRequired(TRUE)
+    // ->addConstraint('NotBlank')
+    // ->addConstraint('NotEmptyValue')
     $info['form_timestamp'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('formTimeStamp')
@@ -194,9 +192,8 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'applicationInfoArray',
         'formTimeStamp',
-      ])
-      ->addConstraint('NotBlank');
-
+      ]);
+    // ->addConstraint('NotBlank')
     $info['application_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('applicationNumber')
@@ -204,9 +201,8 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'applicationInfoArray',
         'applicationNumber',
-      ])
-      ->addConstraint('NotBlank');
-
+      ]);
+    // ->addConstraint('NotBlank')
     $info['status'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('Status')
@@ -214,9 +210,8 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'applicationInfoArray',
         'status',
-      ])
-      ->addConstraint('NotBlank');
-
+      ]);
+    // ->addConstraint('NotBlank')
     $info['acting_year'] = DataDefinition::create('integer')
       // ->setRequired(TRUE)
       ->setLabel('applicationInfoArray=>actingYear')
@@ -285,6 +280,7 @@ trait ApplicationDefinitionTrait {
     $info['myonnetty_avustus'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
       ->setLabel('otherCompensationsInfo=>otherCompensationsArray')
+      ->setSetting('defaultValue', [])
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
@@ -294,7 +290,8 @@ trait ApplicationDefinitionTrait {
 
     $info['haettu_avustus_tieto'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
-      ->setLabel('otherCompensationsInfo=>otherAppliedCompensationsArray')
+      ->setLabel('Haettu avustus')
+      ->setSetting('defaultValue', [])
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
@@ -303,17 +300,20 @@ trait ApplicationDefinitionTrait {
 
     $info['myonnetty_avustus_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
-      ->setLabel('otherCompensationsInfo=>otherCompensationsTotal')
+      ->setLabel('Myönnetty avustus total')
+      ->setSetting('defaultValue', 0)
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
         'otherCompensationsTotal',
       ])
+      ->setSetting('defaultValue', [])
       ->addConstraint('NotBlank');
 
     $info['haettu_avustus_tieto_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
-      ->setLabel('otherCompensationsInfo=>otherAppliedCompensationsTotal')
+      ->setLabel('Haettu avustus total')
+      ->setSetting('defaultValue', 0)
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
@@ -464,7 +464,7 @@ trait ApplicationDefinitionTrait {
     // Attachments.
     $info['attachments'] = ListDataDefinition::create('grants_metadata_attachment')
       // ->setRequired(TRUE)
-      ->setLabel('attachmentsInfo=>attachmentsArray')
+      ->setLabel('Attachments')
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
     // ->addConstraint('NotBlank')
     return $info;

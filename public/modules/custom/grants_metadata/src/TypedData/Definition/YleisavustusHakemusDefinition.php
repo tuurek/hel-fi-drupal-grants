@@ -34,6 +34,7 @@ class YleisavustusHakemusDefinition extends ComplexDataDefinitionBase {
           'compensationInfo',
           'compensationArray',
         ]);
+
     }
     return $this->propertyDefinitions;
   }

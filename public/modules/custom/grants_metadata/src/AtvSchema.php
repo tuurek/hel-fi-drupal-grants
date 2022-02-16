@@ -199,6 +199,10 @@ class AtvSchema {
 
       $value = $property->getValue();
 
+      if (!is_array($value)) {
+        $value = "" . $value;
+      }
+
       // If value is null, try to set default value from config.
       if ($value == NULL) {
         $value = $defaultValue;

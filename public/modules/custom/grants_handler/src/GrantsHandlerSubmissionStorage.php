@@ -3,7 +3,6 @@
 namespace Drupal\grants_handler;
 
 use Drupal\Core\Entity\EntityHandlerInterface;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
@@ -82,4 +81,5 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
       $submission->setData($data);
     }
   }
+
 }
