@@ -24,6 +24,7 @@ class GrantsAttachments extends WebformCompositeBase {
     return parent::getInfo() + ['#theme' => 'grants_attachments'];
   }
 
+  // @codingStandardsIgnoreStart
   /**
    * Build webform element based on data in ATV document.
    *
@@ -72,9 +73,9 @@ class GrantsAttachments extends WebformCompositeBase {
       }
 
     }
-
     return $element;
   }
+  // @codingStandardsIgnoreEnd
 
   /**
    * Form elements for attachments.
