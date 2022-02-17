@@ -1,0 +1,18 @@
+
+<p>Official list here?</p>
+
+
+{% if officials %}
+  <ul class="company-address-list">
+    {% for key,item in officials %}
+      <li class="company-officials">
+        <a href="/grants-profile/application-officials/{{ key }}">
+          {{ item.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<p>
+  <a href="/grants-profile/application-officials/new">New Official</a>
+</p>

@@ -1,0 +1,29 @@
+.grants-profile {
+  hr {
+    margin: var(--spacing-m) 0;
+  }
+  &-basicinfo {
+    background-color: var(--color-silver-light);
+    padding-bottom: var(--spacing-2-xl);
+  }
+  &-wrapper {
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    h5 {
+      margin: 0;
+      font-size: var(--fontsize-body-m);
+      font-weight: bold;
+    }
+
+    &-item {
+      min-width: 160px;
+      margin: var(--spacing-m) var(--spacing-m) var(--spacing-m) 0;
+    }
+  }
+  .hds-icon--check-circle-fill {
+    color: green;
+    vertical-align: middle;
+  }
+}

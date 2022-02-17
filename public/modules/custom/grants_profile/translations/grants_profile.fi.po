@@ -1,0 +1,146 @@
+# Finnish translation of City of Helsinki Grants Profile module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: 2022-02-14 11:00+0300\n"
+"PO-Revision-Date: 2022-02-14 11:00+0300\n"
+"Last-Translator: Petri Leinonen <petri.leinonen@siili.com>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+msgid "Company information"
+msgstr "Yhteisön tiedot"
+
+msgid "Company applications"
+msgstr "Yhteisön hakemukset"
+
+msgid "Basic Information"
+msgstr "Perustiedot"
+
+msgid "Company name"
+msgstr "Yhteisön nimi"
+
+msgid "Business ID"
+msgstr "Y-tunnus"
+
+msgid "Company Location"
+msgstr "Kotipaikka"
+
+msgid "Registration Date"
+msgstr "Rekisteröimispäivä"
+
+msgid "Company Status"
+msgstr "Yhdistyksen tila"
+
+msgid "Special Status"
+msgstr "Erityistila"
+
+msgid "Marked fields habe been retreived from PRH and cannot be edited."
+msgstr "Merkityt tiedot on haettu Patentti- ja rekisterihallinnon rekisteristä (PRH), eikä niitä voi tämän takia muokata."
+
+msgid "User %s added & assign them a HelsinkiProfiili Role"
+msgstr "Käyttäjä %s lisätty heille lisätty HelsinkiProfiili -rooli"
+
+msgid "No profile data available, select company"
+msgstr "Profiilidataa ei saatavilla, valitse yhteisö"
+
+msgid "Street"
+msgstr "Katuosoite"
+
+msgid "City"
+msgstr "Kaupunki"
+
+msgid "Post code"
+msgstr "Postinumero"
+
+msgid "Country"
+msgstr "Maa"
+
+msgid "Send"
+msgstr "Lähetä"
+
+msgid "addressData not found!"
+msgstr "osoitedataa ei löydy!"
+
+msgid "It works!"
+msgstr "Se toimii!"
+
+msgid "Grantsprofile for company number %s saved and can be used in grant applications"
+msgstr "Hakijaprofiili Y-tunnukselle %s on tallennettu ja sitä voidaan käyttää hakemuksissa"
+
+msgid "Address has been saved."
+msgstr "Osoite on tallennettu"
+
+msgid "Name"
+msgstr "Nimi"
+
+msgid "Role"
+msgstr "Rooli"
+
+msgid "Phone"
+msgstr "Puhelinnumero"
+
+msgid "Email"
+msgstr "Sähköpostiosoite"
+
+msgid "You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions."
+msgstr "Voit lisätä yhteisöösi liittyen useita osoitetietoja. Antamasi tiedot ovat käytettävissä avustushakemuksia tehdessä. Annettuun osoitteeseen toimitetaan kirjepostia esim. päätöstä koskevia kirjeitä."
+
+msgid "New Address"
+msgstr "Lisää uusi osoite"
+
+msgid "You can add several bank accounts to your company. The bank account must be a Finnish IBAN account number."
+msgstr "Voit lisätä yhteisöösi liittyen useita tilinumeroita. Tilinumeron täytyy olla suomalainen IBAN-tilinumero."
+
+msgid "The information you give are usable when making grants applications. If a grant is given to an application, it is paid to the account number you've given on the application"
+msgstr "Antamasi tiedot ovat käytettävissä avustushakemuksia tehdessä. Jos hakemukselle myönnetään avustusta, maksetaan se hakemuksella antamallesi tilinumerolle."
+
+msgid "New Bank account"
+msgstr "Lisää uusi tilinumero"
+
+msgid "New official"
+msgstr "Lisää uusi toimihenkilö"
+
+msgid "Report the names and contact information of officials, such as the chairperson, secretary, etc."
+msgstr "Ilmoita toiminnasta vastaavien henkilöiden nimet ja yhteystiedot, esim. puheenjohtaja, varapuheenjohtaja, sihteeri, taloudessta vastaava ja toiminnanjohtaja."
+
+msgid "The information you give are usable during grants applciations."
+msgstr "Antamasi tiedot ovat käytettävissä hakemuslomaketta tehdessä."
+
+msgid "Founding year"
+msgstr "Perustamisvuosi"
+
+msgid "Company short name"
+msgstr "Yhteisön lyhenne"
+
+msgid "Company www address"
+msgstr "Verkkosivujen osoite"
+
+msgid "Company email"
+msgstr "Yhteisön sähköpostiosoite"
+
+msgid "Business Purpose"
+msgstr "Toiminna tarkoitus"
+
+msgid "Description of business purpose"
+msgstr "Kuvaus yhteisön toiminnan tarkoituksesta"
+
+msgid "Company Addresses"
+msgstr "Yhteisön osoitteet"
+
+msgid "Company Bank Accounts"
+msgstr "Yhteisön tilitiedot"
+
+msgid "Company officials"
+msgstr "Yhteisön toimihenkiöt"
+
+msgid "Add at least one address"
+msgstr "Lisää vähintään yksi osoite"
+
+msgid "Add at least one account number"
+msgstr "Lisää vähintään yksi tilinumero"

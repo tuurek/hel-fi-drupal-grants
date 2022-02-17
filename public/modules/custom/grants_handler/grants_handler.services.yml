@@ -1,0 +1,6 @@
+services:
+  grants_handler_linkmodifier:
+    class: Drupal\grants_handler\LinkModifierService
+    tags:
+      - { name: path_processor_inbound, priority: 200 }
+    arguments: [ '@request_stack' ]

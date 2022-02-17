@@ -1,4 +1,7 @@
-on: [push]
+on:
+  push:
+    branches:
+      - '!feature/AU-227-hakuprofiilin-luominen'
 name: CI
 env:
   SIMPLETEST_DB: "mysql://drupal:drupal@db:3306/drupal"

@@ -1,0 +1,12 @@
+administer grants_profile configuration:
+  title: 'Administer grants_profile configuration'
+  description: 'Optional description.'
+  restrict access: true
+view own grants_profile:
+  title: 'View own grants profile'
+  description: 'Optional description.'
+  restrict access: true
+administer own grants_profile:
+  title: 'Administer own grants profile'
+  description: 'Optional description.'
+  restrict access: true

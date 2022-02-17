@@ -5,6 +5,8 @@ package: 'helfi'
 core_version_requirement: ^8.8 || ^9
 dependencies:
   - 'webform:webform'
+  - grants_metadata
+  - helfi_atv
 
 # Information added by Drupal.org packaging script on 2021-08-25
 version: '6.0.5'

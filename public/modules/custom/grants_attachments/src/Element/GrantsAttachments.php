@@ -25,6 +25,58 @@ class GrantsAttachments extends WebformCompositeBase {
   }
 
   /**
+   * Build webform element based on data in ATV document.
+   *
+   * @param array $element
+   *   Element that is being processed.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   * @param array $complete_form
+   *   Full form.
+   *
+   * @return array[]
+   *   Form API element for webform element.
+   */
+  public static function processWebformComposite(&$element, FormStateInterface $form_state, &$complete_form): array {
+    $element = parent::processWebformComposite($element, $form_state, $complete_form);
+    $elementTitle = $element['#title'];
+
+    $submission = $form_state->getFormObject()->getEntity();
+    $submissionData = $submission->getData();
+    if (isset($submissionData['attachments']) && is_array($submissionData['attachments'])) {
+
+      $dataForElement = $submissionData['attachments'][array_search($elementTitle, array_column($submissionData['attachments'], 'description'))];
+      if (isset($dataForElement['isDeliveredLater'])) {
+        $element["isDeliveredLater"]["#default_value"] = $dataForElement['isDeliveredLater'] == 'true';
+        if ($element["isDeliveredLater"]["#default_value"] == TRUE) {
+          $element["fileStatus"]["#value"] = 'deliveredLater';
+        }
+      }
+      if (isset($dataForElement['isIncludedInOtherFile'])) {
+        $element["isIncludedInOtherFile"]["#default_value"] = $dataForElement['isIncludedInOtherFile'] == 'true';
+        if ($element["isIncludedInOtherFile"]["#default_value"] == TRUE) {
+          $element["fileStatus"]["#value"] = 'otherFile';
+        }
+      }
+      if (isset($dataForElement['fileName'])) {
+        $element['attachment'] = [
+          '#type' => 'textfield',
+          '#default_value' => $dataForElement['fileName'],
+          '#disabled' => TRUE,
+        ];
+
+        $element["isIncludedInOtherFile"]["#disabled"] = TRUE;
+        $element["isDeliveredLater"]["#disabled"] = TRUE;
+        $element["fileStatus"]["#value"] = 'uploaded';
+
+      }
+
+    }
+
+    return $element;
+  }
+
+  /**
    * Form elements for attachments.
    *
    * @todo Use description field always and poplate contents from field title.
@@ -59,6 +111,10 @@ class GrantsAttachments extends WebformCompositeBase {
       '#type' => 'checkbox',
       '#title' => t('Attachment already delivered'),
       '#element_validate' => ['\Drupal\grants_attachments\Element\GrantsAttachments::validateIncludedOtherFileCheckbox'],
+    ];
+    $elements['fileStatus'] = [
+      '#type' => 'hidden',
+      '#value' => 'new',
     ];
 
     return $elements;

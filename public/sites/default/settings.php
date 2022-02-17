@@ -50,6 +50,17 @@ if (isset($_SERVER['WODBY_APP_NAME'])) {
 
 $config['openid_connect.client.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
 $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
+
+if(getenv('APP_ENV') == 'production'){
+  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = true;
+  $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://api.hel.fi/sso';
+} else {
+  if(getenv('APP_ENV') == 'development') {
+    $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://tunnistamo.test.hel.ninja';
+  }
+  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = false;
+}
+
 // Drupal route(s).
 $routes = (getenv('DRUPAL_ROUTES')) ? explode(',', getenv('DRUPAL_ROUTES')) : [];
 
@@ -74,6 +85,18 @@ $settings['file_private_path'] = 'sites/default/files/private';
 
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 $settings['install_profile'] = 'minimal';
+
+
+set_error_handler(['Drupal\error_page\ErrorPageErrorHandler', 'handleError']);
+set_exception_handler([
+  'Drupal\error_page\ErrorPageErrorHandler',
+  'handleException',
+]);
+// Log the UUID in the Drupal logs.
+$settings['error_page']['uuid'] = TRUE;
+// Your templates are located in path/to/templates, one level above the webroot.
+$settings['error_page']['template_dir'] = DRUPAL_ROOT . '/../error_templates';
+
 
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
   $reverse_proxy_address = explode(',', $reverse_proxy_address);

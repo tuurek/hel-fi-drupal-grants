@@ -1,0 +1,14 @@
+uuid: cf7d23ed-42b2-4a2e-9caf-a1277c7799c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.helsinkiprofiili
+  module:
+    - user
+id: user_add_role_action.helsinkiprofiili
+label: 'Add the HelsinkiProfiili role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: helsinkiprofiili

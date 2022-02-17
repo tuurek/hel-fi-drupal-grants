@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-    - refs/tags/deploy-to-dev
+    - feature/AU-227-hakuprofiilin-luominen
   paths:
     exclude:
     - README.md

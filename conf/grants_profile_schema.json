@@ -1,0 +1,276 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "grantsProfile": {
+      "type": "object",
+      "properties": {
+        "profileInfoArray": {
+          "description": "",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "companyNameShort",
+                  "companyName",
+                  "companyHome",
+                  "companyHomePage",
+                  "companyEmail",
+                  "companyStatus",
+                  "companyStatusSpecial",
+                  "businessPurpose",
+                  "foundingYear"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "officialsArray": {
+          "description": "Company officials",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "name",
+                  "role",
+                  "email",
+                  "userID",
+                  "phone"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "addressesArray": {
+          "description": "Company Address",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "street",
+                  "city",
+                  "postCode",
+                  "country"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        },
+        "bankAccountsArray": {
+          "description": "Company Bank accounts",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Identifies the data of the array item",
+                "type": "string",
+                "enum": [
+                  "bankAccount"
+                ]
+              },
+              "label": {
+                "desciption": "For future use, field's name in the UI",
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "valueType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "int",
+                  "bool",
+                  "datetime",
+                  "float"
+                ]
+              }
+            },
+            "required": [
+              "ID",
+              "value",
+              "valueType"
+            ]
+          }
+        }
+      },
+      "required": [
+        "profileInfoArray",
+        "officialsArray",
+        "addressesArray",
+        "bankAccountsArray"
+      ]
+    },
+    "statusUpdates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseID": {
+            "type": "string"
+          },
+          "citizenCaseStatus": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "eventCode": {
+            "type": "integer"
+          },
+          "eventSource": {
+            "type": "string"
+          },
+          "timeUpdated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseID": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "eventCode": {
+            "type": "integer"
+          },
+          "eventSource": {
+            "type": "string"
+          },
+          "timeUpdated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseID": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "sentBy": {
+            "type": "string"
+          },
+          "sendDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "fileName": {
+                  "type": "string"
+                },
+                "integrationID": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "grantsProfile"
+  ]
+}

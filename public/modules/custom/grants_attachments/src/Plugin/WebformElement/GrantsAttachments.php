@@ -3,6 +3,7 @@
 namespace Drupal\grants_attachments\Plugin\WebformElement;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -102,6 +103,80 @@ class GrantsAttachments extends WebformCompositeBase {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function getValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
+
+    if (!isset($element['#webform_key']) && isset($element['#value'])) {
+      return $element['#value'];
+    }
+
+    $webform_key = $element['#title'];
+
+    $data = $webform_submission->getData();
+    $value = NULL;
+
+    if (isset($data['attachments'])) {
+      foreach ($data['attachments'] as $item) {
+        if ($item['description'] == $webform_key) {
+          $value = $item;
+        }
+      }
+    }
+    else {
+      foreach (GrantsHandler::getAttachmentFieldNames() as $fieldName) {
+        $fieldData = $data[$fieldName];
+
+        // $element["#webform_parents"][2]
+        if (in_array($fieldName, $element["#webform_parents"])) {
+          $value = $fieldData;
+          // If (isset($fieldData['description'])) {
+          // $value = $fieldData;
+          // //          if ($fieldData['description'] == $webform_key) {
+          // //            $value = $fieldData;
+          // //            break;
+          // //          }
+          // }
+          // elseif ($fieldName == 'muu_liite') {
+          // $d = 'asdf';
+          // //          // Muu liite.
+          // //          $value = [];
+          // //          foreach ($data[$fieldName] as $key => $fieldValue) {
+          // //            if (is_numeric($key)) {
+          // //              $value[] = $fieldValue;
+          // //            }
+          // //          }
+          // }.
+        }
+
+      }
+    }
+
+    // Is value is NULL and there is a #default_value, then use it.
+    if ($value === NULL && isset($element['#default_value'])) {
+      $value = $element['#default_value'];
+    }
+
+    // Return multiple (delta) value or composite (composite_key) value.
+    if (is_array($value)) {
+      // Return $options['delta'] which is used by tokens.
+      // @see _webform_token_get_submission_value()
+      if (isset($options['delta'])) {
+        $value = $value[$options['delta']] ?? NULL;
+      }
+
+      // Return $options['composite_key'] which is used by composite elements.
+      // @see \Drupal\webform\Plugin\WebformElement\WebformCompositeBase::formatTableColumn
+      if ($value && isset($options['composite_key'])) {
+        $value = $value[$options['composite_key']] ?? NULL;
+      }
+    }
+
+    return $value;
+
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function formatHtmlItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
@@ -115,7 +190,11 @@ class GrantsAttachments extends WebformCompositeBase {
     $value = $this->getValue($element, $webform_submission, $options);
     $lines = [];
 
-    if ($value['attachment'] !== NULL) {
+    if (!is_array($value)) {
+      return [];
+    }
+
+    if (isset($value['attachment']) && $value['attachment'] !== NULL) {
       // Load file.
       /** @var \Drupal\file\FileInterface|null $file */
       $file = \Drupal::entityTypeManager()

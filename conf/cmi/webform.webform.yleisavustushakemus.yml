@@ -25,6 +25,10 @@ elements: |-
     '#title': '1. Hakijan tiedot'
     '#prev_button_label': '< Edellinen'
     '#next_button_label': 'Seuraava >'
+    status:
+      '#type': textfield
+      '#title': 'Hakemuksen tila'
+      '#readonly': true
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
@@ -36,11 +40,6 @@ elements: |-
           2: '2'
           3: '3'
         '#required': true
-      company_select:
-        '#type': select
-        '#title': 'Company select'
-        '#options':
-          value: text1
       company_number:
         '#type': textfield
         '#title': Rekisterinumero
@@ -55,20 +54,14 @@ elements: |-
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
         '#required': true
-      registration_date_text:
+      registration_date:
         '#type': textfield
         '#title': Rekisteröimispäivä
         '#readonly': true
-        '#required': true
-      registration_date:
-        '#type': date
-        '#title': Rekisteröimispäivä
-        '#disabled': true
       community_status:
         '#type': textfield
         '#title': 'Yhdistyksen tila'
         '#readonly': true
-        '#required': true
       community_status_special:
         '#type': textfield
         '#title': 'Yhdistyksen erityistilanne'
@@ -143,10 +136,10 @@ elements: |-
         '#multiple__add_more_button_label': 'Lisää henkilö'
         '#format_items': hr
         '#element':
-          official_name:
+          name:
             '#type': textfield
             '#title': Nimi
-          official_role:
+          role:
             '#type': select
             '#options':
               1: Puheenjohtaja
@@ -156,10 +149,10 @@ elements: |-
               5: Varapuheenjohtaja
               6: Muu
             '#title': Rooli
-          official_email:
+          email:
             '#type': email
             '#title': Sähköposti
-          official_phone:
+          phone:
             '#type': textfield
             '#title': Puhelinnumero
   2_avustustiedot:
@@ -180,41 +173,16 @@ elements: |-
     avustuslajit:
       '#type': webform_section
       '#title': Avustuslajit
-      avustuslajit_taulukko:
-        '#type': webform_table
-        '#title': Avustuslajit
-        '#help': |-
-          Valitse, mik&auml; avustuslaji soveltuu parhaiten tarpeisiisi.<br />
-          <br />
-          Voit hakea avustusta useasta avustuslajista yhdell&auml; kertaa valitsemalla t&auml;st&auml; haluamasi avustuslajit.<br />
-          <br />
-          <strong>Mik&auml; avustuslaji sopii parheiten yhteis&ouml;ni tarpeeseen? Mihin voin k&auml;ytt&auml;&auml; esimerkiksi &quot;Korot ja lyhennykset&quot; -avustuslajia?&nbsp;</strong>Tutustu tarkemmin avustuslajien k&auml;ytt&ouml;kohteisiin t&auml;m&auml;n avustuksen <a href="http://google.fi">palvelukuvauksesta</a>.
-        '#header':
-          - title: 'Avustuslaji *'
-            attributes: {  }
-          - title: 'Haettava summa (vuodelle, jolle haetaan avustusta)'
-            attributes: {  }
-        subventions:
-          '#type': webform_table_row
-          '#title': 'Avustuslajit (1)'
-          subventions_type_6:
-            '#type': checkbox
-            '#title': Yleisavustus
-            '#disabled': true
-            '#required': true
-            '#default_value': true
-            '#return_value': Yleisavustus
-            '#attributes':
-              checked: true
-            '#format': raw
-          subventions_type_6_sum:
-            '#type': textfield
-            '#title': 'Yleisavustus, haettava summa (vuodelle, jolle haetaan avustusta)'
-            '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
-            '#states':
-              required:
-                ':input[name="subventions_type_6"]':
-                  checked: true
+      subventions:
+        '#type': grants_compensations
+        '#title': Avustukset
+        '#multiple': true
+        '#subvention_type':
+          1: '1'
+          6: '6'
+        '#subvention_type_id__access': false
+        '#subvention_type__title': Avustuslaji
+        '#subvention_amount__title': 'Avustuksen summa'
     kayttotarkoitus:
       '#type': webform_section
       '#title': Käyttötarkoitus
@@ -380,8 +348,8 @@ elements: |-
         '#type': radios
         '#title': 'Käyttöselvitys edellisenä vuonna saamastani avustuksesta'
         '#options':
-          'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
-          'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+          'false': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
+          'true': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
         '#default_value': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
       markup:
         '#type': webform_markup
