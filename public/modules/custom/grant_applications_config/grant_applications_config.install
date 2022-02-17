@@ -13,6 +13,5 @@
 function grant_applications_config_install() {
   \Drupal::service('theme_installer')->install(['helfi_grant_applications']);
   $system_theme = \Drupal::configFactory()->getEditable('system.theme');
-  $system_theme->set('default', 'helfi_grants')->set('admin', 'hdbt_admin')->save();
-
+  $system_theme->set('default', 'helfi_grant_applications')->set('admin', 'hdbt_admin')->save();
 }
