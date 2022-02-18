@@ -5,7 +5,6 @@ namespace Drupal\grants_profile\Controller;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -24,31 +23,24 @@ class GrantsProfileController extends ControllerBase {
    *
    * @return array
    *   Build for the page.
-   *
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
-   *
-   * @todo get webform submission from db, somehow.
    */
   public function viewApplication(string $document_uuid): array {
 
-    /** @var \Drupal\helfi_atv\AtvService $atvService */
-    $atvService = \Drupal::service('helfi_atv.atv_service');
-
-    try {
-      $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
-
-      $results = $atvService->searchDocuments(['transaction_id' => $document_uuid]);
-      /** @var \Drupal\helfi_atv\AtvDocument $document */
-      $document = reset($results);
-      /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-      $atvSchema = \Drupal::service('grants_metadata.atv_schema');
-      $submissionData = $atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
-
-      // @todo Set up some way to show data. Is webformSubmission needed?
-      $build['#application'] = $submissionData->getValue();
-
+    $submissionObject = GrantsHandler::submissionObjectFromApplicationNumber($document_uuid);
+    if ($submissionObject) {
+      $data = $submissionObject->getData();
+      if (!empty($data)) {
+        // @todo Set up some way to show data. Is webformSubmission needed?
+        $build['#application'] = $submissionObject->getData();
+      }
+      else {
+        \Drupal::messenger()
+          ->addWarning('No data for submission: ' . $document_uuid);
+      }
     }
-    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+    else {
+      \Drupal::messenger()
+        ->addWarning('No submission: ' . $document_uuid);
     }
 
     $build['#theme'] = 'view_application';
