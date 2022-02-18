@@ -145,9 +145,7 @@ function grants_handler_preprocess_webform(array &$variables) {
   $grantsProfileService = \Drupal::service('grants_profile.service');
   $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-  $currentUser = \Drupal::currentUser();
-
-  if ($selectedCompany == NULL && in_array('HelsinkiProfiili', $currentUser->getRoles())) {
+  if ($selectedCompany == NULL) {
     \Drupal::messenger()
       ->addError(t('You need to select company you\'re acting behalf of.'));
     $url = \Drupal\Core\Url::fromRoute('grants_profile.show')
@@ -155,7 +153,6 @@ function grants_handler_preprocess_webform(array &$variables) {
       ->toString();
     $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
     $response->send();
-    return;
   }
 }
 
