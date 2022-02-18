@@ -310,6 +310,23 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Generate application number from submission id.
+   *
+   * @param string $applicationNumber
+   *   String to try and parse submission id from. Ie GRANTS-DEV-00000098.
+   *
+   * @return \Drupal\webform\Entity\WebformSubmission|null
+   *   Webform submission.
+   */
+  public static function submissionObjectFromApplicationNumber(string $applicationNumber): ?WebformSubmission {
+
+    $exploded = explode('-', $applicationNumber);
+    $number = end($exploded);
+    $submissionId = ltrim($number, '0');
+    return WebformSubmission::load((integer) $submissionId);
+  }
+
+  /**
    * Set up sender details from helsinkiprofiili data.
    */
   private function parseSenderDetails() {
