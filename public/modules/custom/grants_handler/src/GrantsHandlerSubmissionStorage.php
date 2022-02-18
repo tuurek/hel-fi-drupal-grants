@@ -4,6 +4,7 @@ namespace Drupal\grants_handler;
 
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
@@ -34,6 +35,13 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   protected AtvSchema $atvSchema;
 
   /**
+   * Current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected AccountInterface $account;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(
@@ -48,6 +56,9 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
     $instance->atvSchema = \Drupal::service('grants_metadata.atv_schema');
+
+    /** @var \Drupal\Core\Session\AccountInterface account */
+    $instance->account = \Drupal::currentUser();
 
     return $instance;
   }
@@ -72,15 +83,17 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
     foreach ($webform_submissions as $submission) {
       $applicationNumber = '';
       try {
-        $applicationNumber = GrantsHandler::createApplicationNumber($submission);
-        $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
-        $document = reset($results);
+        if ($submission->getOwnerId() == $this->account->id()) {
+          $applicationNumber = GrantsHandler::createApplicationNumber($submission);
+          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
+          $document = reset($results);
 
-        $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+          $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
 
-        $data = $appData->toArray();
+          $data = $appData->toArray();
 
-        $submission->setData($data);
+          $submission->setData($data);
+        }
       }
       catch (\Exception $exception) {
         $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
