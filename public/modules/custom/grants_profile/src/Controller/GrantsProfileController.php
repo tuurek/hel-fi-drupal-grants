@@ -32,8 +32,8 @@ class GrantsProfileController extends ControllerBase {
       $webForm = $submissionObject->getWebform();
       $submissionForm = $webForm->getSubmissionForm(['data' => $data]);
       if (!empty($data)) {
-//        // @todo Set up some way to show data. Is webformSubmission needed?
-//        $build['#application'] = $submissionObject->getData();
+        // @todo Set up some way to show data. Is webformSubmission needed?
+        // $build['#application'] = $submissionObject->getData();
         $build['#submission_form'] = $submissionForm;
       }
       else {

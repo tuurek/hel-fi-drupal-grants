@@ -92,7 +92,6 @@ class CompanySelectForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
-
     $selectedCompany = $form_state->getValue('company_select');
     if (empty($selectedCompany)) {
 
@@ -110,7 +109,6 @@ class CompanySelectForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
