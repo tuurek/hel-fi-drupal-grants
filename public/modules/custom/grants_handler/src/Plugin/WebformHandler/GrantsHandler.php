@@ -463,17 +463,6 @@ class GrantsHandler extends WebformHandlerBase {
     $this->setTotals();
     $this->parseSenderDetails();
 
-    $this->submittedFormData['subventions'] = [
-      [
-        'subventionType' => '6',
-        'amount' => '300',
-      ],
-      [
-        'subventionType' => '1',
-        'amount' => '400',
-      ],
-    ];
-
     // Set submission data to empty.
     // form will still contain submission details, IP time etc etc.
     $webform_submission->setData([]);
