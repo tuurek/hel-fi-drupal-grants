@@ -21,9 +21,19 @@ class CompensationTypeData extends Map {
    */
   public function getValue() {
 
-    $retval = parent::getValue();
+    // Update the values and return them.
+    foreach ($this->properties as $name => $property) {
+      $definition = $property->getDataDefinition();
+      if (!$definition->isComputed()) {
+        $value = $property->getValue();
+        // Only write NULL values if the whole map is not NULL.
+        if (isset($this->values) || isset($value)) {
+          $this->values[$name] = $value;
+        }
+      }
+    }
 
-    return $retval;
+    return $this->values;
   }
 
   /**

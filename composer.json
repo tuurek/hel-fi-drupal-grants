@@ -65,9 +65,7 @@
     "extra": {
         "composer-exit-on-patch-failure": true,
         "patches": {
-            "drupal/error_page": {
-                "PHP 8 Compatibility Issue": "https://git.drupalcode.org/project/error_page/-/merge_requests/1.patch"
-            }
+
         },
         "drupal-scaffold": {
             "allowed-packages": [

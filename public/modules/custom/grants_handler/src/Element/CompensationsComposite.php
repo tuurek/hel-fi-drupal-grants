@@ -66,7 +66,6 @@ class CompensationsComposite extends WebformCompositeBase {
     $retval = [
       'subventionType' => '',
       'amount' => '',
-      'subventionTypeName' => '',
     ];
 
     $typeOptions = CompensationsCompositeElement::getOptionsForTypes();

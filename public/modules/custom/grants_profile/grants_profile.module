@@ -54,7 +54,8 @@ function grants_profile_theme(): array {
   $theme['view_application'] = [
     'render element' => 'build',
     'variables' => [
-      'application' => NULL
+      'application' => NULL,
+      'submission_form' => NULL
     ]
   ];
   $theme['own_profile'] = [

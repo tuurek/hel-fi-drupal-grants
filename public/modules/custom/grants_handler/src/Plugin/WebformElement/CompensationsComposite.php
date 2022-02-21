@@ -61,7 +61,7 @@ class CompensationsComposite extends WebformCompositeBase {
     return [
       'amount' => '',
       'subventionType' => '',
-      'subventionTypeName' => '',
+    // 'subventionTypeName' => '',
     ] + $parent;
   }
 
