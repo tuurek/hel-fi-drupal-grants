@@ -48,18 +48,33 @@ class CompanySelectForm extends FormBase {
         ->addStatus('No profiilidata, preset social security used');
     }
 
-    $options = [];
-    foreach ($associationRoles['Role'] as $association) {
-      $options[$association['BusinessId']] = $association['AssociationNameInfo'][0]['AssociationName'];
-    }
+    if (empty($associationRoles)) {
+      $this->messenger()
+        ->addError('No roles for given user or backend errored.');
 
-    $form['company_select'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Select Company'),
-      '#required' => TRUE,
-      '#options' => $options,
-      '#default_value' => $selectedCompany,
-    ];
+      if (getenv('APP_ENV') !== 'production') {
+
+        $this->messenger()
+          ->addError('Since not in production, we set the y-tunnus automatically to 4015026-5 so things can be tested.');
+        /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+        $grantsProfileService = \Drupal::service('grants_profile.service');
+        $grantsProfileService->setSelectedCompany('4015026-5');
+      }
+    }
+    else {
+      $options = [];
+      foreach ($associationRoles['Role'] as $association) {
+        $options[$association['BusinessId']] = $association['AssociationNameInfo'][0]['AssociationName'];
+      }
+
+      $form['company_select'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Select Company'),
+        '#required' => TRUE,
+        '#options' => $options,
+        '#default_value' => $selectedCompany,
+      ];
+    }
 
     $form['actions'] = [
       '#type' => 'actions',
@@ -76,9 +91,18 @@ class CompanySelectForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+
+
     $selectedCompany = $form_state->getValue('company_select');
     if (empty($selectedCompany)) {
-      $form_state->setErrorByName('company_select', $this->t('You MUST select company'));
+
+      /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+      $grantsProfileService = \Drupal::service('grants_profile.service');
+      $alreadySetCompany = $grantsProfileService->getSelectedCompany();
+
+      if ($alreadySetCompany == NULL) {
+        $form_state->setErrorByName('company_select', $this->t('You MUST select company'));
+      }
     }
   }
 
@@ -87,12 +111,17 @@ class CompanySelectForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $selectedCompany = $form_state->getValue('company_select');
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-    $grantsProfileService->setSelectedCompany($selectedCompany);
 
+    $selectedCompany = $form_state->getValue('company_select');
+
+    if ($selectedCompany == NULL) {
+      $selectedCompany = $grantsProfileService->getSelectedCompany();
+    }
+
+    $grantsProfileService->setSelectedCompany($selectedCompany);
     $this->messenger()->addStatus($this->t('Selected company has been set.'));
 
     $form_state->setRedirect('grants_profile.show');
