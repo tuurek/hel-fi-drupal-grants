@@ -37,7 +37,7 @@ class GrantsProfileService {
    *
    * @var \Drupal\helfi_atv\AtvService
    */
-  protected AtvService $helfiAtv;
+  protected AtvService $atvService;
 
   /**
    * Session storage for profile data.
@@ -108,7 +108,7 @@ class GrantsProfileService {
     YjdhClient $yjdhClient,
     LoggerChannelFactory $loggerFactory
   ) {
-    $this->helfiAtv = $helfi_atv;
+    $this->atvService = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
     $this->messenger = $messenger;
     $this->helsinkiProfiili = $helsinkiProfiiliUserData;
@@ -154,7 +154,7 @@ class GrantsProfileService {
       'business_id' => $selectedCompany,
     ];
 
-    return $this->helfiAtv->createDocument($newProfileData);
+    return $this->atvService->createDocument($newProfileData);
   }
 
   /**
@@ -229,7 +229,7 @@ class GrantsProfileService {
       $grantsProfileDocument->setStatus(self::DOCUMENT_STATUS_SAVED);
       $grantsProfileDocument->setTransactionId($transactionId);
       $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
-      return $this->helfiAtv->postDocument($grantsProfileDocument);
+      return $this->atvService->postDocument($grantsProfileDocument);
     }
     else {
 
@@ -242,7 +242,7 @@ class GrantsProfileService {
           if ($fileEntity) {
             $fileName = md5($bank_account['bankAccount']) . '.pdf';
             $documentContent['bankAccounts'][$key]['confirmationFile'] = $fileName;
-            $retval = $this->helfiAtv->uploadAttachment($grantsProfileDocument->getId(), $fileName, $fileEntity);
+            $retval = $this->atvService->uploadAttachment($grantsProfileDocument->getId(), $fileName, $fileEntity);
 
             if ($retval) {
               $this->messenger->addStatus(
@@ -302,7 +302,7 @@ class GrantsProfileService {
         'transaction_id' => $this->newTransactionId($transactionId),
       ];
       $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
-      return $this->helfiAtv->patchDocument($grantsProfileDocument->getId(), $payloadData);
+      return $this->atvService->patchDocument($grantsProfileDocument->getId(), $payloadData);
     }
   }
 
@@ -329,6 +329,24 @@ class GrantsProfileService {
     $addresses[$nextId] = $address;
     $profileContent['addresses'] = $addresses;
     return $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Delete attachment from selected company's grants profile document.
+   *
+   * @param string $selectedCompany
+   *  Selected company.
+   * @param string $attachmentId
+   *  Attachment to delete.
+   *
+   * @return \Drupal\helfi_atv\AtvDocument|bool|array
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function deleteAttachment(string $selectedCompany, string $attachmentId): AtvDocument|bool|array {
+    $grantsProfile = $this->getGrantsProfile($selectedCompany);
+    return $this->atvService->deleteAttachment($grantsProfile->getId(), $attachmentId);
   }
 
   /**
@@ -621,7 +639,7 @@ class GrantsProfileService {
     ];
 
     try {
-      $searchDocuments = $this->helfiAtv->searchDocuments($searchParams);
+      $searchDocuments = $this->atvService->searchDocuments($searchParams);
     }
     catch (AtvFailedToConnectException | GuzzleException $e) {
       throw new AtvDocumentNotFoundException('Not found');
