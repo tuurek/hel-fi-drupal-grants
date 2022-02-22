@@ -361,10 +361,6 @@ elements: |-
         '#counter_minimum': 1
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
-        '#states':
-          required:
-            ':input[name="kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta"]':
-              value: 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön tiedot'
