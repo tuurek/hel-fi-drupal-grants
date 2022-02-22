@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-    - feature/AU-227-hakuprofiilin-luominen
+    - feature/AU-326-tilinumeron-vahvistusliite
   paths:
     exclude:
     - README.md
