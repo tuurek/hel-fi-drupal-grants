@@ -54,7 +54,7 @@ class GrantsProfileForm extends FormBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
+    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
     // Set profile content for other fields than this form.
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);

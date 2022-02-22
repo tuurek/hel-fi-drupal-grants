@@ -1,0 +1,7 @@
+webform-additions:
+  version: 1.x
+  js:
+    js/webform-additions.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings

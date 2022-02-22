@@ -10,6 +10,7 @@ use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
+use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
@@ -150,6 +151,13 @@ class GrantsHandler extends WebformHandlerBase {
   protected AtvSchema $atvSchema;
 
   /**
+   * Access ATV backend.
+   *
+   * @var \Drupal\grants_profile\GrantsProfileService
+   */
+  protected GrantsProfileService $grantsProfileService;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -171,6 +179,9 @@ class GrantsHandler extends WebformHandlerBase {
     /** @var \Drupal\grants_metadata\AtvSchema atvSchema */
     $instance->atvSchema = $container->get('grants_metadata.atv_schema');
     $instance->atvSchema->setSchema(getenv('ATV_SCHEMA_PATH'));
+
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $instance->grantsProfileService = \Drupal::service('grants_profile.service');
 
     return $instance;
   }
@@ -662,6 +673,35 @@ class GrantsHandler extends WebformHandlerBase {
         }
       }
     }
+
+    $selectedAccountNumber = $this->submittedFormData["account_number"];
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany);
+    $profileContent = $grantsProfileDocument->getContent();
+
+    $selectedAccount = NULL;
+    foreach ($profileContent['bankAccounts'] as $account) {
+      if ($account['bankAccount'] == $selectedAccountNumber) {
+        $selectedAccount = $account;
+      }
+    }
+
+    $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+
+    if ($selectedAccountConfirmation) {
+      $attachmentsArray[] = [
+        'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
+        'fileName' => $selectedAccount["confirmationFile"],
+        'isNewAttachment' => TRUE,
+        'fileType' => 0,
+        'isDeliveredLater' => FALSE,
+        'isIncludedInOtherFile' => FALSE,
+        // @todo a better way to strip host from atv url.
+        'integrationID' => str_replace('https://atv-api-hki-kanslia-atv-test.apps.arodevtest.hel.fi/', '', $selectedAccountConfirmation['href']),
+      ];
+
+    }
+
     return $attachmentsArray;
   }
 

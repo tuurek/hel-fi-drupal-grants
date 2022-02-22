@@ -115,9 +115,15 @@ elements: |-
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
+      account_number_select:
+        '#type': select
+        '#title': 'Select account'
+        '#options':
+          noaccounts: 'No accounts.'
       account_number:
         '#type': textfield
         '#title': Tilinumero
+        '#readonly': true
         '#required': true
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
@@ -178,6 +184,9 @@ elements: |-
         '#title': Avustukset
         '#multiple': true
         '#subventionType':
+          6: '6'
+        '#subvention_type':
+          1: '1'
           6: '6'
         '#subvention_type_id__access': false
         '#subvention_type__title': Avustuslaji
