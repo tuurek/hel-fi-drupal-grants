@@ -106,7 +106,7 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
       // Get subvention types from settings form.
       $subventionTypes = $element['#subventionType'];
       // Set element cardinality to match whatever is selected in
-      $element['#cardinality'] = count($subventionTypes);
+      $element['#cardinality'] = $subventionTypes ? count($subventionTypes) : -1;
 
 
       $defaultValues = [];
