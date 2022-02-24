@@ -192,12 +192,17 @@ class AtvSchema {
       $jsonPath = $definition->getSetting('jsonPath');
       $requiredInJson = $definition->getSetting('requiredInJson');
       $defaultValue = $definition->getSetting('defaultValue');
+      $valueCallback = $definition->getSetting('valueCallback');
 
       if ($jsonPath == NULL) {
         continue;
       }
 
       $value = $property->getValue();
+
+      if ($valueCallback) {
+        $value = call_user_func($valueCallback, $value);
+      }
 
       if (!is_array($value)) {
         $value = "" . $value;
