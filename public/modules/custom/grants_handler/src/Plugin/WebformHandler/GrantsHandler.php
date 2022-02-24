@@ -3,6 +3,7 @@
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
@@ -11,10 +12,14 @@ use Drupal\grants_attachments\AttachmentUploader;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\GrantsProfileService;
+use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\helfi_atv\AtvFailedToConnectException;
+use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -151,11 +156,25 @@ class GrantsHandler extends WebformHandlerBase {
   protected AtvSchema $atvSchema;
 
   /**
-   * Access ATV backend.
+   * Access GRants profile.
    *
    * @var \Drupal\grants_profile\GrantsProfileService
    */
   protected GrantsProfileService $grantsProfileService;
+
+  /**
+   * Access ATV backend.
+   *
+   * @var \Drupal\helfi_atv\AtvService
+   */
+  protected AtvService $atvService;
+
+  /**
+   * Date formatter.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatter
+   */
+  protected DateFormatter $dateFormatter;
 
   /**
    * {@inheritdoc}
@@ -174,7 +193,7 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
 
     /** @var \Drupal\helfi_atv\AtvService atvService */
-    // $instance->atvService = $container->get('helfi_atv.atv_service');
+    $instance->atvService = $container->get('helfi_atv.atv_service');
 
     /** @var \Drupal\grants_metadata\AtvSchema atvSchema */
     $instance->atvSchema = $container->get('grants_metadata.atv_schema');
@@ -182,6 +201,9 @@ class GrantsHandler extends WebformHandlerBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $instance->grantsProfileService = \Drupal::service('grants_profile.service');
+
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $instance->dateFormatter = \Drupal::service('date.formatter');
 
     return $instance;
   }
@@ -239,6 +261,21 @@ class GrantsHandler extends WebformHandlerBase {
    *   Floated value.
    */
   private function grantsHandlerConvertToFloat(string $value): float {
+    $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
+    $value = (float) $value;
+    return $value;
+  }
+
+  /**
+   * Convert EUR format value to "double" .
+   *
+   * @param string $value
+   *   Value to be converted.
+   *
+   * @return float
+   *   Floated value.
+   */
+  public static function convertToFloat(string $value): float {
     $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
     $value = (float) $value;
     return $value;
@@ -488,10 +525,14 @@ class GrantsHandler extends WebformHandlerBase {
     $this->applicationTypeID = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
 
+    $ts = date('c', $webform_submission->getCreatedTime());
+    $tsExp = explode('+', $ts);
+
+    $this->submittedFormData['form_timestamp'] = $tsExp[0] . '.000Z';
+
     if ($webform_submission->isDefaultRevision()) {
 
       $this->applicationNumber = self::createApplicationNumber($webform_submission);
-      $this->submittedFormData['form_timestamp'] = (string) $webform_submission->getCreatedTime();
 
       $this->submittedFormData['status'] = 'SUBMITTED';
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
@@ -689,6 +730,17 @@ class GrantsHandler extends WebformHandlerBase {
     $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
 
     if ($selectedAccountConfirmation) {
+      try {
+        // get file
+        $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
+        // add file to attachments for uploading.
+        $this->attachmentFileIds[] = $file->id();
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+        $this->loggerFactory->get('grants_handler')->error($e->getMessage());
+        $this->messenger()
+          ->addError('Bank account confirmation file attachment failed.');
+      }
+
       $attachmentsArray[] = [
         'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
         'fileName' => $selectedAccount["confirmationFile"],
@@ -697,9 +749,7 @@ class GrantsHandler extends WebformHandlerBase {
         'isDeliveredLater' => FALSE,
         'isIncludedInOtherFile' => FALSE,
         // @todo a better way to strip host from atv url.
-        'integrationID' => str_replace('https://atv-api-hki-kanslia-atv-test.apps.arodevtest.hel.fi/', '', $selectedAccountConfirmation['href']),
       ];
-
     }
 
     return $attachmentsArray;

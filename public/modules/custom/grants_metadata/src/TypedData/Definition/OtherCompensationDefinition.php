@@ -50,6 +50,7 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
       $info['amount'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('amount')
+        ->setSetting('valueCallback', ['\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler','convertToFloat'])
         ->setSetting('jsonPath', [
           'compensation',
           'otherCompensationsInfo',

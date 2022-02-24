@@ -266,7 +266,6 @@ trait ApplicationDefinitionTrait {
         'generalInfoArray',
         'totalAmount',
       ])
-      ->setSetting('valueCallback', 'callback_function')
       ->addConstraint('NotBlank');
 
     $info['compensation_explanation'] = DataDefinition::create('string')
@@ -355,6 +354,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feePerson',
       ])
+      ->setSetting('valueCallback', ['\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler','convertToFloat'])
       ->addConstraint('NotBlank');
 
     $info['fee_community'] = DataDefinition::create('string')
@@ -365,6 +365,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feeCommunity',
       ])
+      ->setSetting('valueCallback', ['\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler','convertToFloat'])
       ->addConstraint('NotBlank');
 
     $info['members_applicant_person_local'] = DataDefinition::create('string')
