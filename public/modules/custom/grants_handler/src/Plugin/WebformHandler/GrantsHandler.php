@@ -493,7 +493,7 @@ class GrantsHandler extends WebformHandlerBase {
       $this->applicationNumber = self::createApplicationNumber($webform_submission);
       $this->submittedFormData['form_timestamp'] = (string) $webform_submission->getCreatedTime();
 
-      $this->submittedFormData['status'] = 'DRAFT';
+      $this->submittedFormData['status'] = 'SUBMITTED';
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
