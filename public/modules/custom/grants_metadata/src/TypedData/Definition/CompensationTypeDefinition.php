@@ -53,9 +53,11 @@ class CompensationTypeDefinition extends ComplexDataDefinitionBase {
           'compensationInfo',
           'compensationArray',
           'amount',
-        ]);
-      // ->setRequired(TRUE)
-      // ->addConstraint('NotBlank')
+        ])
+        ->setSetting('defaultValue', 0)
+       ->setRequired(TRUE)
+        ->addConstraint('NotBlank')
+      ;
     }
     // And here we will add later fields as well.
     return $this->propertyDefinitions;
