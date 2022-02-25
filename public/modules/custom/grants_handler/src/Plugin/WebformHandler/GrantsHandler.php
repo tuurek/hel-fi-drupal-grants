@@ -381,24 +381,31 @@ class GrantsHandler extends WebformHandlerBase {
     // Set sender information after save so no accidental saving of data.
     // @todo Think about how sender info should be parsed, maybe in own.
     $userProfileData = $this->userExternalData->getUserProfileData();
+    $userData = $this->userExternalData->getUserData();
+
+    if (isset($userProfileData["myProfile"])) {
+      $data = $userProfileData["myProfile"];
+    } else {
+      $data = $userProfileData;
+    }
 
     // If no userprofile data, we need to hardcode these values.
     // @todo Remove hardcoded values when tunnistamo works.
-    if ($userProfileData == NULL) {
+    if ($userProfileData == NULL || $userData == NULL) {
       $this->submittedFormData['sender_firstname'] = 'NoTunnistamo';
       $this->submittedFormData['sender_lastname'] = 'NoTunnistamo';
       $this->submittedFormData['sender_person_id'] = 'NoTunnistamo';
-      $this->submittedFormData['sender_user_id'] = 'NoTunnistamo';
+      $this->submittedFormData['sender_user_id'] = '280f75c5-6a20-4091-b22d-dfcdce7fef60';
       $this->submittedFormData['sender_email'] = 'NoTunnistamo';
 
     }
     else {
       $userData = $this->userExternalData->getUserData();
-      $this->submittedFormData['sender_firstname'] = $userProfileData["myProfile"]["verifiedPersonalInformation"]["firstName"];
-      $this->submittedFormData['sender_lastname'] = $userProfileData["myProfile"]["verifiedPersonalInformation"]["lastName"];
-      $this->submittedFormData['sender_person_id'] = $userProfileData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+      $this->submittedFormData['sender_firstname'] = $data["verifiedPersonalInformation"]["firstName"];
+      $this->submittedFormData['sender_lastname'] = $data["verifiedPersonalInformation"]["lastName"];
+      $this->submittedFormData['sender_person_id'] = $data["verifiedPersonalInformation"]["nationalIdentificationNumber"];
       $this->submittedFormData['sender_user_id'] = $userData["sub"];
-      $this->submittedFormData['sender_email'] = $userProfileData["myProfile"]["primaryEmail"]["email"];
+      $this->submittedFormData['sender_email'] = $data["primaryEmail"]["email"];
     }
   }
 
