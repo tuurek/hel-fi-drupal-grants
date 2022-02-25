@@ -18,7 +18,7 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
       $info = &$this->propertyDefinitions;
 
       $info['issuer'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
+        // ->setRequired(TRUE)
         ->setLabel('issuer')
         ->setSetting('jsonPath', [
           'compensation',
@@ -28,7 +28,7 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
         ]);
       // ->addConstraint('NotBlank')
       $info['issuerName'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
+        // ->setRequired(TRUE)
         ->setLabel('issuerName')
         ->setSetting('jsonPath', [
           'compensation',
@@ -38,7 +38,7 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
         ]);
       // ->addConstraint('NotBlank')
       $info['year'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
+        // ->setRequired(TRUE)
         ->setLabel('year')
         ->setSetting('jsonPath', [
           'compensation',
@@ -50,7 +50,10 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
       $info['amount'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('amount')
-        ->setSetting('valueCallback', ['\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler','convertToFloat'])
+        ->setSetting('valueCallback', [
+          '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+          'convertToFloat',
+        ])
         ->setSetting('jsonPath', [
           'compensation',
           'otherCompensationsInfo',

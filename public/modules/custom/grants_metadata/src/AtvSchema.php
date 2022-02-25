@@ -97,8 +97,8 @@ class AtvSchema {
         $typedDataValues[$definitionKey] = $this->getValueFromDocument($documentContent, $jsonPath, $elementName);
       }
     }
-    if(isset($typedDataValues['status_updates']) && is_array($typedDataValues['status_updates'])){
-      // loop status updates & set the last one as submission status.
+    if (isset($typedDataValues['status_updates']) && is_array($typedDataValues['status_updates'])) {
+      // Loop status updates & set the last one as submission status.
       foreach ($typedDataValues['status_updates'] as $status) {
         $typedDataValues['status'] = $status['citizenCaseStatus'];
       }
@@ -243,13 +243,13 @@ class AtvSchema {
 
       if (!is_array($value)) {
         if ($propertyName == 'form_update') {
-//          $value = $value;
-        } else {
+          // $value = $value;
+        }
+        else {
           $value = "" . $value;
         }
 
       }
-
 
       switch ($numberOfItems) {
         case 4:
@@ -373,6 +373,7 @@ class AtvSchema {
           }
 
           break;
+
         case 1:
 
           $documentStructure[$elementName] = $value;

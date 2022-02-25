@@ -67,7 +67,7 @@ class BankAccountForm extends FormBase {
         '#readonly' => TRUE,
         '#disabled' => TRUE,
         '#value' => $selectedBankAccount["confirmationFile"],
-        '#suffix' => '<a href="/grants-profile/bank-accounts/0/delete-confirmation">[X]</a>'
+        '#suffix' => '<a href="/grants-profile/bank-accounts/0/delete-confirmation">[X]</a>',
       ];
 
     }

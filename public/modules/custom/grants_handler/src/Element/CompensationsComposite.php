@@ -3,7 +3,6 @@
 namespace Drupal\grants_handler\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite as CompensationsCompositeElement;
 use Drupal\webform\Element\WebformCompositeBase;
 
 /**
@@ -45,7 +44,7 @@ class CompensationsComposite extends WebformCompositeBase {
     $elements['amount'] = [
       '#type' => 'textfield',
       '#title' => t('Subvention amount'),
-      '#required' => TRUE
+      '#required' => TRUE,
     ];
 
     return $elements;

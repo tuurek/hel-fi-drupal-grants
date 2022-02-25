@@ -385,7 +385,8 @@ class GrantsHandler extends WebformHandlerBase {
 
     if (isset($userProfileData["myProfile"])) {
       $data = $userProfileData["myProfile"];
-    } else {
+    }
+    else {
       $data = $userProfileData;
     }
 
@@ -546,7 +547,8 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
       $this->submittedFormData['form_update'] = FALSE;
-    } else {
+    }
+    else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
       $this->submittedFormData['form_update'] = TRUE;
     }
@@ -743,11 +745,12 @@ class GrantsHandler extends WebformHandlerBase {
 
     if ($selectedAccountConfirmation) {
       try {
-        // get file
+        // Get file.
         $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
-        // add file to attachments for uploading.
+        // Add file to attachments for uploading.
         $this->attachmentFileIds[] = $file->id();
-      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->loggerFactory->get('grants_handler')->error($e->getMessage());
         $this->messenger()
           ->addError('Bank account confirmation file attachment failed.');

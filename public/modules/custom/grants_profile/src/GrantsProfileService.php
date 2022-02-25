@@ -335,11 +335,13 @@ class GrantsProfileService {
    * Delete attachment from selected company's grants profile document.
    *
    * @param string $selectedCompany
-   *  Selected company.
+   *   Selected company.
    * @param string $attachmentId
-   *  Attachment to delete.
+   *   Attachment to delete.
    *
    * @return \Drupal\helfi_atv\AtvDocument|bool|array
+   *   Return value varies.
+   *
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \Drupal\helfi_atv\AtvFailedToConnectException
    * @throws \GuzzleHttp\Exception\GuzzleException
