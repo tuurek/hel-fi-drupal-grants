@@ -140,7 +140,18 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
       $element['#default_value'] = $defaultValues;
     }
 
+    if (isset($webformData['status']) && $webformData['status'] == 'RECEIVED' && $element['#type'] != 'webform_actions') {
+      $element['#disabled'] = TRUE;
+    }
+    else {
+      if (!isset($webformData['status'])) {
+        if (isset($element['#webform_key']) && $element['#webform_key'] == 'status') {
+          $element['#default_value'] = 'DRAFT';
+        }
+      }
+    }
   }
+
 
 }
 
@@ -174,13 +185,26 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
 
+  $form["actions"]["draft"]['#disabled'] = TRUE;
+
   if ($selectedCompany != NULL) {
+
+    if (
+      isset($form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"]) &&
+      $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == 'RECEIVED') {
+      $form["actions"]["submit"]['#disabled'] = TRUE;
+      unset($form["elements"]["finalize_application"]);
+    }
+//    else {
+//      unset($form["elements"]["finalize_application"]);
+//      $d = 'asdf';
+//    }
 
     $grantsProfile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
     $bankAccountOptions = [];
-    foreach($grantsProfile['bankAccounts'] as $key => $account){
-      if(isset($account['confirmationFile'])) {
+    foreach ($grantsProfile['bankAccounts'] as $key => $account) {
+      if (isset($account['confirmationFile'])) {
         $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
       }
     }

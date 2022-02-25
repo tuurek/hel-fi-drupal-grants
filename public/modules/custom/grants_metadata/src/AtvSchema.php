@@ -94,12 +94,16 @@ class AtvSchema {
       // If json path not configured for item, do nothing.
       if (is_array($jsonPath)) {
         $elementName = array_pop($jsonPath);
-
         $typedDataValues[$definitionKey] = $this->getValueFromDocument($documentContent, $jsonPath, $elementName);
-
       }
-
     }
+    if(isset($typedDataValues['status_updates']) && is_array($typedDataValues['status_updates'])){
+      // loop status updates & set the last one as submission status.
+      foreach ($typedDataValues['status_updates'] as $status) {
+        $typedDataValues['status'] = $status['citizenCaseStatus'];
+      }
+    }
+
     $typedData->setValue($typedDataValues);
     return $typedData;
 
@@ -204,10 +208,6 @@ class AtvSchema {
         $value = call_user_func($valueCallback, $value);
       }
 
-      if (!is_array($value)) {
-        $value = "" . $value;
-      }
-
       // If value is null, try to set default value from config.
       if ($value == NULL) {
         $value = $defaultValue;
@@ -236,6 +236,20 @@ class AtvSchema {
       else {
         $valueTypeString = 'string';
       }
+
+      if ($propertyName == 'status_updates') {
+        continue;
+      }
+
+      if (!is_array($value)) {
+        if ($propertyName == 'form_update') {
+//          $value = $value;
+        } else {
+          $value = "" . $value;
+        }
+
+      }
+
 
       switch ($numberOfItems) {
         case 4:
@@ -359,18 +373,15 @@ class AtvSchema {
           }
 
           break;
+        case 1:
+
+          $documentStructure[$elementName] = $value;
+          break;
 
         default:
           $d = 'asdf';
           break;
       }
-    }
-    try {
-      $an = $typedData->get('application_number')->getValue();
-      // $documentStructure['formUpdate'] = 'true';
-    }
-    catch (\Exception $e) {
-      // $documentStructure['formUpdate'] = 'false';
     }
 
     if (!array_key_exists('attachmentsInfo', $documentStructure)) {
@@ -433,11 +444,14 @@ class AtvSchema {
         $retval = [];
         // We need to loop values and structure data in array as well.
         foreach ($content[$elementName] as $key => $value) {
-          foreach ($value as $v) {
+          foreach ($value as $key2 => $v) {
             if (is_array($v)) {
               if (array_key_exists('value', $v)) {
                 $retval[$key][$v['ID']] = $v['value'];
               }
+            }
+            else {
+              $retval[$key][$key2] = $v;
             }
           }
         }

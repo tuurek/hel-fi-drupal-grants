@@ -4,6 +4,7 @@ namespace Drupal\grants_metadata\TypedData\Definition;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
+use Drupal\Core\TypedData\MapDataDefinition;
 
 /**
  * Base class for data typing & mapping.
@@ -88,8 +89,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'homePage',
       ])
-      ->setSetting('defaultValue', "")
-    ;
+      ->setSetting('defaultValue', "");
 
     $info['email'] = DataDefinition::create('email')
       // ->setRequired(TRUE)
@@ -354,7 +354,10 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feePerson',
       ])
-      ->setSetting('valueCallback', ['\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler','convertToFloat'])
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
+      ])
       ->addConstraint('NotBlank');
 
     $info['fee_community'] = DataDefinition::create('string')
@@ -365,7 +368,10 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feeCommunity',
       ])
-      ->setSetting('valueCallback', ['\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler','convertToFloat'])
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
+      ])
       ->addConstraint('NotBlank');
 
     $info['members_applicant_person_local'] = DataDefinition::create('string')
@@ -486,6 +492,45 @@ trait ApplicationDefinitionTrait {
       ->setLabel('Attachments')
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
     // ->addConstraint('NotBlank')
+
+    $info['form_update'] = DataDefinition::create('boolean')
+      // ->setRequired(TRUE)
+      ->setLabel('formUpdate')
+      ->setSetting('jsonPath', ['formUpdate']);
+
+    $info['status_updates'] = MapDataDefinition::create()
+      ->setPropertyDefinition(
+        'caseId',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates','caseId'])
+      )
+      ->setPropertyDefinition(
+        'citizenCaseStatus',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates','citizenCaseStatus'])
+      )
+      ->setPropertyDefinition(
+        'eventType',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates','eventType'])
+      )
+      ->setPropertyDefinition(
+        'eventCode',
+        DataDefinition::create('integer')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates','eventCode'])
+      )
+      ->setPropertyDefinition(
+        'eventSource',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates','eventSource'])
+      )
+      ->setSetting('jsonPath', ['statusUpdates']);
+
     return $info;
   }
 

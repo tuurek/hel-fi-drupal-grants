@@ -534,18 +534,23 @@ class GrantsHandler extends WebformHandlerBase {
 
     $ts = date('c', $webform_submission->getCreatedTime());
     $tsExp = explode('+', $ts);
-
     $this->submittedFormData['form_timestamp'] = $tsExp[0] . '.000Z';
 
-    if ($webform_submission->isDefaultRevision()) {
-
-      $this->applicationNumber = self::createApplicationNumber($webform_submission);
-
+    if ($this->submittedFormData["finalize_application"] == 1) {
       $this->submittedFormData['status'] = 'SUBMITTED';
+    }
+
+    if (!isset($this->submittedFormData['application_number'])) {
+      $this->applicationNumber = self::createApplicationNumber($webform_submission);
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
+      $this->submittedFormData['form_update'] = FALSE;
+    } else {
+      $this->applicationNumber = $this->submittedFormData['application_number'];
+      $this->submittedFormData['form_update'] = TRUE;
     }
+
   }
 
   /**

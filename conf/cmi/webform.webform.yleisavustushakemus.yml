@@ -536,6 +536,10 @@ elements: |-
         '#multiple__add_more_button_label': 'Lisää liite'
         '#isDeliveredLater__access': false
         '#isIncludedInOtherFile__access': false
+  finalize_application:
+    '#type': checkbox
+    '#title': 'Finalize application'
+    '#description': 'Check this to submit application for handling and disable editing.'
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
