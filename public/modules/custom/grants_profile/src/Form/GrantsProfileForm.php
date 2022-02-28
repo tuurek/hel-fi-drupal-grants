@@ -56,6 +56,12 @@ class GrantsProfileForm extends FormBase {
 
     $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
+    if (empty($grantsProfileContent)) {
+      $this->messenger()->addError($this->t('Error fetching profile data'));
+      $this->logger('grants_profile')->error('Profile fetch failed.');
+      return $form;
+    }
+
     // Set profile content for other fields than this form.
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);
     $form['foundingYearWrapper'] = [

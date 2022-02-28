@@ -195,10 +195,6 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
       $form["actions"]["submit"]['#disabled'] = TRUE;
       unset($form["elements"]["finalize_application"]);
     }
-//    else {
-//      unset($form["elements"]["finalize_application"]);
-//      $d = 'asdf';
-//    }
 
     $grantsProfile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
@@ -210,6 +206,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     }
 
     $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;
+    if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
+      $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];
+    }
 
     $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompany;
     $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $grantsProfile["companyName"];

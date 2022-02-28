@@ -632,6 +632,7 @@ class GrantsProfileService {
    *   Profile data
    *
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   private function getGrantsProfileFromAtv(string $businessId): AtvDocument|bool {
 
@@ -643,8 +644,11 @@ class GrantsProfileService {
     try {
       $searchDocuments = $this->atvService->searchDocuments($searchParams);
     }
-    catch (AtvFailedToConnectException | GuzzleException $e) {
+    catch (AtvFailedToConnectException) {
       throw new AtvDocumentNotFoundException('Not found');
+    }
+    catch (GuzzleException $e) {
+      throw $e;
     }
 
     if (empty($searchDocuments)) {

@@ -537,6 +537,9 @@ class GrantsHandler extends WebformHandlerBase {
     $tsExp = explode('+', $ts);
     $this->submittedFormData['form_timestamp'] = $tsExp[0] . '.000Z';
 
+    // @todo check community_practices_business value and where to get it from.
+    $this->submittedFormData['community_practices_business'] = FALSE;
+
     if ($this->submittedFormData["finalize_application"] == 1) {
       $this->submittedFormData['status'] = 'SUBMITTED';
     }
@@ -546,7 +549,9 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
-      $this->submittedFormData['form_update'] = FALSE;
+      // Apparently you CANNOT have this set in new applications,
+      // integration seems to fail
+      // $this->submittedFormData['form_update'] = FALSE;.
     }
     else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
@@ -625,7 +630,14 @@ class GrantsHandler extends WebformHandlerBase {
             // TÄHÄN TSEKKAA RESULTTI.
             // @todo print message for every attachment
             $this->messenger()
-              ->addStatus('Grant application saved and attachments saved, see application status from [omat_sivut]');
+              ->addStatus(
+                $this->t(
+                  'Grant application (%number) saved and attachments saved, 
+                  see application status from @link.',
+                  [
+                    '%number' => $this->applicationNumber,
+                    '@link' => '<a href="/grants-profile/applications/' . $this->applicationNumber . '">here</a>',
+                  ]));
 
             $this->attachmentRemover->removeGrantAttachments(
               $this->attachmentFileIds,

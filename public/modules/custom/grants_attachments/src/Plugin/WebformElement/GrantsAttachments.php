@@ -125,6 +125,9 @@ class GrantsAttachments extends WebformCompositeBase {
     }
     else {
       foreach (GrantsHandler::getAttachmentFieldNames() as $fieldName) {
+        if (!isset($data[$fieldName])) {
+          continue;
+        }
         $fieldData = $data[$fieldName];
 
         // $element["#webform_parents"][2]

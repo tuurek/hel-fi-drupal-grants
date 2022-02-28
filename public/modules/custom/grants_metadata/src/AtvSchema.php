@@ -198,9 +198,18 @@ class AtvSchema {
       $defaultValue = $definition->getSetting('defaultValue');
       $valueCallback = $definition->getSetting('valueCallback');
 
+      $propertyName = $property->getName();
+      $propertyLabel = $definition->getLabel();
+      $propertyType = $definition->getDataType();
+
       if ($jsonPath == NULL) {
         continue;
       }
+
+      $numberOfItems = count($jsonPath);
+
+      $elementName = array_pop($jsonPath);
+      $baseIndex = count($jsonPath);
 
       $value = $property->getValue();
 
@@ -209,18 +218,9 @@ class AtvSchema {
       }
 
       // If value is null, try to set default value from config.
-      if ($value == NULL) {
+      if (is_null($value)) {
         $value = $defaultValue;
       }
-
-      $propertyName = $property->getName();
-      $propertyLabel = $definition->getLabel();
-      $propertyType = $definition->getDataType();
-
-      $numberOfItems = count($jsonPath);
-
-      $elementName = array_pop($jsonPath);
-      $baseIndex = count($jsonPath);
 
       $schema = $this->getPropertySchema($elementName, $this->structure);
 
@@ -243,9 +243,11 @@ class AtvSchema {
 
       if (!is_array($value)) {
         if ($propertyName == 'form_update') {
-          // $value = $value;
+          if ($value != TRUE) {
+            continue;
+          }
         }
-        else {
+        elseif ($propertyType !== 'boolean') {
           $value = "" . $value;
         }
 
