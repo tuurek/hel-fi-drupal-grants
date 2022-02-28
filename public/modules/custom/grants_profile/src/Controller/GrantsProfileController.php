@@ -23,17 +23,23 @@ class GrantsProfileController extends ControllerBase {
    * @return array
    *   Build for the page.
    */
-  public function viewApplication(string $document_uuid): array {
+  public function viewApplication(string $document_uuid) {
 
     $submissionObject = GrantsHandler::submissionObjectFromApplicationNumber($document_uuid);
     if ($submissionObject) {
       $data = $submissionObject->getData();
       $webForm = $submissionObject->getWebform();
-      $submissionForm = $webForm->getSubmissionForm(['data' => $data]);
+
+      // $submissionForm = $webForm->getSubmissionForm(['sid' =>
+      // $submissionObject->id(),'data' => $data],'edit');
       if (!empty($data)) {
         // @todo Set up some way to show data. Is webformSubmission needed?
         // $build['#application'] = $submissionObject->getData();
-        $build['#submission_form'] = $submissionForm;
+        // $build['#submission_form'] = $submissionForm;
+        return $this->redirect('entity.webform.user.submission.edit', [
+          'webform' => $webForm->id(),
+          'webform_submission' => $submissionObject->id(),
+        ]);
       }
       else {
         \Drupal::messenger()
