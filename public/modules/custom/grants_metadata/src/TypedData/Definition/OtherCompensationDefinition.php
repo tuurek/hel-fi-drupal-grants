@@ -19,11 +19,8 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
 
       $info['issuer'] = DataDefinition::create('string')
         // ->setRequired(TRUE)
-        ->setLabel('issuer')
+        ->setLabel('Issuer')
         ->setSetting('jsonPath', [
-          'compensation',
-          'otherCompensationsInfo',
-          'otherCompensationsArray',
           'issuer',
         ]);
       // ->addConstraint('NotBlank')
@@ -31,33 +28,28 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
         // ->setRequired(TRUE)
         ->setLabel('issuerName')
         ->setSetting('jsonPath', [
-          'compensation',
-          'otherCompensationsInfo',
-          'otherCompensationsArray',
           'issuerName',
         ]);
       // ->addConstraint('NotBlank')
       $info['year'] = DataDefinition::create('string')
         // ->setRequired(TRUE)
-        ->setLabel('year')
+        ->setLabel('Year issued')
         ->setSetting('jsonPath', [
-          'compensation',
-          'otherCompensationsInfo',
-          'otherCompensationsArray',
           'year',
         ]);
       // ->addConstraint('NotBlank')
-      $info['amount'] = DataDefinition::create('string')
+      $info['amount'] = DataDefinition::create('float')
         ->setRequired(TRUE)
-        ->setLabel('amount')
+        ->setLabel('Amount')
+        ->setSetting('typeOverride', [
+          'dataType' => 'string',
+          'jsonType' => 'float',
+        ])
         ->setSetting('valueCallback', [
           '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
           'convertToFloat',
         ])
         ->setSetting('jsonPath', [
-          'compensation',
-          'otherCompensationsInfo',
-          'otherCompensationsArray',
           'amount',
         ]);
       // ->addConstraint('NotBlank')
@@ -65,9 +57,6 @@ class OtherCompensationDefinition extends ComplexDataDefinitionBase {
         ->setRequired(TRUE)
         ->setLabel('purpose')
         ->setSetting('jsonPath', [
-          'compensation',
-          'otherCompensationsInfo',
-          'otherCompensationsArray',
           'purpose',
         ]);
       // ->addConstraint('NotBlank')

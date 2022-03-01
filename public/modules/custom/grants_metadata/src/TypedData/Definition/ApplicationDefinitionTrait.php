@@ -248,7 +248,12 @@ trait ApplicationDefinitionTrait {
 
     $info['compensation_boolean'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
-      ->setLabel('compensationInfo=>compensationPreviousYear')
+      ->setLabel('compensationPreviousYear')
+      ->setSetting('defaultValue', FALSE)
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'bool',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'compensationInfo',
@@ -257,9 +262,14 @@ trait ApplicationDefinitionTrait {
       ])
       ->addConstraint('NotBlank');
 
-    $info['compensation_total_amount'] = DataDefinition::create('string')
+    $info['compensation_total_amount'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
       ->setLabel('compensationInfo=>purpose')
+      ->setSetting('defaultValue', 0)
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'float',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'compensationInfo',
@@ -305,12 +315,15 @@ trait ApplicationDefinitionTrait {
       // ->setRequired(TRUE)
       ->setLabel('Myönnetty avustus total')
       ->setSetting('defaultValue', 0)
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
         'otherCompensationsTotal',
       ])
-      ->setSetting('defaultValue', [])
       ->addConstraint('NotBlank');
 
     $info['haettu_avustus_tieto_total'] = DataDefinition::create('float')
@@ -321,6 +334,10 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'otherCompensationsInfo',
         'otherAppliedCompensationsTotal',
+      ])
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
       ])
       ->addConstraint('NotBlank');
 
@@ -425,7 +442,7 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'businessPurpose',
       ])
-      ->setSetting('defaultValue', 'Lorem Ipsum Doler est...');
+      ->setSetting('defaultValue', '');
     // ->addConstraint('NotBlank')
     $info['community_practices_business'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
@@ -436,7 +453,12 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'communityPracticesBusiness',
       ])
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'bool',
+      ])
       ->setSetting('defaultValue', FALSE);
+
     // ->addConstraint('NotBlank')
     $info['additional_information'] = DataDefinition::create('string')
       // ->setRequired(TRUE)

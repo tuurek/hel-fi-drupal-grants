@@ -431,6 +431,15 @@ class GrantsHandler extends WebformHandlerBase {
     // webform_preview
     $this->submittedFormData = $webform_submission->getData();
 
+    foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
+      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
+    }
+    foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
+      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
+    }
+
     // Only validate set forms.
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
       // Loop through fieldnames and validate fields.
@@ -515,7 +524,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function preSave(WebformSubmissionInterface $webform_submission) {
 
-    $this->submittedFormData = $webform_submission->getData();
+    // $this->submittedFormData = $webform_submission->getData();
     $this->setTotals();
     $this->parseSenderDetails();
 
@@ -741,42 +750,61 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
-    $selectedAccountNumber = $this->submittedFormData["account_number"];
-    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany);
-    $profileContent = $grantsProfileDocument->getContent();
+    if (isset($this->submittedFormData["account_number"])) {
+      $selectedAccountNumber = $this->submittedFormData["account_number"];
+      $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+      $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany);
+      $profileContent = $grantsProfileDocument->getContent();
 
-    $selectedAccount = NULL;
-    foreach ($profileContent['bankAccounts'] as $account) {
-      if ($account['bankAccount'] == $selectedAccountNumber) {
-        $selectedAccount = $account;
-      }
-    }
+      $applicationDocumentResults = $this->atvService->searchDocuments([
+        'transaction_id' => $this->applicationNumber,
+      ]);
 
-    $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+      $applicationDocument = reset($applicationDocumentResults);
 
-    if ($selectedAccountConfirmation) {
-      try {
-        // Get file.
-        $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
-        // Add file to attachments for uploading.
-        $this->attachmentFileIds[] = $file->id();
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-        $this->loggerFactory->get('grants_handler')->error($e->getMessage());
-        $this->messenger()
-          ->addError('Bank account confirmation file attachment failed.');
+      $filename = md5($selectedAccountNumber);
+      $accountConfirmationExists = FALSE;
+      foreach ($applicationDocument->getAttachments() as $attachment) {
+        if (str_contains($attachment['filename'], $filename)) {
+          $accountConfirmationExists = TRUE;
+          break;
+        }
       }
 
-      $attachmentsArray[] = [
-        'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
-        'fileName' => $selectedAccount["confirmationFile"],
-        'isNewAttachment' => TRUE,
-        'fileType' => 0,
-        'isDeliveredLater' => FALSE,
-        'isIncludedInOtherFile' => FALSE,
-        // @todo a better way to strip host from atv url.
-      ];
+      if (!$accountConfirmationExists) {
+        $selectedAccount = NULL;
+        foreach ($profileContent['bankAccounts'] as $account) {
+          if ($account['bankAccount'] == $selectedAccountNumber) {
+            $selectedAccount = $account;
+          }
+        }
+
+        $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+
+        if ($selectedAccountConfirmation) {
+          try {
+            // Get file.
+            $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
+            // Add file to attachments for uploading.
+            $this->attachmentFileIds[] = $file->id();
+          }
+          catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+            $this->loggerFactory->get('grants_handler')->error($e->getMessage());
+            $this->messenger()
+              ->addError('Bank account confirmation file attachment failed.');
+          }
+
+          $attachmentsArray[] = [
+            'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
+            'fileName' => $selectedAccount["confirmationFile"],
+            'isNewAttachment' => TRUE,
+            'fileType' => 0,
+            'isDeliveredLater' => FALSE,
+            'isIncludedInOtherFile' => FALSE,
+            // @todo a better way to strip host from atv url.
+          ];
+        }
+      }
     }
 
     return $attachmentsArray;

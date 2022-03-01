@@ -55,6 +55,10 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
       $info['isDeliveredLater'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
         ->setLabel('Is delivered later')
+        ->setSetting('typeOverride', [
+          'dataType' => 'string',
+          'jsonType' => 'bool',
+        ])
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
@@ -64,6 +68,10 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
       $info['isIncludedInOtherFile'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
         ->setLabel('In in other attachment')
+        ->setSetting('typeOverride', [
+          'dataType' => 'string',
+          'jsonType' => 'bool',
+        ])
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
@@ -73,6 +81,10 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
       $info['isNewAttachment'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
         ->setLabel('Attachment is new')
+        ->setSetting('typeOverride', [
+          'dataType' => 'string',
+          'jsonType' => 'bool',
+        ])
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
