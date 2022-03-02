@@ -756,55 +756,60 @@ class GrantsHandler extends WebformHandlerBase {
       $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany);
       $profileContent = $grantsProfileDocument->getContent();
 
-      $applicationDocumentResults = $this->atvService->searchDocuments([
-        'transaction_id' => $this->applicationNumber,
-      ]);
+      $applicationDocument = FALSE;
+      try {
+        $applicationDocumentResults = $this->atvService->searchDocuments([
+          'transaction_id' => $this->applicationNumber,
+        ]);
+        $applicationDocument = reset($applicationDocumentResults);
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {}
 
-      $applicationDocument = reset($applicationDocumentResults);
+      if ($applicationDocument) {
+        $filename = md5($selectedAccountNumber);
+        $accountConfirmationExists = FALSE;
+        foreach ($applicationDocument->getAttachments() as $attachment) {
+          if (str_contains($attachment['filename'], $filename)) {
+            $accountConfirmationExists = TRUE;
+            break;
+          }
+        }
 
-      $filename = md5($selectedAccountNumber);
-      $accountConfirmationExists = FALSE;
-      foreach ($applicationDocument->getAttachments() as $attachment) {
-        if (str_contains($attachment['filename'], $filename)) {
-          $accountConfirmationExists = TRUE;
-          break;
+        if (!$accountConfirmationExists) {
+          $selectedAccount = NULL;
+          foreach ($profileContent['bankAccounts'] as $account) {
+            if ($account['bankAccount'] == $selectedAccountNumber) {
+              $selectedAccount = $account;
+            }
+          }
+
+          $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+
+          if ($selectedAccountConfirmation) {
+            try {
+              // Get file.
+              $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
+              // Add file to attachments for uploading.
+              $this->attachmentFileIds[] = $file->id();
+            }
+            catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+              $this->loggerFactory->get('grants_handler')->error($e->getMessage());
+              $this->messenger()
+                ->addError('Bank account confirmation file attachment failed.');
+            }
+
+            $attachmentsArray[] = [
+              'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
+              'fileName' => $selectedAccount["confirmationFile"],
+              'isNewAttachment' => TRUE,
+              'fileType' => 0,
+              'isDeliveredLater' => FALSE,
+              'isIncludedInOtherFile' => FALSE,
+              // @todo a better way to strip host from atv url.
+            ];
+          }
         }
       }
 
-      if (!$accountConfirmationExists) {
-        $selectedAccount = NULL;
-        foreach ($profileContent['bankAccounts'] as $account) {
-          if ($account['bankAccount'] == $selectedAccountNumber) {
-            $selectedAccount = $account;
-          }
-        }
-
-        $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
-
-        if ($selectedAccountConfirmation) {
-          try {
-            // Get file.
-            $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
-            // Add file to attachments for uploading.
-            $this->attachmentFileIds[] = $file->id();
-          }
-          catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-            $this->loggerFactory->get('grants_handler')->error($e->getMessage());
-            $this->messenger()
-              ->addError('Bank account confirmation file attachment failed.');
-          }
-
-          $attachmentsArray[] = [
-            'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
-            'fileName' => $selectedAccount["confirmationFile"],
-            'isNewAttachment' => TRUE,
-            'fileType' => 0,
-            'isDeliveredLater' => FALSE,
-            'isIncludedInOtherFile' => FALSE,
-            // @todo a better way to strip host from atv url.
-          ];
-        }
-      }
     }
 
     return $attachmentsArray;
