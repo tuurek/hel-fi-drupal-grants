@@ -102,7 +102,7 @@ function grants_profile_cron() {
   /** @var \Drupal\Core\File\FileSystem $fileSystem */
   $fileSystem = \Drupal::service('file_system');
 
-  $files = $fileSystem->scanDirectory('/app/public/sites/default/files/private/grants_profile', '(.*?)');
+  $files = $fileSystem->scanDirectory(DRUPAL_ROOT.'/public/sites/default/files/private/grants_profile', '(.*?)');
 
   foreach ($files as $uri => $file) {
 
