@@ -99,6 +99,10 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'email',
       ])
+      ->setSetting('typeOverride', [
+        'dataType' => 'email',
+        'jsonType' => 'string',
+      ])
       ->addConstraint('NotBlank')
       ->addConstraint('Email');
 
@@ -222,7 +226,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'applicationInfoArray',
         'actingYear',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['account_number'] = DataDefinition::create('string')
@@ -287,7 +291,7 @@ trait ApplicationDefinitionTrait {
         'compensationInfo',
         'generalInfoArray',
         'explanation',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['myonnetty_avustus'] = ListDataDefinition::create('grants_metadata_other_compensation')
@@ -349,7 +353,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'benefitsInfoArray',
         'loans',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['benefits_premises'] = DataDefinition::create('string')
@@ -360,7 +364,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'benefitsInfoArray',
         'premises',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['fee_person'] = DataDefinition::create('string')
@@ -399,7 +403,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'activitiesInfoArray',
         'membersApplicantPersonLocal',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['members_applicant_person_global'] = DataDefinition::create('string')
@@ -410,7 +414,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'activitiesInfoArray',
         'membersApplicantPersonGlobal',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['members_applicant_community_local'] = DataDefinition::create('string')
@@ -421,7 +425,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'activitiesInfoArray',
         'membersApplicantCommunityLocal',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['members_applicant_community_global'] = DataDefinition::create('string')
@@ -431,7 +435,7 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'activitiesInfoArray',
         'membersApplicantCommunityGlobal',
-    // ->addConstraint('NotBlank')
+        // ->addConstraint('NotBlank')
       ]);
 
     $info['business_purpose'] = DataDefinition::create('string')
