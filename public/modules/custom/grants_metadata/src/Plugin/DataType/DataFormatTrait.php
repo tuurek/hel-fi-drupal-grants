@@ -21,7 +21,7 @@ trait DataFormatTrait {
       $defaultValue = $definition->getSetting('defaultValue');
       $valueCallback = $definition->getSetting('valueCallback');
 
-      if (isset($values[$name]) || is_null($values[$name])) {
+      if (array_key_exists($name,$values)) {
         $value = $values[$name];
       }
       else {
