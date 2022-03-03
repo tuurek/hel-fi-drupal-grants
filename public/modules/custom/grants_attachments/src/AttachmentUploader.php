@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\Entity\File;
+use Drupal\views\Plugin\views\field\Boolean;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
@@ -51,6 +52,14 @@ class AttachmentUploader {
   protected Connection $connection;
 
   /**
+   * Debug prints?
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+
+  /**
    * Constructs an AttachmentUploader object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -73,6 +82,22 @@ class AttachmentUploader {
   }
 
   /**
+   * @return bool
+   */
+  public function isDebug(): bool {
+    return $this->debug;
+  }
+
+  /**
+   * @param bool $debug
+   */
+  public function setDebug(bool $debug): void {
+    $this->debug = $debug;
+  }
+
+
+
+  /**
    * Upload every attachment from form to backend.
    *
    * @param array $attachments
@@ -90,10 +115,13 @@ class AttachmentUploader {
     string $applicationNumber,
     bool $debug
   ): array {
+    $this->setDebug($debug);
+
     $retval = [];
     foreach ($attachments as $fileId) {
       try {
         $file = File::load($fileId);
+        $filename = $file->getFilename();
 
         // If for some reason the file entity does not wxist, do no more.
         if ($file === NULL) {
@@ -132,15 +160,23 @@ class AttachmentUploader {
         );
         if ($response->getStatusCode() === $this->validStatusCode) {
           $retval[$fileId] = TRUE;
-          $this->loggerChannel->notice('Grants attachment upload succeeded: Response statusCode = @status', [
-            '@status' => $response->getStatusCode(),
-          ]);
-          // Make sure that no rows remain for this FID.
-          $num_deleted = $this->connection->delete('grants_attachments')
-            ->condition('fid', $file->id())
-            ->execute();
+          if ($this->isDebug()) {
+            $this->loggerChannel->notice('Grants attachment(@filename) upload succeeded: Response statusCode = @status', [
+              '@status' => $response->getStatusCode(),
+              '@filename' => $file->getFilename()
+            ]);
+          }
 
-          $this->loggerChannel->notice('Removed file entity & db log row');
+//          // Make sure that no rows remain for this FID.
+//          $num_deleted = $this->connection->delete('grants_attachments')
+//            ->condition('fid', $file->id())
+//            ->execute();
+//
+//          if ($this->isDebug()) {
+//            $this->loggerChannel->notice('Removed db log row: @filename', [
+//              '@filename' => $filename
+//            ]);
+//          }
         }
         else {
           $retval[$fileId] = FALSE;
@@ -151,7 +187,7 @@ class AttachmentUploader {
       }
       catch (\Exception $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
-        if ($debug) {
+        if ($this->isDebug()) {
           $this->messenger->addError(printf('Grants attachment upload failed: %s', [$e->getMessage()]));
         }
         $this->loggerChannel->error('Grants attachment upload failed: @error', [
@@ -160,8 +196,8 @@ class AttachmentUploader {
         $retval[$fileId] = FALSE;
       }
       catch (GuzzleException $e) {
-        $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
-        if ($debug) {
+        if ($this->isDebug()) {
+          $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
           $this->messenger->addError($e->getMessage());
         }
         $this->loggerChannel->error('Grants attachment upload failed: @error', [
