@@ -12,6 +12,7 @@ use Drupal\grants_attachments\AttachmentUploader;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\GrantsProfileService;
+use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
@@ -144,13 +145,6 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Access ATV backend.
    *
-   * @var \Drupal\helfi_atv\AtvService
-   */
-  // Protected AtvService $atvService;.
-
-  /**
-   * Access ATV backend.
-   *
    * @var \Drupal\grants_metadata\AtvSchema
    */
   protected AtvSchema $atvSchema;
@@ -175,6 +169,13 @@ class GrantsHandler extends WebformHandlerBase {
    * @var \Drupal\Core\Datetime\DateFormatter
    */
   protected DateFormatter $dateFormatter;
+
+  /**
+   * Holds document fetched from ATV for checks.
+   *
+   * @var \Drupal\helfi_atv\AtvDocument
+   */
+  protected AtvDocument $atvDocument;
 
   /**
    * {@inheritdoc}
@@ -206,6 +207,25 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->dateFormatter = \Drupal::service('date.formatter');
 
     return $instance;
+  }
+
+  /**
+   * Atv document holding this application.
+   *
+   * @param $transactionId
+   *
+   * @return \Drupal\helfi_atv\AtvDocument
+   */
+  protected function getAtvDocument($transactionId): AtvDocument {
+
+    if (!isset($this->atvDocument)) {
+      $res = $this->atvService->searchDocuments([
+        'transaction_id' => $transactionId,
+      ]);
+      $this->atvDocument = reset($res);
+    }
+
+    return $this->atvDocument;
   }
 
   /**
@@ -275,7 +295,7 @@ class GrantsHandler extends WebformHandlerBase {
    * @return float
    *   Floated value.
    */
-  public static function convertToFloat(string $value): float {
+  public static function convertToFloat(?string $value = ''): float {
     $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
     $value = (float) $value;
     return $value;
@@ -646,6 +666,7 @@ class GrantsHandler extends WebformHandlerBase {
           $status = $res->getStatusCode();
 
           if ($status === 201) {
+            $this->attachmentUploader->setDebug($this->isDebug());
             $attachmentResult = $this->attachmentUploader->uploadAttachments(
               $this->attachmentFileIds,
               $this->applicationNumber,
@@ -734,6 +755,8 @@ class GrantsHandler extends WebformHandlerBase {
    *   Parsed attchments.
    */
   private function parseAttachments($form): array {
+
+//    $thisDocument = $this->getAtvDocument($this->applicationNumber);
 
     $attachmentsArray = [];
     foreach (self::$attachmentFieldNames as $attachmentFieldName) {
@@ -854,13 +877,22 @@ class GrantsHandler extends WebformHandlerBase {
     ];
 
     if (isset($field['attachment']) && $field['attachment'] !== NULL && !empty($field['attachment'])) {
-      $file = File::load($field['attachment']);
-      // Add file id for easier usage in future.
-      $this->attachmentFileIds[] = $field['attachment'];
 
-      $retval['fileName'] = $file->getFilename();
-      $retval['isNewAttachment'] = TRUE;
-      $retval['fileType'] = (int) $fileType;
+      if ($field['fileStatus'] == 'new') {
+        $file = File::load($field['attachment']);
+        if ($file) {
+          // Add file id for easier usage in future.
+          $this->attachmentFileIds[] = $field['attachment'];
+
+          $retval['fileName'] = $file->getFilename();
+          $retval['isNewAttachment'] = TRUE;
+          $retval['fileType'] = (int) $fileType;
+        }
+      } else {
+        $retval['fileName'] = $field['attachment'];
+        $retval['isNewAttachment'] = FALSE;
+        $retval['fileType'] = (int) $fileType;
+      }
 
     }
     if (isset($field['isDeliveredLater'])) {
@@ -870,7 +902,5 @@ class GrantsHandler extends WebformHandlerBase {
       $retval['isIncludedInOtherFile'] = $field['isIncludedInOtherFile'] === "1";
     }
     return $retval;
-
   }
-
 }

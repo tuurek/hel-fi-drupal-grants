@@ -62,6 +62,7 @@ class GrantsAttachments extends WebformCompositeBase {
       '#type' => 'select',
       '#title' => $this->t('Attachment filetype'),
       '#options' => [
+        0 => 'Muu hakemusliite',
         1 => 'Toimintasuunnitelma (Vuodelle, jota hakemus koskee)',
         2 => 'Talousarvio (Vuodelle, jota hakemus koskee)',
         3 => 'Vahvistettu tuloslaskelma ja tase (edelliseltä tilikaudelta)',

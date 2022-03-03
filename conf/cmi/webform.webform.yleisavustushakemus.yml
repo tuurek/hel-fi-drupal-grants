@@ -527,7 +527,7 @@ elements: |-
         '#type': grants_attachments
         '#title': 'Muu liite'
         '#multiple': 10
-        '#filetype': '1'
+        '#filetype': '0'
         '#title_display': before
         '#multiple__item_label': liite
         '#multiple__sorting': false

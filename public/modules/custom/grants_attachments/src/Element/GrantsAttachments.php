@@ -52,6 +52,9 @@ class GrantsAttachments extends WebformCompositeBase {
         if ($element["isDeliveredLater"]["#default_value"] == TRUE) {
           $element["fileStatus"]["#value"] = 'deliveredLater';
         }
+        if($dataForElement['isDeliveredLater'] == '1'){
+          $element["isDeliveredLater"]['#default_value'] = TRUE;
+        }
       }
       if (isset($dataForElement['isIncludedInOtherFile'])) {
         $element["isIncludedInOtherFile"]["#default_value"] = $dataForElement['isIncludedInOtherFile'] == 'true';
@@ -63,13 +66,17 @@ class GrantsAttachments extends WebformCompositeBase {
         $element['attachment'] = [
           '#type' => 'textfield',
           '#default_value' => $dataForElement['fileName'],
-          '#disabled' => TRUE,
+          '#value' => $dataForElement['fileName'],
+          '#readonly' => TRUE,
+          '#attributes' => ['readonly' => 'readonly']
         ];
 
         $element["isIncludedInOtherFile"]["#disabled"] = TRUE;
         $element["isDeliveredLater"]["#disabled"] = TRUE;
         $element["fileStatus"]["#value"] = 'uploaded';
-
+      }
+      if (isset($dataForElement['description'])) {
+        $element["description"]["#default_value"] = $dataForElement['description'];
       }
 
     }
