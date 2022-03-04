@@ -75,20 +75,24 @@ class AttachmentRemover {
   }
 
   /**
+   * If debug is on or not.
+   *
    * @return bool
+   *   TRue or false depending on if debug is on or not.
    */
   public function isDebug(): bool {
     return $this->debug;
   }
 
   /**
+   * Set debug.
+   *
    * @param bool $debug
+   *   True or false.
    */
   public function setDebug(bool $debug): void {
     $this->debug = $debug;
   }
-
-
 
   /**
    * Remove given fileIds from filesystem & database.
@@ -145,7 +149,7 @@ class AttachmentRemover {
 
           if ($this->isDebug()) {
             $this->loggerChannel->notice('Removed file entity & db log row: @filename', [
-              '@filename' => $filename
+              '@filename' => $filename,
             ]);
           }
         }
@@ -170,7 +174,7 @@ class AttachmentRemover {
         }
         catch (\Exception $e) {
           $this->loggerChannel->error('Upload failed, removal failed, adding db row failed: @filename', [
-            '@filename' => $filename
+            '@filename' => $filename,
           ]);
         }
       }

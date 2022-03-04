@@ -212,11 +212,17 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Atv document holding this application.
    *
-   * @param $transactionId
+   * @param string $transactionId
+   *   Id of the transaction.
    *
    * @return \Drupal\helfi_atv\AtvDocument
+   *   FEtched document.
+   *
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  protected function getAtvDocument($transactionId): AtvDocument {
+  protected function getAtvDocument(string $transactionId): AtvDocument {
 
     if (!isset($this->atvDocument)) {
       $res = $this->atvService->searchDocuments([
@@ -289,7 +295,7 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Convert EUR format value to "double" .
    *
-   * @param string $value
+   * @param string|null $value
    *   Value to be converted.
    *
    * @return float
@@ -756,8 +762,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function parseAttachments($form): array {
 
-//    $thisDocument = $this->getAtvDocument($this->applicationNumber);
-
+    // $thisDocument = $this->getAtvDocument($this->applicationNumber);
     $attachmentsArray = [];
     foreach (self::$attachmentFieldNames as $attachmentFieldName) {
       $field = $this->submittedFormData[$attachmentFieldName];
@@ -888,7 +893,8 @@ class GrantsHandler extends WebformHandlerBase {
           $retval['isNewAttachment'] = TRUE;
           $retval['fileType'] = (int) $fileType;
         }
-      } else {
+      }
+      else {
         $retval['fileName'] = $field['attachment'];
         $retval['isNewAttachment'] = FALSE;
         $retval['fileType'] = (int) $fileType;
@@ -903,4 +909,5 @@ class GrantsHandler extends WebformHandlerBase {
     }
     return $retval;
   }
+
 }

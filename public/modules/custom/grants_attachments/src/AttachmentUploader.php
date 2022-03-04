@@ -6,7 +6,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\Entity\File;
-use Drupal\views\Plugin\views\field\Boolean;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
@@ -58,7 +57,6 @@ class AttachmentUploader {
    */
   protected bool $debug;
 
-
   /**
    * Constructs an AttachmentUploader object.
    *
@@ -82,20 +80,24 @@ class AttachmentUploader {
   }
 
   /**
+   * If debug is on or not.
+   *
    * @return bool
+   *   TRue or false depending on if debug is on or not.
    */
   public function isDebug(): bool {
     return $this->debug;
   }
 
   /**
+   * Set debug.
+   *
    * @param bool $debug
+   *   True or false.
    */
   public function setDebug(bool $debug): void {
     $this->debug = $debug;
   }
-
-
 
   /**
    * Upload every attachment from form to backend.
@@ -163,20 +165,19 @@ class AttachmentUploader {
           if ($this->isDebug()) {
             $this->loggerChannel->notice('Grants attachment(@filename) upload succeeded: Response statusCode = @status', [
               '@status' => $response->getStatusCode(),
-              '@filename' => $file->getFilename()
+              '@filename' => $file->getFilename(),
             ]);
           }
 
-//          // Make sure that no rows remain for this FID.
-//          $num_deleted = $this->connection->delete('grants_attachments')
-//            ->condition('fid', $file->id())
-//            ->execute();
-//
-//          if ($this->isDebug()) {
-//            $this->loggerChannel->notice('Removed db log row: @filename', [
-//              '@filename' => $filename
-//            ]);
-//          }
+          // // Make sure that no rows remain for this FID.
+          // $num_deleted = $this->connection->delete('grants_attachments')
+          // ->condition('fid', $file->id())
+          // ->execute();
+          // if ($this->isDebug()) {
+          // $this->loggerChannel->notice('Removed db log row: @filename', [
+          // '@filename' => $filename
+          // ]);
+          // }
         }
         else {
           $retval[$fileId] = FALSE;

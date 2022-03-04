@@ -281,7 +281,7 @@ class AtvSchema {
           if ($value == '0') {
             $value = 'false';
           }
-          if ($value == true) {
+          if ($value == TRUE) {
             $value = 'true';
           }
           if ($value == '1') {
@@ -335,7 +335,7 @@ class AtvSchema {
                       if ($itemValue == '0') {
                         $itemValue = 'false';
                       }
-                      if ($itemValue == true) {
+                      if ($itemValue == TRUE) {
                         $itemValue = 'true';
                       }
                       if ($itemValue == '1') {

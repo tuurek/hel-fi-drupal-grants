@@ -303,8 +303,7 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherCompensationsArray',
       ])
-      ->setSetting('requiredInJson', TRUE)
-    ;
+      ->setSetting('requiredInJson', TRUE);
 
     $info['haettu_avustus_tieto'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
@@ -330,8 +329,7 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherCompensationsTotal',
       ])
-      ->addConstraint('NotBlank')
-    ;
+      ->addConstraint('NotBlank');
 
     $info['haettu_avustus_tieto_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
@@ -513,14 +511,12 @@ trait ApplicationDefinitionTrait {
       ->setLabel('Email')
       ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'email']);
     // ->addConstraint('NotBlank')
-
     // Attachments.
     $info['attachments'] = ListDataDefinition::create('grants_metadata_attachment')
       // ->setRequired(TRUE)
       ->setLabel('Attachments')
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
     // ->addConstraint('NotBlank')
-
     $info['form_update'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
       ->setLabel('formUpdate')
