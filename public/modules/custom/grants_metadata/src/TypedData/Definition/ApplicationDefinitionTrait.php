@@ -303,7 +303,8 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherCompensationsArray',
       ])
-      ->setSetting('requiredInJson', TRUE);
+      ->setSetting('requiredInJson', TRUE)
+    ;
 
     $info['haettu_avustus_tieto'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
@@ -318,6 +319,7 @@ trait ApplicationDefinitionTrait {
     $info['myonnetty_avustus_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
       ->setLabel('Myönnetty avustus total')
+      ->setSetting('requiredInJson', TRUE)
       ->setSetting('defaultValue', 0)
       ->setSetting('valueCallback', [
         '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
@@ -328,7 +330,8 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherCompensationsTotal',
       ])
-      ->addConstraint('NotBlank');
+      ->addConstraint('NotBlank')
+    ;
 
     $info['haettu_avustus_tieto_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
