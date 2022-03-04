@@ -274,10 +274,23 @@ class AtvSchema {
             continue;
           }
         }
+        elseif ($propertyType === 'boolean') {
+          if ($value == FALSE) {
+            $value = 'false';
+          }
+          if ($value == '0') {
+            $value = 'false';
+          }
+          if ($value == true) {
+            $value = 'true';
+          }
+          if ($value == '1') {
+            $value = 'true';
+          }
+        }
         elseif ($propertyType !== 'boolean' && $propertyType !== 'float') {
           $value = "" . $value;
         }
-
       }
 
       switch ($numberOfItems) {
@@ -313,6 +326,21 @@ class AtvSchema {
 
                     if ($itemTypes['dataType'] == 'string') {
                       $itemValue = $itemValue . "";
+                    }
+
+                    if ($itemTypes['dataType'] === 'string' && $itemTypes['jsonType'] === 'bool') {
+                      if ($itemValue == FALSE) {
+                        $itemValue = 'false';
+                      }
+                      if ($itemValue == '0') {
+                        $itemValue = 'false';
+                      }
+                      if ($itemValue == true) {
+                        $itemValue = 'true';
+                      }
+                      if ($itemValue == '1') {
+                        $itemValue = 'true';
+                      }
                     }
 
                     $idValue = $itemName;
@@ -368,7 +396,24 @@ class AtvSchema {
                   if (isset($propertyItem[$itemName])) {
                     $itemValue = $propertyItem[$itemName];
 
-                    if ($itemTypes['dataType'] == 'string') {
+                    if ($itemTypes['dataType'] === 'string' && $itemTypes['jsonType'] === 'bool') {
+                      if ($itemValue === FALSE) {
+                        $itemValue = 'false';
+                      }
+                      if ($itemValue == '0') {
+                        $itemValue = 'false';
+                      }
+                      if ($itemValue === TRUE) {
+                        $itemValue = 'true';
+                      }
+                      if ($itemValue == '1') {
+                        $itemValue = 'true';
+                      }
+                      if ($itemValue == '') {
+                        $itemValue = 'false';
+                      }
+                    }
+                    elseif ($itemTypes['dataType'] == 'string') {
                       $itemValue = $itemValue . "";
                     }
 
