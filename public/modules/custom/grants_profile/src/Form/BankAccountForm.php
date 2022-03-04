@@ -67,7 +67,7 @@ class BankAccountForm extends FormBase {
         '#readonly' => TRUE,
         '#disabled' => TRUE,
         '#value' => $selectedBankAccount["confirmationFile"],
-        '#suffix' => '<a href="/grants-profile/bank-accounts/0/delete-confirmation">[X]</a>',
+        '#suffix' => '<a href="/grants-profile/bank-accounts/' . $bank_account_id . '/delete-confirmation">[X]</a>',
       ];
 
     }
@@ -139,8 +139,7 @@ class BankAccountForm extends FormBase {
         // Move addressData object to form_state storage.
         $form_state->setStorage(['bankAccountData' => $bankAccountData]);
       }
-    }
-    catch (ReadOnlyException $e) {
+    } catch (ReadOnlyException $e) {
       $this->messenger()->addError('Data read only');
       $form_state->setError($form, 'Trying to write to readonly value');
     }
