@@ -9,9 +9,7 @@
  * @see https://www.drupal.org/node/2217931
  */
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
-
 
 /**
  * OpenID Connect post authorize hook.
@@ -38,16 +36,15 @@ use Drupal\user\UserInterface;
 function grants_profile_openid_connect_post_authorize(UserInterface $account, array $context) {
 
   // if no adgroups, then add user to HelsinkiProfiili Role
-  if (!isset($context['user_data']['ad_groups']) || empty($context['user_data']['ad_groups'])) {
-    \Drupal::logger('helsinki_profiili')
-      ->info(t('User %s added & assign them a HelsinkiProfiili Role',
-        ['%s' => $account->getAccountName()]));
-    $account->addRole('helsinkiprofiili');
-    $account->save();
-  }
+  //  if (!isset($context['user_data']['ad_groups']) || empty($context['user_data']['ad_groups'])) {
+  //    \Drupal::logger('helsinki_profiili')
+  //      ->info(t('User %s added & assign them a HelsinkiProfiili Role',
+  //        ['%s' => $account->getAccountName()]));
+  //    $account->addRole('helsinkiprofiili');
+  //    $account->save();
+  //  }
 
 }
-
 
 
 function grants_profile_theme(): array {
@@ -55,8 +52,8 @@ function grants_profile_theme(): array {
     'render element' => 'build',
     'variables' => [
       'application' => NULL,
-      'submission_form' => NULL
-    ]
+      'submission_form' => NULL,
+    ],
   ];
   $theme['own_profile'] = [
     'render element' => 'build',
@@ -65,34 +62,61 @@ function grants_profile_theme(): array {
       'content' => NULL,
       'grants_profile_form' => NULL,
       'profile' => NULL,
-      'applications' => NULL
-    ]
+      'applications' => NULL,
+    ],
   ];
   $theme['company_select'] = [
     'render element' => 'build',
     'variables' => [
       'content' => NULL,
       'company_select_form' => NULL,
-    ]
+    ],
   ];
   $theme['own_addresses'] = [
     'render element' => 'build',
     'variables' => [
-      'addresses' => NULL
-    ]
+      'addresses' => NULL,
+    ],
   ];
   $theme['application_officials'] = [
     'render element' => 'build',
     'variables' => [
-      'officials' => NULL
-    ]
+      'officials' => NULL,
+    ],
   ];
   $theme['bank_accounts'] = [
     'render element' => 'build',
     'variables' => [
-      'bank_accounts' => NULL
-    ]
+      'bank_accounts' => NULL,
+    ],
   ];
 
   return $theme;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function grants_profile_cron() {
+
+  /** @var \Drupal\Core\File\FileSystem $fileSystem */
+  $fileSystem = \Drupal::service('file_system');
+
+  $files = $fileSystem->scanDirectory(DRUPAL_ROOT.'/public/sites/default/files/private/grants_profile', '(.*?)');
+
+  foreach ($files as $uri => $file) {
+
+    /** @var \Drupal\file\FileInterface[] $loadedFiles */
+    $loadedFiles = \Drupal::entityTypeManager()
+      ->getStorage('file')
+      ->loadByProperties(['uri' => $uri]);
+    /** @var \Drupal\file\FileInterface|null $loadedFile */
+    $loadedFile = reset($loadedFiles) ?: NULL;
+
+    if ($loadedFile) {
+      $loadedFile->delete();
+    } else {
+      unlink($uri);
+    }
+  }
 }

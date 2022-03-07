@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_profile;
 
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -10,6 +11,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\TempStoreException;
+use Drupal\file\Entity\File;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -27,6 +29,7 @@ class GrantsProfileService {
   use StringTranslationTrait;
 
   const DOCUMENT_STATUS_NEW = 'DRAFT';
+
   const DOCUMENT_STATUS_SAVED = 'READY';
 
   /**
@@ -34,7 +37,7 @@ class GrantsProfileService {
    *
    * @var \Drupal\helfi_atv\AtvService
    */
-  protected AtvService $helfiAtv;
+  protected AtvService $atvService;
 
   /**
    * Session storage for profile data.
@@ -105,7 +108,7 @@ class GrantsProfileService {
     YjdhClient $yjdhClient,
     LoggerChannelFactory $loggerFactory
   ) {
-    $this->helfiAtv = $helfi_atv;
+    $this->atvService = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
     $this->messenger = $messenger;
     $this->helsinkiProfiili = $helsinkiProfiiliUserData;
@@ -151,16 +154,16 @@ class GrantsProfileService {
       'business_id' => $selectedCompany,
     ];
 
-    return $this->helfiAtv->createDocument($newProfileData);
+    return $this->atvService->createDocument($newProfileData);
   }
 
   /**
    * Transaction ID for new profile.
    *
-   * @todo Maybe these are Document level stuff?
-   *
    * @return string
    *   Transaction ID
+   *
+   * @todo Maybe these are Document level stuff?
    *
    * @todo This can probaably be hardcoded.
    */
@@ -171,10 +174,10 @@ class GrantsProfileService {
   /**
    * TOS ID.
    *
-   * @todo Maybe these are Document level stuff?
-   *
    * @return string
    *   TOS id
+   *
+   * @todo Maybe these are Document level stuff?
    */
   protected function newProfileTosRecordId(): string {
     return 'eb30af1d9d654ebc98287ca25f231bf6';
@@ -183,10 +186,10 @@ class GrantsProfileService {
   /**
    * Function Id.
    *
-   * @todo Maybe these are Document level stuff?
-   *
    * @return string
    *   New function ID.
+   *
+   * @todo Maybe these are Document level stuff?
    */
   protected function newProfileTosFunctionId(): string {
     return 'eb30af1d9d654ebc98287ca25f231bf6';
@@ -226,21 +229,85 @@ class GrantsProfileService {
       $grantsProfileDocument->setStatus(self::DOCUMENT_STATUS_SAVED);
       $grantsProfileDocument->setTransactionId($transactionId);
       $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
-      return $this->helfiAtv->postDocument($grantsProfileDocument);
+      return $this->atvService->postDocument($grantsProfileDocument);
     }
     else {
+
+      $documentContent = $grantsProfileDocument->getContent();
+
+      foreach ($documentContent['bankAccounts'] as $key => $bank_account) {
+        if (isset($bank_account['confirmationFile']) && str_contains($bank_account['confirmationFile'], 'FID-')) {
+          $fileId = str_replace('FID-', '', $bank_account['confirmationFile']);
+          $fileEntity = File::load((int) $fileId);
+          if ($fileEntity) {
+            $fileName = md5($bank_account['bankAccount']) . '.pdf';
+            $documentContent['bankAccounts'][$key]['confirmationFile'] = $fileName;
+            $retval = $this->atvService->uploadAttachment($grantsProfileDocument->getId(), $fileName, $fileEntity);
+
+            if ($retval) {
+              $this->messenger->addStatus(
+                $this->t('Confirmation file saved for account %account. You can now use this account as receipient of grants.',
+                  ['%account' => $bank_account['bankAccount']]
+                )
+              );
+            }
+            else {
+              $this->messenger->addStatus(
+                $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
+                  ['%account' => $bank_account['bankAccount']]
+                )
+              );
+            }
+            try {
+              // Delete temp file.
+              $fileEntity->delete();
+
+              $this->logger->debug($this->t(
+                'File deleted: %id.',
+                [
+                  '%id' => $fileEntity->id(),
+                ]
+              ));
+            }
+            catch (EntityStorageException $e) {
+              $this->logger->error($this->t(
+                'File deleting failed: %id.',
+                [
+                  '%id' => $fileEntity->id(),
+                ]
+              ));
+            }
+          }
+          else {
+            $this->logger->error($this->t(
+              'No file found: %id.',
+              [
+                '%id' => $fileEntity->id(),
+              ]
+            ));
+
+            $this->messenger->addError(
+                        $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
+                          ['%account' => $bank_account['bankAccount']]
+                        )
+                      );
+          }
+
+        }
+      }
+
       $payloadData = [
-        'content' => $grantsProfileDocument->getContent(),
+        'content' => $documentContent,
         'metadata' => $grantsProfileDocument->getMetadata(),
         'transaction_id' => $this->newTransactionId($transactionId),
       ];
       $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
-      return $this->helfiAtv->patchDocument($grantsProfileDocument->getId(), $payloadData);
+      return $this->atvService->patchDocument($grantsProfileDocument->getId(), $payloadData);
     }
   }
 
   /**
-   * Save address to session + ATV.
+   * Save address to session.
    *
    * @param string $address_id
    *   Address id in store.
@@ -262,6 +329,26 @@ class GrantsProfileService {
     $addresses[$nextId] = $address;
     $profileContent['addresses'] = $addresses;
     return $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Delete attachment from selected company's grants profile document.
+   *
+   * @param string $selectedCompany
+   *   Selected company.
+   * @param string $attachmentId
+   *   Attachment to delete.
+   *
+   * @return \Drupal\helfi_atv\AtvDocument|bool|array
+   *   Return value varies.
+   *
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function deleteAttachment(string $selectedCompany, string $attachmentId): AtvDocument|bool|array {
+    $grantsProfile = $this->getGrantsProfile($selectedCompany);
+    return $this->atvService->deleteAttachment($grantsProfile->getId(), $attachmentId);
   }
 
   /**
@@ -472,6 +559,31 @@ class GrantsProfileService {
   }
 
   /**
+   * Get "content" array from document in ATV.
+   *
+   * @param string $businessId
+   *   What business data is fetched.
+   * @param bool $refetch
+   *   If true, data is fetched always.
+   *
+   * @return array
+   *   Content
+   */
+  public function getGrantsProfileAttachments(string $businessId, bool $refetch = FALSE): array {
+
+    if ($refetch === FALSE && $this->isCached($businessId)) {
+      $profileData = $this->getFromCache($businessId);
+      return $profileData->getAttachments();
+    }
+    else {
+      $profileData = $this->getGrantsProfile($businessId, $refetch);
+    }
+
+    return $profileData->getAttachments();
+
+  }
+
+  /**
    * Get profile Document.
    *
    * @param string $businessId
@@ -520,6 +632,7 @@ class GrantsProfileService {
    *   Profile data
    *
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   private function getGrantsProfileFromAtv(string $businessId): AtvDocument|bool {
 
@@ -529,10 +642,13 @@ class GrantsProfileService {
     ];
 
     try {
-      $searchDocuments = $this->helfiAtv->searchDocuments($searchParams);
+      $searchDocuments = $this->atvService->searchDocuments($searchParams);
     }
-    catch (AtvFailedToConnectException | GuzzleException $e) {
+    catch (AtvFailedToConnectException) {
       throw new AtvDocumentNotFoundException('Not found');
+    }
+    catch (GuzzleException $e) {
+      throw $e;
     }
 
     if (empty($searchDocuments)) {

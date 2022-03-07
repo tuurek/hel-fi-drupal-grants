@@ -69,3 +69,11 @@ grants_profile.bank_account_form:
     _form: 'Drupal\grants_profile\Form\BankAccountForm'
   requirements:
     _permission: 'administer own grants_profile'
+
+grants_profile.bank_account_delete_attachment:
+  path: '/grants-profile/bank-accounts/{bank_account_id}/delete-confirmation'
+  defaults:
+    _title: 'Delete confirmation'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteBankAccountAttachment'
+  requirements:
+    _permission: 'administer own grants_profile'

@@ -15,6 +15,8 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  */
 class OtherCompensationData extends Map {
 
+  use DataFormatTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -23,11 +25,9 @@ class OtherCompensationData extends Map {
 
     if (isset($retval['issuerName'])) {
       $retval['issuer_name'] = $retval['issuerName'];
-      unset($retval['issuerName']);
     }
     if (isset($retval['issuer_name'])) {
       $retval['issuerName'] = $retval['issuer_name'];
-      unset($retval['issuer_name']);
     }
 
     return $retval;

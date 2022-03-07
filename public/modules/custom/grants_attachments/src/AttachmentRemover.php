@@ -44,6 +44,13 @@ class AttachmentRemover {
   protected LoggerChannel $loggerChannel;
 
   /**
+   * Debug prints?
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+  /**
    * Constructs an AttachmentRemover object.
    *
    * @param \Drupal\file\FileUsage\FileUsageInterface $file_usage
@@ -65,6 +72,26 @@ class AttachmentRemover {
     $this->messenger = $messenger;
     $this->loggerChannel = $loggerFactory->get('grants_attachments');
     $this->connection = $connection;
+  }
+
+  /**
+   * If debug is on or not.
+   *
+   * @return bool
+   *   TRue or false depending on if debug is on or not.
+   */
+  public function isDebug(): bool {
+    return $this->debug;
+  }
+
+  /**
+   * Set debug.
+   *
+   * @param bool $debug
+   *   True or false.
+   */
+  public function setDebug(bool $debug): void {
+    $this->debug = $debug;
   }
 
   /**
@@ -91,6 +118,7 @@ class AttachmentRemover {
     bool $debug,
     int $webFormSubmissionId
   ): bool {
+    $this->setDebug($debug);
     $retval = FALSE;
 
     $currentUser = \Drupal::currentUser();
@@ -105,6 +133,7 @@ class AttachmentRemover {
 
       // Load file.
       $file = File::load($fileId);
+      $filename = $file->getFilename();
 
       // Only if we have positive upload result remove file.
       if ($uploadResults[$fileId] === TRUE) {
@@ -118,8 +147,11 @@ class AttachmentRemover {
             ->condition('fid', $file->id())
             ->execute();
 
-          $this->loggerChannel->notice('Removed file entity & db log row');
-
+          if ($this->isDebug()) {
+            $this->loggerChannel->notice('Removed file entity & db log row: @filename', [
+              '@filename' => $filename,
+            ]);
+          }
         }
         catch (EntityStorageException $e) {
           $this->messenger->addError('File deletion failed');
@@ -141,7 +173,9 @@ class AttachmentRemover {
 
         }
         catch (\Exception $e) {
-          $this->loggerChannel->error('Upload failed, removal failed, adding db row failed. Wow.');
+          $this->loggerChannel->error('Upload failed, removal failed, adding db row failed: @filename', [
+            '@filename' => $filename,
+          ]);
         }
       }
     }

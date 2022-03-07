@@ -115,9 +115,15 @@ elements: |-
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
+      account_number_select:
+        '#type': select
+        '#title': 'Select account'
+        '#options':
+          noaccounts: 'No accounts.'
       account_number:
         '#type': textfield
         '#title': Tilinumero
+        '#readonly': true
         '#required': true
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
@@ -178,6 +184,9 @@ elements: |-
         '#title': Avustukset
         '#multiple': true
         '#subventionType':
+          6: '6'
+        '#subvention_type':
+          1: '1'
           6: '6'
         '#subvention_type_id__access': false
         '#subvention_type__title': Avustuslaji
@@ -349,7 +358,6 @@ elements: |-
         '#options':
           'false': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
           'true': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
-        '#default_value': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
       markup:
         '#type': webform_markup
         '#markup': 'Anna k&auml;ytt&ouml;selvitys Helsingin kaupungilta saadusta avustuksesta. Avustuksen k&auml;ytt&ouml;selvitys tehd&auml;&auml;n avustuksesta, joka koskee viimeisint&auml; p&auml;&auml;ttynytt&auml; tilikautta. K&auml;ytt&ouml;selvityst&auml; ei tehd&auml; k&auml;ynniss&auml; olevalta tilikaudelta. K&auml;ytt&ouml;selvityksen antaminen on seuraavan avustuksen saamisen ehtona. Mik&auml;li k&auml;ytt&ouml;selvityst&auml; ei tehd&auml;, avustusta ei my&ouml;nnet&auml; eik&auml; makseta. My&ouml;nnetty avustus voidaan peri&auml; takaisin, jos edellisen avustuksen k&auml;ytt&ouml;&auml; ei ole hyv&auml;ksytt&auml;v&auml;sti selvitetty.'
@@ -361,10 +369,6 @@ elements: |-
         '#counter_minimum': 1
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
-        '#states':
-          required:
-            ':input[name="kayttoselvitys_edellisena_vuonna_saamastani_avustuksesta"]':
-              value: 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön tiedot'
@@ -522,7 +526,7 @@ elements: |-
         '#type': grants_attachments
         '#title': 'Muu liite'
         '#multiple': 10
-        '#filetype': '1'
+        '#filetype': '0'
         '#title_display': before
         '#multiple__item_label': liite
         '#multiple__sorting': false
@@ -531,6 +535,10 @@ elements: |-
         '#multiple__add_more_button_label': 'Lisää liite'
         '#isDeliveredLater__access': false
         '#isIncludedInOtherFile__access': false
+  finalize_application:
+    '#type': checkbox
+    '#title': 'Finalize application'
+    '#description': 'Check this to submit application for handling and disable editing.'
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
@@ -732,5 +740,5 @@ handlers:
     weight: 0
     settings:
       endpoint: 'This is a custom endpoint.'
-      debug: false
+      debug: true
 variants: {  }

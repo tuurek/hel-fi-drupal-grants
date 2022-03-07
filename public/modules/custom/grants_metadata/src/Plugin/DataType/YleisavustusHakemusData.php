@@ -15,6 +15,8 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  */
 class YleisavustusHakemusData extends Map {
 
+  use DataFormatTrait;
+
   /**
    * {@inheritdoc}
    */

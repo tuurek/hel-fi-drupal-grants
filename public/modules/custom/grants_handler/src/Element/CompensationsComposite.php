@@ -3,7 +3,6 @@
 namespace Drupal\grants_handler\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite as CompensationsCompositeElement;
 use Drupal\webform\Element\WebformCompositeBase;
 
 /**
@@ -45,6 +44,7 @@ class CompensationsComposite extends WebformCompositeBase {
     $elements['amount'] = [
       '#type' => 'textfield',
       '#title' => t('Subvention amount'),
+      '#required' => TRUE,
     ];
 
     return $elements;
@@ -57,8 +57,6 @@ class CompensationsComposite extends WebformCompositeBase {
 
     $parent = parent::valueCallback($element, $input, $form_state);
 
-    $entity = $form_state->getFormObject()->getEntity();
-
     if (!empty($parent)) {
       return $parent;
     }
@@ -67,8 +65,6 @@ class CompensationsComposite extends WebformCompositeBase {
       'subventionType' => '',
       'amount' => '',
     ];
-
-    $typeOptions = CompensationsCompositeElement::getOptionsForTypes();
 
     if (isset($parent['subventionType']) && $parent['subventionType'] != "") {
       // $retval['subvention_type_id'] = $parent['subventionType'];

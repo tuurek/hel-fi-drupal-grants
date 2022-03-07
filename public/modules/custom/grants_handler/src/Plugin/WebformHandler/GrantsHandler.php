@@ -3,6 +3,7 @@
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
@@ -10,10 +11,16 @@ use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
+use Drupal\grants_profile\GrantsProfileService;
+use Drupal\helfi_atv\AtvDocument;
+use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\helfi_atv\AtvFailedToConnectException;
+use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -138,16 +145,37 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Access ATV backend.
    *
-   * @var \Drupal\helfi_atv\AtvService
+   * @var \Drupal\grants_metadata\AtvSchema
    */
-  // Protected AtvService $atvService;.
+  protected AtvSchema $atvSchema;
+
+  /**
+   * Access GRants profile.
+   *
+   * @var \Drupal\grants_profile\GrantsProfileService
+   */
+  protected GrantsProfileService $grantsProfileService;
 
   /**
    * Access ATV backend.
    *
-   * @var \Drupal\grants_metadata\AtvSchema
+   * @var \Drupal\helfi_atv\AtvService
    */
-  protected AtvSchema $atvSchema;
+  protected AtvService $atvService;
+
+  /**
+   * Date formatter.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatter
+   */
+  protected DateFormatter $dateFormatter;
+
+  /**
+   * Holds document fetched from ATV for checks.
+   *
+   * @var \Drupal\helfi_atv\AtvDocument
+   */
+  protected AtvDocument $atvDocument;
 
   /**
    * {@inheritdoc}
@@ -166,13 +194,44 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
 
     /** @var \Drupal\helfi_atv\AtvService atvService */
-    // $instance->atvService = $container->get('helfi_atv.atv_service');
+    $instance->atvService = $container->get('helfi_atv.atv_service');
 
     /** @var \Drupal\grants_metadata\AtvSchema atvSchema */
     $instance->atvSchema = $container->get('grants_metadata.atv_schema');
     $instance->atvSchema->setSchema(getenv('ATV_SCHEMA_PATH'));
 
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $instance->grantsProfileService = \Drupal::service('grants_profile.service');
+
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $instance->dateFormatter = \Drupal::service('date.formatter');
+
     return $instance;
+  }
+
+  /**
+   * Atv document holding this application.
+   *
+   * @param string $transactionId
+   *   Id of the transaction.
+   *
+   * @return \Drupal\helfi_atv\AtvDocument
+   *   FEtched document.
+   *
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  protected function getAtvDocument(string $transactionId): AtvDocument {
+
+    if (!isset($this->atvDocument)) {
+      $res = $this->atvService->searchDocuments([
+        'transaction_id' => $transactionId,
+      ]);
+      $this->atvDocument = reset($res);
+    }
+
+    return $this->atvDocument;
   }
 
   /**
@@ -228,6 +287,21 @@ class GrantsHandler extends WebformHandlerBase {
    *   Floated value.
    */
   private function grantsHandlerConvertToFloat(string $value): float {
+    $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
+    $value = (float) $value;
+    return $value;
+  }
+
+  /**
+   * Convert EUR format value to "double" .
+   *
+   * @param string|null $value
+   *   Value to be converted.
+   *
+   * @return float
+   *   Floated value.
+   */
+  public static function convertToFloat(?string $value = ''): float {
     $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
     $value = (float) $value;
     return $value;
@@ -333,24 +407,32 @@ class GrantsHandler extends WebformHandlerBase {
     // Set sender information after save so no accidental saving of data.
     // @todo Think about how sender info should be parsed, maybe in own.
     $userProfileData = $this->userExternalData->getUserProfileData();
+    $userData = $this->userExternalData->getUserData();
+
+    if (isset($userProfileData["myProfile"])) {
+      $data = $userProfileData["myProfile"];
+    }
+    else {
+      $data = $userProfileData;
+    }
 
     // If no userprofile data, we need to hardcode these values.
     // @todo Remove hardcoded values when tunnistamo works.
-    if ($userProfileData == NULL) {
+    if ($userProfileData == NULL || $userData == NULL) {
       $this->submittedFormData['sender_firstname'] = 'NoTunnistamo';
       $this->submittedFormData['sender_lastname'] = 'NoTunnistamo';
       $this->submittedFormData['sender_person_id'] = 'NoTunnistamo';
-      $this->submittedFormData['sender_user_id'] = 'NoTunnistamo';
+      $this->submittedFormData['sender_user_id'] = '280f75c5-6a20-4091-b22d-dfcdce7fef60';
       $this->submittedFormData['sender_email'] = 'NoTunnistamo';
 
     }
     else {
       $userData = $this->userExternalData->getUserData();
-      $this->submittedFormData['sender_firstname'] = $userProfileData["myProfile"]["verifiedPersonalInformation"]["firstName"];
-      $this->submittedFormData['sender_lastname'] = $userProfileData["myProfile"]["verifiedPersonalInformation"]["lastName"];
-      $this->submittedFormData['sender_person_id'] = $userProfileData["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+      $this->submittedFormData['sender_firstname'] = $data["verifiedPersonalInformation"]["firstName"];
+      $this->submittedFormData['sender_lastname'] = $data["verifiedPersonalInformation"]["lastName"];
+      $this->submittedFormData['sender_person_id'] = $data["verifiedPersonalInformation"]["nationalIdentificationNumber"];
       $this->submittedFormData['sender_user_id'] = $userData["sub"];
-      $this->submittedFormData['sender_email'] = $userProfileData["myProfile"]["primaryEmail"]["email"];
+      $this->submittedFormData['sender_email'] = $data["primaryEmail"]["email"];
     }
   }
 
@@ -374,6 +456,15 @@ class GrantsHandler extends WebformHandlerBase {
     // lisatiedot_ja_liitteet
     // webform_preview
     $this->submittedFormData = $webform_submission->getData();
+
+    foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
+      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
+    }
+    foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
+      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
+    }
 
     // Only validate set forms.
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
@@ -459,7 +550,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function preSave(WebformSubmissionInterface $webform_submission) {
 
-    $this->submittedFormData = $webform_submission->getData();
+    // $this->submittedFormData = $webform_submission->getData();
     $this->setTotals();
     $this->parseSenderDetails();
 
@@ -477,16 +568,31 @@ class GrantsHandler extends WebformHandlerBase {
     $this->applicationTypeID = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
 
-    if ($webform_submission->isDefaultRevision()) {
+    $ts = date('c', $webform_submission->getCreatedTime());
+    $tsExp = explode('+', $ts);
+    $this->submittedFormData['form_timestamp'] = $tsExp[0] . '.000Z';
 
-      $this->applicationNumber = self::createApplicationNumber($webform_submission);
-      $this->submittedFormData['form_timestamp'] = (string) $webform_submission->getCreatedTime();
+    // @todo check community_practices_business value and where to get it from.
+    $this->submittedFormData['community_practices_business'] = FALSE;
 
+    if ($this->submittedFormData["finalize_application"] == 1) {
       $this->submittedFormData['status'] = 'SUBMITTED';
+    }
+
+    if (!isset($this->submittedFormData['application_number'])) {
+      $this->applicationNumber = self::createApplicationNumber($webform_submission);
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
+      // Apparently you CANNOT have this set in new applications,
+      // integration seems to fail
+      // $this->submittedFormData['form_update'] = FALSE;.
     }
+    else {
+      $this->applicationNumber = $this->submittedFormData['application_number'];
+      $this->submittedFormData['form_update'] = TRUE;
+    }
+
   }
 
   /**
@@ -504,8 +610,24 @@ class GrantsHandler extends WebformHandlerBase {
 
     $this->submittedFormData['attachments'] = $this->parseAttachments($form);
 
-    $applicationData->setValue($this->submittedFormData);
+    try {
+      $applicationData->setValue($this->submittedFormData);
+    }
+    catch (\Exception $e) {
+    }
+
     $violations = $applicationData->validate();
+
+    if ($violations->count() > 0) {
+      foreach ($violations as $violation) {
+        $this->getLogger('grants_handler')
+          ->debug($this->t('Error with data. Property: %property. Message: %message', [
+            '%property' => $violation->getPropertyPath(),
+            '%message' => $violation->getMessage(),
+          ]));
+      }
+      return;
+    }
 
     // If there's violations in data.
     if ($violations->count() == 0) {
@@ -550,6 +672,7 @@ class GrantsHandler extends WebformHandlerBase {
           $status = $res->getStatusCode();
 
           if ($status === 201) {
+            $this->attachmentUploader->setDebug($this->isDebug());
             $attachmentResult = $this->attachmentUploader->uploadAttachments(
               $this->attachmentFileIds,
               $this->applicationNumber,
@@ -559,7 +682,14 @@ class GrantsHandler extends WebformHandlerBase {
             // TÄHÄN TSEKKAA RESULTTI.
             // @todo print message for every attachment
             $this->messenger()
-              ->addStatus('Grant application saved and attachments saved, see application status from [omat_sivut]');
+              ->addStatus(
+                $this->t(
+                  'Grant application (%number) saved and attachments saved, 
+                  see application status from @link.',
+                  [
+                    '%number' => $this->applicationNumber,
+                    '@link' => '<a href="/grants-profile/applications/' . $this->applicationNumber . '">here</a>',
+                  ]));
 
             $this->attachmentRemover->removeGrantAttachments(
               $this->attachmentFileIds,
@@ -632,6 +762,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function parseAttachments($form): array {
 
+    // $thisDocument = $this->getAtvDocument($this->applicationNumber);
     $attachmentsArray = [];
     foreach (self::$attachmentFieldNames as $attachmentFieldName) {
       $field = $this->submittedFormData[$attachmentFieldName];
@@ -662,6 +793,72 @@ class GrantsHandler extends WebformHandlerBase {
         }
       }
     }
+
+    if (isset($this->submittedFormData["account_number"])) {
+      $selectedAccountNumber = $this->submittedFormData["account_number"];
+      $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+      $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany);
+      $profileContent = $grantsProfileDocument->getContent();
+
+      $applicationDocument = FALSE;
+      try {
+        $applicationDocumentResults = $this->atvService->searchDocuments([
+          'transaction_id' => $this->applicationNumber,
+        ]);
+        $applicationDocument = reset($applicationDocumentResults);
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      }
+
+      $accountConfirmationExists = FALSE;
+      if ($applicationDocument) {
+        $filename = md5($selectedAccountNumber);
+
+        foreach ($applicationDocument->getAttachments() as $attachment) {
+          if (str_contains($attachment['filename'], $filename)) {
+            $accountConfirmationExists = TRUE;
+            break;
+          }
+        }
+      }
+
+      if (!$accountConfirmationExists) {
+        $selectedAccount = NULL;
+        foreach ($profileContent['bankAccounts'] as $account) {
+          if ($account['bankAccount'] == $selectedAccountNumber) {
+            $selectedAccount = $account;
+          }
+        }
+
+        $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+
+        if ($selectedAccountConfirmation) {
+          try {
+            // Get file.
+            $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
+            // Add file to attachments for uploading.
+            $this->attachmentFileIds[] = $file->id();
+          }
+          catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+            $this->loggerFactory->get('grants_handler')
+              ->error($e->getMessage());
+            $this->messenger()
+              ->addError('Bank account confirmation file attachment failed.');
+          }
+
+          $attachmentsArray[] = [
+            'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
+            'fileName' => $selectedAccount["confirmationFile"],
+            'isNewAttachment' => TRUE,
+            'fileType' => 0,
+            'isDeliveredLater' => FALSE,
+            'isIncludedInOtherFile' => FALSE,
+            // @todo a better way to strip host from atv url.
+          ];
+        }
+      }
+    }
+
     return $attachmentsArray;
   }
 
@@ -685,13 +882,23 @@ class GrantsHandler extends WebformHandlerBase {
     ];
 
     if (isset($field['attachment']) && $field['attachment'] !== NULL && !empty($field['attachment'])) {
-      $file = File::load($field['attachment']);
-      // Add file id for easier usage in future.
-      $this->attachmentFileIds[] = $field['attachment'];
 
-      $retval['fileName'] = $file->getFilename();
-      $retval['isNewAttachment'] = TRUE;
-      $retval['fileType'] = (int) $fileType;
+      if ($field['fileStatus'] == 'new') {
+        $file = File::load($field['attachment']);
+        if ($file) {
+          // Add file id for easier usage in future.
+          $this->attachmentFileIds[] = $field['attachment'];
+
+          $retval['fileName'] = $file->getFilename();
+          $retval['isNewAttachment'] = TRUE;
+          $retval['fileType'] = (int) $fileType;
+        }
+      }
+      else {
+        $retval['fileName'] = $field['attachment'];
+        $retval['isNewAttachment'] = FALSE;
+        $retval['fileType'] = (int) $fileType;
+      }
 
     }
     if (isset($field['isDeliveredLater'])) {
@@ -701,7 +908,6 @@ class GrantsHandler extends WebformHandlerBase {
       $retval['isIncludedInOtherFile'] = $field['isIncludedInOtherFile'] === "1";
     }
     return $retval;
-
   }
 
 }

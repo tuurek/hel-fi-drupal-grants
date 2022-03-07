@@ -4,6 +4,7 @@ namespace Drupal\grants_metadata\TypedData\Definition;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
+use Drupal\Core\TypedData\MapDataDefinition;
 
 /**
  * Base class for data typing & mapping.
@@ -80,7 +81,7 @@ trait ApplicationDefinitionTrait {
       ->setSetting('jsonPath', ['compensation', 'applicantInfoArray', 'home'])
       ->addConstraint('NotBlank');
 
-    $info['homepage'] = DataDefinition::create('uri')
+    $info['homepage'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('www-sivut')
       ->setSetting('jsonPath', [
@@ -88,7 +89,7 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'homePage',
       ])
-      ->addConstraint('NotBlank');
+      ->setSetting('defaultValue', "");
 
     $info['email'] = DataDefinition::create('email')
       // ->setRequired(TRUE)
@@ -98,12 +99,17 @@ trait ApplicationDefinitionTrait {
         'applicantInfoArray',
         'email',
       ])
+      ->setSetting('typeOverride', [
+        'dataType' => 'email',
+        'jsonType' => 'string',
+      ])
       ->addConstraint('NotBlank')
       ->addConstraint('Email');
 
     $info['applicant_officials'] = ListDataDefinition::create('grants_profile_application_official')
       // ->setRequired(TRUE)
       ->setSetting('jsonPath', ['compensation', 'applicantOfficialsArray'])
+      ->setSetting('defaultValue', [])
       ->setLabel('applicantOfficialsArray');
 
     $info['contact_person'] = DataDefinition::create('string')
@@ -212,15 +218,16 @@ trait ApplicationDefinitionTrait {
         'status',
       ]);
     // ->addConstraint('NotBlank')
-    $info['acting_year'] = DataDefinition::create('integer')
+    $info['acting_year'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
-      ->setLabel('applicationInfoArray=>actingYear')
+      ->setLabel('Acting year')
+      ->setSetting('defaultValue', "")
       ->setSetting('jsonPath', [
         'compensation',
         'applicationInfoArray',
         'actingYear',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['account_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -245,7 +252,12 @@ trait ApplicationDefinitionTrait {
 
     $info['compensation_boolean'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
-      ->setLabel('compensationInfo=>compensationPreviousYear')
+      ->setLabel('compensationPreviousYear')
+      ->setSetting('defaultValue', FALSE)
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'bool',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'compensationInfo',
@@ -254,28 +266,33 @@ trait ApplicationDefinitionTrait {
       ])
       ->addConstraint('NotBlank');
 
-    $info['compensation_total_amount'] = DataDefinition::create('string')
+    $info['compensation_total_amount'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
       ->setLabel('compensationInfo=>purpose')
+      ->setSetting('defaultValue', 0)
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'float',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'compensationInfo',
         'generalInfoArray',
         'totalAmount',
       ])
-      ->setSetting('valueCallback', 'callback_function')
       ->addConstraint('NotBlank');
 
     $info['compensation_explanation'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('compensationInfo=>explanation')
+      ->setSetting('defaultValue', "")
       ->setSetting('jsonPath', [
         'compensation',
         'compensationInfo',
         'generalInfoArray',
         'explanation',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['myonnetty_avustus'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
@@ -301,13 +318,17 @@ trait ApplicationDefinitionTrait {
     $info['myonnetty_avustus_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
       ->setLabel('Myönnetty avustus total')
+      ->setSetting('requiredInJson', TRUE)
       ->setSetting('defaultValue', 0)
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
         'otherCompensationsTotal',
       ])
-      ->setSetting('defaultValue', [])
       ->addConstraint('NotBlank');
 
     $info['haettu_avustus_tieto_total'] = DataDefinition::create('float')
@@ -319,22 +340,33 @@ trait ApplicationDefinitionTrait {
         'otherCompensationsInfo',
         'otherAppliedCompensationsTotal',
       ])
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
+      ])
       ->addConstraint('NotBlank');
 
     $info['benefits_loans'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
-      ->setLabel('benefitsInfoArray=>loans')
-      ->setSetting('jsonPath', ['compensation', 'benefitsInfoArray', 'loans']);
-    // ->addConstraint('NotBlank')
+      ->setLabel('Loans')
+      ->setSetting('defaultValue', "")
+      ->setSetting('jsonPath', [
+        'compensation',
+        'benefitsInfoArray',
+        'loans',
+        // ->addConstraint('NotBlank')
+      ]);
+
     $info['benefits_premises'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
-      ->setLabel('benefitsInfoArray=>premises')
+      ->setLabel('Premises')
+      ->setSetting('defaultValue', "")
       ->setSetting('jsonPath', [
         'compensation',
         'benefitsInfoArray',
         'premises',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['fee_person'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -343,6 +375,10 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'activitiesInfoArray',
         'feePerson',
+      ])
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
       ])
       ->addConstraint('NotBlank');
 
@@ -354,37 +390,44 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'feeCommunity',
       ])
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'convertToFloat',
+      ])
       ->addConstraint('NotBlank');
 
     $info['members_applicant_person_local'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('activitiesInfoArray=>membersApplicantPersonLocal')
+      ->setSetting('defaultValue', "")
       ->setSetting('jsonPath', [
         'compensation',
         'activitiesInfoArray',
         'membersApplicantPersonLocal',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['members_applicant_person_global'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('activitiesInfoArray=>membersApplicantPersonGlobal')
+      ->setSetting('defaultValue', "")
       ->setSetting('jsonPath', [
         'compensation',
         'activitiesInfoArray',
         'membersApplicantPersonGlobal',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['members_applicant_community_local'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('activitiesInfoArray=>membersApplicantCommunityLocal')
+      ->setSetting('defaultValue', "")
       ->setSetting('jsonPath', [
         'compensation',
         'activitiesInfoArray',
         'membersApplicantCommunityLocal',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['members_applicant_community_global'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -393,8 +436,8 @@ trait ApplicationDefinitionTrait {
         'compensation',
         'activitiesInfoArray',
         'membersApplicantCommunityGlobal',
-      ])
-      ->addConstraint('NotBlank');
+        // ->addConstraint('NotBlank')
+      ]);
 
     $info['business_purpose'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
@@ -404,22 +447,29 @@ trait ApplicationDefinitionTrait {
         'activitiesInfoArray',
         'businessPurpose',
       ])
-      ->setSetting('defaultValue', 'Lorem Ipsum Doler est...');
+      ->setSetting('defaultValue', '');
     // ->addConstraint('NotBlank')
     $info['community_practices_business'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
       ->setLabel('activitiesInfoArray=>communityPracticesBusiness')
+      ->setSetting('defaultValue', FALSE)
       ->setSetting('jsonPath', [
         'compensation',
         'activitiesInfoArray',
         'communityPracticesBusiness',
       ])
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'bool',
+      ])
       ->setSetting('defaultValue', FALSE);
+
     // ->addConstraint('NotBlank')
     $info['additional_information'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('additionalInformation')
-      ->setSetting('jsonPath', ['compensation', 'additionalInformation']);
+      ->setSetting('jsonPath', ['compensation', 'additionalInformation'])
+      ->setSetting('defaultValue', "");
     // ->addConstraint('NotBlank')
     // Sender details.
     // @todo Maybe move sender info to custom definition?
@@ -467,6 +517,44 @@ trait ApplicationDefinitionTrait {
       ->setLabel('Attachments')
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
     // ->addConstraint('NotBlank')
+    $info['form_update'] = DataDefinition::create('boolean')
+      // ->setRequired(TRUE)
+      ->setLabel('formUpdate')
+      ->setSetting('jsonPath', ['formUpdate']);
+
+    $info['status_updates'] = MapDataDefinition::create()
+      ->setPropertyDefinition(
+        'caseId',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates', 'caseId'])
+      )
+      ->setPropertyDefinition(
+        'citizenCaseStatus',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates', 'citizenCaseStatus'])
+      )
+      ->setPropertyDefinition(
+        'eventType',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates', 'eventType'])
+      )
+      ->setPropertyDefinition(
+        'eventCode',
+        DataDefinition::create('integer')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates', 'eventCode'])
+      )
+      ->setPropertyDefinition(
+        'eventSource',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates', 'eventSource'])
+      )
+      ->setSetting('jsonPath', ['statusUpdates']);
+
     return $info;
   }
 

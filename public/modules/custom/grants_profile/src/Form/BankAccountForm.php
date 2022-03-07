@@ -61,6 +61,32 @@ class BankAccountForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $selectedBankAccount['bankAccount'],
     ];
+    if (isset($selectedBankAccount["confirmationFile"])) {
+      $form['confirmationFile'] = [
+        '#type' => 'textfield',
+        '#readonly' => TRUE,
+        '#disabled' => TRUE,
+        '#value' => $selectedBankAccount["confirmationFile"],
+        '#suffix' => '<a href="/grants-profile/bank-accounts/' . $bank_account_id . '/delete-confirmation">[X]</a>',
+      ];
+
+    }
+    else {
+      $form['confirmationFile'] = [
+        '#type' => 'managed_file',
+        '#title' => t('Confirmation file'),
+        '#multiple' => FALSE,
+        // '#required' => TRUE,
+        '#uri_scheme' => 'private',
+        '#file_extensions' => 'doc,docx,gif,jpg,jpeg,pdf,png,ppt,pptx,rtf,txt,xls,xlsx,zip',
+        '#upload_validators' => [
+          'file_validate_extensions' => ['doc docx gif jpg jpeg pdf png ppt pptx rtf txt xls xlsx zip'],
+        ],
+        '#upload_location' => 'private://grants_profile',
+        '#sanitize' => TRUE,
+        '#description' => $this->t('Confirm this bank account.'),
+      ];
+    }
 
     $form['bankAccount_id'] = [
       '#type' => 'hidden',
@@ -92,6 +118,9 @@ class BankAccountForm extends FormBase {
     $values = [
       'bankAccount' => $tempValues['bankAccount'],
     ];
+    if (!empty($tempValues['confirmationFile'])) {
+      $values['confirmationFile'] = 'FID-' . reset($tempValues['confirmationFile']);
+    }
     try {
       // Set values.
       $bankAccountData->setValue($values);
@@ -110,8 +139,7 @@ class BankAccountForm extends FormBase {
         // Move addressData object to form_state storage.
         $form_state->setStorage(['bankAccountData' => $bankAccountData]);
       }
-    }
-    catch (ReadOnlyException $e) {
+    } catch (ReadOnlyException $e) {
       $this->messenger()->addError('Data read only');
       $form_state->setError($form, 'Trying to write to readonly value');
     }
@@ -133,6 +161,7 @@ class BankAccountForm extends FormBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
+
     $grantsProfileService->saveBankAccount($bankAccountId, $bankAccountData->toArray());
     $grantsProfileService->saveGrantsProfileAtv();
 
