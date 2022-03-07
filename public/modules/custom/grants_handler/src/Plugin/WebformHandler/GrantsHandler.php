@@ -74,16 +74,16 @@ class GrantsHandler extends WebformHandlerBase {
    *
    * @var string[]
    */
-  private array $applicationStatuses = [
-    'DRAFT',
-    'FINALIZED',
-    'SENT',
-    'RECEIVED',
-    'PENDING',
-    'PROCESSING',
-    'READY',
-    'DONE',
-    'REJECTED',
+  public static array $applicationStatuses = [
+    'DRAFT' => 'DRAFT',
+    'SUBMITTED' => 'SUBMITTED',
+    'SENT' => 'SENT',
+    'RECEIVED' => 'RECEIVED',
+    'PENDING' => 'PENDING',
+    'PROCESSING' => 'PROCESSING',
+    'READY' => 'READY',
+    'DONE' => 'DONE',
+    'REJECTED' => 'REJECTED',
   ];
 
   /**
@@ -829,8 +829,10 @@ class GrantsHandler extends WebformHandlerBase {
             $selectedAccount = $account;
           }
         }
-
-        $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+        $selectedAccountConfirmation = FALSE;
+        if ($selectedAccount['confirmationFile']) {
+          $selectedAccountConfirmation = $grantsProfileDocument->getAttachmentForFilename($selectedAccount['confirmationFile']);
+        }
 
         if ($selectedAccountConfirmation) {
           try {

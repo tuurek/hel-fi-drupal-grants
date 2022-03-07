@@ -9,6 +9,7 @@
 use Drupal\Core\Datetime\DrupalDateTime;
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
+use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\helfi_yjdh\Exception\YjdhException;
 
 /**
@@ -140,7 +141,11 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
       $element['#default_value'] = $defaultValues;
     }
 
-    if (isset($webformData['status']) && $webformData['status'] == 'RECEIVED' && $element['#type'] != 'webform_actions') {
+    if (
+      isset($webformData['status']) &&
+      ($webformData['status'] == GrantsHandler::$applicationStatuses['RECEIVED'] ||
+        $webformData['status'] == GrantsHandler::$applicationStatuses['SUBMITTED']) &&
+      $element['#type'] != 'webform_actions') {
       $element['#disabled'] = TRUE;
     }
     else {
@@ -191,7 +196,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     if (
       isset($form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"]) &&
-      $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == 'RECEIVED') {
+      ($form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == GrantsHandler::$applicationStatuses['RECEIVED'] ||
+        $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == GrantsHandler::$applicationStatuses['SUBMITTED'])
+    ) {
       $form["actions"]["submit"]['#disabled'] = TRUE;
       unset($form["elements"]["finalize_application"]);
     }
