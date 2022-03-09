@@ -42,7 +42,7 @@ elements: |-
         '#required': true
       company_number:
         '#type': textfield
-        '#title': Rekisterinumero
+        '#title': Y-Tunnus
         '#readonly': true
         '#required': true
       community_official_name:
@@ -53,7 +53,6 @@ elements: |-
       community_official_name_short:
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
-        '#required': true
       registration_date:
         '#type': textfield
         '#title': Rekisteröimispäivä
@@ -70,7 +69,6 @@ elements: |-
         '#type': textfield
         '#title': Perustamisvuosi
         '#readonly': true
-        '#required': true
       home:
         '#type': textfield
         '#title': Kotipaikka
@@ -82,12 +80,6 @@ elements: |-
       email:
         '#type': email
         '#title': Sähköpostiosoite
-    hakemuksen_yhteyshenkilo:
-      '#type': webform_section
-      '#title': 'Hakemuksen yhteyshenkilö'
-      contact_person:
-        '#type': textfield
-        '#title': Yhteyshenkilö
         '#required': true
     osoite:
       '#type': webform_section
@@ -107,6 +99,10 @@ elements: |-
       contact_person_country:
         '#type': textfield
         '#title': Maa
+        '#required': true
+      contact_person:
+        '#type': textfield
+        '#title': Yhteyshenkilö
         '#required': true
       contact_person_phone_number:
         '#type': textfield
@@ -371,9 +367,21 @@ elements: |-
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
   3_yhteison_tiedot:
     '#type': webform_wizard_page
-    '#title': '3. Yhteisön tiedot'
+    '#title': '3. Yhteisön toiminta'
     '#prev_button_label': '< Edellinen'
     '#next_button_label': 'Seuraava >'
+    business_info:
+      '#type': webform_section
+      '#title': 'Business info'
+      community_purpose:
+        '#type': textarea
+        '#title': 'Community purpose'
+      community_practices_business:
+        '#type': radios
+        '#title': 'Community practices business'
+        '#options': yes_no
+        '#options_display': side_by_side
+        '#options_description_display': help
     ensimmainen_otsikko:
       '#type': webform_section
       '#title': Jäsenmaksut

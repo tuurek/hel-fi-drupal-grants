@@ -625,6 +625,11 @@ class GrantsHandler extends WebformHandlerBase {
             '%property' => $violation->getPropertyPath(),
             '%message' => $violation->getMessage(),
           ]));
+        $this->messenger()
+          ->addError($this->t('Data not saved, error with data. (This functionality WILL change before production.) Property: %property. Message: %message', [
+            '%property' => $violation->getPropertyPath(),
+            '%message' => $violation->getMessage(),
+          ]));
       }
       return;
     }

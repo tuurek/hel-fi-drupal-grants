@@ -34,7 +34,7 @@ class CompensationsComposite extends WebformCompositeBase {
    */
   protected static $optionsForTypes = [
     1 => 'Toiminta-avustus',
-    6 => 'Yleisavustushakemus',
+    6 => 'Yleisavustus',
   ];
 
   /**

@@ -71,7 +71,6 @@ class GrantsProfileForm extends FormBase {
     $form['foundingYearWrapper']['foundingYear'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Founding year'),
-      '#required' => TRUE,
       '#default_value' => $grantsProfileContent['foundingYear'],
     ];
     $form['companyNameShortWrapper'] = [
@@ -81,7 +80,6 @@ class GrantsProfileForm extends FormBase {
     $form['companyNameShortWrapper']['companyNameShort'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Company short name'),
-      '#required' => TRUE,
       '#default_value' => $grantsProfileContent['companyNameShort'],
     ];
     $form['companyHomePageWrapper'] = [
@@ -91,7 +89,6 @@ class GrantsProfileForm extends FormBase {
     $form['companyHomePageWrapper']['companyHomePage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Company www address'),
-      '#required' => TRUE,
       '#default_value' => $grantsProfileContent['companyHomePage'],
     ];
     $form['companyEmailWrapper'] = [
@@ -101,7 +98,6 @@ class GrantsProfileForm extends FormBase {
     $form['companyEmailWrapper']['companyEmail'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Company email'),
-      '#required' => TRUE,
       '#default_value' => $grantsProfileContent['companyEmail'],
     ];
     $form['businessPurposeWrapper'] = [
@@ -111,7 +107,6 @@ class GrantsProfileForm extends FormBase {
     $form['businessPurposeWrapper']['businessPurpose'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Description of business purpose'),
-      '#required' => TRUE,
       '#default_value' => $grantsProfileContent['businessPurpose'],
     ];
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
