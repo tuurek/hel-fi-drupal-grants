@@ -8,3 +8,5 @@ dependencies:
   - webform
   - grants_metadata
   - grants_handler
+'interface translation project': grants_attachments
+'interface translation server pattern': modules/custom/grants_attachments/translations/grants_attachments.%language.po
