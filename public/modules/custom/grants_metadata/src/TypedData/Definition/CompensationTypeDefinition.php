@@ -54,6 +54,14 @@ class CompensationTypeDefinition extends ComplexDataDefinitionBase {
           'compensationArray',
           'amount',
         ])
+        ->setSetting('valueCallback', [
+          '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+          'convertToFloat',
+        ])
+        ->setSetting('typeOverride', [
+          'dataType' => 'string',
+          'jsonType' => 'float',
+        ])
         ->setSetting('defaultValue', 0)
         ->setRequired(TRUE)
         ->addConstraint('NotBlank');
