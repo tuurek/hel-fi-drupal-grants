@@ -60,17 +60,17 @@ class AddressForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $selectedAddress['street'],
     ];
-    $form['city'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('City'),
-      '#required' => TRUE,
-      '#default_value' => $selectedAddress['city'],
-    ];
     $form['postCode'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Post code'),
       '#required' => TRUE,
       '#default_value' => $selectedAddress['postCode'],
+    ];
+    $form['city'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('City'),
+      '#required' => TRUE,
+      '#default_value' => $selectedAddress['city'],
     ];
     $form['country'] = [
       '#type' => 'textfield',
@@ -107,8 +107,8 @@ class AddressForm extends FormBase {
     $tempValues = $form_state->getValues();
     $values = [
       'street' => $tempValues['street'],
-      'city' => $tempValues['city'],
       'postCode' => $tempValues['postCode'],
+      'city' => $tempValues['city'],
       'country' => $tempValues['country'],
     ];
     try {
