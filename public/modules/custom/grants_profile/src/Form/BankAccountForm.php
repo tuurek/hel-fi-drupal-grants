@@ -139,7 +139,8 @@ class BankAccountForm extends FormBase {
         // Move addressData object to form_state storage.
         $form_state->setStorage(['bankAccountData' => $bankAccountData]);
       }
-    } catch (ReadOnlyException $e) {
+    }
+    catch (ReadOnlyException $e) {
       $this->messenger()->addError('Data read only');
       $form_state->setError($form, 'Trying to write to readonly value');
     }
