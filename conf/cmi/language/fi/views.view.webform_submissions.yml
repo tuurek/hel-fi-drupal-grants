@@ -1,4 +1,3 @@
-label: 'Webform submissions'
 display:
   default:
     display_title: Master
@@ -23,10 +22,8 @@ display:
             offset_label: Offset
       fields:
         sid:
-          label: '#'
           separator: ', '
         in_draft:
-          label: Draft
           separator: ', '
         created:
           label: Luotu
@@ -44,17 +41,14 @@ display:
         in_draft:
           exception:
             title: Kaikki
-      title: 'Webform submissions'
   embed_administer:
     display_options:
       fields:
         webform_submission_bulk_form:
           action_title: Toiminto
         sid:
-          label: '#'
           separator: ', '
         in_draft:
-          label: Draft
           separator: ', '
         sticky:
           label: Kiinnitetty
@@ -66,7 +60,6 @@ display:
           label: Luotu
           separator: ', '
         completed:
-          label: Completed
           separator: ', '
         remote_addr:
           label: 'IP osoite'
@@ -86,10 +79,8 @@ display:
         webform_submission_bulk_form:
           action_title: Toiminto
         sid:
-          label: '#'
           separator: ', '
         in_draft:
-          label: Draft
           separator: ', '
         sticky:
           label: Kiinnitetty
@@ -101,7 +92,6 @@ display:
           label: Luotu
           separator: ', '
         completed:
-          label: Completed
           separator: ', '
         remote_addr:
           label: 'IP osoite'
@@ -123,10 +113,8 @@ display:
     display_options:
       fields:
         sid:
-          label: '#'
           separator: ', '
         in_draft:
-          label: Draft
           separator: ', '
         sticky:
           label: Kiinnitetty
@@ -138,7 +126,6 @@ display:
           label: Luotu
           separator: ', '
         completed:
-          label: Completed
           separator: ', '
         remote_addr:
           label: 'IP osoite'
