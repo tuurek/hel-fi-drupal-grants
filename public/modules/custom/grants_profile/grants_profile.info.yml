@@ -10,3 +10,5 @@ dependencies:
   - helfi_helsinki_profiili
   - grants_metadata
 
+'interface translation project': grants_profile
+'interface translation server pattern': modules/custom/grants_profile/translations/grants_profile.%language.po
