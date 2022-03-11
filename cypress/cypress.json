@@ -1,0 +1,7 @@
+{
+  "viewportWidth": 1000,
+  "viewportHeight": 800,
+  "chromeWebSecurity": false,
+  "experimentalSessionSupport": true,
+  "baseUrl": "https://hel-fi-drupal-grant-applications.docker.so"
+}
