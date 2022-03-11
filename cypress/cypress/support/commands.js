@@ -64,3 +64,13 @@ Cypress.Commands.add('login', (type) => {
     })
 
 });
+
+Cypress.SelectorPlayground.defaults({
+    onElement: ($el) => {
+        const customId = $el.attr('data-drupal-selector')
+
+        if (customId) {
+            return `[data-drupal-selector="${customId}"]`
+        }
+    },
+})

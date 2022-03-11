@@ -29,6 +29,10 @@ elements: |-
       '#type': textfield
       '#title': 'Hakemuksen tila'
       '#readonly': true
+    finalize_application:
+      '#type': checkbox
+      '#title': 'Finalize application'
+      '#description': 'Check this to submit application for handling and disable editing.&nbsp;'
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
@@ -88,13 +92,13 @@ elements: |-
         '#type': textfield
         '#title': Katuosoite
         '#required': true
-      contact_person_city:
-        '#type': textfield
-        '#title': Postitoimipaikka
-        '#required': true
       contact_person_post_code:
         '#type': textfield
         '#title': Postinumero
+        '#required': true
+      contact_person_city:
+        '#type': textfield
+        '#title': Postitoimipaikka
         '#required': true
       contact_person_country:
         '#type': textfield
@@ -169,9 +173,9 @@ elements: |-
         '#type': select
         '#title': 'Vuosi, jolle haen avustusta'
         '#options':
-          2021: '2021'
           2022: '2022'
           2023: '2023'
+          2024: '2024'
     avustuslajit:
       '#type': webform_section
       '#title': Avustuslajit
@@ -543,10 +547,6 @@ elements: |-
         '#multiple__add_more_button_label': 'Lisää liite'
         '#isDeliveredLater__access': false
         '#isIncludedInOtherFile__access': false
-  finalize_application:
-    '#type': checkbox
-    '#title': 'Finalize application'
-    '#description': 'Check this to submit application for handling and disable editing.'
   actions:
     '#type': webform_actions
     '#title': 'Submit button(s)'
