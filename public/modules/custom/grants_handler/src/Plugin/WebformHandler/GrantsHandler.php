@@ -707,6 +707,7 @@ class GrantsHandler extends WebformHandlerBase {
         }
         catch (\Exception $e) {
           $this->messenger()->addError($e->getMessage());
+          $this->getLogger('grants_handler')->error($e->getMessage());
         }
 
       }

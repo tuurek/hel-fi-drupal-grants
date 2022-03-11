@@ -296,7 +296,7 @@ trait ApplicationDefinitionTrait {
 
     $info['myonnetty_avustus'] = ListDataDefinition::create('grants_metadata_other_compensation')
       // ->setRequired(TRUE)
-      ->setLabel('otherCompensationsInfo=>otherCompensationsArray')
+      ->setLabel('Myönnetty avustus')
       ->setSetting('defaultValue', [])
       ->setSetting('jsonPath', [
         'compensation',
@@ -318,8 +318,11 @@ trait ApplicationDefinitionTrait {
     $info['myonnetty_avustus_total'] = DataDefinition::create('float')
       // ->setRequired(TRUE)
       ->setLabel('Myönnetty avustus total')
-      ->setSetting('requiredInJson', TRUE)
       ->setSetting('defaultValue', 0)
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'double',
+      ])
       ->setSetting('valueCallback', [
         '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
         'convertToFloat',
@@ -327,6 +330,7 @@ trait ApplicationDefinitionTrait {
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
+        'otherCompensationsInfoArray',
         'otherCompensationsTotal',
       ])
       ->addConstraint('NotBlank');
@@ -335,9 +339,14 @@ trait ApplicationDefinitionTrait {
       // ->setRequired(TRUE)
       ->setLabel('Haettu avustus total')
       ->setSetting('defaultValue', 0)
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'double',
+      ])
       ->setSetting('jsonPath', [
         'compensation',
         'otherCompensationsInfo',
+        'otherCompensationsInfoArray',
         'otherAppliedCompensationsTotal',
       ])
       ->setSetting('valueCallback', [

@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-    - feature/AU-326-tilinumeron-vahvistusliite
+    - feature/AU-344-e2e-proto
   paths:
     exclude:
     - README.md
