@@ -22,10 +22,13 @@ class GrantsProfileController extends ControllerBase {
    *
    * @return array
    *   Build for the page.
+   *
+   * @throws \Exception
    */
   public function viewApplication(string $document_uuid) {
 
     $submissionObject = GrantsHandler::submissionObjectFromApplicationNumber($document_uuid);
+
     if ($submissionObject) {
       $data = $submissionObject->getData();
       $webForm = $submissionObject->getWebform();

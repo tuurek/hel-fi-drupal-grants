@@ -2,6 +2,8 @@
 
 namespace Drupal\grants_metadata;
 
+use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Serialization\Json;
@@ -37,11 +39,19 @@ class AtvSchema {
   protected string $atvSchemaPath;
 
   /**
+   * Logger Factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannel
+   */
+  protected LoggerChannel $logger;
+
+  /**
    * Constructs an AtvShcema object.
    */
-  public function __construct(TypedDataManager $typed_data_manager) {
+  public function __construct(TypedDataManager $typed_data_manager, LoggerChannelFactory $loggerFactory) {
 
     $this->typedDataManager = $typed_data_manager;
+    $this->logger = $loggerFactory->get('grants_attachments');
 
   }
 
@@ -252,44 +262,18 @@ class AtvSchema {
       }
 
       $types = $this->getJsonTypeForDataType($definition);
-
-      if ($valueCallback) {
-        $value = call_user_func($valueCallback, $value);
-      }
-
-      // If value is null, try to set default value from config.
-      if (is_null($value)) {
-        $value = $defaultValue;
-      }
-
       $schema = $this->getPropertySchema($elementName, $this->structure);
 
-      if ($propertyName == 'status_updates') {
+      $itemTypes = $this->getJsonTypeForDataType($definition);
+      $itemValue = $this->getItemValue($itemTypes, $value, $defaultValue, $valueCallback);
+
+      if ($propertyName === 'status_updates') {
         continue;
       }
 
-      if (!is_array($value)) {
-        if ($propertyName == 'form_update') {
-          if ($value != TRUE) {
-            continue;
-          }
-        }
-        elseif ($propertyType === 'boolean') {
-          if ($value == FALSE) {
-            $value = 'false';
-          }
-          if ($value == '0') {
-            $value = 'false';
-          }
-          if ($value == TRUE) {
-            $value = 'true';
-          }
-          if ($value == '1') {
-            $value = 'true';
-          }
-        }
-        elseif ($propertyType !== 'boolean' && $propertyType !== 'float') {
-          $value = "" . $value;
+      if ($propertyName === 'form_update') {
+        if ($itemValue != TRUE) {
+          continue;
         }
       }
 
@@ -297,18 +281,18 @@ class AtvSchema {
         case 4:
           $valueArray = [
             'ID' => $elementName,
-            'value' => $value,
-            'valueType' => $types['jsonType'],
+            'value' => $itemValue,
+            'valueType' => $itemTypes['jsonType'],
             'label' => $propertyLabel,
           ];
           $documentStructure[$jsonPath[0]][$jsonPath[1]][$jsonPath[2]][] = $valueArray;
           break;
 
         case 3:
-          if (is_array($value) && $this->numericKeys($value)) {
-            if (empty($value)) {
+          if (is_array($itemValue) && $this->numericKeys($itemValue)) {
+            if (empty($itemValue)) {
               if ($requiredInJson == TRUE) {
-                $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
+                $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $itemValue;
               }
             }
             else {
@@ -324,24 +308,7 @@ class AtvSchema {
                   if (isset($propertyItem[$itemName])) {
                     $itemValue = $propertyItem[$itemName];
 
-                    if ($itemTypes['dataType'] == 'string') {
-                      $itemValue = $itemValue . "";
-                    }
-
-                    if ($itemTypes['dataType'] === 'string' && $itemTypes['jsonType'] === 'bool') {
-                      if ($itemValue == FALSE) {
-                        $itemValue = 'false';
-                      }
-                      if ($itemValue == '0') {
-                        $itemValue = 'false';
-                      }
-                      if ($itemValue == TRUE) {
-                        $itemValue = 'true';
-                      }
-                      if ($itemValue == '1') {
-                        $itemValue = 'true';
-                      }
-                    }
+                    $itemValue = $this->getItemValue($itemTypes, $itemValue, $defaultValue, $valueCallback);
 
                     $idValue = $itemName;
                     $valueArray = [
@@ -358,23 +325,23 @@ class AtvSchema {
             }
           }
           else {
+            $valueArray = [
+              'ID' => $elementName,
+              'value' => $itemValue,
+              'valueType' => $itemTypes['jsonType'],
+              'label' => $propertyLabel,
+            ];
             if ($schema['type'] == 'number') {
-              if ($value == NULL) {
+              if ($itemValue == NULL) {
                 if ($requiredInJson == TRUE) {
-                  $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
+                  $documentStructure[$jsonPath[0]][$jsonPath[1]][] = $valueArray;
                 }
               }
               else {
-                $documentStructure[$jsonPath[0]][$jsonPath[1]][$elementName] = $value;
+                $documentStructure[$jsonPath[0]][$jsonPath[1]][] = $valueArray;
               }
             }
             else {
-              $valueArray = [
-                'ID' => $elementName,
-                'value' => $value,
-                'valueType' => $types['jsonType'],
-                'label' => $propertyLabel,
-              ];
               $documentStructure[$jsonPath[0]][$jsonPath[1]][] = $valueArray;
             }
           }
@@ -396,26 +363,7 @@ class AtvSchema {
                   if (isset($propertyItem[$itemName])) {
                     $itemValue = $propertyItem[$itemName];
 
-                    if ($itemTypes['dataType'] === 'string' && $itemTypes['jsonType'] === 'bool') {
-                      if ($itemValue === FALSE) {
-                        $itemValue = 'false';
-                      }
-                      if ($itemValue == '0') {
-                        $itemValue = 'false';
-                      }
-                      if ($itemValue === TRUE) {
-                        $itemValue = 'true';
-                      }
-                      if ($itemValue == '1') {
-                        $itemValue = 'true';
-                      }
-                      if ($itemValue == '') {
-                        $itemValue = 'false';
-                      }
-                    }
-                    elseif ($itemTypes['dataType'] == 'string') {
-                      $itemValue = $itemValue . "";
-                    }
+                    $itemValue = $this->getItemValue($itemTypes, $itemValue, $defaultValue, $valueCallback);
 
                     $idValue = $itemName;
                     $valueArray = [
@@ -434,12 +382,12 @@ class AtvSchema {
           else {
             $valueArray = [
               'ID' => $elementName,
-              'value' => $value,
-              'valueType' => $types['jsonType'],
+              'value' => $itemValue,
+              'valueType' => $itemTypes['jsonType'],
               'label' => $propertyLabel,
             ];
             if ($schema['type'] == 'string') {
-              $documentStructure[$jsonPath[$baseIndex - 1]][$elementName] = $value;
+              $documentStructure[$jsonPath[$baseIndex - 1]][$elementName] = $itemValue;
             }
             else {
               $documentStructure[$jsonPath[$baseIndex - 1]][] = $valueArray;
@@ -450,11 +398,11 @@ class AtvSchema {
 
         case 1:
 
-          $documentStructure[$elementName] = $value;
+          $documentStructure[$elementName] = $itemValue;
           break;
 
         default:
-          $d = 'asdf';
+          $this->logger->error('@field failed parsing, check setup.', ['@field' => $elementName]);
           break;
       }
     }
@@ -575,6 +523,7 @@ class AtvSchema {
     if (is_string($atvDocument['content'])) {
       $replaced = str_replace("'", "\"", $atvDocument['content']);
       $replaced = str_replace("False", "false", $replaced);
+      $replaced = str_replace("True", "true", $replaced);
 
       return Json::decode($replaced);
     }
@@ -595,6 +544,55 @@ class AtvSchema {
   public function setAtvDocumentContent(array $atvDocument, array $atvDocumentContent): array {
     $atvDocument['content'] = $atvDocumentContent;
     return $atvDocument;
+  }
+
+  /**
+   * Format data type from item types.
+   *
+   * Use default value & value callback if applicable.
+   *
+   * @param array $itemTypes
+   *   Item types for this value.
+   * @param mixed $itemValue
+   *   Value itself.
+   * @param mixed $defaultValue
+   *   Default value used if no value given. Configurable in typed data.
+   * @param mixed $valueCallback
+   *   Callback to handle value formatting. Configurable in typed data.
+   *
+   * @return mixed
+   *   Formatted value.
+   */
+  public function getItemValue(array $itemTypes, mixed $itemValue, mixed $defaultValue, mixed $valueCallback): mixed {
+
+    if ($valueCallback) {
+      $itemValue = call_user_func($valueCallback, $itemValue);
+    }
+
+    // If value is null, try to set default value from config.
+    if (is_null($itemValue)) {
+      $itemValue = $defaultValue;
+    }
+
+    if ($itemTypes['dataType'] === 'string' && $itemTypes['jsonType'] !== 'bool') {
+      $itemValue = $itemValue . "";
+    }
+
+    if ($itemTypes['dataType'] === 'string' && $itemTypes['jsonType'] === 'bool') {
+      if ($itemValue === FALSE) {
+        $itemValue = 'false';
+      }
+      if ($itemValue === '0') {
+        $itemValue = 'false';
+      }
+      if ($itemValue === TRUE) {
+        $itemValue = 'true';
+      }
+      if ($itemValue === '1') {
+        $itemValue = 'true';
+      }
+    }
+    return $itemValue;
   }
 
 }

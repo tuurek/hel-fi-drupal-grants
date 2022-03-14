@@ -1,4 +1,4 @@
 services:
   grants_metadata.atv_schema:
     class: Drupal\grants_metadata\AtvSchema
-    arguments: ['@typed_data_manager']
+    arguments: ['@typed_data_manager', '@logger.factory']

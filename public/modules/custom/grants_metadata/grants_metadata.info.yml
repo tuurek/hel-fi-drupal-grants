@@ -10,3 +10,6 @@ dependencies:
 version: '6.0.3'
 project: 'webform'
 datestamp: 1620250261
+
+'interface translation project': grants_metadata
+'interface translation server pattern': modules/custom/grants_metadata/translations/%language/grants_metadata.%language.po
