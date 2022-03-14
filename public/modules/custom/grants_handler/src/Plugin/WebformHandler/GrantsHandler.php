@@ -4,8 +4,10 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
@@ -568,9 +570,10 @@ class GrantsHandler extends WebformHandlerBase {
     $this->applicationTypeID = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
 
-    $ts = date('c', $webform_submission->getCreatedTime());
-    $tsExp = explode('+', $ts);
-    $this->submittedFormData['form_timestamp'] = $tsExp[0] . '.000Z';
+    $dt = new \DateTime();
+    $dt->setTimestamp($webform_submission->getCreatedTime());
+    $dt->setTimezone(new \DateTimeZone('UTC'));
+    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
     // @todo check community_practices_business value and where to get it from.
     $this->submittedFormData['community_practices_business'] = FALSE;
@@ -684,16 +687,26 @@ class GrantsHandler extends WebformHandlerBase {
               $this->isDebug()
             );
 
+            $url = Url::fromRoute(
+              'grants_profile.view_application',
+              ['document_uuid' => $this->applicationNumber],
+              [
+                'attributes' => [
+                  'data-drupal-selector' => 'application-saved-successfully-link',
+                ],
+              ]
+            );
+
             // TÄHÄN TSEKKAA RESULTTI.
             // @todo print message for every attachment
             $this->messenger()
               ->addStatus(
                 $this->t(
-                  'Grant application (%number) saved and attachments saved, 
-                  see application status from @link.',
+                  'Grant application (@number) saved and attachments saved, 
+                  see application status from @link',
                   [
-                    '%number' => $this->applicationNumber,
-                    '@link' => '<a href="/grants-profile/applications/' . $this->applicationNumber . '">here</a>',
+                    '@number' => $this->applicationNumber,
+                    '@link' => Link::fromTextAndUrl('here', $url)->toString(),
                   ]));
 
             $this->attachmentRemover->removeGrantAttachments(
