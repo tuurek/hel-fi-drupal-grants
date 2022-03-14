@@ -169,15 +169,15 @@ class AttachmentUploader {
             ]);
           }
 
-          // // Make sure that no rows remain for this FID.
-          // $num_deleted = $this->connection->delete('grants_attachments')
-          // ->condition('fid', $file->id())
-          // ->execute();
-          // if ($this->isDebug()) {
-          // $this->loggerChannel->notice('Removed db log row: @filename', [
-          // '@filename' => $filename
-          // ]);
-          // }
+          // Make sure that no rows remain for this FID.
+          $num_deleted = $this->connection->delete('grants_attachments')
+            ->condition('fid', $file->id())
+            ->execute();
+          if ($this->isDebug()) {
+            $this->loggerChannel->notice('Removed db log row: @filename', [
+              '@filename' => $filename,
+            ]);
+          }
         }
         else {
           $retval[$fileId] = FALSE;
