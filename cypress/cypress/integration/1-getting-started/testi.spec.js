@@ -117,7 +117,7 @@ describe('Site load, cookies, login', () => {
             cy.get('[data-drupal-selector="edit-vahvistettu-tilinpaatos-isincludedinotherfile"]').uncheck()
         })
 
-        cy.wait(1000)
+        cy.wait(1500)
 
         cy.get('[data-drupal-selector="edit-vahvistettu-toimintakertomus-isdeliveredlater"]').check()
         cy.get('[data-drupal-selector="edit-vahvistettu-toimintakertomus-isincludedinotherfile"]').check()
@@ -127,14 +127,14 @@ describe('Site load, cookies, login', () => {
             cy.get('[data-drupal-selector="edit-vahvistettu-tilin-tai-toiminnantarkastuskertomus-isdeliveredlater"]').uncheck()
         })
 
-        cy.wait(1000)
+        cy.wait(1500)
 
         cy.get('[data-drupal-selector="edit-toimintasuunnitelma-attachment-upload"]').selectFile('./cypress/files/Testitiedosto2.doc', {force: true}).then(() => {
             cy.get('[data-drupal-selector="edit-toimintasuunnitelma-isdeliveredlater"]').uncheck()
             cy.get('[data-drupal-selector="edit-toimintasuunnitelma-isincludedinotherfile"]').uncheck()
         })
 
-        cy.wait(1000)
+        cy.wait(1500)
 
         cy.get('[data-drupal-selector="edit-vuosikokouksen-poytakirja-isdeliveredlater"]').check()
         cy.get('[data-drupal-selector="edit-talousarvio-isdeliveredlater"]').check()

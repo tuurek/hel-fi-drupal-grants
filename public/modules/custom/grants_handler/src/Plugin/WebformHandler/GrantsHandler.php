@@ -589,7 +589,7 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData['application_number'] = $this->applicationNumber;
       // Apparently you CANNOT have this set in new applications,
       // integration seems to fail
-      // $this->submittedFormData['form_update'] = FALSE;.
+       $this->submittedFormData['form_update'] = FALSE;
     }
     else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
