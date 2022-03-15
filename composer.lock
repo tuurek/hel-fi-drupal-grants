@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93fd2c60f7be039699d7ab09ba3b40a1",
+    "content-hash": "bb49e77c9bb8e6b2346c64290fd5b135",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5034,6 +5034,52 @@
             "time": "2022-02-21T12:41:55+00:00"
         },
         {
+            "name": "drupal/http_client_log",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/http_client_log.git",
+                "reference": "1.0.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/http_client_log-1.0.5.zip",
+                "reference": "1.0.5",
+                "shasum": "32186bdaffef13fe05084447ca82a05e284279b9"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "gmponos/guzzle_logger": "^2.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.5",
+                    "datestamp": "1642241985",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "zterry95",
+                    "homepage": "https://www.drupal.org/user/1952394"
+                }
+            ],
+            "description": "Http Client Logs",
+            "homepage": "https://www.drupal.org/project/http_client_log",
+            "support": {
+                "source": "http://cgit.drupalcode.org/http_client_log",
+                "issues": "https://www.drupal.org/project/issues/http_client_log"
+            }
+        },
+        {
             "name": "drupal/image_style_quality",
             "version": "1.4.0",
             "source": {
@@ -7868,6 +7914,79 @@
                 "source": "https://github.com/globalcitizen/php-iban/tree/v4.1.0"
             },
             "time": "2021-07-01T23:55:02+00:00"
+        },
+        {
+            "name": "gmponos/guzzle_logger",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gmponos/guzzle-log-middleware.git",
+                "reference": "572508aa5791d6de23da0aa8b42d440aa715c6a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gmponos/guzzle-log-middleware/zipball/572508aa5791d6de23da0aa8b42d440aa715c6a6",
+                "reference": "572508aa5791d6de23da0aa8b42d440aa715c6a6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.1 || ^7.0.1",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
+                "php": "^7.2 || ^8.0",
+                "psr/log": "^1.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "~0.12.32",
+                "phpstan/phpstan-phpunit": "^0.12.11",
+                "phpstan/phpstan-strict-rules": "^0.12.2",
+                "phpunit/phpunit": "^8.5.8 || ^9.2.5",
+                "squizlabs/php_codesniffer": "^3.5.5"
+            },
+            "suggest": {
+                "monolog/monolog": "A PSR-3 logger to send your logs to files, sockets and various web services"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleLogMiddleware\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com"
+                }
+            ],
+            "description": "A Guzzle middleware to log request and responses automatically",
+            "homepage": "https://github.com/gmponos/guzzle-log-middleware",
+            "keywords": [
+                "Guzzle",
+                "PSR3",
+                "log",
+                "logging"
+            ],
+            "support": {
+                "issues": "https://github.com/gmponos/guzzle-log-middleware/issues",
+                "source": "https://github.com/gmponos/guzzle-log-middleware/tree/master"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/gmponos",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-11-12T12:51:47+00:00"
         },
         {
             "name": "grasmash/expander",

@@ -37,6 +37,10 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
       $info['fileType'] = DataDefinition::create('integer')
       // ->setRequired(TRUE)
         ->setLabel('File type.')
+        ->setSetting('typeOverride', [
+          'dataType' => 'string',
+          'jsonType' => 'int',
+        ])
         ->setSetting('jsonPath', [
           'attachmentsInfo',
           'attachmentsArray',
