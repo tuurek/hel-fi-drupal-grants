@@ -10,5 +10,8 @@ default_content:
     - 0182c5c9-c99d-4f0d-8311-8a1accabe6fd
     - a1caac9d-8eef-49df-89c7-ddd75c007a4e
     - ada20fc6-a716-42ff-9cc2-3dab6fe51dc3
+  node:
+    - 7f2574d3-d889-46d6-a716-7a05f2e2e761
+    - 94868e26-669f-45fd-bba0-2ac3bad827b5
 'interface translation project': grant_applications_content
 'interface translation server pattern': modules/contrib/grant_applications_content/helfi_features/grant_applications_content/translations/%language.po

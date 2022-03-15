@@ -36,6 +36,7 @@ module:
   filter: 0
   focal_point: 0
   gin_toolbar: 0
+  grant_applications_content: 0
   grants_attachments: 0
   grants_metadata: 0
   hal: 0
