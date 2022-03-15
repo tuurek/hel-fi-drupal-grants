@@ -257,7 +257,7 @@ class AtvSchema {
       $baseIndex = count($jsonPath);
       $value = $property->getValue();
 
-      if ($jsonPath == NULL) {
+      if ($jsonPath == NULL && $propertyName !== 'form_update') {
         continue;
       }
 
@@ -269,12 +269,6 @@ class AtvSchema {
 
       if ($propertyName === 'status_updates') {
         continue;
-      }
-
-      if ($propertyName === 'form_update') {
-        if ($itemValue != TRUE) {
-          continue;
-        }
       }
 
       switch ($numberOfItems) {
@@ -397,8 +391,17 @@ class AtvSchema {
           break;
 
         case 1:
-
-          $documentStructure[$elementName] = $itemValue;
+          if ($propertyName == 'form_update') {
+            if ($itemValue === 'true') {
+              $documentStructure[$elementName] = TRUE;
+            }
+            else {
+              $documentStructure[$elementName] = FALSE;
+            }
+          }
+          else {
+            $documentStructure[$elementName] = $itemValue;
+          }
           break;
 
         default:

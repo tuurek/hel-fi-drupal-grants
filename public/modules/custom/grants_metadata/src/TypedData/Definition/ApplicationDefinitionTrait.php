@@ -527,9 +527,14 @@ trait ApplicationDefinitionTrait {
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
     // ->addConstraint('NotBlank')
     $info['form_update'] = DataDefinition::create('boolean')
-      // ->setRequired(TRUE)
+      ->setRequired(TRUE)
       ->setLabel('formUpdate')
-      ->setSetting('jsonPath', ['formUpdate']);
+      ->setSetting('jsonPath', ['formUpdate'])
+      ->setSetting('typeOverride', [
+        'dataType' => 'string',
+        'jsonType' => 'bool',
+      ])
+      ->setSetting('defaultValue', FALSE);
 
     $info['status_updates'] = MapDataDefinition::create()
       ->setPropertyDefinition(
