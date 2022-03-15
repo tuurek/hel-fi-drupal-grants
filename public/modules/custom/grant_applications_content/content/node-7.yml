@@ -1,0 +1,136 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 7f2574d3-d889-46d6-a716-7a05f2e2e761
+  bundle: page
+  default_langcode: fi
+  depends:
+    a22c3a4c-85d9-48b0-831b-882458741a6e: media
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: Avustukset
+  created:
+    -
+      value: 1646911808
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  color_palette:
+    -
+      value: engel
+  toc_enabled:
+    -
+      value: false
+  toc_title:
+    -
+      value: Sisällysluettelo
+  path:
+    -
+      alias: /avustukset
+      langcode: fi
+      pathauto: 1
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_content:
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: 80a62189-8063-4bf2-a76a-307823032179
+          bundle: text
+          default_langcode: fi
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1646911822
+          behavior_settings:
+            -
+              value: {  }
+  field_has_hero:
+    -
+      value: true
+  field_hero:
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: de453484-44b0-483a-a879-fa4a3798f4cd
+          bundle: hero
+          default_langcode: fi
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1646911822
+          behavior_settings:
+            -
+              value: {  }
+          field_hero_bg_color:
+            -
+              value: engel
+          field_hero_desc:
+            -
+              value: "<p>Kaupunki avustaa helsinkiläisiä järjestöjä, yhteisöjä ja asukasryhmiä vuosittain noin 70 miljoonalla eurolla.</p>\r\n"
+              format: full_html
+          field_hero_design:
+            -
+              value: diagonal
+          field_hero_image:
+            -
+              entity: a22c3a4c-85d9-48b0-831b-882458741a6e
+          field_hero_link_design:
+            -
+              value: primary
+          field_hero_title:
+            -
+              value: 'Kaupungin avustuspalvelut yhdessä paikassa'
+  field_lower_content:
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: 2d6519ae-a606-4140-9420-b9a74bfea051
+          bundle: text
+          default_langcode: fi
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1646911822
+          behavior_settings:
+            -
+              value: {  }
+  field_metatags:
+    -
+      value:
+        description: "Kaupunki avustaa helsinkiläisiä järjestöjä, yhteisöjä ja asukasryhmiä vuosittain noin\r\n70 miljoonalla eurolla."
