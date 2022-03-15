@@ -12,7 +12,7 @@ describe('Site load, cookies, login', () => {
 
 
     it('Fill yleisavustushakemus', () => {
-        cy.visit('/fi/form/yleisavustushakemus')
+        cy.visit('/fi/form/yleisavustushakemus', {qs: {XDEBUG_SESSION:'PHPSTORM'}})
 
         // general
         cy.get('[data-drupal-selector="edit-finalize-application"]').check()
