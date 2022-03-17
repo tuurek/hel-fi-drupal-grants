@@ -16,7 +16,7 @@ default:
       value: main
   link:
     -
-      uri: 'internal:/form/yleisavustushakemus'
+      uri: 'internal:/yleisavustuslomake'
       title: ''
       options:
         attributes:

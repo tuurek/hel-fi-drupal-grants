@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb49e77c9bb8e6b2346c64290fd5b135",
+    "content-hash": "8365f7369a6c618e99090c431038b3e8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2644,57 +2644,6 @@
             }
         },
         {
-            "name": "drupal/content_access",
-            "version": "1.0.0-alpha3",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/content_access.git",
-                "reference": "8.x-1.0-alpha3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/content_access-8.x-1.0-alpha3.zip",
-                "reference": "8.x-1.0-alpha3",
-                "shasum": "38715d271d166cbf7ed801acd6cee6010962bc79"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "require-dev": {
-                "drupal/acl": "~1.0"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-alpha3",
-                    "datestamp": "1600327861",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "fago",
-                    "homepage": "https://www.drupal.org/user/16747"
-                },
-                {
-                    "name": "gisle",
-                    "homepage": "https://www.drupal.org/user/409554"
-                }
-            ],
-            "description": "Provides flexible content access control.",
-            "homepage": "https://drupal.org/project/content_access",
-            "support": {
-                "source": "https://git.drupalcode.org/project/content_access"
-            }
-        },
-        {
             "name": "drupal/content_lock",
             "version": "2.2.0",
             "source": {
@@ -4512,16 +4461,16 @@
         },
         {
             "name": "drupal/hdbt",
-            "version": "1.4.4",
+            "version": "2.2.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-hdbt.git",
-                "reference": "cf57cf69d115ede127017d07f02d8f14b05d5143"
+                "reference": "91eea1dea74372bf3e6d730ccfd03994f8397065"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-hdbt/zipball/cf57cf69d115ede127017d07f02d8f14b05d5143",
-                "reference": "cf57cf69d115ede127017d07f02d8f14b05d5143",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-hdbt/zipball/91eea1dea74372bf3e6d730ccfd03994f8397065",
+                "reference": "91eea1dea74372bf3e6d730ccfd03994f8397065",
                 "shasum": ""
             },
             "require": {
@@ -4536,10 +4485,10 @@
                 "Drupal"
             ],
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-hdbt/tree/1.4.4",
+                "source": "https://github.com/City-of-Helsinki/drupal-hdbt/tree/2.2.14",
                 "issues": "https://github.com/City-of-Helsinki/drupal-hdbt/issues"
             },
-            "time": "2021-11-02T16:27:26+00:00"
+            "time": "2022-03-16T07:39:17+00:00"
         },
         {
             "name": "drupal/hdbt_admin",
@@ -16632,7 +16581,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "drupal/content_access": 15,
         "drupal/helfi_atv": 20,
         "drupal/helfi_drupal_tools": 20,
         "drupal/helfi_helsinki_profiili": 20,

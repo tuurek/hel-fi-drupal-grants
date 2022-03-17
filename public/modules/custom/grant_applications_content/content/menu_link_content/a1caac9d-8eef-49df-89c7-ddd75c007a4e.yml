@@ -13,7 +13,7 @@ default:
       value: Kirjaudu
   menu_name:
     -
-      value: branding-navigation
+      value: header-top-navigation
   link:
     -
       uri: 'internal:/user/login'
