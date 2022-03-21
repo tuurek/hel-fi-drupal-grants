@@ -90,9 +90,18 @@ function grants_profile_theme(): array {
       'bank_accounts' => NULL,
     ],
   ];
-
+  $theme['block__grants_profile_menuitem'] = [
+    'render element' => 'build',
+    'template' => 'block--grants-profile-menuitem',
+    'base hook' => 'block',
+    'variables' => [
+      'initials' => NULL,
+      'notifications' => NULL,
+    ],
+  ];
   return $theme;
 }
+
 
 /**
  * Implements hook_cron().

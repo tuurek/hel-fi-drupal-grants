@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - media.type.file
+    - media.type.helfi_chart
     - media.type.image
     - media.type.remote_video
     - media.type.soundcloud
@@ -64,6 +65,7 @@ permissions:
   - 'change own username'
   - 'create content translations'
   - 'create file media'
+  - 'create helfi_chart media'
   - 'create image media'
   - 'create landing_page content'
   - 'create media'
@@ -75,6 +77,7 @@ permissions:
   - 'create url aliases'
   - 'delete all revisions'
   - 'delete any file media'
+  - 'delete any helfi_chart media'
   - 'delete any image media'
   - 'delete any landing_page content'
   - 'delete any media'
@@ -86,6 +89,7 @@ permissions:
   - 'delete media'
   - 'delete own address content'
   - 'delete own file media'
+  - 'delete own helfi_chart media'
   - 'delete own image media'
   - 'delete own landing_page content'
   - 'delete own page content'
@@ -95,6 +99,7 @@ permissions:
   - 'delete remote entities'
   - 'delete terms in keywords'
   - 'edit any file media'
+  - 'edit any helfi_chart media'
   - 'edit any image media'
   - 'edit any landing_page content'
   - 'edit any page content'
@@ -102,6 +107,7 @@ permissions:
   - 'edit any soundcloud media'
   - 'edit own address content'
   - 'edit own file media'
+  - 'edit own helfi_chart media'
   - 'edit own image media'
   - 'edit own landing_page content'
   - 'edit own page content'
@@ -134,6 +140,7 @@ permissions:
   - 'view all media revisions'
   - 'view all revisions'
   - 'view any unpublished content'
+  - 'view any unpublished content'
   - 'view landing_page revisions'
   - 'view own unpublished content'
   - 'view own unpublished media'
@@ -142,9 +149,3 @@ permissions:
   - 'view scheduled content'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
-  - 'view any unpublished content'
-  - 'create helfi_chart media'
-  - 'delete any helfi_chart media'
-  - 'delete own helfi_chart media'
-  - 'edit any helfi_chart media'
-  - 'edit own helfi_chart media'

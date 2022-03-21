@@ -1,0 +1,20 @@
+uuid: 657a194f-7ccc-442d-a09e-c20c6502cc9f
+langcode: fi
+status: true
+dependencies:
+  module:
+    - grants_profile
+  theme:
+    - helfi_grant_applications
+id: menuitemsforprofile
+theme: helfi_grant_applications
+region: header_branding
+weight: 0
+provider: null
+plugin: grants_profile_menuitem
+settings:
+  id: grants_profile_menuitem
+  label: 'Menu Items For Profile'
+  label_display: '0'
+  provider: grants_profile
+visibility: {  }

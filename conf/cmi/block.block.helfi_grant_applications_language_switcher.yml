@@ -11,7 +11,7 @@ _core:
 id: helfi_grant_applications_language_switcher
 theme: helfi_grant_applications
 region: header_branding
-weight: -6
+weight: -9
 provider: null
 plugin: 'language_block:language_content'
 settings:

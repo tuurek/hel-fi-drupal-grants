@@ -9,6 +9,7 @@ dependencies:
   - helfi_atv
   - helfi_helsinki_profiili
   - grants_metadata
+  - drupal:block
 
 'interface translation project': grants_profile
-'interface translation server pattern': modules/custom/grants_profile/translations/%language/grants_profile.%language.po
+'interface translation server pattern': modules/custom/grants_profile/translations/%language.po

@@ -1,6 +1,6 @@
 uuid: f65963fe-3438-4d95-96a5-2fff9b398fa2
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.tools
@@ -12,7 +12,7 @@ _core:
   default_config_hash: atce5PmAgiEg8e3P2xLrzfOrI1xbYYJ-CbmWOZgiy3w
 id: hdbt_admin_tools
 theme: hdbt_admin
-region: before_footer
+region: sidebar_first
 weight: 0
 provider: null
 plugin: 'system_menu_block:tools'

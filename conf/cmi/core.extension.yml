@@ -39,6 +39,7 @@ module:
   grant_applications_content: 0
   grants_attachments: 0
   grants_metadata: 0
+  grants_profile: 0
   hal: 0
   hdbt_admin_editorial: 0
   hdbt_admin_tools: 0
@@ -113,7 +114,6 @@ module:
   views: 10
   eu_cookie_compliance: 11
   grants_handler: 11
-  grants_profile: 11
   grants_user_fields: 11
   grants_webform_print: 11
   grants_webform_summation_field: 11

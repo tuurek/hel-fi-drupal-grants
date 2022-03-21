@@ -1,6 +1,6 @@
 uuid: d1dadc51-68af-4b99-adb2-1aa5eaed4352
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.admin
@@ -12,7 +12,7 @@ _core:
   default_config_hash: 0DFEuxPXq9lyF_UE_uHA2GO9HL_0fE32QR4oo_dsq0E
 id: hdbt_admin_admin
 theme: hdbt_admin
-region: before_footer
+region: sidebar_first
 weight: 1
 provider: null
 plugin: 'system_menu_block:admin'

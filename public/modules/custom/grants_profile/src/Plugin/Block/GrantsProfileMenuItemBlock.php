@@ -20,18 +20,32 @@ class GrantsProfileMenuItemBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build() {
+  public function build()
+  {
     $logged_in = \Drupal::currentUser()->isAuthenticated();
+    $initials = 'NaN';
     if ($logged_in) {
-      $build['content'] = [
-        '#markup' => Link::fromTextAndUrl(t('Profile'), Url::fromUri('internal:/grants-profile'))->toString().
-          Link::fromTextAndUrl(t('Logout'), Url::fromUri('internal:/user/logout'))->toString(),
-      ];
-    } else {
-      $build['content'] = [
-        '#markup' => Link::fromTextAndUrl(t('Login'), Url::fromUri('internal:/user/login'))->toString()
-      ];
+      $current_user = \Drupal::currentUser();
+      $name = $current_user->getDisplayName();
+      $words = explode(' ', $name);
+      if (count($words) >= 2) {
+        $initials = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
+      } else {
+        preg_match_all('#([A-Z]+)#', $name, $capitals);
+        if (count($capitals[1]) >= 2) {
+          $initials = substr(implode('', $capitals[1]), 0, 2);
+        } else {
+
+          $initials = trtoupper(substr($name, 0, 2));
+
+        }
+      }
     }
+
+    $build['#theme'] = 'block__grants_profile_menuitem';
+    $build['notifications'] = 1;
+    $build['initials'] = $initials;
+    $build['loggedin'] = $logged_in;
     return $build;
   }
 
