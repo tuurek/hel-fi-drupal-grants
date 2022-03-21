@@ -3,8 +3,6 @@
 namespace Drupal\grants_profile\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
 
 /**
  * Provides a menuitem block.
@@ -35,11 +33,11 @@ class GrantsProfileMenuItemBlock extends BlockBase {
         if (count($capitals[1]) >= 2) {
           $initials = substr(implode('', $capitals[1]), 0, 2);
         } else {
-
           $initials = trtoupper(substr($name, 0, 2));
-
         }
+
       }
+      
     }
 
     $build['#theme'] = 'block__grants_profile_menuitem';
