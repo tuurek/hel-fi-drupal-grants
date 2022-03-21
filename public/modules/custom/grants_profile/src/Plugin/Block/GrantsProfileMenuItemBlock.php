@@ -18,8 +18,7 @@ class GrantsProfileMenuItemBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function build()
-  {
+  public function build() {
     $logged_in = \Drupal::currentUser()->isAuthenticated();
     $initials = 'NaN';
     if ($logged_in) {
@@ -28,16 +27,18 @@ class GrantsProfileMenuItemBlock extends BlockBase {
       $words = explode(' ', $name);
       if (count($words) >= 2) {
         $initials = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
-      } else {
+      }
+      else {
         preg_match_all('#([A-Z]+)#', $name, $capitals);
         if (count($capitals[1]) >= 2) {
           $initials = substr(implode('', $capitals[1]), 0, 2);
-        } else {
-          $initials = trtoupper(substr($name, 0, 2));
+        }
+        else {
+          $initials = strtoupper(substr($name, 0, 2));
         }
 
       }
-      
+
     }
 
     $build['#theme'] = 'block__grants_profile_menuitem';
