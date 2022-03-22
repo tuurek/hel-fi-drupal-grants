@@ -6,6 +6,7 @@ _meta:
   default_langcode: fi
   depends:
     a22c3a4c-85d9-48b0-831b-882458741a6e: media
+    94868e26-669f-45fd-bba0-2ac3bad827b5: node
 default:
   revision_uid:
     -
@@ -28,9 +29,6 @@ default:
   sticky:
     -
       value: false
-  revision_translation_affected:
-    -
-      value: true
   color_palette:
     -
       value: engel
@@ -92,6 +90,9 @@ default:
           behavior_settings:
             -
               value: {  }
+          revision_translation_affected:
+            -
+              value: true
           field_hero_bg_color:
             -
               value: engel
@@ -105,6 +106,12 @@ default:
           field_hero_image:
             -
               entity: a22c3a4c-85d9-48b0-831b-882458741a6e
+          field_hero_link:
+            -
+              target_uuid: 94868e26-669f-45fd-bba0-2ac3bad827b5
+              title: 'Hae Avustuksia'
+              options:
+                target_new: 0
           field_hero_link_design:
             -
               value: primary
@@ -130,6 +137,9 @@ default:
           behavior_settings:
             -
               value: {  }
+          revision_translation_affected:
+            -
+              value: true
   field_metatags:
     -
       value:

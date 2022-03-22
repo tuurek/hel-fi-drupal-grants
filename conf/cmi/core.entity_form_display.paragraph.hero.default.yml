@@ -56,9 +56,9 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
-      link_target: ''
+      linkit_profile: helfi
       linkit_auto_link_text: 0
-      linkit_profile: tpr_content
+      link_target: ''
     third_party_settings: {  }
   field_hero_link_design:
     type: design_field_widget
