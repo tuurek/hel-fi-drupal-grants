@@ -43,6 +43,7 @@ class GrantsProfileMenuItemBlock extends BlockBase {
 
     $build['#theme'] = 'block__grants_profile_menuitem';
     $build['notifications'] = 1;
+    $build['colorscheme'] = 0;
     $build['initials'] = $initials;
     $build['loggedin'] = $logged_in;
     return $build;

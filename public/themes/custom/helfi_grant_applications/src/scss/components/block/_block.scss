@@ -37,6 +37,9 @@
   position: relative;
   width: $spacing * 2.5;
   height: $spacing * 2.5;
+  a {
+    text-decoration: none;
+  }
   @include breakpoint($breakpoint-m) {
     width: $spacing-triple;
     height: $spacing-triple;
@@ -63,15 +66,31 @@
     width: $spacing * 2.5;
     height: $spacing * 2.5;
     line-height: $spacing * 2.5;
-    color: white;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
-    background-color: var(--color-bus);
+    &:hover, &:active, &:focus {
+      text-decoration: underline;
+    }
     @include breakpoint($breakpoint-m) {
       width: $spacing-triple;
       height: $spacing-triple;
       line-height: $spacing-triple;
+    }
+    &-colorscheme {
+      &-2 {
+        background-color: var(--color-bus);
+        color: var(--color-white);
+      }
+      &-1 {
+        background-color: var(--color-engel);
+        color: var(--color-black);
+
+      }
+      &-0 {
+        background-color: var(--color-tram);
+        color: var(--color-white);
+      }
     }
   }
 }
