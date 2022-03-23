@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-    - develop
+    - feature/AU-215-toiminnan-tarkoitus-tietojen-tuonti
   paths:
     exclude:
     - README.md

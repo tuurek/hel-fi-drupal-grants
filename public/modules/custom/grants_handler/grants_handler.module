@@ -205,11 +205,23 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     $grantsProfile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
+    // pass variable to Drupal.Settings
+    $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
+
     $bankAccountOptions = [];
     foreach ($grantsProfile['bankAccounts'] as $key => $account) {
       if (isset($account['confirmationFile'])) {
         $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
       }
+    }
+
+    // Business purpose from grants profile.
+    if (empty($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"]['#default_value'])) {
+      $form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"]['#default_value'] = $grantsProfile["businessPurpose"];
+    }
+    // Business practising from profile as well.
+    if (empty($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"]['#default_value'])) {
+      $form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"]['#default_value'] = $grantsProfile["practisesBusiness"];
     }
 
     $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;

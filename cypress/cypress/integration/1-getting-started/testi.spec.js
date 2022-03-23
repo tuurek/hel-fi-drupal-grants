@@ -94,7 +94,7 @@ describe('Site load, cookies, login', () => {
         cy.get('[data-webform-page="3_yhteison_tiedot"]').should('have.class', 'is-active')
 
         cy.get('[data-drupal-selector="edit-community-purpose"]').type('Lorem ipsum doler est')
-        cy.get('input#edit-community-practices-business-no[value="No"]').check({force: true})
+        cy.get('input#edit-community-practices-business-0[value="0"]').check({force: true})
         cy.get('[data-drupal-selector="edit-fee-person"]').type('539,30')
         cy.get('[data-drupal-selector="edit-fee-community"]').type('539,30')
         cy.get('[data-drupal-selector="edit-fee-community"]').type('539,30')
@@ -117,7 +117,7 @@ describe('Site load, cookies, login', () => {
             cy.get('[data-drupal-selector="edit-vahvistettu-tilinpaatos-isincludedinotherfile"]').uncheck()
         })
 
-        cy.wait(1500)
+        cy.wait(2000)
 
         cy.get('[data-drupal-selector="edit-vahvistettu-toimintakertomus-isdeliveredlater"]').check()
         cy.get('[data-drupal-selector="edit-vahvistettu-toimintakertomus-isincludedinotherfile"]').check()
@@ -127,17 +127,19 @@ describe('Site load, cookies, login', () => {
             cy.get('[data-drupal-selector="edit-vahvistettu-tilin-tai-toiminnantarkastuskertomus-isdeliveredlater"]').uncheck()
         })
 
-        cy.wait(1500)
+        cy.wait(2000)
 
         cy.get('[data-drupal-selector="edit-toimintasuunnitelma-attachment-upload"]').selectFile('./cypress/files/Testitiedosto2.doc', {force: true}).then(() => {
             cy.get('[data-drupal-selector="edit-toimintasuunnitelma-isdeliveredlater"]').uncheck()
             cy.get('[data-drupal-selector="edit-toimintasuunnitelma-isincludedinotherfile"]').uncheck()
         })
 
-        cy.wait(1500)
+        cy.wait(2000)
 
         cy.get('[data-drupal-selector="edit-vuosikokouksen-poytakirja-isdeliveredlater"]').check()
         cy.get('[data-drupal-selector="edit-talousarvio-isdeliveredlater"]').check()
+
+        cy.get('[data-drupal-selector="edit-extra-info"]').type('Lorem Ipsum doler est.')
 
         cy.get('[data-drupal-selector="edit-actions-preview-next"]').click()
 

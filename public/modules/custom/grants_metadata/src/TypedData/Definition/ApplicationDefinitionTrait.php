@@ -515,7 +515,6 @@ trait ApplicationDefinitionTrait {
       ->setLabel('userID')
       ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'userID']);
     // ->addConstraint('NotBlank')
-
     $info['sender_email'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('Email')
