@@ -2,7 +2,7 @@ _meta:
   version: '1.0'
   entity_type: node
   uuid: 94868e26-669f-45fd-bba0-2ac3bad827b5
-  bundle: page
+  bundle: form_page
   default_langcode: fi
 default:
   revision_uid:
@@ -26,9 +26,6 @@ default:
   sticky:
     -
       value: false
-  revision_translation_affected:
-    -
-      value: true
   color_palette:
     -
       value: engel
@@ -42,7 +39,7 @@ default:
     -
       alias: /yleisavustuslomake
       langcode: fi
-      pathauto: 1
+      pathauto: 0
   content_translation_source:
     -
       value: und
