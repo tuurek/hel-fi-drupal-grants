@@ -1,0 +1,51 @@
+[
+  {
+    "name": "",
+    "pages": {
+      "1_hakijan_tiedot": {
+        "values": [
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-finalize-application"
+            },
+            "type": "checkbox",
+            "value": "1"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-applicant-type"
+            },
+            "type": "select",
+            "value": "1"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-community-official-name-short"
+            },
+            "type": "textfield",
+            "value": "DTAFRTST"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-homepage"
+            },
+            "type": "textfield",
+            "value": "https://www.yle.fi"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-email"
+            },
+            "type": "textfield",
+            "value": "testi@mailiosoite.com"
+          },
+        ]
+      }
+    }
+  }
+]
