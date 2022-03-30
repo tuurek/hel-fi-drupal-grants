@@ -27,5 +27,6 @@ visibility:
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:
+      form_page: form_page
       landing_page: landing_page
       page: page
