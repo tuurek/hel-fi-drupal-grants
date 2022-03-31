@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-    - develop
+    - feature/AU-99-oma-liite-viimeistely
   paths:
     exclude:
     - README.md
