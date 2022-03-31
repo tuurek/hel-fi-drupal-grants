@@ -8,8 +8,9 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
+use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\webform\Entity\WebformSubmission;
 
 /**
@@ -63,7 +64,6 @@ class AtvSchema {
    */
   public function setSchema(string $schemaPath) {
 
-    // $schemaPath = getenv('ATV_SCHEMA_PATH');
     $jsonString = file_get_contents($schemaPath);
     $jsonStructure = Json::decode($jsonString);
 
@@ -78,14 +78,12 @@ class AtvSchema {
    * @param \Drupal\Core\TypedData\ComplexDataDefinitionInterface $typedDataDefinition
    *   Data definition for this document / application.
    *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
+   * @return array
    *   Mapped dta from document.
-   *
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function documentContentToTypedData(
     array $document,
-    ComplexDataDefinitionInterface $typedDataDefinition): TypedDataInterface {
+    ComplexDataDefinitionInterface $typedDataDefinition): array {
 
     if (isset($document['content']) && is_array($document['content'])) {
       $documentContent = $document['content'];
@@ -105,6 +103,7 @@ class AtvSchema {
       // If json path not configured for item, do nothing.
       if (is_array($jsonPath)) {
         $elementName = array_pop($jsonPath);
+
         $typedDataValues[$definitionKey] = $this->getValueFromDocument($documentContent, $jsonPath, $elementName);
       }
     }
@@ -115,8 +114,36 @@ class AtvSchema {
       }
     }
 
-    $typedData->setValue($typedDataValues);
-    return $typedData;
+    $other_attachments = [];
+    $attachmentFileTypes = GrantsHandler::getAttachmentFieldNames(TRUE);
+    $attachmentHeaders = GrantsAttachments::$fileTypes;
+    foreach ($typedDataValues["attachments"] as $key => $attachment) {
+      $headerKey = array_search($attachment["description"], $attachmentHeaders);
+      $thisHeader = $attachmentHeaders[$headerKey];
+      $fieldName = array_search($headerKey, $attachmentFileTypes);
+
+      $newValues = $attachment;
+
+      // If we have fileName property we know the file is definitely not new.
+      if (isset($attachment["fileName"]) && $attachment["fileName"] !== '') {
+        $newValues["isNewAttachment"] = 'false';
+      }
+
+      // @todo Do away with hard coded field name for muu liite.
+      if ($fieldName === 'muu_liite') {
+        $other_attachments[$key] = $newValues;
+        unset($typedDataValues["attachments"][$key]);
+      }
+      else {
+        if ($newValues['description'] === $thisHeader) {
+          $typedDataValues[$fieldName] = $newValues;
+        }
+      }
+    }
+
+    $typedDataValues['muu_liite'] = $other_attachments;
+
+    return $typedDataValues;
 
   }
 
