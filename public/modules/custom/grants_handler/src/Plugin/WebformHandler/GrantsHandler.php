@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
 use Drupal\grants_attachments\AttachmentUploader;
+use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\GrantsProfileService;
@@ -62,13 +63,13 @@ class GrantsHandler extends WebformHandlerBase {
    * @todo get field names from form where field type is attachment.
    */
   protected static array $attachmentFieldNames = [
-    'vahvistettu_tilinpaatos',
-    'vahvistettu_toimintakertomus',
-    'vahvistettu_tilin_tai_toiminnantarkastuskertomus',
-    'vuosikokouksen_poytakirja',
-    'toimintasuunnitelma',
-    'talousarvio',
-    'muu_liite',
+    'vahvistettu_tilinpaatos' => 43,
+    'vahvistettu_toimintakertomus' => 4,
+    'vahvistettu_tilin_tai_toiminnantarkastuskertomus' => 5,
+    'vuosikokouksen_poytakirja' => 8,
+    'toimintasuunnitelma' => 1,
+    'talousarvio' => 2,
+    'muu_liite' => 0,
   ];
 
   /**
@@ -242,8 +243,11 @@ class GrantsHandler extends WebformHandlerBase {
    * @return string[]
    *   Attachment fields.
    */
-  public static function getAttachmentFieldNames(): array {
-    return self::$attachmentFieldNames;
+  public static function getAttachmentFieldNames($preventKeys = FALSE): array {
+    if ($preventKeys) {
+      return self::$attachmentFieldNames;
+    }
+    return array_keys(self::$attachmentFieldNames);
   }
 
   /**
@@ -382,7 +386,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     $appParam = self::getAppEnv();
 
-    return 'GRANTS-' . $appParam . '-' . sprintf('%08d', $submission->id());
+    return 'GRANTS-' . $appParam . '-' . sprintf('%08d', $submission->serial());
   }
 
   /**
@@ -393,13 +397,23 @@ class GrantsHandler extends WebformHandlerBase {
    *
    * @return \Drupal\webform\Entity\WebformSubmission|null
    *   Webform submission.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public static function submissionObjectFromApplicationNumber(string $applicationNumber): ?WebformSubmission {
 
     $exploded = explode('-', $applicationNumber);
     $number = end($exploded);
     $submissionId = ltrim($number, '0');
-    return WebformSubmission::load((integer) $submissionId);
+
+    $result = \Drupal::entityTypeManager()
+      ->getStorage('webform_submission')
+      ->loadByProperties([
+        'serial' => $submissionId,
+      ]);
+
+    return reset($result);
   }
 
   /**
@@ -471,15 +485,13 @@ class GrantsHandler extends WebformHandlerBase {
     // Only validate set forms.
     if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
       // Loop through fieldnames and validate fields.
-      foreach (self::$attachmentFieldNames as $fieldName) {
+      foreach (self::getAttachmentFieldNames() as $fieldName) {
         $fValues = $form_state->getValue($fieldName);
-        if (isset($fValues['fileStatus']) && $fValues['fileStatus'] == 'new') {
-          $this->validateAttachmentField(
-            $fieldName,
-            $form_state,
-            $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
-          );
-        }
+        $this->validateAttachmentField(
+          $fieldName,
+          $form_state,
+          $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
+        );
       }
     }
 
@@ -517,7 +529,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     foreach ($args as $value) {
       // Muu liite is optional.
-      if ($fieldName !== 'muu_liite' && $value === NULL) {
+      if ($fieldName !== 'muu_liite' && ($value === NULL || empty($value))) {
         $form_state->setErrorByName($fieldName, $this->t('@fieldname field is required', [
           '@fieldname' => $fieldTitle,
         ]));
@@ -534,6 +546,15 @@ class GrantsHandler extends WebformHandlerBase {
             $form_state->setErrorByName("[" . $fieldName . "][isIncludedInOtherFile]", $this->t('@fieldname has file added, it cannot belong to other file.', [
               '@fieldname' => $fieldTitle,
             ]));
+          }
+        }
+        else {
+          if ((!empty($value) && !isset($value['attachment']) && ($value['attachment'] === NULL && $value['attachmentName'] === ''))) {
+            if (empty($value['isDeliveredLater']) && empty($value['isIncludedInOtherFile'])) {
+              $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", $this->t('@fieldname has no file uploaded, it must be either delivered later or be included in other file.', [
+                '@fieldname' => $fieldTitle,
+              ]));
+            }
           }
         }
       }
@@ -593,7 +614,13 @@ class GrantsHandler extends WebformHandlerBase {
     }
     else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
-      $this->submittedFormData['form_update'] = TRUE;
+      if ($this->submittedFormData['status'] === 'SUBMITTED') {
+        $this->submittedFormData['form_update'] = FALSE;
+      }
+      else {
+        $this->submittedFormData['form_update'] = TRUE;
+      }
+
     }
 
   }
@@ -687,6 +714,28 @@ class GrantsHandler extends WebformHandlerBase {
               $this->isDebug()
             );
 
+            foreach ($attachmentResult as $attResult) {
+              if ($attResult['upload'] === TRUE) {
+                $this->messenger()
+                  ->addStatus(
+                    $this->t(
+                      'Attachment (@filename) uploaded',
+                      [
+                        '@filename' => $attResult['filename'],
+                      ]));
+              }
+              else {
+                $this->messenger()
+                  ->addStatus(
+                    $this->t(
+                      'Attachment (@filename) upload failed with message: @msg. Event has been logged.',
+                      [
+                        '@filename' => $attResult['filename'],
+                        '@msg' => $attResult['msg'],
+                      ]));
+              }
+            }
+
             $url = Url::fromRoute(
               'grants_profile.view_application',
               ['document_uuid' => $this->applicationNumber],
@@ -702,7 +751,7 @@ class GrantsHandler extends WebformHandlerBase {
             $this->messenger()
               ->addStatus(
                 $this->t(
-                  'Grant application (@number) saved and attachments saved, 
+                  'Grant application (@number), 
                   see application status from @link',
                   [
                     '@number' => $this->applicationNumber,
@@ -783,16 +832,16 @@ class GrantsHandler extends WebformHandlerBase {
 
     // $thisDocument = $this->getAtvDocument($this->applicationNumber);
     $attachmentsArray = [];
-    foreach (self::$attachmentFieldNames as $attachmentFieldName) {
+    $attachmentHeaders = GrantsAttachments::$fileTypes;
+    $filenames = [];
+    foreach (self::getAttachmentFieldNames() as $attachmentFieldName) {
       $field = $this->submittedFormData[$attachmentFieldName];
-      $descriptionValue = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#title"];
+      $descriptionKey = self::$attachmentFieldNames[$attachmentFieldName];
 
-      if (isset($form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"])) {
-        $fileType = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"];
-      }
-      else {
-        $fileType = '0';
-      }
+      // $descriptionValue = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#title"];
+      $descriptionValue = $attachmentHeaders[$descriptionKey];
+
+      $fileType = NULL;
 
       // Since we have to support multiple field elements, we need to
       // handle all as they were a multifield.
@@ -804,11 +853,33 @@ class GrantsHandler extends WebformHandlerBase {
         $args[] = $field;
       }
 
-      // Lppt args & create attachement field.
+      // Loop args & create attachement field.
       foreach ($args as $fieldElement) {
         if (is_array($fieldElement)) {
-          $attachmentsArray[] = $this->getAttachmentByFieldValue(
+
+          if (isset($fieldElement["fileType"]) && $fieldElement["fileType"] !== "") {
+            $fileType = $fieldElement["fileType"];
+          }
+          else {
+            if (isset($form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"])) {
+              $fileType = $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$attachmentFieldName]["#filetype"];
+            }
+            else {
+              $fileType = '0';
+            }
+          }
+
+          $parsedArray = $this->getAttachmentByFieldValue(
             $fieldElement, $descriptionValue, $fileType);
+
+          if (!empty($parsedArray)) {
+            if (!isset($parsedArray['fileName']) || !in_array($parsedArray['fileName'], $filenames)) {
+              $attachmentsArray[] = $parsedArray;
+              if (isset($parsedArray['fileName'])) {
+                $filenames[] = $parsedArray['fileName'];
+              }
+            }
+          }
         }
       }
     }
@@ -833,12 +904,34 @@ class GrantsHandler extends WebformHandlerBase {
       if ($applicationDocument) {
         $filename = md5($selectedAccountNumber);
 
-        foreach ($applicationDocument->getAttachments() as $attachment) {
+        $aa = $applicationDocument->getAttachments();
+
+        foreach ($aa as $attachment) {
           if (str_contains($attachment['filename'], $filename)) {
             $accountConfirmationExists = TRUE;
             break;
           }
+          $found = array_filter($filenames, function ($fn) use ($filename) {
+            return str_contains($fn, $filename);
+          });
+          if (!empty($found)) {
+            $accountConfirmationExists = TRUE;
+            break;
+          }
         }
+
+        if (!$accountConfirmationExists) {
+          $found = array_filter($attachmentsArray, function ($fn) use ($filename) {
+            if (!isset($fn['fileName'])) {
+              return FALSE;
+            }
+            return str_contains($fn['fileName'], $filename);
+          });
+          if (!empty($found)) {
+            $accountConfirmationExists = TRUE;
+          }
+        }
+
       }
 
       if (!$accountConfirmationExists) {
@@ -871,7 +964,7 @@ class GrantsHandler extends WebformHandlerBase {
             'description' => 'Confirmation for account ' . $selectedAccount["bankAccount"],
             'fileName' => $selectedAccount["confirmationFile"],
             'isNewAttachment' => TRUE,
-            'fileType' => 0,
+            'fileType' => 101,
             'isDeliveredLater' => FALSE,
             'isIncludedInOtherFile' => FALSE,
             // @todo a better way to strip host from atv url.
@@ -899,34 +992,64 @@ class GrantsHandler extends WebformHandlerBase {
   private function getAttachmentByFieldValue(array $field, string $fieldDescription, string $fileType): array {
 
     $retval = [
-      'description' => (isset($field['description']) && $field['description'] !== "") ? $fieldDescription . ': ' . $field['description'] : $fieldDescription,
+      'description' => (isset($field['description']) && $field['description'] !== "") ? $field['description'] : $fieldDescription,
     ];
-
+    $retval['fileType'] = (int) $fileType;
+    // We have uploaded file. THIS time. Not previously.
     if (isset($field['attachment']) && $field['attachment'] !== NULL && !empty($field['attachment'])) {
 
-      if ($field['fileStatus'] == 'new') {
-        $file = File::load($field['attachment']);
-        if ($file) {
-          // Add file id for easier usage in future.
-          $this->attachmentFileIds[] = $field['attachment'];
+      $file = File::load($field['attachment']);
+      if ($file) {
+        // Add file id for easier usage in future.
+        $this->attachmentFileIds[] = $field['attachment'];
 
-          $retval['fileName'] = $file->getFilename();
-          $retval['isNewAttachment'] = TRUE;
-          $retval['fileType'] = (int) $fileType;
+        $retval['fileName'] = $file->getFilename();
+        $retval['isNewAttachment'] = TRUE;
+        $retval['isDeliveredLater'] = FALSE;
+        $retval['isIncludedInOtherFile'] = FALSE;
+      }
+    }
+    else {
+      // If other filetype and no attachment already set, we don't add them to
+      // retval since we don't want to fill attachments with empty other files.
+      if (($fileType === "0" || $fileType === '101') && empty($field["attachmentName"])) {
+        return [];
+      }
+      // No upload, process accordingly.
+      if ($field['fileStatus'] == 'new' || empty($field['fileStatus'])) {
+        if (isset($field['isDeliveredLater'])) {
+          $retval['isDeliveredLater'] = $field['isDeliveredLater'] === "1";
+        }
+        if (isset($field['isIncludedInOtherFile'])) {
+          $retval['isIncludedInOtherFile'] = $field['isIncludedInOtherFile'] === "1";
         }
       }
-      else {
-        $retval['fileName'] = $field['attachment'];
+      if ($field['fileStatus'] === 'uploaded') {
+        if (isset($field['attachmentName'])) {
+          $retval['fileName'] = $field["attachmentName"];
+        }
+        $retval['isDeliveredLater'] = FALSE;
+        $retval['isIncludedInOtherFile'] = FALSE;
         $retval['isNewAttachment'] = FALSE;
-        $retval['fileType'] = (int) $fileType;
       }
+      if ($field['fileStatus'] == 'deliveredLater') {
+        if ($field['attachmentName']) {
+          $retval['fileName'] = $field["attachmentName"];
+        }
+        if (isset($field['isDeliveredLater'])) {
+          $retval['isDeliveredLater'] = $field['isDeliveredLater'] === "1";
+        }
+        else {
+          $retval['isDeliveredLater'] = '0';
+        }
 
-    }
-    if (isset($field['isDeliveredLater'])) {
-      $retval['isDeliveredLater'] = $field['isDeliveredLater'] === "1";
-    }
-    if (isset($field['isIncludedInOtherFile'])) {
-      $retval['isIncludedInOtherFile'] = $field['isIncludedInOtherFile'] === "1";
+        if (isset($field['isIncludedInOtherFile'])) {
+          $retval['isIncludedInOtherFile'] = $field['isIncludedInOtherFile'] === "1";
+        }
+        else {
+          $retval['isIncludedInOtherFile'] = '0';
+        }
+      }
     }
     return $retval;
   }
