@@ -73,7 +73,7 @@ class AtvSchema {
   /**
    * Map document structure to typed data object.
    *
-   * @param array $document
+   * @param array $documentData
    *   Document as array.
    * @param \Drupal\Core\TypedData\ComplexDataDefinitionInterface $typedDataDefinition
    *   Data definition for this document / application.
@@ -82,14 +82,14 @@ class AtvSchema {
    *   Mapped dta from document.
    */
   public function documentContentToTypedData(
-    array $document,
+    array $documentData,
     ComplexDataDefinitionInterface $typedDataDefinition): array {
 
-    if (isset($document['content']) && is_array($document['content'])) {
-      $documentContent = $document['content'];
+    if (isset($documentData['content']) && is_array($documentData['content'])) {
+      $documentContent = $documentData['content'];
     }
     else {
-      $documentContent = $document;
+      $documentContent = $documentData;
     }
 
     $propertyDefinitions = $typedDataDefinition->getPropertyDefinitions();
