@@ -3,6 +3,7 @@
 namespace Drupal\grants_profile\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\TempStore\TempStoreException;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
@@ -104,24 +105,27 @@ class GrantsProfileController extends ControllerBase {
       try {
         // @todo Fix application search when ATV supports better methods.
         $applicationDocuments = $atvService->searchDocuments([
-          'type' => 'mysterious form',
-          // 'business_id' => $selectedCompany,
-          'business_id' => '1234567-8',
+          'type' => 'ECONOMICGRANTAPPLICATION',
+          'business_id' => $selectedCompany,
         ]);
         $applications = [];
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         foreach ($applicationDocuments as $document) {
           $transactionId = $document->getTransactionId();
           if (str_contains($transactionId, 'GRANTS-' . GrantsHandler::getAppEnv())) {
+
             $applications[] = (object) [
               'transaction_id' => $transactionId,
+              'attachmentStatus' => $document->attachmentsUploadStatus(),
+              'status' => $document->getStatus(),
+              'statusHistory' => $document->getStatusHistory(),
             ];
           }
         }
         $build['#applications'] = $applications;
 
       }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
       }
 
       $build['#profile'] = $profile;

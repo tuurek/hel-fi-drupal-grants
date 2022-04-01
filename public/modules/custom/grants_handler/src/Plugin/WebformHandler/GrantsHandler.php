@@ -4,9 +4,11 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\AttachmentRemover;
@@ -405,13 +407,62 @@ class GrantsHandler extends WebformHandlerBase {
 
     $exploded = explode('-', $applicationNumber);
     $number = end($exploded);
-    $submissionId = ltrim($number, '0');
+    $submissionSerial = ltrim($number, '0');
 
     $result = \Drupal::entityTypeManager()
       ->getStorage('webform_submission')
       ->loadByProperties([
-        'serial' => $submissionId,
+        'serial' => $submissionSerial,
       ]);
+
+    // If there's no local submission with given serial
+    // we can actually create that object on the fly and use that for editing.
+    if (empty($result)) {
+      try {
+        // Create submission.
+        // @todo remove hardcoded form type at some point.
+        $createdSubmissionObject = WebformSubmission::create([
+          'webform_id' => 'yleisavustushakemus',
+          'serial' => $submissionSerial,
+        ]);
+        // Make sure serial is set.
+        $createdSubmissionObject->set('serial', $submissionSerial);
+
+        /** @var \Drupal\helfi_atv\AtvService $atvService */
+        $atvService = \Drupal::service('helfi_atv.atv_service');
+
+        /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+        $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+
+        // Get document from ATV.
+        $document = $atvService->searchDocuments([
+          'transaction_id' => $applicationNumber,
+        ]);
+
+        /** @var \Drupal\helfi_atv\AtvDocument $document */
+        $document = reset($document);
+
+        // Save submission BEFORE setting data so we don't accidentally
+        // save anything.
+        $createdSubmissionObject->save();
+
+        // Set submission data from parsed mapper.
+        $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
+          $document->getContent(),
+          YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
+
+        return $createdSubmissionObject;
+
+      }
+      catch (
+      AtvDocumentNotFoundException |
+      AtvFailedToConnectException |
+      GuzzleException |
+      TempStoreException |
+      EntityStorageException $e) {
+        return NULL;
+      }
+    }
 
     return reset($result);
   }
@@ -573,13 +624,17 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function preSave(WebformSubmissionInterface $webform_submission) {
 
-    // $this->submittedFormData = $webform_submission->getData();
-    $this->setTotals();
-    $this->parseSenderDetails();
+    if (empty($this->submittedFormData)) {
+      $this->submittedFormData = $webform_submission->getData();
+    }
 
-    // Set submission data to empty.
-    // form will still contain submission details, IP time etc etc.
-    $webform_submission->setData([]);
+    if (!empty($this->submittedFormData)) {
+      $this->setTotals();
+      $this->parseSenderDetails();
+      // Set submission data to empty.
+      // form will still contain submission details, IP time etc etc.
+      $webform_submission->setData([]);
+    }
   }
 
   /**
@@ -599,7 +654,8 @@ class GrantsHandler extends WebformHandlerBase {
     // @todo check community_practices_business value and where to get it from.
     $this->submittedFormData['community_practices_business'] = FALSE;
 
-    if ($this->submittedFormData["finalize_application"] == 1) {
+    if (isset($this->submittedFormData["finalize_application"]) &&
+      $this->submittedFormData["finalize_application"] == 1) {
       $this->submittedFormData['status'] = 'SUBMITTED';
     }
 
