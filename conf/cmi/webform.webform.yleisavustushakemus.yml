@@ -376,16 +376,17 @@ elements: |-
     '#next_button_label': 'Seuraava >'
     business_info:
       '#type': webform_section
-      '#title': 'Business info'
+      '#title': 'Toiminnan kuvaus'
       community_purpose:
-        '#type': textarea
-        '#title': 'Community purpose'
+        '#type': textfield
+        '#title': 'Toiminnan kuvaus'
+        '#required': true
+        '#readonly': true
       community_practices_business:
-        '#type': radios
-        '#title': 'Community practices business'
-        '#options': yes_no
-        '#options_display': side_by_side
-        '#options_description_display': help
+        '#type': textfield
+        '#title': 'Harjoittaako yhteisö liiketoimintaa'
+        '#required': true
+        '#readonly': true
     ensimmainen_otsikko:
       '#type': webform_section
       '#title': Jäsenmaksut
@@ -534,6 +535,12 @@ elements: |-
         '#help': '<span style="font-size:11.0pt"><span style="line-height:107%"><span style="font-family:&quot;Calibri&quot;,sans-serif">Liit&auml; t&auml;h&auml;n koko yhteis&ouml;n talousarvio.</span></span></span>'
         '#title_display': before
         '#description__access': false
+      extra_info:
+        '#type': textarea
+        '#title': 'Lisäselvitys liitteistä'
+        '#counter_type': character
+        '#counter_maximum': 5000
+        '#counter_maximum_message': 'Max 5000 characters.'
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'

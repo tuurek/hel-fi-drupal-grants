@@ -54,7 +54,7 @@ class GrantsProfileForm extends FormBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
     if (empty($grantsProfileContent)) {
       $this->messenger()->addError($this->t('Error fetching profile data'));
@@ -108,6 +108,12 @@ class GrantsProfileForm extends FormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Description of business purpose'),
       '#default_value' => $grantsProfileContent['businessPurpose'],
+    ];
+    $form['businessPurposeWrapper']['practisesBusiness'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Community practises business'),
+      '#description' => $this->t('Check this if this company practises business.'),
+      '#default_value' => $grantsProfileContent['practisesBusiness'],
     ];
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
@@ -228,7 +234,7 @@ class GrantsProfileForm extends FormBase {
       }
     }
 
-    // @todo täytyy laittaa storageen tuo profile
+    // @todo Created profile needs to be set to cache.
     $grantsProfileDefinition = GrantsProfileDefinition::create('grants_profile_profile');
     // Create data object.
     $grantsProfileData = $this->typedDataManager->create($grantsProfileDefinition);
