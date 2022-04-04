@@ -5,7 +5,7 @@
 trigger:
   branches:
     include:
-    - develop
+      - refs/tags/deploy-to-test
   paths:
     exclude:
     - README.md
