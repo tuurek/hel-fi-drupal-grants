@@ -519,6 +519,9 @@ class GrantsProfileService {
     if (!isset($profileContent['businessPurpose'])) {
       $profileContent['businessPurpose'] = NULL;
     }
+    if (!isset($profileContent['practisesBusiness'])) {
+      $profileContent['practisesBusiness'] = NULL;
+    }
 
     if (!isset($profileContent['addresses'])) {
       $profileContent['addresses'] = [];
@@ -593,9 +596,10 @@ class GrantsProfileService {
    *
    * @return \Drupal\helfi_atv\AtvDocument
    *   Profiledata
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getGrantsProfile(string $businessId, bool $refetch = FALSE): AtvDocument {
-    if ($refetch == FALSE) {
+    if ($refetch === FALSE) {
       if ($this->isCached($businessId)) {
         $document = $this->getFromCache($businessId);
         return $document;
@@ -604,7 +608,7 @@ class GrantsProfileService {
 
     // Get profile document from ATV.
     try {
-      $profileDocument = $this->getGrantsProfileFromAtv($businessId);
+      $profileDocument = $this->getGrantsProfileFromAtv($businessId, $refetch);
     }
     catch (AtvDocumentNotFoundException $e) {
       $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
@@ -634,7 +638,7 @@ class GrantsProfileService {
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function getGrantsProfileFromAtv(string $businessId): AtvDocument|bool {
+  private function getGrantsProfileFromAtv(string $businessId, $refetch = FALSE): AtvDocument|bool {
 
     $searchParams = [
       'business_id' => $businessId,
@@ -642,7 +646,7 @@ class GrantsProfileService {
     ];
 
     try {
-      $searchDocuments = $this->atvService->searchDocuments($searchParams);
+      $searchDocuments = $this->atvService->searchDocuments($searchParams, $refetch);
     }
     catch (AtvFailedToConnectException) {
       throw new AtvDocumentNotFoundException('Not found');

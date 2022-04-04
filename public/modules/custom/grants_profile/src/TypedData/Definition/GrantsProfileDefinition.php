@@ -90,6 +90,14 @@ class GrantsProfileDefinition extends ComplexDataDefinitionBase {
           'profileInfoArray',
           'businessPurpose',
         ]);
+      $info['practisesBusiness'] = DataDefinition::create('boolean')
+        ->setRequired(TRUE)
+        ->setLabel('practisesBusiness')
+        ->setSetting('jsonPath', [
+          'grantsProfile',
+          'profileInfoArray',
+          'practisesBusiness',
+        ]);
 
       $info['foundingYear'] = DataDefinition::create('string')
         ->setRequired(TRUE)
