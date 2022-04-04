@@ -27,3 +27,19 @@
     vertical-align: middle;
   }
 }
+.grants-handler--prefilled-field {
+  .hds-icon--check-circle-fill {
+    color: green;
+    vertical-align: middle;
+  }
+  .webform-element-description {
+    color: var(--color-black);
+    cursor: pointer;
+    font-size: var(--fontsize-body-m);
+    line-height: var(--spacing-m);
+    position: relative;
+  }
+  .hds-text-input__label {
+    margin-bottom: 0;
+  }
+}

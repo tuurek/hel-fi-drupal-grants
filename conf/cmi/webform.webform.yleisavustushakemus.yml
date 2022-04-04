@@ -376,18 +376,17 @@ elements: |-
     '#next_button_label': 'Seuraava >'
     business_info:
       '#type': webform_section
-      '#title': 'Business info'
+      '#title': 'Toiminnan kuvaus'
       community_purpose:
-        '#type': textarea
-        '#title': 'Community purpose'
+        '#type': textfield
+        '#title': 'Toiminnan kuvaus'
+        '#required': true
+        '#readonly': true
       community_practices_business:
-        '#type': radios
-        '#title': 'Community practices business'
-        '#options':
-          1: 'Yes'
-          0: 'No'
-        '#options_display': side_by_side
-        '#options_description_display': help
+        '#type': textfield
+        '#title': 'Harjoittaako yhteisö liiketoimintaa'
+        '#required': true
+        '#readonly': true
     ensimmainen_otsikko:
       '#type': webform_section
       '#title': Jäsenmaksut

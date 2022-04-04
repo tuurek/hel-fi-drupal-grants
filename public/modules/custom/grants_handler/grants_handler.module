@@ -7,6 +7,7 @@
 
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Link;
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
@@ -179,6 +180,51 @@ function grants_handler_preprocess_webform(array &$variables) {
   }
 }
 
+
+/**
+ * @param $array
+ *   Array being manipulated.
+ * @param $value
+ *   Imported value for the array.
+ * @param $show_checkmark
+ *   Is the checkmark visible.
+ */
+function _grants_handler_imported_handler(array &$array, $value, $show_checkmark = TRUE) {
+  $array["#value"] = $value;
+  $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
+  $array['#description'] =  \Drupal\Core\Field\FieldFilteredMarkup::create($show_checkmark ? $value .
+  ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
+  $array['#wrapper_attributes'] = ['class' => 'grants-handler--prefilled-field'];
+}
+
+/**
+ * @param array $element
+ *   The element in question.
+ * @param $str1
+ *   Header of the alert notification.
+ * @param $str2
+ *   Link text.
+ * @param $str3
+ *   Clarifying text.
+ */
+function _grants_handler_missing_data(array &$element, $str1 = 'Field is missing.', $str2 = 'Go to grants profile', $str3 = 'to fill out missing data.') {
+  unset($element['#value']);
+  unset($element['#default_value']);
+  $element['#required'] = TRUE;
+  $element['#attributes'] = ['required' => 'required', 'readonly' => 'readonly', 'style' => 'display:none'];
+  $element['#description'] = '
+  <section aria-label="Notification" class="hds-notification hds-notification--alert">
+    <div class="hds-notification__content">
+      <div class="hds-notification__label" role="heading" aria-level="2">
+        <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+        <span>'.$str1.'</span>
+      </div>
+      <div class="hds-notification__body">'. Link::createFromRoute($str2, 'grants_profile.show')->toString().' '.$str3.'</div>
+    </div>
+  </section>
+  ';
+}
+
 /**
  * Implements hook_form_alter().
  */
@@ -215,34 +261,58 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
       }
     }
 
-    // Business purpose from grants profile.
-    if (empty($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"]['#default_value'])) {
-      $form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"]['#default_value'] = $grantsProfile["businessPurpose"];
+    if ($grantsProfile["businessPurpose"]) {
+      _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"], $grantsProfile["businessPurpose"], FALSE);
+    } else {
+      _grants_handler_missing_data($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"],
+        t('Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'), t('Lisää toiminnan kuvaus'),
+        t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
-    // Business practising from profile as well.
-    if (empty($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"]['#default_value'])) {
-      $form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"]['#default_value'] = $grantsProfile["practisesBusiness"];
+    if ($grantsProfile["practisesBusiness"] === 0 ) {
+      _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"], t('No'), FALSE);
+    } else if ($grantsProfile["practisesBusiness"] === 1) {
+      _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"], t('Yes'), FALSE);
+    } else {
+      _grants_handler_missing_data($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"],
+        t('Avustushakemukselle tarvitaan tieto harjoittaako yhteisö liiketoimintaa.'), t('Määritä harjoittaako yhteisö liiketoimintaa'),
+        t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
-
     $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
       $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];
     }
 
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"]["#value"] = $selectedCompany;
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"]["#value"] = $grantsProfile["companyName"];
+    $infoelement = [ 'omat_tiedot_page_infobox' => [
+      '#markup' => '
+  <section aria-label="Notification" class="hds-notification">
+    <div class="hds-notification__content">
+      <div class="hds-notification__label" role="heading" aria-level="2">
+        <span class="hds-icon hds-icon--info-circle-fill" aria-hidden="true"></span>
+        <span>Osa tiedoista on haettu lomakkeelle asiointipalvelun omista tiedoista</span>
+      </div>
+      <div class="hds-notification__body">Tarkistathan lomakkeella olevat tiedot ennen hakemuksen lähettämistä. Voit muokata omia tietoja oma asiointi > omat tiedot -osiossa.</div>
+    </div>
+  </section>
+  ',
+    ]];
+    $form['elements']['1_hakijan_tiedot'] = array_merge($infoelement, $form['elements']['1_hakijan_tiedot']);
+    $form['elements']['3_yhteison_tiedot'] = array_merge($infoelement, $form['elements']['3_yhteison_tiedot']);
+
+
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"], $selectedCompany);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"], $grantsProfile["companyName"]);
 
     $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
 
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"]["#value"] = $regDate->format('d.m.Y');
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"], $regDate->format('d.m.Y'));
 
     $foundingYearExplode = explode('-', $grantsProfile["registrationDate"]);
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"]["#value"] = $foundingYearExplode[0];
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"], $foundingYearExplode[0], FALSE);
 
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"]["#value"] = $grantsProfile["companyHome"];
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"], $grantsProfile["companyHome"]);
 
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"]["#value"] = $grantsProfile["companyStatus"];
-    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"]["#value"] = $grantsProfile["companyStatusSpecial"];
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"], $grantsProfile["companyStatus"]);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"], $grantsProfile["companyStatusSpecial"]);
   }
   else {
     \Drupal::messenger()
