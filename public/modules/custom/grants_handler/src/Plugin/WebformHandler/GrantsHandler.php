@@ -437,7 +437,8 @@ class GrantsHandler extends WebformHandlerBase {
         // Get document from ATV.
         $document = $atvService->searchDocuments([
           'transaction_id' => $applicationNumber,
-        ]);
+        ],
+        TRUE);
 
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         $document = reset($document);
