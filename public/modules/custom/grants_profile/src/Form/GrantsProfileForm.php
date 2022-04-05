@@ -73,6 +73,8 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Founding year'),
       '#default_value' => $grantsProfileContent['foundingYear'],
     ];
+    $form['foundingYearWrapper']['foundingYear']['#attributes']['class'][] = 'webform--small';
+
     $form['companyNameShortWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Company short name'),

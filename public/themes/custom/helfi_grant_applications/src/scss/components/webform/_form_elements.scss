@@ -81,3 +81,13 @@
     display: block;
   }
 }
+
+form .hds-text-input__input-wrapper input {
+  &.webform--small {
+    max-width: 125px;
+  }
+  &.webform--large {
+    max-width: 588px;
+  }
+
+}

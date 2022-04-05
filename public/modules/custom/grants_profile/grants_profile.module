@@ -63,6 +63,8 @@ function grants_profile_theme(): array {
       'grants_profile_form' => NULL,
       'profile' => NULL,
       'applications' => NULL,
+      'colorscheme' => NULL,
+      'initials' => NULL,
     ],
   ];
   $theme['company_select'] = [
