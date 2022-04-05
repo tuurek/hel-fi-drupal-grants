@@ -198,7 +198,7 @@ class AttachmentUploader {
       catch (\Exception $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
         if ($this->isDebug()) {
-          $this->messenger->addError(printf('Grants attachment upload failed: %s', [$e->getMessage()]));
+          $this->messenger->addError(printf('Grants attachment upload failed: %s', $e->getMessage()));
         }
         $this->loggerChannel->error('Grants attachment upload failed: @error', [
           '@error' => $e->getMessage(),
