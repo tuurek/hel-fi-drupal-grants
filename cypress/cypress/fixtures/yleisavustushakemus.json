@@ -1,0 +1,109 @@
+[
+  {
+    "name": "Yleisavustus - Perus",
+    "pages": {
+      "1_hakijan_tiedot": {
+        "values": [
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-finalize-application"
+            },
+            "type": "checkbox",
+            "value": "1"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-applicant-type"
+            },
+            "type": "select",
+            "value": "1"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-community-official-name-short"
+            },
+            "type": "textfield",
+            "value": "DTAFRTST"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-homepage"
+            },
+            "type": "textfield",
+            "value": "https://www.yle.fi"
+          },
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-email"
+            },
+            "type": "textfield",
+            "value": "testi@mailiosoite.com"
+          }
+        ]
+      },
+      "2_avustustiedot": {
+        "validate": [
+          {
+            "selector": {
+              "name": "data-webform-page",
+              "value": "1_hakijan_tiedot"
+            },
+            "should": [
+              {
+                "chainer": "have.class",
+                "value": "is-complete"
+              }
+            ]
+          },
+          {
+            "selector": {
+              "name": "data-webform-page",
+              "value": "2_avustustiedot"
+            },
+            "should": [
+              {
+                "chainer": "have.class",
+                "value": "is-active"
+              }
+            ]
+          }
+        ],
+        "values": [
+          {
+            "selector": {
+              "name": "data-drupal-selector",
+              "value": "edit-acting-year"
+            },
+            "type": "select",
+            "value": 1,
+            "then": [
+              {
+                "values": [
+                  {
+                    "selector": {
+                      "name": "data-drupal-selector",
+                      "value": "edit-acting-year"
+                    },
+                    "type": "textfield",
+                    "should": [
+                      {
+                        "chainer": "have.value",
+                        "value": "*currentYear*"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "click": {}
+      }
+    }
+  }
+]

@@ -85,14 +85,16 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
       try {
         if ($submission->getOwnerId() == $this->account->id()) {
           $applicationNumber = GrantsHandler::createApplicationNumber($submission);
-          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
+          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
+
+          /** @var \Drupal\helfi_atv\AtvDocument $document */
           $document = reset($results);
 
+          // $attStatus = $document->attachmentsUploadStatus();
           $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
 
-          $data = $appData->toArray();
-
-          $submission->setData($data);
+          // $data = $appData->toArray();
+          $submission->setData($appData);
         }
       }
       catch (\Exception $exception) {

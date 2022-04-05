@@ -519,13 +519,22 @@ trait ApplicationDefinitionTrait {
       // ->setRequired(TRUE)
       ->setLabel('Email')
       ->setSetting('jsonPath', ['compensation', 'senderInfoArray', 'email']);
-    // ->addConstraint('NotBlank')
+
     // Attachments.
     $info['attachments'] = ListDataDefinition::create('grants_metadata_attachment')
       // ->setRequired(TRUE)
       ->setLabel('Attachments')
       ->setSetting('jsonPath', ['attachmentsInfo', 'attachmentsArray']);
-    // ->addConstraint('NotBlank')
+
+    $info['extra_info'] = DataDefinition::create('string')
+      // ->setRequired(TRUE)
+      ->setLabel('Extra Info')
+      ->setSetting('jsonPath', [
+        'attachmentsInfo',
+        'generalInfoArray',
+        'extraInfo',
+      ]);
+
     $info['form_update'] = DataDefinition::create('boolean')
       ->setRequired(TRUE)
       ->setLabel('formUpdate')

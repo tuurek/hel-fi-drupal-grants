@@ -29,6 +29,51 @@ use Drupal\webform\WebformSubmissionInterface;
 class GrantsAttachments extends WebformCompositeBase {
 
   /**
+   * Avustus2 file types.
+   *
+   * @var string[]
+   *  Array with file types.
+   */
+  public static array $fileTypes = [
+    0 => 'Muu hakemusliite',
+    1 => 'Toimintasuunnitelma (Vuodelle, jota hakemus koskee)',
+    2 => 'Talousarvio (Vuodelle, jota hakemus koskee)',
+    3 => 'Vahvistettu tuloslaskelma ja tase (edelliseltä tilikaudelta)',
+    4 => 'Toimintakertomus (edelliseltä tilikaudelta)',
+    5 => 'Tilintarkastuskertomus / toiminnantarkastuskertomus edelliseltä tilikaudelta allekirjoitettuna',
+    6 => 'Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakija tai pankkiyhteystiedot muuttuneet)',
+    7 => 'Yhteisön säännöt (uusi hakija tai säännöt muuttuneet)',
+    8 => 'Vuosikokouksen pöytäkirja allekirjoitettuna',
+    10 => 'Vuokrasopimus (haettaessa vuokra-avustusta)',
+    12 => 'Yhdistykseen kuuluvat paikallisosastot',
+    13 => 'Ote yhdistysrekisteristä (uudet seurat)',
+    14 => 'Ammattilaisproduktioilta työryhmän jäsenten ansioluettelot',
+    15 => 'Kopio vuokrasopimuksesta (uusi hakija tai muuttunut sopimus)',
+    16 => 'Laskukopiot (ajalta, jolta kompensaatiota haetaan)',
+    17 => 'Myyntireskontra',
+    19 => 'Projektisuunnitelma',
+    22 => 'Talousarvio',
+    23 => 'Arviointisuunnitelma',
+    25 => 'Toimintaryhmien yhteystiedot-lomake / nuorten toimintaryhmät',
+    26 => 'Rekisteriote',
+    28 => 'Talousarvio ja toimintasuunnitelma',
+    29 => 'Suunnistuskartat, joille avustusta haetaan',
+    30 => 'Karttojen valmistukseen liittyvät laskut ja kuitit',
+    31 => 'Kuitit kuljetuskustannuksista',
+    32 => 'Ennakkotiedot leireistä (Excel liite)',
+    36 => 'Tiedot toteutuneista leireistä (excel-liite)',
+    37 => 'Tilankäyttöliite',
+    38 => 'Tapahtumasuunnitelma',
+    39 => 'Palvelusuunnitelma',
+    40 => 'Hankesuunnitelma',
+    41 => 'Selvitys avustuksen käytöstä',
+    42 => 'Seuran toimintatiedot',
+    43 => 'Tilinpäätös',
+    44 => 'Hakemusliite',
+    101 => 'Pankkitilin vahvistus.',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function defineDefaultProperties() {
@@ -61,43 +106,7 @@ class GrantsAttachments extends WebformCompositeBase {
     $form['element']['filetype'] = [
       '#type' => 'select',
       '#title' => $this->t('Attachment filetype'),
-      '#options' => [
-        0 => 'Muu hakemusliite',
-        1 => 'Toimintasuunnitelma (Vuodelle, jota hakemus koskee)',
-        2 => 'Talousarvio (Vuodelle, jota hakemus koskee)',
-        3 => 'Vahvistettu tuloslaskelma ja tase (edelliseltä tilikaudelta)',
-        4 => 'Toimintakertomus (edelliseltä tilikaudelta)',
-        5 => 'Tilintarkastuskertomus / toiminnantarkastuskertomus edelliseltä tilikaudelta allekirjoitettuna',
-        6 => 'Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakija tai pankkiyhteystiedot muuttuneet)',
-        7 => 'Yhteisön säännöt (uusi hakija tai säännöt muuttuneet)',
-        8 => 'Vuosikokouksen pöytäkirja allekirjoitettuna',
-        10 => 'Vuokrasopimus (haettaessa vuokra-avustusta)',
-        12 => 'Yhdistykseen kuuluvat paikallisosastot',
-        13 => 'Ote yhdistysrekisteristä (uudet seurat)',
-        14 => 'Ammattilaisproduktioilta työryhmän jäsenten ansioluettelot',
-        15 => 'Kopio vuokrasopimuksesta (uusi hakija tai muuttunut sopimus)',
-        16 => 'Laskukopiot (ajalta, jolta kompensaatiota haetaan)',
-        17 => 'Myyntireskontra',
-        19 => 'Projektisuunnitelma',
-        22 => 'Talousarvio',
-        23 => 'Arviointisuunnitelma',
-        25 => 'Toimintaryhmien yhteystiedot-lomake / nuorten toimintaryhmät',
-        26 => 'Rekisteriote',
-        28 => 'Talousarvio ja toimintasuunnitelma',
-        29 => 'Suunnistuskartat, joille avustusta haetaan',
-        30 => 'Karttojen valmistukseen liittyvät laskut ja kuitit',
-        31 => 'Kuitit kuljetuskustannuksista',
-        32 => 'Ennakkotiedot leireistä (Excel liite)',
-        36 => 'Tiedot toteutuneista leireistä (excel-liite)',
-        37 => 'Tilankäyttöliite',
-        38 => 'Tapahtumasuunnitelma',
-        39 => 'Palvelusuunnitelma',
-        40 => 'Hankesuunnitelma',
-        41 => 'Selvitys avustuksen käytöstä',
-        42 => 'Seuran toimintatiedot',
-        43 => 'Tilinpäätös',
-        44 => 'Hakemusliite',
-      ],
+      '#options' => self::$fileTypes,
     ];
 
     return $form;
@@ -112,17 +121,13 @@ class GrantsAttachments extends WebformCompositeBase {
       return $element['#value'];
     }
 
-    $webform_key = $element['#title'];
+    $webform_key = $element['#webform_key'];
 
     $data = $webform_submission->getData();
     $value = NULL;
 
-    if (isset($data['attachments'])) {
-      foreach ($data['attachments'] as $item) {
-        if ($item['description'] == $webform_key) {
-          $value = $item;
-        }
-      }
+    if (isset($data[$webform_key])) {
+      $value = $data[$webform_key];
     }
     else {
       foreach (GrantsHandler::getAttachmentFieldNames() as $fieldName) {
@@ -134,23 +139,6 @@ class GrantsAttachments extends WebformCompositeBase {
         // $element["#webform_parents"][2]
         if (in_array($fieldName, $element["#webform_parents"])) {
           $value = $fieldData;
-          // If (isset($fieldData['description'])) {
-          // $value = $fieldData;
-          // //          if ($fieldData['description'] == $webform_key) {
-          // //            $value = $fieldData;
-          // //            break;
-          // //          }
-          // }
-          // elseif ($fieldName == 'muu_liite') {
-          // $d = 'asdf';
-          // //          // Muu liite.
-          // //          $value = [];
-          // //          foreach ($data[$fieldName] as $key => $fieldValue) {
-          // //            if (is_numeric($key)) {
-          // //              $value[] = $fieldValue;
-          // //            }
-          // //          }
-          // }.
         }
 
       }

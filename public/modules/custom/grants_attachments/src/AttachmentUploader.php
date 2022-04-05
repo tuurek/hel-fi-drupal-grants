@@ -109,7 +109,7 @@ class AttachmentUploader {
    * @param bool $debug
    *   Is debug mode on?
    *
-   * @return bool[]
+   * @return array[]
    *   Array keyed with FID and boolean to indicate if upload succeeded.
    */
   public function uploadAttachments(
@@ -161,7 +161,11 @@ class AttachmentUploader {
           ]
         );
         if ($response->getStatusCode() === $this->validStatusCode) {
-          $retval[$fileId] = TRUE;
+          $retval[$fileId] = [
+            'upload' => TRUE,
+            'status' => $response->getStatusCode(),
+            'filename' => $file->getFilename(),
+          ];
           if ($this->isDebug()) {
             $this->loggerChannel->notice('Grants attachment(@filename) upload succeeded: Response statusCode = @status', [
               '@status' => $response->getStatusCode(),
@@ -180,7 +184,12 @@ class AttachmentUploader {
           }
         }
         else {
-          $retval[$fileId] = FALSE;
+          $retval[$fileId] = [
+            'upload' => FALSE,
+            'status' => $response->getStatusCode(),
+            'filename' => $file->getFilename(),
+            'msg' => '',
+          ];
           $this->loggerChannel->error('Grants attachment upload failed: Response statusCode = @status', [
             '@status' => $response->getStatusCode(),
           ]);
@@ -189,12 +198,17 @@ class AttachmentUploader {
       catch (\Exception $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
         if ($this->isDebug()) {
-          $this->messenger->addError(printf('Grants attachment upload failed: %s', [$e->getMessage()]));
+          $this->messenger->addError(printf('Grants attachment upload failed: %s', $e->getMessage()));
         }
         $this->loggerChannel->error('Grants attachment upload failed: @error', [
           '@error' => $e->getMessage(),
         ]);
-        $retval[$fileId] = FALSE;
+        $retval[$fileId] = [
+          'upload' => FALSE,
+          'status' => $e->getCode(),
+          'filename' => $file->getFilename(),
+          'msg' => $e->getMessage(),
+        ];
       }
       catch (GuzzleException $e) {
         if ($this->isDebug()) {
@@ -204,7 +218,12 @@ class AttachmentUploader {
         $this->loggerChannel->error('Grants attachment upload failed: @error', [
           '@error' => $e->getMessage(),
         ]);
-        $retval[$fileId] = FALSE;
+        $retval[$fileId] = [
+          'upload' => FALSE,
+          'status' => $e->getCode(),
+          'filename' => '',
+          'msg' => $e->getMessage(),
+        ];
       }
     }
     return $retval;
