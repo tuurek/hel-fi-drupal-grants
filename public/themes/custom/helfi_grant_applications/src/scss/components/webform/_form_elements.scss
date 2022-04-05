@@ -26,9 +26,6 @@
     clip: rect(0, 0, 0, 0);
     border: 0;
   }
-  .hds-checkbox label.hds-checkbox__label::after {
-    content: '';
-  }
 }
 .webform-section-flex-wrapper {
 
@@ -82,12 +79,20 @@
   }
 }
 
-form .hds-text-input__input-wrapper input {
-  &.webform--small {
-    max-width: 125px;
-  }
-  &.webform--large {
-    max-width: 588px;
-  }
+form .hds-text-input__input-wrapper {
+  input, textarea {
+    &.webform--small {
+      max-width: 125px;
+    }
 
+    &.webform--large {
+      max-width: 588px;
+    }
+  }
+}
+form .hds-checkbox {
+  display:block;
+  label.hds-checkbox__label::after {
+    content: '';
+  }
 }

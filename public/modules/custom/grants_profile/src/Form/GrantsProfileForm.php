@@ -84,6 +84,9 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Company short name'),
       '#default_value' => $grantsProfileContent['companyNameShort'],
     ];
+    $form['companyNameShortWrapper']['companyNameShort']['#attributes']['class'][] = 'webform--large';
+
+    /**
     $form['companyHomePageWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Company www address'),
@@ -102,6 +105,7 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Company email'),
       '#default_value' => $grantsProfileContent['companyEmail'],
     ];
+     */
     $form['businessPurposeWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Business Purpose'),
@@ -111,6 +115,8 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Description of business purpose'),
       '#default_value' => $grantsProfileContent['businessPurpose'],
     ];
+    $form['businessPurposeWrapper']['businessPurpose']['#attributes']['class'][] = 'webform--large';
+
     $form['businessPurposeWrapper']['practisesBusiness'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Community practises business'),
