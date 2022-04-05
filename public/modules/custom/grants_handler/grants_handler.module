@@ -193,6 +193,7 @@ function _grants_handler_imported_handler(
   mixed &$array,
   $value,
   bool $show_checkmark = TRUE ) {
+
   if (!is_array($array)) {
     return;
   }
@@ -201,7 +202,7 @@ function _grants_handler_imported_handler(
   $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
   $array['#description'] = \Drupal\Core\Field\FieldFilteredMarkup::create($show_checkmark ? $value .
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
-  $array['#wrapper_attributes'] = ['class' => ['grants-handler--prefilled-field']];
+  $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
 }
 
 /**
