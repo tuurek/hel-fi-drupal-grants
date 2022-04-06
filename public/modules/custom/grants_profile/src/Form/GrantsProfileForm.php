@@ -106,23 +106,6 @@ class GrantsProfileForm extends FormBase {
       '#default_value' => $grantsProfileContent['companyEmail'],
     ];
      */
-    $form['businessPurposeWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Business Purpose'),
-    ];
-    $form['businessPurposeWrapper']['businessPurpose'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Description of business purpose'),
-      '#default_value' => $grantsProfileContent['businessPurpose'],
-    ];
-    $form['businessPurposeWrapper']['businessPurpose']['#attributes']['class'][] = 'webform--large';
-
-    $form['businessPurposeWrapper']['practisesBusiness'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Community practises business'),
-      '#description' => $this->t('Check this if this company practises business.'),
-      '#default_value' => $grantsProfileContent['practisesBusiness'],
-    ];
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
       $addressMarkup .= '<ul>';
@@ -197,6 +180,23 @@ class GrantsProfileForm extends FormBase {
     $officialsMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/application-officials/new">
 <span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span><span class="hds-button__label">' . $this->t('New official') . '</span></a></div>';
     $officialsMarkup = '<div>' . $officialsMarkup . '</div>';
+    $form['businessPurposeWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Business Purpose'),
+    ];
+    $form['businessPurposeWrapper']['businessPurpose'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Description of business purpose'),
+      '#default_value' => $grantsProfileContent['businessPurpose'],
+    ];
+    $form['businessPurposeWrapper']['businessPurpose']['#attributes']['class'][] = 'webform--large';
+
+    $form['businessPurposeWrapper']['practisesBusiness'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Community practises business'),
+      '#description' => $this->t('Check this if this company practises business.'),
+      '#default_value' => $grantsProfileContent['practisesBusiness'],
+    ];
 
     $form['officialsWrapper'] = [
       '#type' => 'webform_section',
