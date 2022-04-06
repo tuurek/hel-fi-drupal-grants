@@ -69,12 +69,12 @@ class ApplicationOfficialForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $selectedOfficial['role'],
       '#options' => [
-        1 => $this->t('Puheenjohtaja'),
-        2 => $this->t('Taloudesta vastaava'),
-        3 => $this->t('Sihteeri'),
-        4 => $this->t('Toiminnanjohtaja'),
-        5 => $this->t('Varapuheenjohtaja'),
-        6 => $this->t('Muu'),
+        1 => $this->t('Chairperson'),
+        2 => $this->t('Financial officer'),
+        3 => $this->t('Secretary'),
+        4 => $this->t('Operative manager'),
+        5 => $this->t('Vice Chairperson'),
+        6 => $this->t('Other'),
       ],
     ];
 
