@@ -66,19 +66,8 @@
   </div>
 
   <div tabindex="0" role="tabpanel" id="applications-tab" aria-labelledby="applications" class="is-hidden tabs--content-wrapper">
-    <div class="container">
-      {% if applications %}
-        <ul class="company-address-list">
-          {% for key,item in applications %}
-            <li class="user-applications">
-              <a href="/grants-profile/applications/{{ item.transaction_id }}">
-                {{ item.transaction_id }}
-              </a>
-
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-  </div>
+    {% if applications %}
+      {{ applications }}
+    {% endif %}
+´  </div>
 </div>

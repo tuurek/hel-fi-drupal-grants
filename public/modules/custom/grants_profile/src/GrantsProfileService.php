@@ -596,6 +596,7 @@ class GrantsProfileService {
    *
    * @return \Drupal\helfi_atv\AtvDocument
    *   Profiledata
+   *
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getGrantsProfile(string $businessId, bool $refetch = FALSE): AtvDocument {
@@ -631,10 +632,13 @@ class GrantsProfileService {
    *
    * @param string $businessId
    *   Id to be fetched.
+   * @param bool $refetch
+   *   Force refetching and bypass caching.
    *
    * @return \Drupal\helfi_atv\AtvDocument|bool
    *   Profile data
    *
+   * @throws \Drupal\Core\TempStore\TempStoreException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */

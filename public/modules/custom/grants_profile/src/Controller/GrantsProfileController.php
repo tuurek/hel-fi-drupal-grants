@@ -3,7 +3,9 @@
 namespace Drupal\grants_profile\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\TempStore\TempStoreException;
+use Drupal\Core\Url;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
@@ -114,15 +116,57 @@ class GrantsProfileController extends ControllerBase {
           $transactionId = $document->getTransactionId();
           if (str_contains($transactionId, 'GRANTS-' . GrantsHandler::getAppEnv())) {
 
-            $applications[] = (object) [
-              'transaction_id' => $transactionId,
-              'attachmentStatus' => $document->attachmentsUploadStatus(),
+            $url = Url::fromRoute(
+              'grants_profile.view_application',
+              ['document_uuid' => $transactionId],
+              [
+                'attributes' => [
+                  'data-drupal-selector' => 'application-edit-link',
+                  'target' => '_blank',
+                ],
+              ]
+            );
+
+            $attachments = $document->attachmentsUploadStatus();
+
+            $uploaded = [
+              '#theme' => 'item_list',
+              '#list_type' => 'ul',
+              '#items' => $attachments['uploaded'],
+              '#attributes' => ['class' => 'uploaded-attachments'],
+              '#wrapper_attributes' => ['class' => 'container'],
+            ];
+
+            $non_uploaded = [
+              '#theme' => 'item_list',
+              '#list_type' => 'ul',
+              '#items' => $attachments['not-uploaded'],
+              '#attributes' => ['class' => 'not-uploaded-attachments'],
+              '#wrapper_attributes' => ['class' => 'container'],
+            ];
+
+            $applications[] = [
+              'transaction_id' => Link::fromTextAndUrl($transactionId, $url),
+              'uploadedAttachments' => \Drupal::service('renderer')->render($uploaded),
+              'missingAttachments' => \Drupal::service('renderer')->render($non_uploaded),
               'status' => $document->getStatus(),
               'statusHistory' => $document->getStatusHistory(),
             ];
           }
         }
-        $build['#applications'] = $applications;
+        $table = [
+          '#type' => 'table',
+          '#header' => [
+            'transaction_id' => $this->t('Application #'),
+            'uploadedAttachments' => $this->t('Attachments uploaded'),
+            'missingAttachments' => $this->t('Attachments en route'),
+            'status' => $this->t('Application status'),
+            'statusHistory' => $this->t('Status history'),
+          ],
+          '#rows' => $applications,
+          '#empty' => t('No content has been found.'),
+        ];
+        $build['#applications'] = $table;
 
       }
       catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
