@@ -763,6 +763,14 @@ class GrantsHandler extends WebformHandlerBase {
 
           $status = $res->getStatusCode();
 
+          if ($this->isDebug()) {
+            $t_args = [
+              '@status' => $status,
+            ];
+            $this->getLogger('grants_handler')
+              ->debug('Data sent to integration, response status: @status', $t_args);
+          }
+
           if ($status === 201) {
             $this->attachmentUploader->setDebug($this->isDebug());
             $attachmentResult = $this->attachmentUploader->uploadAttachments(
@@ -803,8 +811,6 @@ class GrantsHandler extends WebformHandlerBase {
               ]
             );
 
-            // TÄHÄN TSEKKAA RESULTTI.
-            // @todo print message for every attachment
             $this->messenger()
               ->addStatus(
                 $this->t(

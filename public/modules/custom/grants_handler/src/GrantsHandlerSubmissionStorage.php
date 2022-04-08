@@ -95,6 +95,9 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
           // $data = $appData->toArray();
           $submission->setData($appData);
+
+          $submission->testimuuttuja = 'jokuarvo tässä hei';
+
         }
       }
       catch (\Exception $exception) {

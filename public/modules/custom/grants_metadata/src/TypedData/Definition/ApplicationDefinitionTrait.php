@@ -576,7 +576,79 @@ trait ApplicationDefinitionTrait {
           ->setRequired(TRUE)
           ->setSetting('jsonPath', ['statusUpdates', 'eventSource'])
       )
+      ->setPropertyDefinition(
+        'timeUpdated',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['statusUpdates', 'timeUpdated'])
+      )
       ->setSetting('jsonPath', ['statusUpdates']);
+
+    $info['events'] = MapDataDefinition::create()
+      ->setPropertyDefinition(
+        'caseId',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['events', 'caseId'])
+      )
+      ->setPropertyDefinition(
+        'eventType',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['events', 'eventType'])
+      )
+      ->setPropertyDefinition(
+        'eventCode',
+        DataDefinition::create('integer')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['events', 'eventCode'])
+      )
+      ->setPropertyDefinition(
+        'eventSource',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['events', 'eventSource'])
+      )
+      ->setPropertyDefinition(
+        'timeUpdated',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['events', 'timeUpdated'])
+      )
+      ->setSetting('jsonPath', ['events']);
+
+    $info['messages'] = MapDataDefinition::create()
+      ->setPropertyDefinition(
+        'caseId',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['messages', 'caseId'])
+      )
+      ->setPropertyDefinition(
+        'messageId',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['messages', 'messageId'])
+      )
+      ->setPropertyDefinition(
+        'body',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['messages', 'body'])
+      )
+      ->setPropertyDefinition(
+        'sentBy',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['messages', 'sentBy'])
+      )
+      ->setPropertyDefinition(
+        'sendDateTime',
+        DataDefinition::create('string')
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['messages', 'sendDateTime'])
+      )
+      ->setSetting('jsonPath', ['messages']);
 
     return $info;
   }
