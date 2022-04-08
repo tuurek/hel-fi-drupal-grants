@@ -86,26 +86,6 @@ class GrantsProfileForm extends FormBase {
     ];
     $form['companyNameShortWrapper']['companyNameShort']['#attributes']['class'][] = 'webform--large';
 
-    /**
-    $form['companyHomePageWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Company www address'),
-    ];
-    $form['companyHomePageWrapper']['companyHomePage'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Company www address'),
-      '#default_value' => $grantsProfileContent['companyHomePage'],
-    ];
-    $form['companyEmailWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Company email'),
-    ];
-    $form['companyEmailWrapper']['companyEmail'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Company email'),
-      '#default_value' => $grantsProfileContent['companyEmail'],
-    ];
-     */
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
       $addressMarkup .= '<ul>';
@@ -175,22 +155,27 @@ class GrantsProfileForm extends FormBase {
     $officialsMarkup .= '<ul class="grants-profile--officials">';
     foreach ($grantsProfileContent["officials"] as $key => $official) {
       $officialRole = $this->t('Other');
-      switch($official['role']) {
+      switch ($official['role']) {
         case 1:
           $officialRole = $this->t('Chairperson');
           break;
+
         case 2:
           $officialRole = $this->t('Financial officer');
           break;
+
         case 3:
           $officialRole = $this->t('Secretary');
           break;
+
         case 4:
           $officialRole = $this->t('Operative manager');
           break;
+
         case 5:
           $officialRole = $this->t('Vice Chairperson');
           break;
+
         default:
           $officialRole = $this->t('Other');
           break;
