@@ -80,15 +80,17 @@ class GrantsHandler extends WebformHandlerBase {
    * @var string[]
    */
   public static array $applicationStatuses = [
-    'DRAFT' => 'DRAFT',
-    'SUBMITTED' => 'SUBMITTED',
+    'DRAFT' => 'DRAFT',         //
     'SENT' => 'SENT',
-    'RECEIVED' => 'RECEIVED',
+    'SUBMITTED' => 'SUBMITTED', // => Vastaanotettu
+    'RECEIVED' => 'RECEIVED',   // => Vastaanotettu
     'PENDING' => 'PENDING',
-    'PROCESSING' => 'PROCESSING',
-    'READY' => 'READY',
-    'DONE' => 'DONE',
+    'PROCESSING' => 'PROCESSING', // => Käsittelyssä
+    'READY' => 'READY',           // => Valmis
+    'DONE' => 'DONE',           // => Valmis
     'REJECTED' => 'REJECTED',
+    'DELETED' => 'DELETED',
+    'CANCELED' => 'CANCELED',
   ];
 
   /**
@@ -214,29 +216,70 @@ class GrantsHandler extends WebformHandlerBase {
     return $instance;
   }
 
-  /**
-   * Atv document holding this application.
-   *
-   * @param string $transactionId
-   *   Id of the transaction.
-   *
-   * @return \Drupal\helfi_atv\AtvDocument
-   *   FEtched document.
-   *
-   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
-   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   */
-  protected function getAtvDocument(string $transactionId): AtvDocument {
 
-    if (!isset($this->atvDocument)) {
-      $res = $this->atvService->searchDocuments([
-        'transaction_id' => $transactionId,
-      ]);
-      $this->atvDocument = reset($res);
+  /*
+   * Static methods
+   */
+
+  /**
+   * Check if given submission is allowed to be edited.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission|null $submission
+   *  Submission in question.
+   * @param string|null $status
+   *  If no object is available, do text comparison
+   *
+   * @return bool
+   */
+  public static function isSubmissionEditable(?WebformSubmission $submission, ?string $status): bool {
+    if (NULL === $submission) {
+      $submissionStatus = $status;
+    } else {
+      $data = $submission->getData();
+      $submissionStatus = $data['status'];
     }
 
-    return $this->atvDocument;
+    if(in_array($submissionStatus, [
+      self::$applicationStatuses['DRAFT'],
+      self::$applicationStatuses['SUBMITTED'],
+      self::$applicationStatuses['SENT'],
+      self::$applicationStatuses['RECEIVED']
+    ])) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check if given submission is allowed to be messaged.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission|null $submission
+   * Submission in question.
+   * @param string|null $status
+   *  If no object is available, do text comparison
+   *
+   * @return bool
+   */
+  public static function isSubmissionMessageable(?WebformSubmission $submission, ?string $status): bool {
+
+    if (NULL === $submission) {
+      $submissionStatus = $status;
+    } else {
+      $data = $submission->getData();
+      $submissionStatus = $data['status'];
+    }
+
+    if(in_array($submissionStatus, [
+      self::$applicationStatuses['DRAFT'],
+      self::$applicationStatuses['SUBMITTED'],
+      self::$applicationStatuses['SENT'],
+      self::$applicationStatuses['RECEIVED'],
+      self::$applicationStatuses['PENDING'],
+      self::$applicationStatuses['PROCESSING']
+    ])) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
@@ -284,6 +327,36 @@ class GrantsHandler extends WebformHandlerBase {
     }
     return $appParam;
   }
+
+/*
+ * Non static methods.
+ */
+
+  /**
+   * Atv document holding this application.
+   *
+   * @param string $transactionId
+   *   Id of the transaction.
+   *
+   * @return \Drupal\helfi_atv\AtvDocument
+   *   FEtched document.
+   *
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  protected function getAtvDocument(string $transactionId): AtvDocument {
+
+    if (!isset($this->atvDocument)) {
+      $res = $this->atvService->searchDocuments([
+        'transaction_id' => $transactionId,
+      ]);
+      $this->atvDocument = reset($res);
+    }
+
+    return $this->atvDocument;
+  }
+
 
   /**
    * Convert EUR format value to "double" .
@@ -624,6 +697,9 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function preSave(WebformSubmissionInterface $webform_submission) {
+
+    // don't save ip address.
+    $webform_submission->remote_addr->value = '';
 
     if (empty($this->submittedFormData)) {
       $this->submittedFormData = $webform_submission->getData();

@@ -147,7 +147,7 @@ class MessageForm extends FormBase {
       $this->messenger()->addStatus($this->t('Your message: @message', ['@message' => $data['body']]));
     }
     else {
-      $this->messenger()->addStatus($this->t('Your message failed.'));
+      $this->messenger()->addStatus($this->t('Sending of your message failed.'));
     }
   }
 

@@ -25,17 +25,17 @@ function grants_handler_theme() {
       'variables' => [
         'messages' => NULL,
         'message_form' => NULL,
-        'submission' => NULL
+        'submission' => NULL,
       ],
     ],
     'webform_submission_events' => [
       'variables' => [
-        'submission' => NULL
+        'submission' => NULL,
       ],
     ],
     'webform_submission_status_history' => [
       'variables' => [
-        'submission' => NULL
+        'submission' => NULL,
       ],
     ],
   ];
@@ -161,12 +161,9 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
 
     if (
       isset($webformData['status']) &&
-      (
-        $webformData['status'] == GrantsHandler::$applicationStatuses['RECEIVED'] ||
-        $webformData['status'] == GrantsHandler::$applicationStatuses['SUBMITTED']||
-        $webformData['status'] == GrantsHandler::$applicationStatuses['PROCESSING']
-      ) &&
-      $element['#type'] != 'webform_actions') {
+      !GrantsHandler::isSubmissionEditable(NULL, $webformData['status']) &&
+      $element['#type'] != 'webform_actions')
+    {
       $element['#disabled'] = TRUE;
     }
     else {
@@ -211,8 +208,8 @@ function grants_handler_preprocess_webform(array &$variables) {
  */
 function _grants_handler_imported_handler(
   mixed &$array,
-  $value,
-  bool $show_checkmark = TRUE ) {
+        $value,
+  bool  $show_checkmark = TRUE) {
 
   if (!is_array($array)) {
     return;
@@ -280,11 +277,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     if (
       isset($form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"]) &&
-      (
-        $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == GrantsHandler::$applicationStatuses['RECEIVED'] ||
-        $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == GrantsHandler::$applicationStatuses['SUBMITTED']||
-        $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"] == GrantsHandler::$applicationStatuses['PROCESSING']
-      )
+      !GrantsHandler::isSubmissionEditable(NULL, $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"])
     ) {
       $form["actions"]["submit"]['#disabled'] = TRUE;
       unset($form["elements"]["finalize_application"]);
@@ -379,6 +372,7 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
     '#theme' => 'webform_submission_messages',
     '#submission' => $submission,
   ];
+
   $variables['events'] = [
     '#theme' => 'webform_submission_events',
     '#submission' => $submission,
@@ -399,20 +393,25 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   $submission = $variables['submission'];
   $submissionData = $submission->getData();
 
-  $messageForm = \Drupal::formBuilder()->getForm('Drupal\grants_handler\Form\MessageForm',$submission);
-  $variables['message_form'] = $messageForm;
+
+  if (GrantsHandler::isSubmissionMessageable($submission, NULL)) {
+    $variables['message_form'] = \Drupal::formBuilder()
+      ->getForm('Drupal\grants_handler\Form\MessageForm', $submission);
+  }
 
   $messages = [];
-  foreach ($submissionData['messages'] as $message) {
-    $dt = new \DateTime($message['sendDateTime']);
-    $dt->setTimezone(new \DateTimeZone('UTC'));
+  if (isset($submissionData['messages']) && is_array($submissionData['messages'])) {
+    foreach ($submissionData['messages'] as $message) {
+      $dt = new \DateTime($message['sendDateTime']);
+      $dt->setTimezone(new \DateTimeZone('UTC'));
 
-    $messages[] = [
-      'date' => $dt->format('d.m.Y h:i:s'),
-      'sender' => $message['sentBy'],
-      'body' => $message['body'] ?? '',
-      'attachments' => $message['attachment'] ?? '',
-    ];
+      $messages[] = [
+        'date' => $dt->format('d.m.Y h:i:s'),
+        'sender' => $message['sentBy'],
+        'body' => $message['body'] ?? '',
+        'attachments' => $message['attachment'] ?? '',
+      ];
+    }
   }
 
   $table = [
@@ -424,7 +423,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
       'attachments' => t('Attachments'),
     ],
     '#rows' => $messages,
-    '#empty' => t('No content has been found.'),
+    '#empty' => t('No messages has been found.'),
   ];
 
   $variables['messages'] = $table;
@@ -444,14 +443,16 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
   $submissionData = $submission->getData();
 
   $history = [];
-  foreach (array_reverse($submissionData["status_updates"]) as $event) {
-
-    $history[] = [
-      'date' => '12.04.2021 14:54:32',
-      'citizenCaseStatus' => $event['citizenCaseStatus'],
-      'eventSource' => $event['eventSource'] ?? '',
-    ];
+  if (isset($submissionData["status_updates"]) && is_array($submissionData["status_updates"])) {
+    foreach (array_reverse($submissionData["status_updates"]) as $event) {
+      $history[] = [
+        'date' => '12.04.2021 14:54:32',
+        'citizenCaseStatus' => $event['citizenCaseStatus'],
+        'eventSource' => $event['eventSource'] ?? '',
+      ];
+    }
   }
+
 
   $table = [
     '#type' => 'table',
@@ -461,7 +462,7 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
       'eventSource' => t('Source'),
     ],
     '#rows' => $history,
-    '#empty' => t('No content has been found.'),
+    '#empty' => t('No status updates has been found.'),
   ];
 
   $variables['history'] = $table;
@@ -478,13 +479,15 @@ function grants_handler_preprocess_webform_submission_events(&$variables) {
   $submissionData = $submission->getData();
 
   $events = [];
-  foreach ($submissionData['events'] as $event) {
+  if (isset($submissionData['events']) && is_array($submissionData['events'])) {
+    foreach ($submissionData['events'] as $event) {
+      $events[] = [
+        'date' => '12.04.2021 14:54:32',
+        'eventSource' => $event['eventSource'],
+        'eventDescription' => $event['eventDescription'] ?? '',
+      ];
+    }
 
-    $events[] = [
-      'date' => '12.04.2021 14:54:32',
-      'eventSource' => $event['eventSource'],
-      'eventDescription' => $event['eventDescription'] ?? '',
-    ];
   }
 
   $table = [
@@ -495,7 +498,7 @@ function grants_handler_preprocess_webform_submission_events(&$variables) {
       'eventDescription' => t('Description'),
     ],
     '#rows' => $events,
-    '#empty' => t('No content has been found.'),
+    '#empty' => t('No events has been found.'),
   ];
 
   $variables['events'] = $table;
