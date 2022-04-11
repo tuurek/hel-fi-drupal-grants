@@ -131,14 +131,17 @@
     vertical-align: middle;
   }
 }
+
 .grants-handler--prefilled-field {
+  .description {
+    white-space: normal;
+  }
   .hds-icon--check-circle-fill {
     color: green;
     vertical-align: middle;
   }
   .webform-element-description {
     color: var(--color-black);
-    cursor: pointer;
     font-size: var(--fontsize-body-m);
     line-height: var(--spacing-m);
     position: relative;
