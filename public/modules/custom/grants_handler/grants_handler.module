@@ -287,19 +287,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
         t('Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'), t('Lisää toiminnan kuvaus'),
         t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
-    if ($grantsProfile["practisesBusiness"] === 0) {
-      _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"], t('No'), FALSE);
-    }
-    else {
-      if ($grantsProfile["practisesBusiness"] === 1) {
-        _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"], t('Yes'), FALSE);
-      }
-      else {
-        _grants_handler_missing_data($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_practices_business"],
-          t('Avustushakemukselle tarvitaan tieto harjoittaako yhteisö liiketoimintaa.'), t('Määritä harjoittaako yhteisö liiketoimintaa'),
-          t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
-      }
-    }
+
     $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
       $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];

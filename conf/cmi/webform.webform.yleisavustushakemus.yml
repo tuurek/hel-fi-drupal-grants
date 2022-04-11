@@ -123,6 +123,7 @@ elements: |-
         '#title': 'Select account'
         '#options':
           noaccounts: 'No accounts.'
+        '#required': true
       account_number:
         '#type': textfield
         '#title': Tilinumero
@@ -386,10 +387,14 @@ elements: |-
         '#required': true
         '#readonly': true
       community_practices_business:
-        '#type': textfield
+        '#type': radios
         '#title': 'Harjoittaako yhteisö liiketoimintaa'
+        '#options':
+          1: 'Kyllä'
+          0: 'Ei'
         '#required': true
-        '#readonly': true
+        '#options_display': side_by_side
+        '#options_description_display': help
     ensimmainen_otsikko:
       '#type': webform_section
       '#title': Jäsenmaksut
