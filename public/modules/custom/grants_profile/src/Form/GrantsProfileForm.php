@@ -139,8 +139,8 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $bankAccountMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/bank-accounts/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
-<span class="hds-button__label">' . $this->t('New Bank account') . '</span></a></div>';
+    $bankAccountMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/new">
+<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Bank account') . '</span></a></div>';
     $bankAccountMarkup = '<div>' . $bankAccountMarkup . '</div>';
     $form['bankAccountWrapper'] = [
       '#type' => 'webform_section',
