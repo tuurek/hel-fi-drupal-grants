@@ -88,9 +88,21 @@ class GrantsProfileForm extends FormBase {
 
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
-      $addressMarkup .= '<ul>';
+      $addressMarkup .= '<ul class="grants-profile--officials">';
       foreach ($grantsProfileContent["addresses"] as $key => $address) {
-        $addressMarkup .= '<li><a href="/grants-profile/address/' . $key . '">' . $address['street'] . '</a></li>';
+        $addressMarkup .= '
+    <li class="grants-profile--officials-item">
+        <div class="grants-profile--officials-item-wrapper">
+          <div class="grants-profile--officials-item--name">
+            ' . $address['street'] . ', ' . $address['postCode'] . ' ' . $address['city'] . '
+          </div>
+        </div>
+        <div class="grants-profile--officials-edit-wrapper">
+        <a class="hds-link hds-link--medium" href="/grants-profile/address/' . $key . '">
+<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
+       </div>
+
+    </li>';
       }
       $addressMarkup .= '</ul>';
     }
@@ -105,8 +117,8 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $addressMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/address/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
-<span class="hds-button__label">' . $this->t('New Address') . '</span></a></div>';
+    $addressMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/address/new">
+<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Address') . '</span></a></div>';
     $addressMarkup = '<div>' . $addressMarkup . '</div>';
 
     $form['addressWrapper'] = [
@@ -124,7 +136,19 @@ class GrantsProfileForm extends FormBase {
     if (is_array($grantsProfileContent["bankAccounts"]) && count($grantsProfileContent["bankAccounts"]) > 0) {
       $bankAccountMarkup .= '<ul>';
       foreach ($grantsProfileContent["bankAccounts"] as $key => $address) {
-        $bankAccountMarkup .= '<li><a href="/grants-profile/bank-accounts/' . $key . '">' . $address['bankAccount'] . '</a></li>';
+        $addressMarkup .= '
+    <li class="grants-profile--officials-item">
+        <div class="grants-profile--officials-item-wrapper">
+          <div class="grants-profile--officials-item--name">
+            ' . $address['bankAccount'] . '
+          </div>
+        </div>
+        <div class="grants-profile--officials-edit-wrapper">
+        <a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/' . $key . '">
+<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
+       </div>
+
+    </li>';
       }
       $bankAccountMarkup .= '</ul>';
     }
@@ -198,7 +222,7 @@ class GrantsProfileForm extends FormBase {
         </div>
         <div class="grants-profile--officials-edit-wrapper">
         <a class="hds-link hds-link--medium" href="/grants-profile/application-officials/' . $key . '">
-<span aria-hidden="true" class="hds-icon hds-icon--pen hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
+<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
         <a class="hds-link hds-link--medium" href="/grants-profile/application-officials/' . $key . '">
 <span aria-hidden="true" class="hds-icon hds-icon--cross hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span></a>
         </div>
@@ -219,13 +243,6 @@ class GrantsProfileForm extends FormBase {
       '#default_value' => $grantsProfileContent['businessPurpose'],
     ];
     $form['businessPurposeWrapper']['businessPurpose']['#attributes']['class'][] = 'webform--large';
-
-    $form['businessPurposeWrapper']['practisesBusiness'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Community practises business'),
-      '#description' => $this->t('Check this if this company practises business.'),
-      '#default_value' => $grantsProfileContent['practisesBusiness'],
-    ];
 
     $form['officialsWrapper'] = [
       '#type' => 'webform_section',

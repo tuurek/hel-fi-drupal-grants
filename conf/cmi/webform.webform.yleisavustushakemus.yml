@@ -129,6 +129,9 @@ elements: |-
         '#title': Tilinumero
         '#readonly': true
         '#required': true
+        '#wrapper_attributes':
+          class:
+            - hidden
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
