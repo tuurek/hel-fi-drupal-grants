@@ -134,9 +134,9 @@ class GrantsProfileForm extends FormBase {
     $bankAccountMarkup .= '<p>' . $this->t("The information you give are usable when making grants applications. If a grant is given to an application, it is paid to the account number you've given on the application") . '</p>';
 
     if (is_array($grantsProfileContent["bankAccounts"]) && count($grantsProfileContent["bankAccounts"]) > 0) {
-      $bankAccountMarkup .= '<ul>';
+      $bankAccountMarkup .= '<ul class="grants-profile--officials">';
       foreach ($grantsProfileContent["bankAccounts"] as $key => $address) {
-        $addressMarkup .= '
+        $bankAccountMarkup .= '
     <li class="grants-profile--officials-item">
         <div class="grants-profile--officials-item-wrapper">
           <div class="grants-profile--officials-item--name">

@@ -300,33 +300,53 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     <div class="hds-notification__content">
       <div class="hds-notification__label" role="heading" aria-level="2">
         <span class="hds-icon hds-icon--info-circle-fill" aria-hidden="true"></span>
-        <span>Osa tiedoista on haettu lomakkeelle asiointipalvelun omista tiedoista</span>
+        <span>'.t('Some information fetched from personal information').'</span>
       </div>
-      <div class="hds-notification__body">Tarkistathan lomakkeella olevat tiedot ennen hakemuksen lähettämistä. Voit muokata omia tietoja oma asiointi > omat tiedot -osiossa.</div>
+      <div class="hds-notification__body">
+        '.t('Check the information on the form before sending the application. You can change your own information from personal information section of the site.').'
+      </div>
     </div>
   </section>
   ',
       ],
     ];
+  $required_fields_info_element = [
+      'required_fields_infobox' => [
+        '#markup' => '
+  <section aria-label="Notification" class="hds-notification">
+    <div class="hds-notification__content">
+      <div class="hds-notification__label" role="heading" aria-level="2">
+        <span class="hds-icon hds-icon--info-circle-fill" aria-hidden="true"></span>
+        <span>'.t('Fields marked with an asterisk * are required, that need to be filled before saving.').'</span>
+      </div>
+    </div>
+  </section>
+  ',
+      ],
+    ];
+    $form['elements']['1_hakijan_tiedot'] = array_merge($required_fields_info_element, $form['elements']['1_hakijan_tiedot']);
+    $form['elements']['2_avustustiedot'] = array_merge($required_fields_info_element, $form['elements']['2_avustustiedot']);
+    $form['elements']['3_yhteison_tiedot'] = array_merge($required_fields_info_element, $form['elements']['3_yhteison_tiedot']);
+    $form['elements']['lisatiedot_ja_liitteet'] = array_merge($required_fields_info_element, $form['elements']['lisatiedot_ja_liitteet']);
     $form['elements']['1_hakijan_tiedot'] = array_merge($infoelement, $form['elements']['1_hakijan_tiedot']);
     $form['elements']['3_yhteison_tiedot'] = array_merge($infoelement, $form['elements']['3_yhteison_tiedot']);
 
 
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["company_number"], $selectedCompany);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["company_number"], $selectedCompany);
     _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name"], $grantsProfile["companyName"]);
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_official_name_short"], $grantsProfile["companyNameShort"], FALSE);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteison_lyhenne"]["community_official_name_short"], $grantsProfile["companyNameShort"], FALSE);
 
     $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
 
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["registration_date"], $regDate->format('d.m.Y'));
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["registration_date"], $regDate->format('d.m.Y'));
 
 
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["founding_year"], $grantsProfile["foundingYear"], FALSE);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["perustamisvuosi"]["founding_year"], $grantsProfile["foundingYear"], FALSE);
 
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["home"], $grantsProfile["companyHome"]);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["home"], $grantsProfile["companyHome"]);
 
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"], $grantsProfile["companyStatus"]);
-    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"], $grantsProfile["companyStatusSpecial"]);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["community_status"], $grantsProfile["companyStatus"]);
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["community_status_special"], $grantsProfile["companyStatusSpecial"]);
   }
   else {
     \Drupal::messenger()

@@ -33,61 +33,67 @@ elements: |-
       '#type': checkbox
       '#title': 'Finalize application'
       '#description': 'Check this to submit application for handling and disable editing.&nbsp;'
+    applicant_type:
+      '#type': select
+      '#title': 'Hakijan tyyppi'
+      '#options':
+        1: '1'
+        2: '2'
+        3: '3'
+      '#required': true
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
-      applicant_type:
-        '#type': select
-        '#title': 'Hakijan tyyppi'
-        '#options':
-          1: '1'
-          2: '2'
-          3: '3'
-        '#required': true
-      company_number:
-        '#type': textfield
-        '#title': Y-Tunnus
-        '#readonly': true
-        '#required': true
+      '#attributes':
+        class:
+          - grants-profile--imported-section
       community_official_name:
         '#type': textfield
         '#title': 'Yhteisön nimi'
         '#readonly': true
         '#required': true
-      community_official_name_short:
-        '#type': textfield
-        '#title': 'Yhteisön lyhenne'
-        '#attributes':
-          class:
-            - webform--small
-      registration_date:
-        '#type': textfield
-        '#title': Rekisteröimispäivä
-        '#readonly': true
-      community_status:
-        '#type': textfield
-        '#title': 'Yhdistyksen tila'
-        '#readonly': true
-      community_status_special:
-        '#type': textfield
-        '#title': 'Yhdistyksen erityistilanne'
-        '#readonly': true
+      grants_profile__items_container:
+        '#type': container
+        company_number:
+          '#type': textfield
+          '#title': Y-Tunnus
+          '#readonly': true
+          '#required': true
+        registration_date:
+          '#type': textfield
+          '#title': Rekisteröimispäivä
+          '#readonly': true
+        community_status:
+          '#type': textfield
+          '#title': 'Yhdistyksen tila'
+          '#readonly': true
+        community_status_special:
+          '#type': textfield
+          '#title': 'Yhdistyksen erityistilanne'
+          '#readonly': true
+        home:
+          '#type': textfield
+          '#title': Kotipaikka
+          '#readonly': true
+          '#required': true
+    perustamisvuosi:
+      '#type': webform_section
+      '#title': Perustamisvuosi
       founding_year:
         '#type': textfield
         '#title': Perustamisvuosi
+        '#title_display': invisible
         '#readonly': true
-      home:
+    yhteison_lyhenne:
+      '#type': webform_section
+      '#title': 'Yhteisön lyhenne'
+      community_official_name_short:
         '#type': textfield
-        '#title': Kotipaikka
-        '#readonly': true
-        '#required': true
-      homepage:
-        '#type': textfield
-        '#title': www-sivut
-      email:
-        '#type': email
-        '#title': Sähköpostiosoite
-        '#required': true
+        '#title': 'Yhteisön lyhenne'
+        '#title_display': invisible
+        '#attributes':
+          class:
+            - webform--small
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -115,12 +121,19 @@ elements: |-
         '#type': textfield
         '#title': Puhelinnumero
         '#required': true
+      email:
+        '#type': email
+        '#title': Sähköpostiosoite
+        '#required': true
+      homepage:
+        '#type': textfield
+        '#title': www-sivut
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
       account_number_select:
         '#type': select
-        '#title': 'Select account'
+        '#title': Tilinumero
         '#options':
           noaccounts: 'No accounts.'
         '#required': true
@@ -393,8 +406,8 @@ elements: |-
         '#type': radios
         '#title': 'Harjoittaako yhteisö liiketoimintaa'
         '#options':
-          1: 'Kyllä'
-          0: 'Ei'
+          1: Kyllä
+          0: Ei
         '#required': true
         '#options_display': side_by_side
         '#options_description_display': help

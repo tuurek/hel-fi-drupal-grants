@@ -1,5 +1,7 @@
 $item_spacing: $spacing-triple / 2;
 .node--form-page .list-of-links {
+  margin-left: 0;
+  width: 100%;
   @include breakpoint($breakpoint-m) {
     margin-top: 0;
   }
@@ -33,9 +35,8 @@ $item_spacing: $spacing-triple / 2;
       height: auto;
     }
     &__item {
-      border-left: 3px solid $color-engel-dark;
-      margin-right: -3px;
-      height: 100%;
+      border-left: 4px solid $color-copper;
+      margin-right: -4px;
       align-self: stretch;
       padding-left: $item_spacing;
       padding-right: $item_spacing;
