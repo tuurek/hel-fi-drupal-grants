@@ -1,0 +1,53 @@
+_meta:
+  version: '1.0'
+  entity_type: menu_link_content
+  uuid: ada20fc6-a716-42ff-9cc2-3dab6fe51dc3
+  bundle: menu_link_content
+  default_langcode: fi
+default:
+  enabled:
+    -
+      value: true
+  title:
+    -
+      value: Yleisavustushakemus
+  menu_name:
+    -
+      value: main
+  link:
+    -
+      uri: 'internal:/yleisavustuslomake'
+      title: ''
+      options:
+        attributes:
+          class: {  }
+  external:
+    -
+      value: false
+  rediscover:
+    -
+      value: true
+  weight:
+    -
+      value: 0
+  expanded:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  content_translation_uid:
+    -
+      target_id: 1
+  content_translation_status:
+    -
+      value: true
+  content_translation_created:
+    -
+      value: 1647264636

@@ -1,6 +1,6 @@
 uuid: d1dadc51-68af-4b99-adb2-1aa5eaed4352
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.admin

@@ -1,6 +1,5 @@
 $item_spacing: $spacing-triple / 2;
-
-.list-of-links {
+.node--form-page .list-of-links {
   @include breakpoint($breakpoint-m) {
     margin-top: 0;
   }
@@ -41,10 +40,6 @@ $item_spacing: $spacing-triple / 2;
       padding-left: $item_spacing;
       padding-right: $item_spacing;
 
-      @include breakpoint($breakpoint-s) {
-        flex-direction: row;
-        width: 100% !important;
-      }
 
     }
   }

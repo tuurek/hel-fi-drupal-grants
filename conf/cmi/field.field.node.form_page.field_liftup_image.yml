@@ -1,0 +1,31 @@
+uuid: e6b72b66-5236-49b6-aa4e-3fab66e94316
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_liftup_image
+    - media.type.image
+    - node.type.form_page
+_core:
+  default_config_hash: F6wBhij8loESl_c6bpPWHJSiCOWOkwkSj4uEiolmzdY
+id: node.form_page.field_liftup_image
+field_name: field_liftup_image
+entity_type: node
+bundle: form_page
+label: 'Liftup image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

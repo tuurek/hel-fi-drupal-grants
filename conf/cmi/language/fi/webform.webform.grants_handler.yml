@@ -1,4 +1,3 @@
-category: Example
 elements: |-
   page_1:
     '#type': webform_wizard_page

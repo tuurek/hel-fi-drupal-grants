@@ -73,6 +73,8 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Founding year'),
       '#default_value' => $grantsProfileContent['foundingYear'],
     ];
+    $form['foundingYearWrapper']['foundingYear']['#attributes']['class'][] = 'webform--small';
+
     $form['companyNameShortWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Company short name'),
@@ -82,39 +84,8 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Company short name'),
       '#default_value' => $grantsProfileContent['companyNameShort'],
     ];
-    $form['companyHomePageWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Company www address'),
-    ];
-    $form['companyHomePageWrapper']['companyHomePage'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Company www address'),
-      '#default_value' => $grantsProfileContent['companyHomePage'],
-    ];
-    $form['companyEmailWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Company email'),
-    ];
-    $form['companyEmailWrapper']['companyEmail'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Company email'),
-      '#default_value' => $grantsProfileContent['companyEmail'],
-    ];
-    $form['businessPurposeWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Business Purpose'),
-    ];
-    $form['businessPurposeWrapper']['businessPurpose'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Description of business purpose'),
-      '#default_value' => $grantsProfileContent['businessPurpose'],
-    ];
-    $form['businessPurposeWrapper']['practisesBusiness'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Community practises business'),
-      '#description' => $this->t('Check this if this company practises business.'),
-      '#default_value' => $grantsProfileContent['practisesBusiness'],
-    ];
+    $form['companyNameShortWrapper']['companyNameShort']['#attributes']['class'][] = 'webform--large';
+
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
       $addressMarkup .= '<ul>';
@@ -168,8 +139,8 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $bankAccountMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/bank-accounts/new"><span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span>
-<span class="hds-button__label">' . $this->t('New Bank account') . '</span></a></div>';
+    $bankAccountMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/new">
+<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Bank account') . '</span></a></div>';
     $bankAccountMarkup = '<div>' . $bankAccountMarkup . '</div>';
     $form['bankAccountWrapper'] = [
       '#type' => 'webform_section',
@@ -181,14 +152,80 @@ class GrantsProfileForm extends FormBase {
     ];
     $officialsMarkup = '<p>' . $this->t('Report the names and contact information of officials, such as the chairperson, secretary, etc.') . '</p>';
     $officialsMarkup .= '<p>' . $this->t("The information you give are usable during grants applciations.") . '</p>';
-    $officialsMarkup .= '<ul>';
-    foreach ($grantsProfileContent["officials"] as $key => $address) {
-      $officialsMarkup .= '<li><a href="/grants-profile/application-officials/' . $key . '">' . $address['name'] . '</a></li>';
+    $officialsMarkup .= '<ul class="grants-profile--officials">';
+    foreach ($grantsProfileContent["officials"] as $key => $official) {
+      $officialRole = $this->t('Other');
+      switch ($official['role']) {
+        case 1:
+          $officialRole = $this->t('Chairperson');
+          break;
+
+        case 2:
+          $officialRole = $this->t('Financial officer');
+          break;
+
+        case 3:
+          $officialRole = $this->t('Secretary');
+          break;
+
+        case 4:
+          $officialRole = $this->t('Operative manager');
+          break;
+
+        case 5:
+          $officialRole = $this->t('Vice Chairperson');
+          break;
+
+        default:
+          $officialRole = $this->t('Other');
+          break;
+      }
+      $officialsMarkup .= '
+    <li class="grants-profile--officials-item">
+        <div class="grants-profile--officials-item-wrapper">
+          <h3 class="grants-profile--officials-item--position">
+            ' . $officialRole . '
+          </h3>
+          <div class="grants-profile--officials-item--name">
+            ' . $official['name'] . '
+          </div>
+          <div class="grants-profile--officials-item--phone">
+            ' . $official['phone'] . '
+          </div>
+          <div class="grants-profile--officials-item--email">
+            ' . $official['email'] . '
+          </div>
+        </div>
+        <div class="grants-profile--officials-edit-wrapper">
+        <a class="hds-link hds-link--medium" href="/grants-profile/application-officials/' . $key . '">
+<span aria-hidden="true" class="hds-icon hds-icon--pen hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
+        <a class="hds-link hds-link--medium" href="/grants-profile/application-officials/' . $key . '">
+<span aria-hidden="true" class="hds-icon hds-icon--cross hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span></a>
+        </div>
+
+    </li>';
     }
     $officialsMarkup .= '</ul>';
-    $officialsMarkup .= '<div><a class="hds-button hds-button--secondary" href="/grants-profile/application-officials/new">
-<span aria-hidden="true" class="hds-icon hds-icon--plus-circle"></span><span class="hds-button__label">' . $this->t('New official') . '</span></a></div>';
+    $officialsMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/application-officials/new">
+<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New official') . '</span></a></div>';
     $officialsMarkup = '<div>' . $officialsMarkup . '</div>';
+    $form['businessPurposeWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Business Purpose'),
+    ];
+    $form['businessPurposeWrapper']['businessPurpose'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Description of business purpose'),
+      '#default_value' => $grantsProfileContent['businessPurpose'],
+    ];
+    $form['businessPurposeWrapper']['businessPurpose']['#attributes']['class'][] = 'webform--large';
+
+    $form['businessPurposeWrapper']['practisesBusiness'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Community practises business'),
+      '#description' => $this->t('Check this if this company practises business.'),
+      '#default_value' => $grantsProfileContent['practisesBusiness'],
+    ];
 
     $form['officialsWrapper'] = [
       '#type' => 'webform_section',
