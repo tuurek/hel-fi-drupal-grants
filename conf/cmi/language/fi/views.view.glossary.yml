@@ -27,7 +27,7 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
   attachment_1:
-    display_title: Liite
+    display_title: Liitetiedosto
   page_1:
     display_title: Sivu
     display_options:

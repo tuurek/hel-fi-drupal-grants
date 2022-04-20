@@ -1,0 +1,253 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 7f2574d3-d889-46d6-a716-7a05f2e2e761
+  bundle: page
+  default_langcode: fi
+  depends:
+    94868e26-669f-45fd-bba0-2ac3bad827b5: node
+    7f2574d3-d889-46d6-a716-7a05f2e2e761: node
+    a22c3a4c-85d9-48b0-831b-882458741a6e: media
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: Avustukset
+  created:
+    -
+      value: 1646911808
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  color_palette:
+    -
+      value: engel
+  toc_enabled:
+    -
+      value: false
+  toc_title:
+    -
+      value: Sisällysluettelo
+  path:
+    -
+      alias: /avustukset
+      langcode: fi
+      pathauto: 1
+  content_translation_source:
+    -
+      value: und
+  content_translation_outdated:
+    -
+      value: false
+  field_content:
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: f748cace-4d4b-4f4f-89a2-5012dc5dc877
+          bundle: list_of_links
+          default_langcode: fi
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1648040543
+          behavior_settings:
+            -
+              value: {  }
+          revision_translation_affected:
+            -
+              value: true
+          field_list_of_links_design:
+            -
+              value: without-image
+          field_list_of_links_links:
+            -
+              entity:
+                _meta:
+                  version: '1.0'
+                  entity_type: paragraph
+                  uuid: b67a0d6d-9867-4e44-a467-3e22a369381e
+                  bundle: list_of_links_item
+                  default_langcode: fi
+                default:
+                  status:
+                    -
+                      value: true
+                  created:
+                    -
+                      value: 1648040543
+                  behavior_settings:
+                    -
+                      value: {  }
+                  field_list_of_links_desc:
+                    -
+                      value: 'Tutustu kaupungin tarjoamiin avustuksiin ja löydä tarpeeseesi parhaiten sopiva avustus.'
+                  field_list_of_links_link:
+                    -
+                      target_uuid: 94868e26-669f-45fd-bba0-2ac3bad827b5
+                      title: 'Etsi sopivaa avustusta'
+                      options:
+                        target_new: 0
+            -
+              entity:
+                _meta:
+                  version: '1.0'
+                  entity_type: paragraph
+                  uuid: 131502e8-6ffd-4e85-acc7-1e071a0a0c86
+                  bundle: list_of_links_item
+                  default_langcode: fi
+                default:
+                  status:
+                    -
+                      value: true
+                  created:
+                    -
+                      value: 1648040581
+                  behavior_settings:
+                    -
+                      value: {  }
+                  revision_translation_affected:
+                    -
+                      value: true
+                  field_list_of_links_desc:
+                    -
+                      value: 'Kuka voi hakea avustusta? Miten avustuksia haetaan? Täältä löydät vastauksia yleisimpiin kysymyksiin.'
+                  field_list_of_links_link:
+                    -
+                      target_uuid: 94868e26-669f-45fd-bba0-2ac3bad827b5
+                      title: 'Ohjeita hakijalle'
+                      options:
+                        target_new: 0
+            -
+              entity:
+                _meta:
+                  version: '1.0'
+                  entity_type: paragraph
+                  uuid: ace45005-8ff2-4bcd-81fd-daa68bc2d721
+                  bundle: list_of_links_item
+                  default_langcode: fi
+                default:
+                  status:
+                    -
+                      value: true
+                  created:
+                    -
+                      value: 1648040598
+                  behavior_settings:
+                    -
+                      value: {  }
+                  field_list_of_links_desc:
+                    -
+                      value: 'Lue täältä uusimmat uutiset ja tiedotteet avustusten hakemiseen liittyen.'
+                  field_list_of_links_link:
+                    -
+                      target_uuid: 94868e26-669f-45fd-bba0-2ac3bad827b5
+                      title: Tiedotteet
+                      options:
+                        target_new: 0
+          field_list_of_links_title:
+            -
+              value: 'Asionnin pikalinkit'
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: 0733d5a9-46e1-46f3-b88d-a3d9f89d6bb0
+          bundle: content_cards
+          default_langcode: fi
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1648040824
+          behavior_settings:
+            -
+              value: {  }
+          revision_translation_affected:
+            -
+              value: true
+          field_content_cards_content:
+            -
+              entity: 7f2574d3-d889-46d6-a716-7a05f2e2e761
+            -
+              entity: 7f2574d3-d889-46d6-a716-7a05f2e2e761
+            -
+              entity: 7f2574d3-d889-46d6-a716-7a05f2e2e761
+          field_content_cards_design:
+            -
+              value: large-cards-grey
+          field_content_cards_title:
+            -
+              value: 'Etsi sopivaa avustusta'
+  field_has_hero:
+    -
+      value: true
+  field_hero:
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: de453484-44b0-483a-a879-fa4a3798f4cd
+          bundle: hero
+          default_langcode: fi
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1646911822
+          behavior_settings:
+            -
+              value: {  }
+          field_hero_bg_color:
+            -
+              value: engel
+          field_hero_desc:
+            -
+              value: "<p>Kaupunki avustaa helsinkiläisiä järjestöjä, yhteisöjä ja asukasryhmiä vuosittain noin 70 miljoonalla eurolla.</p>\r\n"
+              format: full_html
+          field_hero_design:
+            -
+              value: diagonal
+          field_hero_image:
+            -
+              entity: a22c3a4c-85d9-48b0-831b-882458741a6e
+          field_hero_link:
+            -
+              target_uuid: 94868e26-669f-45fd-bba0-2ac3bad827b5
+              title: 'Hae Avustuksia'
+              options:
+                target_new: 0
+          field_hero_link_design:
+            -
+              value: primary
+          field_hero_title:
+            -
+              value: 'Kaupungin avustuspalvelut yhdessä paikassa'
+  field_metatags:
+    -
+      value:
+        description: "Kaupunki avustaa helsinkiläisiä järjestöjä, yhteisöjä ja asukasryhmiä vuosittain noin\r\n70 miljoonalla eurolla."

@@ -1,0 +1,96 @@
+.grants-profile--menuitem--login, .grants-profile--menuitem--logout {
+  font-size: $fontsize-body-s;
+  margin-left: $spacing-half;
+  margin-right: $spacing-half;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  .hds-icon {
+    display: block;
+    margin: 0 auto;
+  }
+  &-triggertext {
+    position: absolute;
+    bottom: -7px;
+  }
+  text-align: center;
+  width: $spacing * 2.5;
+  height: $spacing * 2.5;
+  @include breakpoint($breakpoint-m) {
+    width: $spacing-triple;
+    height: $spacing-triple;
+  }
+
+}
+.block--grants-profile--menuitem {
+  order: 2;
+  display: flex;
+  z-index: 2;
+}
+.block--branding {
+  flex-grow: 10;
+}
+.grants-profile--menuitem {
+  margin-left: $spacing-half;
+  margin-right: $spacing-half;
+  position: relative;
+  width: $spacing * 2.5;
+  height: $spacing * 2.5;
+  a {
+    text-decoration: none;
+  }
+  @include breakpoint($breakpoint-m) {
+    width: $spacing-triple;
+    height: $spacing-triple;
+  }
+  &--notifications {
+    border-radius: 50%;
+    width: $spacing * 1.25;
+    height: $spacing * 1.25;
+    line-height: $spacing * 1;
+    border: 2px white solid;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    background-color: var(--color-error);
+    position: absolute;
+    z-index: 2;
+    top: -5px;
+    right: -5px;
+    font-size: $fontsize-body-s;
+  }
+  &--initials {
+    border-radius: 50%;
+    width: $spacing * 2.5;
+    height: $spacing * 2.5;
+    line-height: $spacing * 2.5;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    &:hover, &:active, &:focus {
+      text-decoration: underline;
+    }
+    @include breakpoint($breakpoint-m) {
+      width: $spacing-triple;
+      height: $spacing-triple;
+      line-height: $spacing-triple;
+    }
+    &-colorscheme {
+      &-2 {
+        background-color: var(--color-bus);
+        color: var(--color-white);
+      }
+      &-1 {
+        background-color: var(--color-engel);
+        color: var(--color-black);
+
+      }
+      &-0 {
+        background-color: var(--color-tram);
+        color: var(--color-white);
+      }
+    }
+  }
+}

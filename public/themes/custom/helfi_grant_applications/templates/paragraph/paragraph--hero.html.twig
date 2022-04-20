@@ -38,19 +38,18 @@
  * @ingroup themeable
  */
 #}
-
 {% set background_color = content.field_hero_bg_color[0]['#markup'] %}
 {% set design = content.field_hero_design[0]['#markup'] %}
 {% set description = content.field_hero_desc %}
 
 {%
   set classes = [
-    'hero',
-    view_mode ? 'hero--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'hero--unpublished',
-    design ? 'hero--' ~ design,
-    background_color ? 'hero--bg-color--' ~ background_color
-  ]
+  'hero',
+  view_mode ? 'hero--' ~ view_mode|clean_class,
+  not paragraph.isPublished() ? 'hero--unpublished',
+  design ? 'hero--' ~ design,
+  background_color ? 'hero--bg-color--' ~ background_color
+]
 %}
 
 {% block paragraph %}
@@ -82,7 +81,6 @@
           {% endif %}
 
           {% if
-            design == "background-image" and
             content.field_hero_link|render
           %}
             {% set link_type = content.field_hero_link_design[0]['#markup'] %}
@@ -139,7 +137,7 @@
         </div>
       {% endif %}
     {% endif %}
-    {% if design != 'no-background' %}ssss
+    {% if design != 'no-background' %}
       {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
     {% endif %}  </div>
 {% endblock paragraph %}

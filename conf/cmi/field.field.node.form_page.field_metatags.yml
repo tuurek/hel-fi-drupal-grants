@@ -1,0 +1,23 @@
+uuid: 826ea9fd-ba17-4733-9caf-79e78c10cc53
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_metatags
+    - node.type.form_page
+  module:
+    - metatag
+_core:
+  default_config_hash: 66fePtAJZ1t0RO2WvkpN-gBiDaq55M4LM1FFDEQ6rvY
+id: node.form_page.field_metatags
+field_name: field_metatags
+entity_type: node
+bundle: form_page
+label: Metatags
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: metatag

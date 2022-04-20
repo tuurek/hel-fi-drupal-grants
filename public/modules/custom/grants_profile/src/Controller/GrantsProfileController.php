@@ -173,7 +173,6 @@ class GrantsProfileController extends ControllerBase {
       }
 
       $build['#profile'] = $profile;
-
     }
 
     $gpForm = \Drupal::formBuilder()
@@ -186,6 +185,25 @@ class GrantsProfileController extends ControllerBase {
       '#markup' => $this->t('It works!'),
     ];
     $build['#title'] = $profile['companyName'];
+    $initials = NULL;
+    $name = $profile['companyName'];
+    $words = explode(' ', $name);
+    if (count($words) >= 2) {
+      $initials = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
+    }
+    else {
+      preg_match_all('#([A-Z]+)#', $name, $capitals);
+      if (count($capitals[1]) >= 2) {
+        $initials = substr(implode('', $capitals[1]), 0, 2);
+      }
+      else {
+        $initials = strtoupper(substr($name, 0, 2));
+      }
+
+    }
+    $build['#initials'] = $initials;
+    $build['#colorscheme'] = 0;
+
     $build['#attached']['library'][] = 'grants_profile/tabs';
     return $build;
   }

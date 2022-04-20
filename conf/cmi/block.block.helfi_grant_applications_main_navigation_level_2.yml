@@ -5,15 +5,15 @@ dependencies:
   config:
     - system.menu.main
   module:
-    - ctools
     - menu_block_current_language
+    - node
   theme:
     - helfi_grant_applications
 _core:
   default_config_hash: zS9zgTlcanrv75vk0WibXcekGUttnN4EwP1pwFdTAcM
 id: helfi_grant_applications_main_navigation_level_2
 theme: helfi_grant_applications
-region: sidebar_first
+region: before_footer
 weight: 0
 provider: null
 plugin: 'menu_block_current_language:main'

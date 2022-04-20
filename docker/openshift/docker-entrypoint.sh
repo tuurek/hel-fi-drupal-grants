@@ -24,6 +24,10 @@ echo "in /var/www/html/public via the terminal"
 cd /var/www/html/public && drush cr && drush updb -y && drush cim -y
 # Allow locale-import to fail.
 cd /var/www/html/public && drush helfi:locale-import helfi_platform_config || true
+cd /var/www/html/public && drush helfi:locale-import grants_attachments || true
+cd /var/www/html/public && drush helfi:locale-import grants_metadata || true
+cd /var/www/html/public && drush helfi:locale-import grants_handler || true
+cd /var/www/html/public && drush helfi:locale-import grants_profile || true
 
 echo "Run PHP-FPM in the background as a daemon"
 php-fpm

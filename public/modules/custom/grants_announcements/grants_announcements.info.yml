@@ -1,0 +1,6 @@
+name: Grants Announcements
+type: module
+description: Module for handling various parts of the grants announcements, such as listing etc.
+package: Hel.fi Grants
+core: 8.x
+core_version_requirement: ^8 || ^9
