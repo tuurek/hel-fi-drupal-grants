@@ -8,6 +8,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
@@ -94,17 +95,18 @@ class AtvSchema {
 
     $propertyDefinitions = $typedDataDefinition->getPropertyDefinitions();
 
-    $typedData = $this->typedDataManager->create($typedDataDefinition);
+    // $typedData = $this->typedDataManager->create($typedDataDefinition);
     $typedDataValues = [];
 
     foreach ($propertyDefinitions as $definitionKey => $definition) {
 
       $jsonPath = $definition->getSetting('jsonPath');
+
       // If json path not configured for item, do nothing.
       if (is_array($jsonPath)) {
         $elementName = array_pop($jsonPath);
 
-        $typedDataValues[$definitionKey] = $this->getValueFromDocument($documentContent, $jsonPath, $elementName);
+        $typedDataValues[$definitionKey] = $this->getValueFromDocument($documentContent, $jsonPath, $elementName, $definition);
       }
     }
     if (isset($typedDataValues['status_updates']) && is_array($typedDataValues['status_updates'])) {
@@ -286,6 +288,10 @@ class AtvSchema {
 
       if ($jsonPath == NULL && $propertyName !== 'form_update') {
         continue;
+      }
+
+      if ($propertyName === 'messages') {
+        $d = 'asdf';
       }
 
       $types = $this->getJsonTypeForDataType($definition);
@@ -473,11 +479,13 @@ class AtvSchema {
    *   Path in JSONn document. From definition settings.
    * @param string $elementName
    *   ELement name in JSON.
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface|null $definition
+   *   Data definition setup.
    *
    * @return mixed
    *   Parsed typed data structure.
    */
-  protected function getValueFromDocument(array $content, array $pathArray, string $elementName): mixed {
+  protected function getValueFromDocument(array $content, array $pathArray, string $elementName, ?DataDefinitionInterface $definition): mixed {
     // Get new key to me evalued.
     $newKey = array_shift($pathArray);
 
@@ -487,7 +495,7 @@ class AtvSchema {
       $newContent = $content[$newKey];
       // And since we're not in root element, call self
       // to drill down to desired element.
-      return $this->getValueFromDocument($newContent, $pathArray, $elementName);
+      return $this->getValueFromDocument($newContent, $pathArray, $elementName, $definition);
     }
     // If we are at the root of content, and the given element exists.
     elseif (array_key_exists($elementName, $content)) {
@@ -501,6 +509,9 @@ class AtvSchema {
             if (is_array($v)) {
               if (array_key_exists('value', $v)) {
                 $retval[$key][$v['ID']] = $v['value'];
+              }
+              else {
+                $retval[$key][$key2] = $v;
               }
             }
             else {

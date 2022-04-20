@@ -66,8 +66,8 @@ class MessageService {
    */
   public function __construct(
     HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata,
-    ClientInterface          $http_client,
-    LoggerChannelFactory     $loggerFactory,
+    ClientInterface $http_client,
+    LoggerChannelFactory $loggerFactory,
   ) {
     $this->helfiHelsinkiProfiiliUserdata = $helfi_helsinki_profiili_userdata;
     $this->httpClient = $http_client;

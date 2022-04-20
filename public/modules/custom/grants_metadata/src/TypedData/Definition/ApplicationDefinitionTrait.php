@@ -648,6 +648,22 @@ trait ApplicationDefinitionTrait {
           ->setRequired(TRUE)
           ->setSetting('jsonPath', ['messages', 'sendDateTime'])
       )
+      ->setPropertyDefinition(
+        'attachments',
+        MapDataDefinition::create()
+          ->setPropertyDefinition('description',
+            DataDefinition::create('string')
+              ->setRequired(FALSE)
+              ->setSetting('jsonPath', ['description'])
+          )
+          ->setPropertyDefinition('fileName',
+            DataDefinition::create('string')
+              ->setRequired(FALSE)
+              ->setSetting('jsonPath', ['fileName'])
+          )
+          ->setRequired(TRUE)
+          ->setSetting('jsonPath', ['messages', 'attachments'])
+      )
       ->setSetting('jsonPath', ['messages']);
 
     return $info;

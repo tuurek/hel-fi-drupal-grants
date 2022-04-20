@@ -108,6 +108,8 @@ class AttachmentUploader {
    *   Generated application number.
    * @param bool $debug
    *   Is debug mode on?
+   * @param string $mode
+   *   Mode to run in, "application" will function as was.
    *
    * @return array[]
    *   Array keyed with FID and boolean to indicate if upload succeeded.
@@ -115,9 +117,34 @@ class AttachmentUploader {
   public function uploadAttachments(
     array $attachments,
     string $applicationNumber,
-    bool $debug
+    bool $debug,
+    string $mode = 'application'
   ): array {
     $this->setDebug($debug);
+
+    if ($mode !== 'application') {
+      $endpoint = getenv('AVUSTUS2_MESSAGE_LIITE_ENDPOINT');
+      $auth = [
+        // Auth details.
+        getenv('AVUSTUS2_USERNAME'),
+        getenv('AVUSTUS2_PASSWORD'),
+      ];
+      $headers = [
+        'X-Case-ID' => $applicationNumber,
+        'X-Message-ID' => $mode,
+      ];
+    }
+    else {
+      $endpoint = getenv('AVUSTUS2_LIITE_ENDPOINT');
+      $auth = [
+        // Auth details.
+        getenv('AVUSTUS2_USERNAME'),
+        getenv('AVUSTUS2_PASSWORD'),
+      ];
+      $headers = [
+        'X-Case-ID' => $applicationNumber,
+      ];
+    }
 
     $retval = [];
     foreach ($attachments as $fileId) {
@@ -140,16 +167,10 @@ class AttachmentUploader {
         $response = $this->httpClient->request(
           'POST',
           // Liite endpoint.
-          getenv('AVUSTUS2_LIITE_ENDPOINT'),
+          $endpoint,
           [
-            'headers' => [
-              'X-Case-ID' => $applicationNumber,
-            ],
-            'auth' => [
-              // Auth details.
-              getenv('AVUSTUS2_USERNAME'),
-              getenv('AVUSTUS2_PASSWORD'),
-            ],
+            'headers' => $headers,
+            'auth' => $auth,
             // Form data.
             'multipart' => [
               [

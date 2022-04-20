@@ -136,7 +136,7 @@ class AttachmentRemover {
       $filename = $file->getFilename();
 
       // Only if we have positive upload result remove file.
-      if ($uploadResults[$fileId] === TRUE) {
+      if ($uploadResults[$fileId]['upload'] === TRUE) {
         try {
           // And delete it.
           $file->delete();

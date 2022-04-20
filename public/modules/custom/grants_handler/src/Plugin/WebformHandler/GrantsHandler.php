@@ -80,14 +80,19 @@ class GrantsHandler extends WebformHandlerBase {
    * @var string[]
    */
   public static array $applicationStatuses = [
-    'DRAFT' => 'DRAFT',         //
+    'DRAFT' => 'DRAFT',
     'SENT' => 'SENT',
-    'SUBMITTED' => 'SUBMITTED', // => Vastaanotettu
-    'RECEIVED' => 'RECEIVED',   // => Vastaanotettu
+  // => Vastaanotettu
+    'SUBMITTED' => 'SUBMITTED',
+  // => Vastaanotettu
+    'RECEIVED' => 'RECEIVED',
     'PENDING' => 'PENDING',
-    'PROCESSING' => 'PROCESSING', // => Käsittelyssä
-    'READY' => 'READY',           // => Valmis
-    'DONE' => 'DONE',           // => Valmis
+  // => Käsittelyssä
+    'PROCESSING' => 'PROCESSING',
+  // => Valmis
+    'READY' => 'READY',
+  // => Valmis
+    'DONE' => 'DONE',
     'REJECTED' => 'REJECTED',
     'DELETED' => 'DELETED',
     'CANCELED' => 'CANCELED',
@@ -216,7 +221,6 @@ class GrantsHandler extends WebformHandlerBase {
     return $instance;
   }
 
-
   /*
    * Static methods
    */
@@ -225,25 +229,27 @@ class GrantsHandler extends WebformHandlerBase {
    * Check if given submission is allowed to be edited.
    *
    * @param \Drupal\webform\Entity\WebformSubmission|null $submission
-   *  Submission in question.
+   *   Submission in question.
    * @param string|null $status
-   *  If no object is available, do text comparison
+   *   If no object is available, do text comparison.
    *
    * @return bool
+   *   Is submission editable?
    */
   public static function isSubmissionEditable(?WebformSubmission $submission, ?string $status): bool {
     if (NULL === $submission) {
       $submissionStatus = $status;
-    } else {
+    }
+    else {
       $data = $submission->getData();
       $submissionStatus = $data['status'];
     }
 
-    if(in_array($submissionStatus, [
+    if (in_array($submissionStatus, [
       self::$applicationStatuses['DRAFT'],
       self::$applicationStatuses['SUBMITTED'],
       self::$applicationStatuses['SENT'],
-      self::$applicationStatuses['RECEIVED']
+      self::$applicationStatuses['RECEIVED'],
     ])) {
       return TRUE;
     }
@@ -254,28 +260,30 @@ class GrantsHandler extends WebformHandlerBase {
    * Check if given submission is allowed to be messaged.
    *
    * @param \Drupal\webform\Entity\WebformSubmission|null $submission
-   * Submission in question.
+   *   Submission in question.
    * @param string|null $status
-   *  If no object is available, do text comparison
+   *   If no object is available, do text comparison.
    *
    * @return bool
+   *   Is submission editable?
    */
   public static function isSubmissionMessageable(?WebformSubmission $submission, ?string $status): bool {
 
     if (NULL === $submission) {
       $submissionStatus = $status;
-    } else {
+    }
+    else {
       $data = $submission->getData();
       $submissionStatus = $data['status'];
     }
 
-    if(in_array($submissionStatus, [
+    if (in_array($submissionStatus, [
       self::$applicationStatuses['DRAFT'],
       self::$applicationStatuses['SUBMITTED'],
       self::$applicationStatuses['SENT'],
       self::$applicationStatuses['RECEIVED'],
       self::$applicationStatuses['PENDING'],
-      self::$applicationStatuses['PROCESSING']
+      self::$applicationStatuses['PROCESSING'],
     ])) {
       return TRUE;
     }
@@ -328,9 +336,9 @@ class GrantsHandler extends WebformHandlerBase {
     return $appParam;
   }
 
-/*
- * Non static methods.
- */
+  /*
+   * Non static methods.
+   */
 
   /**
    * Atv document holding this application.
@@ -356,7 +364,6 @@ class GrantsHandler extends WebformHandlerBase {
 
     return $this->atvDocument;
   }
-
 
   /**
    * Convert EUR format value to "double" .
