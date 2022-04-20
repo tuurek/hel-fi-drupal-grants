@@ -42,7 +42,7 @@ class GrantsProfileController extends ControllerBase {
         // @todo Set up some way to show data. Is webformSubmission needed?
         // $build['#application'] = $submissionObject->getData();
         // $build['#submission_form'] = $submissionForm;
-        return $this->redirect('entity.webform.user.submission.edit', [
+        return $this->redirect('entity.webform.user.submission', [
           'webform' => $webForm->id(),
           'webform_submission' => $submissionObject->id(),
         ]);
@@ -109,7 +109,8 @@ class GrantsProfileController extends ControllerBase {
         $applicationDocuments = $atvService->searchDocuments([
           'type' => 'ECONOMICGRANTAPPLICATION',
           'business_id' => $selectedCompany,
-        ]);
+        ],
+          TRUE);
         $applications = [];
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         foreach ($applicationDocuments as $document) {
@@ -147,8 +148,10 @@ class GrantsProfileController extends ControllerBase {
 
             $applications[] = [
               'transaction_id' => Link::fromTextAndUrl($transactionId, $url),
-              'uploadedAttachments' => \Drupal::service('renderer')->render($uploaded),
-              'missingAttachments' => \Drupal::service('renderer')->render($non_uploaded),
+              'uploadedAttachments' => \Drupal::service('renderer')
+                ->render($uploaded),
+              'missingAttachments' => \Drupal::service('renderer')
+                ->render($non_uploaded),
               'status' => $document->getStatus(),
               'statusHistory' => $document->getStatusHistory(),
             ];
@@ -168,8 +171,7 @@ class GrantsProfileController extends ControllerBase {
         ];
         $build['#applications'] = $table;
 
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException|TempStoreException $e) {
       }
 
       $build['#profile'] = $profile;
@@ -306,16 +308,15 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Bank account confirmation successfully deleted'));
 
-    }
-    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
       unset($bankAccount['confirmationFile']);
 
       $grantsProfileService->saveBankAccount($bank_account_id, $bankAccount);
       try {
         $grantsProfileService->saveGrantsProfileAtv();
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-        $this->getLogger('grants_profile')->error('Profile saving failed. ' . $e->getMessage());
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+        $this->getLogger('grants_profile')
+          ->error('Profile saving failed. ' . $e->getMessage());
         $this->messenger()
           ->addStatus($this->t('Bank account confirmation deleting failed. Issue has been logged.'));
       }

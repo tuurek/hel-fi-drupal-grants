@@ -538,6 +538,12 @@ elements: |-
         '#help': '<span style="font-size:11.0pt"><span style="line-height:107%"><span style="font-family:&quot;Calibri&quot;,sans-serif">Liit&auml; t&auml;h&auml;n koko yhteis&ouml;n talousarvio.</span></span></span>'
         '#title_display': before
         '#description__access': false
+      extra_info:
+        '#type': textarea
+        '#title': 'Lisäselvitys liitteistä'
+        '#counter_type': character
+        '#counter_maximum': 5000
+        '#counter_maximum_message': 'Max 5000 characters.'
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'

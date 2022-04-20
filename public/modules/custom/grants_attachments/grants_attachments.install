@@ -93,3 +93,16 @@ function grants_attachments_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Create upload folder for message attachments.
+ */
+function grants_attachments_update_9001(&$sandbox) {
+  $privatePath = \Drupal::service('file_system')
+      ->realpath("private://") . '/grants_messages';
+
+  if (!file_exists($privatePath)) {
+    mkdir($privatePath, 0777, true);
+  }
+
+}
