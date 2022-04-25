@@ -179,6 +179,21 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
         }
       }
     }
+
+    // Hacky fix for issues with camelCase keys with Custom component keys.
+    // Set issuerName value to issuer_name field and unset camelCase.
+    if (isset($element['#webform_key']) && ($element['#webform_key'] == 'myonnetty_avustus' || $element['#webform_key'] == 'haettu_avustus_tieto')) {
+      $newValues = [];
+      foreach ($element["#default_value"] as $key => $default) {
+        $new = $default;
+        if (isset($default['issuerName'])) {
+          $new['issuer_name'] = $default['issuerName'];
+          unset($new['issuerName']);
+        }
+        $newValues[] = $new;
+      }
+      $element["#default_value"] = $newValues;
+    }
   }
 
 
