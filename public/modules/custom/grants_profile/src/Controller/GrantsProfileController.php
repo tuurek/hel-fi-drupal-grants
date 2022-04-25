@@ -171,7 +171,8 @@ class GrantsProfileController extends ControllerBase {
         ];
         $build['#applications'] = $table;
 
-      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException|TempStoreException $e) {
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
       }
 
       $build['#profile'] = $profile;
@@ -308,13 +309,15 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Bank account confirmation successfully deleted'));
 
-    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       unset($bankAccount['confirmationFile']);
 
       $grantsProfileService->saveBankAccount($bank_account_id, $bankAccount);
       try {
         $grantsProfileService->saveGrantsProfileAtv();
-      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
           ->error('Profile saving failed. ' . $e->getMessage());
         $this->messenger()
