@@ -143,11 +143,11 @@ elements: |-
             '#type': select
             '#options':
               1: Puheenjohtaja
-              2: 'Taloudesta vastaava'
-              3: Sihteeri
-              4: Toiminnanjohtaja
-              5: Varapuheenjohtaja
-              6: Muu
+              2: Yhteyshenkilö
+              3: Muu
+              4: 'Taloudesta vastaava'
+              5: 'Tilintarkastaja / toiminnantarkastaja'
+              6: Sihteeri
             '#title': Rooli
           email:
             '#type': email

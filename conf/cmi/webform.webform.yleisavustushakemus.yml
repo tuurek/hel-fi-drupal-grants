@@ -76,6 +76,12 @@ elements: |-
           '#title': Kotipaikka
           '#readonly': true
           '#required': true
+      prh_markup:
+        '#type': webform_markup
+        '#markup': |-
+          <div class="grants-profile-prh-info">
+                      <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> Merkityt tiedot on haettu Patentti- ja rekisterihallinnon rekisteristä (PRH), eikä niitä voi tämän takia muokata.
+                    </div>
     perustamisvuosi:
       '#type': webform_section
       '#title': Perustamisvuosi
@@ -169,11 +175,11 @@ elements: |-
             '#type': select
             '#options':
               1: Puheenjohtaja
-              2: 'Taloudesta vastaava'
-              3: Sihteeri
-              4: Toiminnanjohtaja
-              5: Varapuheenjohtaja
-              6: Muu
+              2: Yhteyshenkilö
+              3: Muu
+              4: 'Taloudesta vastaava'
+              5: 'Tilintarkastaja / toiminnantarkastaja'
+              6: Sihteeri
             '#title': Rooli
           email:
             '#type': email
@@ -222,6 +228,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     muut_samaan_tarkoitukseen_myonnetyt_avustukset:
       '#type': webform_section
       '#title': 'Muut samaan tarkoitukseen myönnetyt avustukset'
@@ -356,6 +365,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     kaupungilta_saatu_tiloihin_liittyva_tuki:
       '#type': webform_section
       '#title': 'Kaupungilta saatu tiloihin liittyvä tuki'
@@ -369,6 +381,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     edellisen_avustuksen_kayttoselvitys:
       '#type': webform_section
       '#title': 'Edellisen avustuksen käyttöselvitys'
@@ -389,6 +404,9 @@ elements: |-
         '#counter_minimum': 1
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön toiminta'
@@ -421,12 +439,15 @@ elements: |-
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#attributes':
           class:
-            - input--short
+            - webform--short
       fee_community:
         '#type': textfield
         '#title': 'Yhteisöjäsen (€ / vuosi)'
         '#maxlength': 50
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#attributes':
+          class:
+            - webform--short
     jasenmaara:
       '#type': webform_section
       '#title': Jäsenmäärä
@@ -437,6 +458,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--short
       members_applicant_person_global:
         '#type': textfield
         '#title': 'Henkilöjäseniä yhteensä'
@@ -444,6 +468,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--short
       members_applicant_community_local:
         '#type': textfield
         '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'
@@ -451,6 +478,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--short
       members_applicant_community_global:
         '#type': textfield
         '#title': Yhteisöjäseniä
@@ -458,6 +488,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--short
   lisatiedot_ja_liitteet:
     '#type': webform_wizard_page
     '#title': '4. Lisätiedot ja liitteet'
@@ -471,6 +504,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     liitteet:
       '#type': webform_section
       '#title': Liitteet
@@ -559,6 +595,15 @@ elements: |-
         '#help': '<span style="font-size:11.0pt"><span style="line-height:107%"><span style="font-family:&quot;Calibri&quot;,sans-serif">Liit&auml; t&auml;h&auml;n koko yhteis&ouml;n talousarvio.</span></span></span>'
         '#title_display': before
         '#description__access': false
+      extra_info:
+        '#type': textarea
+        '#title': 'Lisäselvitys liitteistä'
+        '#counter_type': character
+        '#counter_maximum': 5000
+        '#counter_maximum_message': 'Max 5000 characters.'
+        '#attributes':
+          class:
+            - webform--large
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'

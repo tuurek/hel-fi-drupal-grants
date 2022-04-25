@@ -28,7 +28,10 @@
   }
 }
 .webform-section {
-  margin-bottom: var(--spacing-layout-l);
+  padding-bottom: var(--spacing-layout-2-xs);
+}
+.form-item {
+  margin-bottom: var(--spacing-layout-xs);
 }
 .webform-section-flex-wrapper {
 
@@ -59,6 +62,9 @@
     font-size: $base-font-size;
     width: 100%;
     padding-left: $spacing-triple;
+    p:first-child {
+      margin-top: 0;
+    }
   }
   .form-required::after {
     content: '*';

@@ -117,7 +117,7 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $addressMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/address/new">
+    $addressMarkup .= '<div class="form-item"><a class="hds-link hds-link--medium" href="/grants-profile/address/new">
 <span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Address') . '</span></a></div>';
     $addressMarkup = '<div>' . $addressMarkup . '</div>';
 
@@ -147,7 +147,6 @@ class GrantsProfileForm extends FormBase {
         <a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/' . $key . '">
 <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
        </div>
-
     </li>';
       }
       $bankAccountMarkup .= '</ul>';
@@ -163,9 +162,9 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $bankAccountMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/new">
+    $bankAccountMarkup .= '<div class="form-item"><a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/new">
 <span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Bank account') . '</span></a></div>';
-    $bankAccountMarkup = '<div>' . $bankAccountMarkup . '</div>';
+
     $form['bankAccountWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Company Bank Accounts'),
@@ -230,7 +229,7 @@ class GrantsProfileForm extends FormBase {
     </li>';
     }
     $officialsMarkup .= '</ul>';
-    $officialsMarkup .= '<div><a class="hds-link hds-link--medium" href="/grants-profile/application-officials/new">
+    $officialsMarkup .= '<div class="form-item"><a class="hds-link hds-link--medium" href="/grants-profile/application-officials/new">
 <span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New official') . '</span></a></div>';
     $officialsMarkup = '<div>' . $officialsMarkup . '</div>';
     $form['businessPurposeWrapper'] = [

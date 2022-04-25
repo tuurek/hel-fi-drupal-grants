@@ -126,7 +126,7 @@
   }
 }
 
-.grants-handler--prefilled-field {
+.grants-handler--prefilled-field, .grants-profile-prh-info {
   .description {
     white-space: normal;
   }
@@ -149,8 +149,8 @@
   width: 100%;
   h2.webform-section-title {
     width: 100%;
-    padding-bottom: var(--spacing-layout-m);
-    margin-bottom: var(--spacing-layout-m);
+    padding-bottom: var(--spacing-layout-l);
+    margin-bottom: var(--spacing-layout-l);
     max-width: 100%;
     border-bottom: 1px var(--color-silver) solid;
   }
@@ -163,9 +163,10 @@
   #edit-grants-profile-items-container {
     border-top: 1px var(--color-silver) solid;
     border-bottom: 1px var(--color-silver) solid;
-    margin-top: var(--spacing-layout-m);
-    padding-top: var(--spacing-layout-m);
-    padding-bottom: var(--spacing-layout-m);
+    margin-top: var(--spacing-layout-xs);
+    padding-top: var(--spacing-layout-xs);
+    padding-bottom: var(--spacing-layout-xs);
+    margin-bottom: var(--spacing-layout-xs);
     display: flex;
     width: 100%;
     flex-flow: row wrap;
