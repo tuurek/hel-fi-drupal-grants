@@ -168,8 +168,7 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
     if (
       isset($webformData['status']) &&
       !GrantsHandler::isSubmissionEditable(NULL, $webformData['status']) &&
-      $element['#type'] != 'webform_actions')
-    {
+      $element['#type'] != 'webform_actions') {
       $element['#disabled'] = TRUE;
     }
     else {
@@ -184,13 +183,15 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
     // Set issuerName value to issuer_name field and unset camelCase.
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'myonnetty_avustus' || $element['#webform_key'] == 'haettu_avustus_tieto')) {
       $newValues = [];
-      foreach ($element["#default_value"] as $key => $default) {
-        $new = $default;
-        if (isset($default['issuerName'])) {
-          $new['issuer_name'] = $default['issuerName'];
-          unset($new['issuerName']);
+      if (isset($element["#default_value"])) {
+        foreach ($element["#default_value"] as $key => $default) {
+          $new = $default;
+          if (isset($default['issuerName'])) {
+            $new['issuer_name'] = $default['issuerName'];
+            unset($new['issuerName']);
+          }
+          $newValues[] = $new;
         }
-        $newValues[] = $new;
       }
       $element["#default_value"] = $newValues;
     }
@@ -203,19 +204,19 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
  * Implements hook_preprocess().
  */
 function grants_handler_preprocess_webform(array &$variables) {
-  /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-  $grantsProfileService = \Drupal::service('grants_profile.service');
-  $selectedCompany = $grantsProfileService->getSelectedCompany();
-
-  if ($selectedCompany == NULL) {
-    \Drupal::messenger()
-      ->addError(t('You need to select company you\'re acting behalf of.'));
-    $url = \Drupal\Core\Url::fromRoute('grants_profile.show')
-      ->setAbsolute()
-      ->toString();
-    $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
-    $response->send();
-  }
+//  /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+//  $grantsProfileService = \Drupal::service('grants_profile.service');
+//  $selectedCompany = $grantsProfileService->getSelectedCompany();
+//
+//  if ($selectedCompany == NULL) {
+//    \Drupal::messenger()
+//      ->addError(t('You need to select company you\'re acting behalf of.'));
+//    $url = \Drupal\Core\Url::fromRoute('grants_profile.show')
+//      ->setAbsolute()
+//      ->toString();
+//    $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
+//    $response->send();
+//  }
 }
 
 
@@ -375,6 +376,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status"], $grantsProfile["companyStatus"]);
     _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["community_status_special"], $grantsProfile["companyStatusSpecial"]);
+
+    _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["homepage"], $grantsProfile["companyHomePage"]);
+
   }
   else {
     \Drupal::messenger()
@@ -440,7 +444,8 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
         'date' => $dt->format('d.m.Y h:i:s'),
         'sender' => $message['sentBy'],
         'body' => $message['body'] ?? '',
-        'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')->render($build) : ''
+        'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')
+          ->render($build) : '',
       ];
     }
   }
@@ -557,12 +562,12 @@ function grants_handler_preprocess_webform_submission_message_attachments(&$vari
 
   $table = [
     '#type' => 'table',
-//    '#header' => [
-//      'fileName' => t('File name'),
-//      'description' => t('Description'),
-//    ],
+    //    '#header' => [
+    //      'fileName' => t('File name'),
+    //      'description' => t('Description'),
+    //    ],
     '#rows' => $events,
-//    '#empty' => t('No attachments has been found.'),
+    //    '#empty' => t('No attachments has been found.'),
   ];
 
   $variables['attachments_to_print'] = $table;
