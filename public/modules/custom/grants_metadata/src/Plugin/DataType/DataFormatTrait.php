@@ -24,7 +24,7 @@ trait DataFormatTrait {
       if (array_key_exists($name, $values)) {
         $value = $values[$name];
 
-        if (!$value) {
+        if ($value === NULL) {
           $value = $defaultValue;
         }
 

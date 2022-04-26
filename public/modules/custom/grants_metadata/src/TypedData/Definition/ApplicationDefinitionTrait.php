@@ -15,7 +15,7 @@ trait ApplicationDefinitionTrait {
    * Base data definitions for all.
    */
   public function getBaseProperties(): array {
-    $info['applicant_type'] = DataDefinition::create('integer')
+    $info['applicant_type'] = DataDefinition::create('string')
       // // ->setRequired(TRUE)
       ->setLabel('Hakijan tyyppi')
       ->setSetting('jsonPath', [

@@ -615,6 +615,7 @@ class GrantsHandler extends WebformHandlerBase {
     // lisatiedot_ja_liitteet
     // webform_preview
     $this->submittedFormData = $webform_submission->getData();
+    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
 
     foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
       $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
@@ -766,15 +767,18 @@ class GrantsHandler extends WebformHandlerBase {
     }
     else {
       $applicantTypeString = $this->grantsProfileService->getApplicantType();
+      $applicantType = '0';
       switch ($applicantTypeString) {
         case 'registered_community':
-          $applicantType = 0;
+          $applicantType = '0';
           break;
+
         case 'unregistered_community':
-          $applicantType = 1;
+          $applicantType = '1';
           break;
+
         case 'private_person':
-          $applicantType = 2;
+          $applicantType = '2';
           break;
       }
     }
@@ -807,6 +811,12 @@ class GrantsHandler extends WebformHandlerBase {
 
     if (empty($this->submittedFormData)) {
       $this->submittedFormData = $webform_submission->getData();
+    }
+
+    // If for some reason applicant type is not present, make sure it get's
+    // added otherwise validation fails.
+    if (!isset($this->submittedFormData['applicant_type'])) {
+      $this->submittedFormData['applicant_type'] = $this->grantsProfileService->getApplicantType();
     }
 
     if (isset($this->submittedFormData["community_purpose"])) {
