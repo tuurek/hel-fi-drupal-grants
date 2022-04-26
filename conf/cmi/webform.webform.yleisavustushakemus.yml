@@ -36,14 +36,6 @@ elements: |-
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
-      applicant_type:
-        '#type': select
-        '#title': 'Hakijan tyyppi'
-        '#options':
-          1: '1'
-          2: '2'
-          3: '3'
-        '#required': true
       company_number:
         '#type': textfield
         '#title': Y-Tunnus
@@ -88,6 +80,9 @@ elements: |-
         '#type': email
         '#title': Sähköpostiosoite
         '#required': true
+      applicant_type:
+        '#type': hidden
+        '#title': 'Applicant TYPE'
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -179,6 +174,7 @@ elements: |-
           2022: '2022'
           2023: '2023'
           2024: '2024'
+        '#required': true
     avustuslajit:
       '#type': webform_section
       '#title': Avustuslajit

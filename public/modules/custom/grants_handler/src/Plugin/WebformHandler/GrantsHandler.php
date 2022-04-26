@@ -773,6 +773,17 @@ class GrantsHandler extends WebformHandlerBase {
       '#value' => $applicantType,
     ];
 
+    $thisYear = (integer) date('Y');
+    $thisYearPlus1 = $thisYear + 1;
+    $thisYearPlus2 = $thisYear + 2;
+
+    $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]['#required'] = TRUE;
+    $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]["#options"] = [
+      $thisYear => $thisYear,
+      $thisYearPlus1 => $thisYearPlus1,
+      $thisYearPlus2 => $thisYearPlus2,
+    ];
+
   }
 
   /**
