@@ -765,7 +765,18 @@ class GrantsHandler extends WebformHandlerBase {
       $applicantType = $submissionData['applicant_type'];
     }
     else {
-      $applicantType = $this->grantsProfileService->getApplicantType();
+      $applicantTypeString = $this->grantsProfileService->getApplicantType();
+      switch ($applicantTypeString) {
+        case 'registered_community':
+          $applicantType = '0';
+          break;
+        case 'unregistered_community':
+          $applicantType = '1';
+          break;
+        case 'private_person':
+          $applicantType = '2';
+          break;
+      }
     }
 
     $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["applicant_type"] = [
