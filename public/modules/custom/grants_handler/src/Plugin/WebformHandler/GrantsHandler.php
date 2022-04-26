@@ -712,6 +712,10 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData = $webform_submission->getData();
     }
 
+    if (isset($this->submittedFormData["community_purpose"])) {
+      $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
+    }
+
     if (!empty($this->submittedFormData)) {
       $this->setTotals();
       $this->parseSenderDetails();
@@ -761,6 +765,13 @@ class GrantsHandler extends WebformHandlerBase {
         $this->submittedFormData['form_update'] = TRUE;
       }
 
+    }
+
+    // Because of funky naming convention, we need to manually
+    // set purpose field value.
+    // This is populated from grants profile so it's just passing this on.
+    if (isset($this->submittedFormData["community_purpose"])) {
+      $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
     }
 
   }
