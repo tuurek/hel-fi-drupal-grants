@@ -768,13 +768,13 @@ class GrantsHandler extends WebformHandlerBase {
       $applicantTypeString = $this->grantsProfileService->getApplicantType();
       switch ($applicantTypeString) {
         case 'registered_community':
-          $applicantType = '0';
+          $applicantType = 0;
           break;
         case 'unregistered_community':
-          $applicantType = '1';
+          $applicantType = 1;
           break;
         case 'private_person':
-          $applicantType = '2';
+          $applicantType = 2;
           break;
       }
     }
