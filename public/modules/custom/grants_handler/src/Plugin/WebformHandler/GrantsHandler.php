@@ -4,6 +4,7 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -27,6 +28,7 @@ use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Webform example handler.
@@ -125,6 +127,15 @@ class GrantsHandler extends WebformHandlerBase {
    * @var string
    */
   protected string $applicationType;
+
+  /**
+   * Applicant type.
+   *
+   * Private / registered / UNregistered.
+   *
+   * @var string
+   */
+  protected string $applicantType;
 
   /**
    * Application type ID.
@@ -703,6 +714,70 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
+  public function preCreate(array &$values) {
+
+    // These both are required to be selected.
+    // probably will change when we have proper company selection process.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $applicantType = $this->grantsProfileService->getApplicantType();
+    if ($applicantType === NULL) {
+
+      \Drupal::messenger()
+        ->addError(t('You need to select applicant type.'));
+
+      $url = Url::fromRoute('grants_profile.applicant_type', [
+        'destination' => $values["uri"],
+      ])
+        ->setAbsolute()
+        ->toString();
+      $response = new RedirectResponse($url);
+      $response->send();
+    }
+    else {
+      $this->applicantType = $this->grantsProfileService->getApplicantType();
+    }
+
+    if ($selectedCompany == NULL) {
+      \Drupal::messenger()
+        ->addError(t("You need to select company you're acting behalf of."));
+
+      $url = Url::fromRoute('grants_profile.show', [
+        'destination' => $values["uri"],
+      ])
+        ->setAbsolute()
+        ->toString();
+      $response = new RedirectResponse($url);
+      $response->send();
+    }
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+
+    // If submission has applicant type set, ie we're editing submission
+    // use that, if not then get selected from profile.
+    // we know that.
+    $submissionData = $webform_submission->getData();
+    if (isset($submissionData['applicant_type'])) {
+      $applicantType = $submissionData['applicant_type'];
+    }
+    else {
+      $applicantType = $this->grantsProfileService->getApplicantType();
+    }
+
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["applicant_type"] = [
+      '#type' => 'hidden',
+      '#value' => $applicantType,
+    ];
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(WebformSubmissionInterface $webform_submission) {
 
     // don't save ip address.
@@ -741,6 +816,13 @@ class GrantsHandler extends WebformHandlerBase {
 
     // @todo check community_practices_business value and where to get it from.
     $this->submittedFormData['community_practices_business'] = FALSE;
+
+    // Get regdate from profile data and format it for Avustus2
+    // This data is immutable for end user so safe to this way.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
+    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
     if (isset($this->submittedFormData["finalize_application"]) &&
       $this->submittedFormData["finalize_application"] == 1) {
