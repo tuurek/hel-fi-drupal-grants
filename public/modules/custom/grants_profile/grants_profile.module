@@ -101,6 +101,7 @@ function grants_profile_theme(): array {
       'notifications' => NULL,
     ],
   ];
+
   return $theme;
 }
 
