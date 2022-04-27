@@ -621,31 +621,31 @@ trait ApplicationDefinitionTrait {
       ->setPropertyDefinition(
         'caseId',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['messages', 'caseId'])
       )
       ->setPropertyDefinition(
         'messageId',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['messages', 'messageId'])
       )
       ->setPropertyDefinition(
         'body',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['messages', 'body'])
       )
       ->setPropertyDefinition(
         'sentBy',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['messages', 'sentBy'])
       )
       ->setPropertyDefinition(
         'sendDateTime',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['messages', 'sendDateTime'])
       )
       ->setPropertyDefinition(
@@ -661,10 +661,11 @@ trait ApplicationDefinitionTrait {
               ->setRequired(FALSE)
               ->setSetting('jsonPath', ['fileName'])
           )
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['messages', 'attachments'])
       )
-      ->setSetting('jsonPath', ['messages']);
+      ->setSetting('jsonPath', ['messages'])
+      ->setRequired(FALSE);
 
     return $info;
   }
