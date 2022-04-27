@@ -842,7 +842,7 @@ class GrantsHandler extends WebformHandlerBase {
       ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
 
     $dt = new \DateTime();
-    $dt->setTimestamp($webform_submission->getCreatedTime());
+    // $dt->setTimestamp($webform_submission->getCreatedTime());
     $dt->setTimezone(new \DateTimeZone('UTC'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
@@ -1319,6 +1319,30 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           $retval['isIncludedInOtherFile'] = '0';
+        }
+      }
+    }
+    return $retval;
+  }
+
+  /**
+   * Cleans up non-array values from array structure.
+   *
+   * This is due to some configuration error with messages/statuses/events
+   * that I'm not able to find.
+   *
+   * @param array $value
+   *   Array we need to flatten.
+   *
+   * @return array
+   *   Fixed array.
+   */
+  public static function cleanUpArrayValues(array $value): array {
+    $retval = [];
+    if (is_array($value)) {
+      foreach ($value as $k => $v) {
+        if (is_array($v)) {
+          $retval[] = $v;
         }
       }
     }

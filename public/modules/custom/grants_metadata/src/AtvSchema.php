@@ -281,28 +281,37 @@ class AtvSchema {
       $propertyLabel = $definition->getLabel();
       $propertyType = $definition->getDataType();
 
+      if (
+        $propertyName === 'messages' ||
+        $propertyName === 'events' ||
+        $propertyName === 'status_updates'
+      ) {
+        $d = 'asdf';
+      }
+
       $numberOfItems = count($jsonPath);
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
       $value = $property->getValue();
 
-      if ($jsonPath == NULL && $propertyName !== 'form_update') {
+      if ($jsonPath == NULL &&
+        ($propertyName !== 'form_update' &&
+          $propertyName !== 'messages' &&
+          $propertyName !== 'status_updates' &&
+          $propertyName !== 'events'
+        )
+      ) {
         continue;
       }
 
-      if ($propertyName === 'messages') {
-        $d = 'asdf';
-      }
-
+      // If ($propertyName === 'status_updates') {
+      // continue;
+      // }.
       $types = $this->getJsonTypeForDataType($definition);
       $schema = $this->getPropertySchema($elementName, $this->structure);
 
       $itemTypes = $this->getJsonTypeForDataType($definition);
       $itemValue = $this->getItemValue($itemTypes, $value, $defaultValue, $valueCallback);
-
-      if ($propertyName === 'status_updates') {
-        continue;
-      }
 
       switch ($numberOfItems) {
         case 4:

@@ -39,4 +39,15 @@ trait DataFormatTrait {
     parent::setValue($formattedData, $notify);
   }
 
+  /**
+   * Override getValue to be able to debug better.
+   *
+   * @return array
+   *   The value.
+   */
+  public function getValue(): array {
+    $retval = parent::getValue();
+    return $retval;
+  }
+
 }

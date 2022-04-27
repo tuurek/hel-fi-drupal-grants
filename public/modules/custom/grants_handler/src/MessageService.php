@@ -2,9 +2,12 @@
 
 namespace Drupal\grants_handler;
 
+use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use Drupal\webform\Entity\WebformSubmission;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -31,7 +34,7 @@ class MessageService {
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactory
    */
-  protected $logger;
+  protected LoggerChannelFactory|LoggerChannelInterface|LoggerChannel $logger;
 
   /**
    * API endopoint.
@@ -80,15 +83,25 @@ class MessageService {
   }
 
   /**
-   * Method description.
+   * Send message to backend.
+   *
+   * @param array $messageData
+   *   Message content.
+   * @param \Drupal\webform\Entity\WebformSubmission $submission
+   *   Submission entity.
+   * @param string $nextMessageId
+   *   Next message id for logging.
+   *
+   * @return bool
+   *   Return message status.
    */
-  public function sendMessage($messageData, $submission): bool {
+  public function sendMessage(array $messageData, WebformSubmission $submission, string $nextMessageId): bool {
 
     $submissionData = $submission->getData();
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
 
     $dt = new \DateTime();
-    $dt->setTimezone(new \DateTimeZone('UTC'));
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
 
     if (isset($submissionData["application_number"]) && !empty($submissionData["application_number"])) {
       $messageData['caseId'] = $submissionData["application_number"];
@@ -101,6 +114,7 @@ class MessageService {
       ]);
 
       if ($res->getStatusCode() == 201) {
+        $this->logger->error('MSG id: ' . $nextMessageId . ', message sent.');
         return TRUE;
       }
     }
