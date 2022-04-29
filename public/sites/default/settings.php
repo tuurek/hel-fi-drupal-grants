@@ -53,14 +53,15 @@ if (isset($_SERVER['WODBY_APP_NAME'])) {
 $config['openid_connect.client.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
 $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
 
-if(getenv('APP_ENV') == 'production'){
-  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = true;
+if (getenv('APP_ENV') == 'production') {
+  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = TRUE;
   $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://api.hel.fi/sso';
-} else {
-  if(getenv('APP_ENV') == 'development') {
+}
+else {
+  if (getenv('APP_ENV') == 'development') {
     $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://tunnistamo.test.hel.ninja';
   }
-  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = false;
+  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = FALSE;
 }
 
 $config['siteimprove.settings']['prepublish_enabled'] = TRUE;
@@ -232,6 +233,16 @@ if (
   $settings['redis.connection']['interface'] = 'PhpRedis';
   $settings['redis.connection']['host'] = $redis_host;
   $settings['redis.connection']['port'] = $redis_port;
+
+  // REDIS_INSTANCE environment variable is used to support Redis sentinel.
+  // REDIS_HOST value should contain host and port, like 'sentinel-external:5000'
+  // when using Sentinel.
+  if ($redis_instance = getenv('REDIS_INSTANCE')) {
+    $settings['redis.connection']['instance'] = $redis_instance;
+    // Sentinel expects redis host to be an array.
+    $redis_host = explode(',', $redis_host);
+  }
+
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
   // Register redis services to make sure we don't get a non-existent service
