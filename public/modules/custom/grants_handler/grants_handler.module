@@ -374,7 +374,9 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   $submission = $variables['webform_submission'];
   $data = $submission->getData();
 
-  $variables['applicationNumber'] = $data["application_number"];
+  if (isset($data["application_number"])) {
+    $variables['applicationNumber'] = $data["application_number"];
+  }
 
   // parse messages
   $variables['messages'] = [
@@ -443,6 +445,9 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
     ],
     '#rows' => $messages,
     '#empty' => t('No messages has been found.'),
+    '#attributes' => [
+      'class' => ['message-table'],
+    ],
   ];
 
   $variables['messages'] = $table;
