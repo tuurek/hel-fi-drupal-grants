@@ -84,16 +84,16 @@ class GrantsHandler extends WebformHandlerBase {
   public static array $applicationStatuses = [
     'DRAFT' => 'DRAFT',
     'SENT' => 'SENT',
-  // => Vastaanotettu
+    // => Vastaanotettu
     'SUBMITTED' => 'SUBMITTED',
-  // => Vastaanotettu
+    // => Vastaanotettu
     'RECEIVED' => 'RECEIVED',
     'PENDING' => 'PENDING',
-  // => Käsittelyssä
+    // => Käsittelyssä
     'PROCESSING' => 'PROCESSING',
-  // => Valmis
+    // => Valmis
     'READY' => 'READY',
-  // => Valmis
+    // => Valmis
     'DONE' => 'DONE',
     'REJECTED' => 'REJECTED',
     'DELETED' => 'DELETED',
@@ -529,7 +529,7 @@ class GrantsHandler extends WebformHandlerBase {
         $document = $atvService->searchDocuments([
           'transaction_id' => $applicationNumber,
         ],
-        TRUE);
+          TRUE);
 
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         $document = reset($document);
@@ -833,6 +833,33 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Method to figure out if formUpdate should be false/true?
+   *
+   * The thing is that the Avustus2 is not very clear about when it fetches
+   * data from ATV. Initial import from ATV MUST have fromUpdate FALSE, and
+   * any subsequent update will have to have it as FALSE. The application status
+   * handling makes this possibly very complicated, hence separate method
+   * figuring it out.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission $webformSubmission
+   *   Submission being saved. If status of submission is needed.
+   */
+  private function setFormUpdate(WebformSubmission $webformSubmission) {
+    if (!isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'DRAFT') {
+      $this->submittedFormData['form_update'] = FALSE;
+    }
+    elseif (!isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'SUBMITTED') {
+      $this->submittedFormData['form_update'] = FALSE;
+    }
+    elseif (isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'SUBMITTED') {
+      $this->submittedFormData['form_update'] = FALSE;
+    }
+    else {
+      $this->submittedFormData['form_update'] = TRUE;
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
@@ -861,24 +888,18 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData['status'] = 'SUBMITTED';
     }
 
+    // This needs to be called before setting applicationNumber
+    // with new submission.
+    $this->setFormUpdate($webform_submission);
+
     if (!isset($this->submittedFormData['application_number'])) {
       $this->applicationNumber = self::createApplicationNumber($webform_submission);
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
-      // Apparently you CANNOT have this set in new applications,
-      // integration seems to fail.
-      $this->submittedFormData['form_update'] = FALSE;
     }
     else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
-      if ($this->submittedFormData['status'] === 'SUBMITTED') {
-        $this->submittedFormData['form_update'] = FALSE;
-      }
-      else {
-        $this->submittedFormData['form_update'] = TRUE;
-      }
-
     }
 
     // Because of funky naming convention, we need to manually
@@ -1321,6 +1342,11 @@ class GrantsHandler extends WebformHandlerBase {
           $retval['isIncludedInOtherFile'] = '0';
         }
       }
+
+      if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
+        $retval['integrationID'] = $field["integrationID"];
+      }
+
     }
     return $retval;
   }
@@ -1331,13 +1357,13 @@ class GrantsHandler extends WebformHandlerBase {
    * This is due to some configuration error with messages/statuses/events
    * that I'm not able to find.
    *
-   * @param array $value
+   * @param array|null $value
    *   Array we need to flatten.
    *
    * @return array
    *   Fixed array.
    */
-  public static function cleanUpArrayValues(array $value): array {
+  public static function cleanUpArrayValues(?array $value): array {
     $retval = [];
     if (is_array($value)) {
       foreach ($value as $k => $v) {

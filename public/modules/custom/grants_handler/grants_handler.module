@@ -11,7 +11,6 @@ use Drupal\Core\Link;
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
-use Drupal\helfi_yjdh\Exception\YjdhException;
 
 /**
  * Implements hook_theme().
@@ -201,26 +200,6 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
 }
 
 /**
- * Implements hook_preprocess().
- */
-function grants_handler_preprocess_webform(array &$variables) {
-//  /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-//  $grantsProfileService = \Drupal::service('grants_profile.service');
-//  $selectedCompany = $grantsProfileService->getSelectedCompany();
-//
-//  if ($selectedCompany == NULL) {
-//    \Drupal::messenger()
-//      ->addError(t('You need to select company you\'re acting behalf of.'));
-//    $url = \Drupal\Core\Url::fromRoute('grants_profile.show')
-//      ->setAbsolute()
-//      ->toString();
-//    $response = new \Symfony\Component\HttpFoundation\RedirectResponse($url);
-//    $response->send();
-//  }
-}
-
-
-/**
  * @param $array
  *   Array being manipulated.
  * @param $value
@@ -391,7 +370,11 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
  */
 function grants_handler_preprocess_webform_submission_data(&$variables) {
   // get submission object
+  /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables['webform_submission'];
+  $data = $submission->getData();
+
+  $variables['applicationNumber'] = $data["application_number"];
 
   // parse messages
   $variables['messages'] = [
@@ -433,7 +416,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   if (isset($submissionData['messages']) && is_array($submissionData['messages'])) {
     foreach ($submissionData['messages'] as $message) {
       $dt = new \DateTime($message['sendDateTime']);
-      $dt->setTimezone(new \DateTimeZone('UTC'));
+      $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
 
       $build = [
         '#theme' => 'webform_submission_message_attachments',

@@ -101,11 +101,19 @@ class MessageService {
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
 
     $dt = new \DateTime();
-    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+    // $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+    $dt->setTimezone(new \DateTimeZone('UTC'));
 
     if (isset($submissionData["application_number"]) && !empty($submissionData["application_number"])) {
       $messageData['caseId'] = $submissionData["application_number"];
-      $messageData['sentBy'] = $userData['name'];
+
+      if ($userData === NULL) {
+        $messageData['sentBy'] = 'Testi Käyttäjä';
+      }
+      else {
+        $messageData['sentBy'] = $userData['name'];
+      }
+
       $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
       $res = $this->httpClient->post($this->endpoint, [
@@ -114,7 +122,7 @@ class MessageService {
       ]);
 
       if ($res->getStatusCode() == 201) {
-        $this->logger->error('MSG id: ' . $nextMessageId . ', message sent.');
+        $this->logger->info('MSG id: ' . $nextMessageId . ', message sent.');
         return TRUE;
       }
     }

@@ -12,13 +12,13 @@
  * @ingroup themeable
  */
 #}
-{%
-    set classes = [
+{% set classes = [
     'webform-submission-data',
     'webform-submission-data--webform-' ~ webform.id()|clean_class,
     view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
-]
-%}
+] %}
+
+<h3>{{ applicationNumber }}</h3>
 
 <div id="message-form-wrapper">
     {{ messages }}
