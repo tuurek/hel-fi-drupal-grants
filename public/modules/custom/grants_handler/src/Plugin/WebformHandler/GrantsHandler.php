@@ -1043,7 +1043,7 @@ class GrantsHandler extends WebformHandlerBase {
             $this->messenger()
               ->addStatus(
                 $this->t(
-                  'Grant application (@number), 
+                  'Grant application (<span id="saved-application-number">@number</span>) saved, 
                   see application status from @link',
                   [
                     '@number' => $this->applicationNumber,

@@ -30,9 +30,9 @@
 Cypress.Commands.add('login', (type) => {
     cy.session(type, () => {
 
-        cy.visit('/fi')
+        cy.visit('/user/login')
         cy.get('button.eu-cookie-compliance-default-button').click()
-
+        
         let perms = {};
         switch (type) {
             case 'admin':
@@ -63,6 +63,28 @@ Cypress.Commands.add('login', (type) => {
         });
     })
 
+});
+
+Cypress.Commands.add('accept_cookies', (type) => {
+    // cy.get('body')
+    //     .then(($body) => {
+    //         // synchronously query from body
+    //         // to find which element was created
+    //         if ($body.find('div.eu-cookie-compliance-banner').length) {
+    //             // input was found, do something else here
+    //             return 'banner'
+    //         }
+    //
+    //         // else assume it was textarea
+    //         return 'nobanner'
+    //     })
+    //     .then(($selector) => {
+    //         console.log($selector)
+    //         if ($selector === 'banner') {
+    //             cy.get('button.eu-cookie-compliance-default-button').click()
+    //         }
+    //     })
+    cy.get('button.eu-cookie-compliance-default-button').click()
 });
 
 Cypress.SelectorPlayground.defaults({
