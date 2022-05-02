@@ -77,7 +77,7 @@ class GrantsProfileService {
   /**
    * Logger.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   * @var \Drupal\Core\Logger\LoggerChannelFactory|\Drupal\Core\Logger\LoggerChannelInterface|\Drupal\Core\Logger\LoggerChannel
    */
   protected LoggerChannelFactory|LoggerChannelInterface|LoggerChannel $logger;
 
@@ -691,6 +691,30 @@ class GrantsProfileService {
   }
 
   /**
+   * Get selected company id.
+   *
+   * @return string|null
+   *   Selected company
+   */
+  public function getApplicantType(): ?string {
+    if ($this->isCached('applicant_type')) {
+      $data = $this->getFromCache('applicant_type');
+      return $data['selected_type'];
+    }
+    return NULL;
+  }
+
+  /**
+   * Set selected business id to store.
+   *
+   * @param string $selected_type
+   *   Type to be saved.
+   */
+  public function setApplicantType(string $selected_type): bool {
+    return $this->setToCache('applicant_type', ['selected_type' => $selected_type]);
+  }
+
+  /**
    * Whether or not we have made this query?
    *
    * @param string $key
@@ -742,6 +766,10 @@ class GrantsProfileService {
         return TRUE;
       }
       elseif ($key == 'selected_company') {
+        $this->tempStore->set($key, $data);
+        return TRUE;
+      }
+      elseif ($key == 'applicant_type') {
         $this->tempStore->set($key, $data);
         return TRUE;
       }
