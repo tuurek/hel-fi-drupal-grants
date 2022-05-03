@@ -125,7 +125,11 @@
     vertical-align: middle;
   }
 }
-
+.grants-profile {
+  .hds-text-input__label {
+    display: inline-block;
+  }
+}
 .grants-handler--prefilled-field, .grants-profile-prh-info {
   .description {
     white-space: normal;

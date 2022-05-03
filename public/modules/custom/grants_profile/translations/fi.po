@@ -144,3 +144,6 @@ msgstr "Lisää vähintään yksi osoite"
 
 msgid "Add at least one account number"
 msgstr "Lisää vähintään yksi tilinumero"
+
+msgid "Briefly describe the purpose for which the community is working and how the community is fulfilling its purpose. For example, you can use the text \"Community purpose and forms of action\" in the Community rules. Please do not describe the purpose of the grant here, it will be asked later when completing the grant application."
+msgstr "Kerro lyhyesti tarkoitus, jonka edistämiseksi yhteisö toimii ja millä tavoin yhteisö toteuttaa tarkoitustaan. Voit hyödyntää esimerkiksi yhteisön säännöistä löytyvää \"Yhteisön tarkoitus ja toimintamuodot\" -tekstikappaletta. Älä kuvaile avustuksen käyttötarkoitusta tässä, sitä kysytään myöhemmin avustushakemuksen täyttämisen yhteydessä."
