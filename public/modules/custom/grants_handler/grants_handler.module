@@ -341,7 +341,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   ',
       ],
     ];
-    if (array_key_exists($form['elements']['1_hakijan_tiedot'])) && is_array($form['elements']['1_hakijan_tiedot'])) {
+    if (array_key_exists($form['elements']['1_hakijan_tiedot']) && is_array($form['elements']['1_hakijan_tiedot'])) {
       $form['elements']['1_hakijan_tiedot'] = array_merge($required_fields_info_element, $form['elements']['1_hakijan_tiedot']);
       $form['elements']['1_hakijan_tiedot'] = array_merge($infoelement, $form['elements']['1_hakijan_tiedot']);
 
