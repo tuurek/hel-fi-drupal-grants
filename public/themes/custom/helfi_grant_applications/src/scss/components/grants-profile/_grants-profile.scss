@@ -76,15 +76,6 @@
 
   }
 
-  .hds-link .hds-icon {
-    vertical-align: bottom;
-    margin-right: var(--spacing-2-xs);
-  }
-  .hds-link span.link-label {
-    margin-right: var(--spacing-m);
-    font-weight: bold;
-  }
-
   &--officials {
     padding-left: 0;
     margin-left: 0;
@@ -124,6 +115,14 @@
     color: var(--color-success);
     vertical-align: middle;
   }
+}
+.hds-link .hds-icon {
+  vertical-align: bottom;
+  margin-right: var(--spacing-2-xs);
+}
+.hds-link span.link-label {
+  margin-right: var(--spacing-m);
+  font-weight: bold;
 }
 .grants-profile {
   .hds-text-input__label {
