@@ -416,6 +416,7 @@ elements: |-
         '#title': 'Toiminnan kuvaus'
         '#required': true
         '#readonly': true
+        '#help': 'Tieto haetaan omat tiedot -osiosta'
       community_practices_business:
         '#type': radios
         '#title': 'Harjoittaako yhteisö liiketoimintaa'
