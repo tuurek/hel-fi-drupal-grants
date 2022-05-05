@@ -164,7 +164,7 @@ elements: |-
           <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
           </a>
-  toiminnasta_vastaavat_henkilot:
+    toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
       applicant_officials:
