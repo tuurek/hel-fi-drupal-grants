@@ -341,7 +341,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   ',
       ],
     ];
-    if (array_key_exists($form['elements']['1_hakijan_tiedot']) && is_array($form['elements']['1_hakijan_tiedot'])) {
+    if (array_key_exists('1_hakijan_tiedot', $form['elements']) && is_array($form['elements']['1_hakijan_tiedot'])) {
       $form['elements']['1_hakijan_tiedot'] = array_merge($required_fields_info_element, $form['elements']['1_hakijan_tiedot']);
       $form['elements']['1_hakijan_tiedot'] = array_merge($infoelement, $form['elements']['1_hakijan_tiedot']);
 
@@ -363,14 +363,14 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
       _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["homepage"], $grantsProfile["companyHomePage"]);
 
     }
-    if (array_key_exists($form['elements']['2_avustustiedot']) && is_array($form['elements']['2_avustustiedot'])) {
+    if (array_key_exists('2_avustustiedot', $form['elements']) && is_array($form['elements']['2_avustustiedot'])) {
       $form['elements']['2_avustustiedot'] = array_merge($required_fields_info_element, $form['elements']['2_avustustiedot']);
     }
-    if (array_key_exists($form['elements']['3_yhteison_tiedot']) && is_array($form['elements']['3_yhteison_tiedot'])) {
+    if (array_key_exists('3_yhteison_tiedot', $form['elements']) && is_array($form['elements']['3_yhteison_tiedot'])) {
       $form['elements']['3_yhteison_tiedot'] = array_merge($required_fields_info_element, $form['elements']['3_yhteison_tiedot']);
       $form['elements']['3_yhteison_tiedot'] = array_merge($infoelement, $form['elements']['3_yhteison_tiedot']);
     }
-    if (array_key_exists($form['elements']['lisatiedot_ja_liitteet']) && is_array($form['elements']['lisatiedot_ja_liitteet'])) {
+    if (array_key_exists('lisatiedot_ja_liitteet', $form['elements']) && is_array($form['elements']['lisatiedot_ja_liitteet'])) {
       $form['elements']['lisatiedot_ja_liitteet'] = array_merge($required_fields_info_element, $form['elements']['lisatiedot_ja_liitteet']);
     }
 
