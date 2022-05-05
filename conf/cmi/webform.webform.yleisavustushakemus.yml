@@ -435,7 +435,7 @@ elements: |-
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#attributes':
           class:
-            - webform--short
+            - webform--small
       fee_community:
         '#type': textfield
         '#title': 'Yhteisöjäsen (€ / vuosi)'
@@ -443,7 +443,7 @@ elements: |-
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#attributes':
           class:
-            - webform--short
+            - webform--small
     jasenmaara:
       '#type': webform_section
       '#title': Jäsenmäärä
@@ -456,7 +456,7 @@ elements: |-
         '#pattern_error': 'Vain numeroita'
         '#attributes':
           class:
-            - webform--short
+            - webform--small
       members_applicant_person_global:
         '#type': textfield
         '#title': 'Henkilöjäseniä yhteensä'
@@ -466,7 +466,7 @@ elements: |-
         '#pattern_error': 'Vain numeroita'
         '#attributes':
           class:
-            - webform--short
+            - webform--small
       members_applicant_community_local:
         '#type': textfield
         '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'
@@ -476,7 +476,7 @@ elements: |-
         '#pattern_error': 'Vain numeroita'
         '#attributes':
           class:
-            - webform--short
+            - webform--small
       members_applicant_community_global:
         '#type': textfield
         '#title': Yhteisöjäseniä
@@ -486,7 +486,7 @@ elements: |-
         '#pattern_error': 'Vain numeroita'
         '#attributes':
           class:
-            - webform--short
+            - webform--small
   lisatiedot_ja_liitteet:
     '#type': webform_wizard_page
     '#title': '4. Lisätiedot ja liitteet'
