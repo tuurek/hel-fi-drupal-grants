@@ -85,7 +85,15 @@ class GrantsProfileForm extends FormBase {
       '#default_value' => $grantsProfileContent['companyNameShort'],
     ];
     $form['companyNameShortWrapper']['companyNameShort']['#attributes']['class'][] = 'webform--large';
-
+    $form['companyHomePageWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Company www address'),
+    ];
+    $form['companyHomePageWrapper']['companyHomePage'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Company www address'),
+      '#default_value' => $grantsProfileContent['companyHomePage'],
+    ];
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
       $addressMarkup .= '<ul class="grants-profile--officials">';

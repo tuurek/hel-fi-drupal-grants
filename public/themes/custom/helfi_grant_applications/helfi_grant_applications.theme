@@ -160,6 +160,10 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
   $element = &$variables['element'];
   $type = $element['#type'] ?? '';
 
+  // This stuff is done already with webform forms, so we're skipping it for them.
+  if (array_key_exists('#webform', $element))
+    return;
+
   // Fix details 'description' property which does not have description.content.
   // @see template_preprocess_details
   // @see Issue #2896169: Details elements have incorrect aria-describedby attributes
@@ -218,11 +222,6 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
   if (is_string($title_parents)) {
     $title_parents = [$title_parents];
   }
-  // Move #description to #help for webform admin routes.
-  _webform_preprocess_description_help($variables);
-
-  // Add (read) more to #description.
-  _webform_preprocess_form_element_description_more($variables);
 
   // Add help to title (aka label).
   _helfi_grant_applications_preprocess_help($variables, $title_parents);
@@ -236,8 +235,8 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
 /**
  * Append #help to title or element variable.
  */
-function _helfi_grant_applications_preprocess_help(array &$variables, $title_parents = ['title']) {
-  
+function _helfi_grant_applications_preprocess_help(array &$variables, $title_parents = ['label']) {
+
   $element = &$variables['element'];
   $type = $element['#type'] ?? '';
 

@@ -15,7 +15,7 @@ trait ApplicationDefinitionTrait {
    * Base data definitions for all.
    */
   public function getBaseProperties(): array {
-    $info['applicant_type'] = DataDefinition::create('integer')
+    $info['applicant_type'] = DataDefinition::create('string')
       // // ->setRequired(TRUE)
       ->setLabel('Hakijan tyyppi')
       ->setSetting('jsonPath', [
@@ -546,37 +546,140 @@ trait ApplicationDefinitionTrait {
       ->setSetting('defaultValue', FALSE);
 
     $info['status_updates'] = MapDataDefinition::create()
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'cleanUpArrayValues',
+      ])
       ->setPropertyDefinition(
         'caseId',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['statusUpdates', 'caseId'])
       )
       ->setPropertyDefinition(
         'citizenCaseStatus',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['statusUpdates', 'citizenCaseStatus'])
       )
       ->setPropertyDefinition(
         'eventType',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['statusUpdates', 'eventType'])
       )
       ->setPropertyDefinition(
         'eventCode',
         DataDefinition::create('integer')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['statusUpdates', 'eventCode'])
       )
       ->setPropertyDefinition(
         'eventSource',
         DataDefinition::create('string')
-          ->setRequired(TRUE)
+          ->setRequired(FALSE)
           ->setSetting('jsonPath', ['statusUpdates', 'eventSource'])
       )
-      ->setSetting('jsonPath', ['statusUpdates']);
+      ->setPropertyDefinition(
+        'timeUpdated',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['statusUpdates', 'timeUpdated'])
+      )
+      ->setSetting('jsonPath', ['statusUpdates'])
+      ->setRequired(FALSE);
+
+    $info['events'] = MapDataDefinition::create()
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'cleanUpArrayValues',
+      ])
+      ->setPropertyDefinition(
+        'caseId',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['events', 'caseId'])
+      )
+      ->setPropertyDefinition(
+        'eventType',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['events', 'eventType'])
+      )
+      ->setPropertyDefinition(
+        'eventCode',
+        DataDefinition::create('integer')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['events', 'eventCode'])
+      )
+      ->setPropertyDefinition(
+        'eventSource',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['events', 'eventSource'])
+      )
+      ->setPropertyDefinition(
+        'timeUpdated',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['events', 'timeUpdated'])
+      )
+      ->setSetting('jsonPath', ['events'])
+      ->setRequired(FALSE);
+
+    $info['messages'] = MapDataDefinition::create()
+      ->setSetting('valueCallback', [
+        '\Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler',
+        'cleanUpArrayValues',
+      ])
+      ->setPropertyDefinition(
+        'caseId',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['messages', 'caseId'])
+      )
+      ->setPropertyDefinition(
+        'messageId',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['messages', 'messageId'])
+      )
+      ->setPropertyDefinition(
+        'body',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['messages', 'body'])
+      )
+      ->setPropertyDefinition(
+        'sentBy',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['messages', 'sentBy'])
+      )
+      ->setPropertyDefinition(
+        'sendDateTime',
+        DataDefinition::create('string')
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['messages', 'sendDateTime'])
+      )
+      ->setPropertyDefinition(
+        'attachments',
+        MapDataDefinition::create()
+          ->setPropertyDefinition('description',
+            DataDefinition::create('string')
+              ->setRequired(FALSE)
+              ->setSetting('jsonPath', ['description'])
+          )
+          ->setPropertyDefinition('fileName',
+            DataDefinition::create('string')
+              ->setRequired(FALSE)
+              ->setSetting('jsonPath', ['fileName'])
+          )
+          ->setRequired(FALSE)
+          ->setSetting('jsonPath', ['messages', 'attachments'])
+      )
+      ->setSetting('jsonPath', ['messages'])
+      ->setRequired(FALSE);
 
     return $info;
   }

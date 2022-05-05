@@ -4,6 +4,7 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -27,6 +28,7 @@ use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Webform example handler.
@@ -81,14 +83,21 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public static array $applicationStatuses = [
     'DRAFT' => 'DRAFT',
-    'SUBMITTED' => 'SUBMITTED',
     'SENT' => 'SENT',
+    // => Vastaanotettu
+    'SUBMITTED' => 'SUBMITTED',
+    // => Vastaanotettu
     'RECEIVED' => 'RECEIVED',
     'PENDING' => 'PENDING',
+    // => Käsittelyssä
     'PROCESSING' => 'PROCESSING',
+    // => Valmis
     'READY' => 'READY',
+    // => Valmis
     'DONE' => 'DONE',
     'REJECTED' => 'REJECTED',
+    'DELETED' => 'DELETED',
+    'CANCELED' => 'CANCELED',
   ];
 
   /**
@@ -118,6 +127,15 @@ class GrantsHandler extends WebformHandlerBase {
    * @var string
    */
   protected string $applicationType;
+
+  /**
+   * Applicant type.
+   *
+   * Private / registered / UNregistered.
+   *
+   * @var string
+   */
+  protected string $applicantType;
 
   /**
    * Application type ID.
@@ -214,29 +232,73 @@ class GrantsHandler extends WebformHandlerBase {
     return $instance;
   }
 
-  /**
-   * Atv document holding this application.
-   *
-   * @param string $transactionId
-   *   Id of the transaction.
-   *
-   * @return \Drupal\helfi_atv\AtvDocument
-   *   FEtched document.
-   *
-   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
-   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
-   * @throws \GuzzleHttp\Exception\GuzzleException
+  /*
+   * Static methods
    */
-  protected function getAtvDocument(string $transactionId): AtvDocument {
 
-    if (!isset($this->atvDocument)) {
-      $res = $this->atvService->searchDocuments([
-        'transaction_id' => $transactionId,
-      ]);
-      $this->atvDocument = reset($res);
+  /**
+   * Check if given submission is allowed to be edited.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission|null $submission
+   *   Submission in question.
+   * @param string|null $status
+   *   If no object is available, do text comparison.
+   *
+   * @return bool
+   *   Is submission editable?
+   */
+  public static function isSubmissionEditable(?WebformSubmission $submission, ?string $status): bool {
+    if (NULL === $submission) {
+      $submissionStatus = $status;
+    }
+    else {
+      $data = $submission->getData();
+      $submissionStatus = $data['status'];
     }
 
-    return $this->atvDocument;
+    if (in_array($submissionStatus, [
+      self::$applicationStatuses['DRAFT'],
+      self::$applicationStatuses['SUBMITTED'],
+      self::$applicationStatuses['SENT'],
+      self::$applicationStatuses['RECEIVED'],
+    ])) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check if given submission is allowed to be messaged.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission|null $submission
+   *   Submission in question.
+   * @param string|null $status
+   *   If no object is available, do text comparison.
+   *
+   * @return bool
+   *   Is submission editable?
+   */
+  public static function isSubmissionMessageable(?WebformSubmission $submission, ?string $status): bool {
+
+    if (NULL === $submission) {
+      $submissionStatus = $status;
+    }
+    else {
+      $data = $submission->getData();
+      $submissionStatus = $data['status'];
+    }
+
+    if (in_array($submissionStatus, [
+      self::$applicationStatuses['DRAFT'],
+      self::$applicationStatuses['SUBMITTED'],
+      self::$applicationStatuses['SENT'],
+      self::$applicationStatuses['RECEIVED'],
+      self::$applicationStatuses['PENDING'],
+      self::$applicationStatuses['PROCESSING'],
+    ])) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
@@ -283,6 +345,35 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
     return $appParam;
+  }
+
+  /*
+   * Non static methods.
+   */
+
+  /**
+   * Atv document holding this application.
+   *
+   * @param string $transactionId
+   *   Id of the transaction.
+   *
+   * @return \Drupal\helfi_atv\AtvDocument
+   *   FEtched document.
+   *
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  protected function getAtvDocument(string $transactionId): AtvDocument {
+
+    if (!isset($this->atvDocument)) {
+      $res = $this->atvService->searchDocuments([
+        'transaction_id' => $transactionId,
+      ]);
+      $this->atvDocument = reset($res);
+    }
+
+    return $this->atvDocument;
   }
 
   /**
@@ -438,7 +529,7 @@ class GrantsHandler extends WebformHandlerBase {
         $document = $atvService->searchDocuments([
           'transaction_id' => $applicationNumber,
         ],
-        TRUE);
+          TRUE);
 
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         $document = reset($document);
@@ -524,6 +615,7 @@ class GrantsHandler extends WebformHandlerBase {
     // lisatiedot_ja_liitteet
     // webform_preview
     $this->submittedFormData = $webform_submission->getData();
+    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
 
     foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
       $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
@@ -623,10 +715,112 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * {@inheritdoc}
    */
+  public function preCreate(array &$values) {
+
+    // These both are required to be selected.
+    // probably will change when we have proper company selection process.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $applicantType = $this->grantsProfileService->getApplicantType();
+    if ($applicantType === NULL) {
+
+      \Drupal::messenger()
+        ->addError(t('You need to select applicant type.'));
+
+      $url = Url::fromRoute('grants_profile.applicant_type', [
+        'destination' => $values["uri"],
+      ])
+        ->setAbsolute()
+        ->toString();
+      $response = new RedirectResponse($url);
+      $response->send();
+    }
+    else {
+      $this->applicantType = $this->grantsProfileService->getApplicantType();
+    }
+
+    if ($selectedCompany == NULL) {
+      \Drupal::messenger()
+        ->addError(t("You need to select company you're acting behalf of."));
+
+      $url = Url::fromRoute('grants_profile.show', [
+        'destination' => $values["uri"],
+      ])
+        ->setAbsolute()
+        ->toString();
+      $response = new RedirectResponse($url);
+      $response->send();
+    }
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+
+    // If submission has applicant type set, ie we're editing submission
+    // use that, if not then get selected from profile.
+    // we know that.
+    $submissionData = $webform_submission->getData();
+    if (isset($submissionData['applicant_type'])) {
+      $applicantType = $submissionData['applicant_type'];
+    }
+    else {
+      $applicantTypeString = $this->grantsProfileService->getApplicantType();
+      $applicantType = '0';
+      switch ($applicantTypeString) {
+        case 'registered_community':
+          $applicantType = '0';
+          break;
+
+        case 'unregistered_community':
+          $applicantType = '1';
+          break;
+
+        case 'private_person':
+          $applicantType = '2';
+          break;
+      }
+    }
+
+    $form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["applicant_type"] = [
+      '#type' => 'hidden',
+      '#value' => $applicantType,
+    ];
+
+    $thisYear = (integer) date('Y');
+    $thisYearPlus1 = $thisYear + 1;
+    $thisYearPlus2 = $thisYear + 2;
+
+    $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]['#required'] = TRUE;
+    $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]["#options"] = [
+      $thisYear => $thisYear,
+      $thisYearPlus1 => $thisYearPlus1,
+      $thisYearPlus2 => $thisYearPlus2,
+    ];
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(WebformSubmissionInterface $webform_submission) {
+
+    // don't save ip address.
+    $webform_submission->remote_addr->value = '';
 
     if (empty($this->submittedFormData)) {
       $this->submittedFormData = $webform_submission->getData();
+    }
+
+    // If for some reason applicant type is not present, make sure it get's
+    // added otherwise validation fails.
+    if (!isset($this->submittedFormData['applicant_type'])) {
+      $this->submittedFormData['applicant_type'] = $this->grantsProfileService->getApplicantType();
+    }
+
+    if (isset($this->submittedFormData["community_purpose"])) {
+      $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
     }
 
     if (!empty($this->submittedFormData)) {
@@ -635,6 +829,33 @@ class GrantsHandler extends WebformHandlerBase {
       // Set submission data to empty.
       // form will still contain submission details, IP time etc etc.
       $webform_submission->setData([]);
+    }
+  }
+
+  /**
+   * Method to figure out if formUpdate should be false/true?
+   *
+   * The thing is that the Avustus2 is not very clear about when it fetches
+   * data from ATV. Initial import from ATV MUST have fromUpdate FALSE, and
+   * any subsequent update will have to have it as FALSE. The application status
+   * handling makes this possibly very complicated, hence separate method
+   * figuring it out.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission $webformSubmission
+   *   Submission being saved. If status of submission is needed.
+   */
+  private function setFormUpdate(WebformSubmission $webformSubmission) {
+    if (!isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'DRAFT') {
+      $this->submittedFormData['form_update'] = FALSE;
+    }
+    elseif (!isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'SUBMITTED') {
+      $this->submittedFormData['form_update'] = FALSE;
+    }
+    elseif (isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'SUBMITTED') {
+      $this->submittedFormData['form_update'] = FALSE;
+    }
+    else {
+      $this->submittedFormData['form_update'] = TRUE;
     }
   }
 
@@ -648,36 +869,44 @@ class GrantsHandler extends WebformHandlerBase {
       ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
 
     $dt = new \DateTime();
-    $dt->setTimestamp($webform_submission->getCreatedTime());
+    // $dt->setTimestamp($webform_submission->getCreatedTime());
     $dt->setTimezone(new \DateTimeZone('UTC'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
     // @todo check community_practices_business value and where to get it from.
     $this->submittedFormData['community_practices_business'] = FALSE;
 
+    // Get regdate from profile data and format it for Avustus2
+    // This data is immutable for end user so safe to this way.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
+    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s\.\0\0\0\Z');
+
     if (isset($this->submittedFormData["finalize_application"]) &&
       $this->submittedFormData["finalize_application"] == 1) {
       $this->submittedFormData['status'] = 'SUBMITTED';
     }
+
+    // This needs to be called before setting applicationNumber
+    // with new submission.
+    $this->setFormUpdate($webform_submission);
 
     if (!isset($this->submittedFormData['application_number'])) {
       $this->applicationNumber = self::createApplicationNumber($webform_submission);
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
       $this->submittedFormData['application_type'] = $this->applicationType;
       $this->submittedFormData['application_number'] = $this->applicationNumber;
-      // Apparently you CANNOT have this set in new applications,
-      // integration seems to fail.
-      $this->submittedFormData['form_update'] = FALSE;
     }
     else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
-      if ($this->submittedFormData['status'] === 'SUBMITTED') {
-        $this->submittedFormData['form_update'] = FALSE;
-      }
-      else {
-        $this->submittedFormData['form_update'] = TRUE;
-      }
+    }
 
+    // Because of funky naming convention, we need to manually
+    // set purpose field value.
+    // This is populated from grants profile so it's just passing this on.
+    if (isset($this->submittedFormData["community_purpose"])) {
+      $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
     }
 
   }
@@ -763,6 +992,14 @@ class GrantsHandler extends WebformHandlerBase {
 
           $status = $res->getStatusCode();
 
+          if ($this->isDebug()) {
+            $t_args = [
+              '@status' => $status,
+            ];
+            $this->getLogger('grants_handler')
+              ->debug('Data sent to integration, response status: @status', $t_args);
+          }
+
           if ($status === 201) {
             $this->attachmentUploader->setDebug($this->isDebug());
             $attachmentResult = $this->attachmentUploader->uploadAttachments(
@@ -803,12 +1040,10 @@ class GrantsHandler extends WebformHandlerBase {
               ]
             );
 
-            // TÄHÄN TSEKKAA RESULTTI.
-            // @todo print message for every attachment
             $this->messenger()
               ->addStatus(
                 $this->t(
-                  'Grant application (@number), 
+                  'Grant application (<span id="saved-application-number">@number</span>) saved, 
                   see application status from @link',
                   [
                     '@number' => $this->applicationNumber,
@@ -1105,6 +1340,35 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           $retval['isIncludedInOtherFile'] = '0';
+        }
+      }
+
+      if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
+        $retval['integrationID'] = $field["integrationID"];
+      }
+
+    }
+    return $retval;
+  }
+
+  /**
+   * Cleans up non-array values from array structure.
+   *
+   * This is due to some configuration error with messages/statuses/events
+   * that I'm not able to find.
+   *
+   * @param array|null $value
+   *   Array we need to flatten.
+   *
+   * @return array
+   *   Fixed array.
+   */
+  public static function cleanUpArrayValues(?array $value): array {
+    $retval = [];
+    if (is_array($value)) {
+      foreach ($value as $k => $v) {
+        if (is_array($v)) {
+          $retval[] = $v;
         }
       }
     }

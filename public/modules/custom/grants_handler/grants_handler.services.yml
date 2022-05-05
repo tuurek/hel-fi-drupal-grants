@@ -4,3 +4,7 @@ services:
     tags:
       - { name: path_processor_inbound, priority: 200 }
     arguments: [ '@request_stack' ]
+
+  grants_handler.message_service:
+    class: Drupal\grants_handler\MessageService
+    arguments: ['@helfi_helsinki_profiili.userdata','@http_client', '@logger.factory']

@@ -55,7 +55,7 @@ class GrantsProfileDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['companyEmail'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
+        ->setRequired(FALSE)
         ->setLabel('companyEmail')
         ->setSetting('jsonPath', [
           'grantsProfile',

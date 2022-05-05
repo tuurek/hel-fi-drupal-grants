@@ -25,6 +25,7 @@ class GrantsAttachments extends WebformCompositeBase {
   }
 
   // @codingStandardsIgnoreStart
+
   /**
    * Build webform element based on data in ATV document.
    *
@@ -55,6 +56,10 @@ class GrantsAttachments extends WebformCompositeBase {
       }
       elseif (isset($element["#filetype"])) {
         $element["fileType"]["#value"] = $element["#filetype"];
+      }
+
+      if (isset($dataForElement["integrationID"])) {
+        $element["integrationID"]["#value"] = $dataForElement["integrationID"];
       }
 
       if (isset($dataForElement['isDeliveredLater'])) {
@@ -183,6 +188,10 @@ class GrantsAttachments extends WebformCompositeBase {
       '#value' => NULL,
     ];
     $elements['fileType'] = [
+      '#type' => 'hidden',
+      '#value' => NULL,
+    ];
+    $elements['integrationID'] = [
       '#type' => 'hidden',
       '#value' => NULL,
     ];

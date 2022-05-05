@@ -33,20 +33,15 @@ elements: |-
       '#type': checkbox
       '#title': 'Finalize application'
       '#description': 'Check this to submit application for handling and disable editing.&nbsp;'
-    applicant_type:
-      '#type': select
-      '#title': 'Hakijan tyyppi'
-      '#options':
-        1: '1'
-        2: '2'
-        3: '3'
-      '#required': true
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
       '#attributes':
         class:
           - grants-profile--imported-section
+      applicant_type:
+        '#type': hidden
+        '#title': 'Applicant TYPE'
       community_official_name:
         '#type': textfield
         '#title': 'Yhteisön nimi'
@@ -178,8 +173,8 @@ elements: |-
               2: Yhteyshenkilö
               3: Muu
               4: 'Taloudesta vastaava'
-              5: 'Tilintarkastaja / toiminnantarkastaja'
-              6: Sihteeri
+              5: 'Tilin- / Toiminnantarkastaja'
+              7: Sihteeri
             '#title': Rooli
           email:
             '#type': email
@@ -202,6 +197,7 @@ elements: |-
           2022: '2022'
           2023: '2023'
           2024: '2024'
+        '#required': true
     avustuslajit:
       '#type': webform_section
       '#title': Avustuslajit
@@ -260,11 +256,11 @@ elements: |-
           issuer:
             '#type': select
             '#options':
-              1: EU
-              2: Muu
-              3: STEA
-              4: Säätiö
-              5: Valtio
+              1: Valtio
+              3: EU
+              4: Muu
+              5: Säätiö
+              6: STEA
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           issuer_name:
@@ -320,11 +316,11 @@ elements: |-
           issuer:
             '#type': select
             '#options':
-              1: EU
-              2: Muu
-              3: STEA
-              4: Säätiö
-              5: Valtio
+              1: Valtio
+              3: EU
+              4: Muu
+              5: Säätiö
+              6: STEA
             '#required': true
             '#title': 'Avustuksen myöntäjä'
           issuer_name:

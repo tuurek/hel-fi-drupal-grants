@@ -69,9 +69,6 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
    * @param array $webform_submissions
    *   An array of webform submissions.
    *
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
-   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
-   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function loadData(array &$webform_submissions) {
@@ -95,6 +92,7 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
           // $data = $appData->toArray();
           $submission->setData($appData);
+
         }
       }
       catch (\Exception $exception) {
