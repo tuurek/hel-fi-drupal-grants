@@ -85,12 +85,12 @@ elements: |-
         '#title': Perustamisvuosi
         '#title_display': invisible
         '#readonly': true
-      year_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
-          </a>
+        '#field_suffix':
+          '#type': webform_markup
+          '#markup': |-
+            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
+            </a>
     yhteison_lyhenne:
       '#type': webform_section
       '#title': 'Yhteisön lyhenne'
@@ -98,15 +98,32 @@ elements: |-
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
         '#title_display': invisible
-        '#attributes':
-          class:
-            - webform--small
-      short_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
-          </a>
+        '#field_suffix':
+          '#type': webform_markup
+          '#markup': |-
+            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
+            </a>
+    sahkoposti:
+      '#type': webform_section
+      '#title': 'Sähköpostiosoite'
+      email:
+        '#type': email
+        '#title': Sähköpostiosoite
+        '#required': true
+    verkkosivut:
+      '#type': webform_section
+      '#title': www-sivut
+      homepage:
+        '#type': textfield
+        '#title': www-sivut
+        '#title_display': invisible
+        '#field_suffix':
+          '#type': webform_markup
+          '#markup': |-
+            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
+            </a>
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -134,13 +151,6 @@ elements: |-
         '#type': textfield
         '#title': Puhelinnumero
         '#required': true
-      email:
-        '#type': email
-        '#title': Sähköpostiosoite
-        '#required': true
-      homepage:
-        '#type': textfield
-        '#title': www-sivut
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero

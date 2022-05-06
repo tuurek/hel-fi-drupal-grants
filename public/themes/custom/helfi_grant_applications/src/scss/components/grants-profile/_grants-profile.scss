@@ -130,8 +130,12 @@
   }
 }
 .grants-handler--prefilled-field, .grants-profile-prh-info {
+  .field-suffix {
+    float:right;
+  }
   .description {
     white-space: normal;
+    display: inline-block;
   }
   .hds-icon--check-circle-fill {
     color: var(--color-success);

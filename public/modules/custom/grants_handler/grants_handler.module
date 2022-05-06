@@ -360,7 +360,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
       _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["community_status"], $grantsProfile["companyStatus"]);
       _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["community_status_special"], $grantsProfile["companyStatusSpecial"]);
 
-      _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]["homepage"], $grantsProfile["companyHomePage"]);
+      _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["verkkosivut"]["homepage"], $grantsProfile["companyHomePage"], FALSE);
 
     }
     if (array_key_exists('2_avustustiedot', $form['elements']) && is_array($form['elements']['2_avustustiedot'])) {
