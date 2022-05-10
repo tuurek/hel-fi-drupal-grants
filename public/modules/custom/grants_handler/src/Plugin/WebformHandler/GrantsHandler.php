@@ -873,9 +873,6 @@ class GrantsHandler extends WebformHandlerBase {
     $dt->setTimezone(new \DateTimeZone('UTC'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
-    // @todo check community_practices_business value and where to get it from.
-    $this->submittedFormData['community_practices_business'] = FALSE;
-
     // Get regdate from profile data and format it for Avustus2
     // This data is immutable for end user so safe to this way.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();

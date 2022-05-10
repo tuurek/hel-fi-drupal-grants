@@ -1,9 +1,6 @@
 .grants-profile {
-  form section {
-    padding-bottom: var(--spacing-2-xl);
-  }
   hr {
-    margin: var(--spacing-m) 0;
+    margin: var(--spacing-layout-s) 0;
   }
   &--title {
     display: flex;
@@ -74,17 +71,9 @@
 
     &-item {
       min-width: 160px;
-      margin: var(--spacing-m) var(--spacing-m) var(--spacing-m) 0;
+      margin: 0 var(--spacing-layout-xs) 0 0;
     }
-  }
 
-  .hds-link .hds-icon {
-    vertical-align: bottom;
-    margin-right: var(--spacing-2-xs);
-  }
-  .hds-link span.link-label {
-    margin-right: var(--spacing-m);
-    font-weight: bold;
   }
 
   &--officials {
@@ -122,31 +111,85 @@
     }
   }
 
-
-
-
-
   .hds-icon--check-circle-fill {
-    color: green;
+    color: var(--color-success);
     vertical-align: middle;
   }
 }
-
-.grants-handler--prefilled-field {
+.hds-link .hds-icon {
+  vertical-align: bottom;
+  margin-right: var(--spacing-2-xs);
+}
+.hds-link span.link-label {
+  margin-right: var(--spacing-m);
+  font-weight: bold;
+}
+.grants-profile {
+  .hds-text-input__label {
+    display: inline-block;
+  }
+}
+.grants-handler--prefilled-field, .grants-profile-prh-info {
+  .field-suffix {
+    float:right;
+  }
   .description {
     white-space: normal;
+    display: inline-block;
   }
   .hds-icon--check-circle-fill {
-    color: green;
+    color: var(--color-success);
     vertical-align: middle;
   }
   .webform-element-description {
     color: var(--color-black);
-    font-size: var(--fontsize-body-m);
+    font-size: var(--fontsize-body-l);
     line-height: var(--spacing-m);
     position: relative;
   }
   .hds-text-input__label {
     margin-bottom: 0;
+  }
+}
+.grants-profile--imported-section .webform-section-flex-wrapper {
+  display:block;
+  width: 100%;
+  h2.webform-section-title {
+    width: 100%;
+    padding-bottom: var(--spacing-layout-xs);
+    margin-bottom: var(--spacing-layout-xs);
+    max-width: 100%;
+    border-bottom: 1px var(--color-silver) solid;
+  }
+  .webform-section-wrapper {
+    padding: 0;
+  }
+  .hds-text-input {
+    margin-bottom: 0;
+  }
+  #edit-grants-profile-items-container {
+    border-top: 1px var(--color-silver) solid;
+    border-bottom: 1px var(--color-silver) solid;
+    margin-top: var(--spacing-layout-xs);
+    padding-top: var(--spacing-layout-xs);
+    padding-bottom: var(--spacing-layout-xs);
+    margin-bottom: var(--spacing-layout-xs);
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    > div {
+      min-width: 160px;
+      margin: 0 var(--spacing-layout-xs) 0 0;
+    }
+    .hds-text-input__input-wrapper {
+      display: none;
+    }
+    label {
+      margin: 0;
+      font-size: var(--fontsize-body-m);
+      font-weight: bold;
+    }
+
   }
 }

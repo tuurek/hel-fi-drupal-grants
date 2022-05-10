@@ -15,8 +15,8 @@
         background-color: var(--hdbt-color-black);
         color: var(--color-white);
         border: 2px var(--hdbt-color-black) solid;
-        width: 55px;
-        height: 55px;
+        width: var(--spacing-layout-l);
+        height: var(--spacing-layout-l);
         font-size: $base-font-size * 1.5;
         margin-bottom: $spacing;
         font-weight: 500;
@@ -51,8 +51,8 @@
     .progress-step {
       margin-top: 0;
       .progress-marker::after {
-        right: calc(-50% - 25px);
-        top: 25px;
+        right: calc(-50% - 12px);
+        top: var(--spacing-layout-2-xs);
         height: 2px;
         background: repeating-linear-gradient(
           90deg,
@@ -66,8 +66,8 @@
         background-color: var(--color-white);
         color: var(--hdbt-color-black);
         border: 2px var(--hdbt-color-black) solid;
-        width: 55px;
-        height: 55px;
+        width: var(--spacing-layout-s);
+        height: var(--spacing-layout-s);
         font-size: $base-font-size * 1.5;
         margin-bottom: $spacing;
         font-weight: bold;

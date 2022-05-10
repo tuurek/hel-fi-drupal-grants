@@ -42,3 +42,12 @@ msgstr "Taustajärjestelmän DEV-moodi päällä, mitään tietoja ei tallenneta
 
 msgid "Invoked @id: @class_name:@method_name @context1"
 msgstr "Kutsuttu @id: @class_name:@method_name @context1"
+
+msgid "Some information fetched from personal information"
+msgstr "Osa tiedoista on haettu lomakkeelle asiointipalvelun omista tiedoista"
+
+msgid "Check the information on the form before sending the application. You can change your own information from personal information section of the site."
+msgstr "Tarkistathan lomakkeella olevat tiedot ennen hakemuksen lähettämistä. Voit muokata omia tietoja oma asiointi > omat tiedot -osiossa."
+
+msgid "Fields marked with an asterisk * are required, that need to be filled before saving."
+msgstr "Tähdellä * merkityt kentät ovat pakollisia tietoja, jotka sinun on täytettävä ennen tietojen tallentamista."

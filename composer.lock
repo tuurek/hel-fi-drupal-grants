@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "47b71ce21a77c38b2fa38a414eeb02c3",
+    "content-hash": "cf5eaa9da3b5273a61510b903cb8a194",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4695,6 +4695,36 @@
                 "issues": "https://github.com/City-of-Helsinki/drupal-tools/issues"
             },
             "time": "2022-04-01T08:23:42+00:00"
+        },
+        {
+            "name": "drupal/helfi_formtool_embed",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed.git",
+                "reference": "05b8c3a096a6c29df17824937bdc91b6432b82c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-form-tool-embed/zipball/05b8c3a096a6c29df17824937bdc91b6432b82c9",
+                "reference": "05b8c3a096a6c29df17824937bdc91b6432b82c9",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\HelfiFormtoolEmbed\\": "src/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Embed form tool to Drupal",
+            "support": {
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed/tree/develop",
+                "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed/issues"
+            },
+            "time": "2022-05-10T08:15:49+00:00"
         },
         {
             "name": "drupal/helfi_hauki",
@@ -16779,6 +16809,7 @@
         "drupal/content_access": 15,
         "drupal/helfi_atv": 20,
         "drupal/helfi_drupal_tools": 20,
+        "drupal/helfi_formtool_embed": 20,
         "drupal/helfi_helsinki_profiili": 20,
         "drupal/helfi_yjdh": 20,
         "drupal/multivalue_form_element": 10,

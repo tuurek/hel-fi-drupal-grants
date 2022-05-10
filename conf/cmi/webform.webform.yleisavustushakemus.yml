@@ -36,53 +36,94 @@ elements: |-
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
-      company_number:
-        '#type': textfield
-        '#title': Y-Tunnus
-        '#readonly': true
-        '#required': true
+      '#attributes':
+        class:
+          - grants-profile--imported-section
+      applicant_type:
+        '#type': hidden
+        '#title': 'Applicant TYPE'
       community_official_name:
         '#type': textfield
         '#title': 'Yhteisön nimi'
         '#readonly': true
         '#required': true
-      community_official_name_short:
-        '#type': textfield
-        '#title': 'Yhteisön lyhenne'
-        '#attributes':
-          class:
-            - webform--small
-      registration_date:
-        '#type': textfield
-        '#title': Rekisteröimispäivä
-        '#readonly': true
-      community_status:
-        '#type': textfield
-        '#title': 'Yhdistyksen tila'
-        '#readonly': true
-      community_status_special:
-        '#type': textfield
-        '#title': 'Yhdistyksen erityistilanne'
-        '#readonly': true
+      grants_profile__items_container:
+        '#type': container
+        company_number:
+          '#type': textfield
+          '#title': Y-Tunnus
+          '#readonly': true
+          '#required': true
+        registration_date:
+          '#type': textfield
+          '#title': Rekisteröimispäivä
+          '#readonly': true
+        community_status:
+          '#type': textfield
+          '#title': 'Yhdistyksen tila'
+          '#readonly': true
+        community_status_special:
+          '#type': textfield
+          '#title': 'Yhdistyksen erityistilanne'
+          '#readonly': true
+        home:
+          '#type': textfield
+          '#title': Kotipaikka
+          '#readonly': true
+          '#required': true
+      prh_markup:
+        '#type': webform_markup
+        '#markup': |-
+          <div class="grants-profile-prh-info">
+                      <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> Merkityt tiedot on haettu Patentti- ja rekisterihallinnon rekisteristä (PRH), eikä niitä voi tämän takia muokata.
+                    </div>
+    perustamisvuosi:
+      '#type': webform_section
+      '#title': Perustamisvuosi
       founding_year:
         '#type': textfield
         '#title': Perustamisvuosi
+        '#title_display': invisible
         '#readonly': true
-      home:
+        '#field_suffix':
+          '#type': webform_markup
+          '#markup': |-
+            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
+            </a>
+    yhteison_lyhenne:
+      '#type': webform_section
+      '#title': 'Yhteisön lyhenne'
+      community_official_name_short:
         '#type': textfield
-        '#title': Kotipaikka
-        '#readonly': true
-        '#required': true
-      homepage:
-        '#type': textfield
-        '#title': www-sivut
+        '#title': 'Yhteisön lyhenne'
+        '#title_display': invisible
+        '#field_suffix':
+          '#type': webform_markup
+          '#markup': |-
+            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
+            </a>
+    sahkoposti:
+      '#type': webform_section
+      '#title': 'Sähköpostiosoite'
       email:
         '#type': email
         '#title': Sähköpostiosoite
         '#required': true
-      applicant_type:
-        '#type': hidden
-        '#title': 'Applicant TYPE'
+    verkkosivut:
+      '#type': webform_section
+      '#title': www-sivut
+      homepage:
+        '#type': textfield
+        '#title': www-sivut
+        '#title_display': invisible
+        '#field_suffix':
+          '#type': webform_markup
+          '#markup': |-
+            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
+            </a>
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -115,14 +156,24 @@ elements: |-
       '#title': Tilinumero
       account_number_select:
         '#type': select
-        '#title': 'Select account'
+        '#title': Tilinumero
         '#options':
           noaccounts: 'No accounts.'
+        '#required': true
       account_number:
         '#type': textfield
         '#title': Tilinumero
         '#readonly': true
         '#required': true
+        '#wrapper_attributes':
+          class:
+            - hidden
+      account_markup:
+        '#type': webform_markup
+        '#markup': |-
+          <a class="hds-link hds-link--medium" href="/grants-profile/">
+            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
+          </a>
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
@@ -201,6 +252,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     muut_samaan_tarkoitukseen_myonnetyt_avustukset:
       '#type': webform_section
       '#title': 'Muut samaan tarkoitukseen myönnetyt avustukset'
@@ -335,6 +389,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     kaupungilta_saatu_tiloihin_liittyva_tuki:
       '#type': webform_section
       '#title': 'Kaupungilta saatu tiloihin liittyvä tuki'
@@ -348,6 +405,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     edellisen_avustuksen_kayttoselvitys:
       '#type': webform_section
       '#title': 'Edellisen avustuksen käyttöselvitys'
@@ -368,6 +428,9 @@ elements: |-
         '#counter_minimum': 1
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön toiminta'
@@ -381,11 +444,16 @@ elements: |-
         '#title': 'Toiminnan kuvaus'
         '#required': true
         '#readonly': true
+        '#help': 'Tieto haetaan omat tiedot -osiosta'
       community_practices_business:
-        '#type': textfield
+        '#type': radios
         '#title': 'Harjoittaako yhteisö liiketoimintaa'
+        '#options':
+          1: Kyllä
+          0: Ei
         '#required': true
-        '#readonly': true
+        '#options_display': side_by_side
+        '#options_description_display': help
     ensimmainen_otsikko:
       '#type': webform_section
       '#title': Jäsenmaksut
@@ -396,12 +464,15 @@ elements: |-
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#attributes':
           class:
-            - input--short
+            - webform--small
       fee_community:
         '#type': textfield
         '#title': 'Yhteisöjäsen (€ / vuosi)'
         '#maxlength': 50
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+        '#attributes':
+          class:
+            - webform--small
     jasenmaara:
       '#type': webform_section
       '#title': Jäsenmäärä
@@ -412,6 +483,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--small
       members_applicant_person_global:
         '#type': textfield
         '#title': 'Henkilöjäseniä yhteensä'
@@ -419,6 +493,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--small
       members_applicant_community_local:
         '#type': textfield
         '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'
@@ -426,6 +503,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--small
       members_applicant_community_global:
         '#type': textfield
         '#title': Yhteisöjäseniä
@@ -433,6 +513,9 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
+        '#attributes':
+          class:
+            - webform--small
   lisatiedot_ja_liitteet:
     '#type': webform_wizard_page
     '#title': '4. Lisätiedot ja liitteet'
@@ -446,6 +529,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#attributes':
+          class:
+            - webform--large
     liitteet:
       '#type': webform_section
       '#title': Liitteet
@@ -540,6 +626,9 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': 'Max 5000 characters.'
+        '#attributes':
+          class:
+            - webform--large
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'
