@@ -545,12 +545,11 @@ class GrantsHandler extends WebformHandlerBase {
 
         return $createdSubmissionObject;
 
-      }
-      catch (
-      AtvDocumentNotFoundException |
-      AtvFailedToConnectException |
-      GuzzleException |
-      TempStoreException |
+      } catch (
+      AtvDocumentNotFoundException|
+      AtvFailedToConnectException|
+      GuzzleException|
+      TempStoreException|
       EntityStorageException $e) {
         return NULL;
       }
@@ -599,8 +598,8 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission
   ) {
 
@@ -873,9 +872,6 @@ class GrantsHandler extends WebformHandlerBase {
     $dt->setTimezone(new \DateTimeZone('UTC'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
-    // @todo check community_practices_business value and where to get it from.
-    $this->submittedFormData['community_practices_business'] = FALSE;
-
     // Get regdate from profile data and format it for Avustus2
     // This data is immutable for end user so safe to this way.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
@@ -915,8 +911,8 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function confirmForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission) {
 
     $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
@@ -928,8 +924,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     try {
       $applicationData->setValue($this->submittedFormData);
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
     }
 
     $violations = $applicationData->validate();
@@ -1058,8 +1053,7 @@ class GrantsHandler extends WebformHandlerBase {
               $webform_submission->id()
             );
           }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $this->messenger()->addError($e->getMessage());
           $this->getLogger('grants_handler')->error($e->getMessage());
         }
@@ -1188,8 +1182,7 @@ class GrantsHandler extends WebformHandlerBase {
           'transaction_id' => $this->applicationNumber,
         ]);
         $applicationDocument = reset($applicationDocumentResults);
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
       }
 
       $accountConfirmationExists = FALSE;
@@ -1244,8 +1237,7 @@ class GrantsHandler extends WebformHandlerBase {
             $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
             // Add file to attachments for uploading.
             $this->attachmentFileIds[] = $file->id();
-          }
-          catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+          } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
             $this->loggerFactory->get('grants_handler')
               ->error($e->getMessage());
             $this->messenger()
