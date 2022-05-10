@@ -10,7 +10,8 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  * @DataType(
  * id = "grants_metadata_yleisavustushakemus",
  * label = @Translation("Yleisavustushakemus"),
- * definition_class = "\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition"
+ * definition_class =
+ *   "\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition"
  * )
  */
 class YleisavustusHakemusData extends Map {
@@ -25,7 +26,7 @@ class YleisavustusHakemusData extends Map {
       // The property path of this data object is the parent's path appended
       // by this object's name.
       $prefix = $this->parent->getPropertyPath();
-      return (strlen($prefix) ? $prefix . '.' : '') . $this->name;
+      return ((is_string($prefix) && strlen($prefix)) ? $prefix . '.' : '') . $this->name;
     }
     // If no parent is set, this is the root of the data tree. Thus the property
     // path equals the name of this data object.

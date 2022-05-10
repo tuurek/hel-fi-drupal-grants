@@ -41,7 +41,7 @@ describe('Login, cookies, Profile, Applicant type, Yleisavustushakemus.', () => 
         // cy.accept_cookies()
         // general
         cy.get('[data-drupal-selector="edit-finalize-application"]').check()
-        cy.get('[data-drupal-selector="edit-community-official-name-short"]').type('CypressTEST')
+        // cy.get('[data-drupal-selector="edit-community-official-name-short"]').type('CypressTEST')
         cy.get('[data-drupal-selector="edit-email"]').type('testi@mailiosoite.com')
 
         // company details
@@ -117,8 +117,8 @@ describe('Login, cookies, Profile, Applicant type, Yleisavustushakemus.', () => 
         cy.get('[data-webform-page="3_yhteison_tiedot"]').should('have.class', 'is-active')
 
         cy.get('[id="edit-community-purpose--description"]').should('exist')
-        cy.get('[id="edit-community-practices-business--description"]').should('exist')
 
+        cy.get('[data-drupal-selector="edit-community-practices-business-1"]').check({force: true})
 
         cy.get('[data-drupal-selector="edit-fee-person"]').type('539,30')
         cy.get('[data-drupal-selector="edit-fee-community"]').type('539,30')
