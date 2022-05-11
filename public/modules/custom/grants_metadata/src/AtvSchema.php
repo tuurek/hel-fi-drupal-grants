@@ -142,6 +142,24 @@ class AtvSchema {
         }
       }
     }
+    $community_address = [];
+    if (isset($typedDataValues['community_street'])) {
+      $community_address['community_street'] = $typedDataValues['community_street'];
+      unset($typedDataValues['community_street']);
+    }
+    if (isset($typedDataValues['community_city'])) {
+      $community_address['community_city'] = $typedDataValues['community_city'];
+      unset($typedDataValues['community_city']);
+    }
+    if (isset($typedDataValues['community_post_code'])) {
+      $community_address['community_post_code'] = $typedDataValues['community_post_code'];
+      unset($typedDataValues['community_post_code']);
+    }
+    if (isset($typedDataValues['community_country'])) {
+      $community_address['community_country'] = $typedDataValues['community_country'];
+      unset($typedDataValues['community_country']);
+    }
+    $typedDataValues['community_address'] = $community_address;
 
     $typedDataValues['muu_liite'] = $other_attachments;
 
@@ -304,9 +322,10 @@ class AtvSchema {
         continue;
       }
 
-      // If ($propertyName === 'status_updates') {
-      // continue;
-      // }.
+      if ($propertyName === 'community_officials') {
+        $d = 'asdf';
+      }
+
       $types = $this->getJsonTypeForDataType($definition);
       $schema = $this->getPropertySchema($elementName, $this->structure);
 

@@ -596,6 +596,27 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Format form values to be consumed with typedata.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission $webform_submission
+   *   Submission object.
+   *
+   * @return mixed
+   *   Massaged values.
+   */
+  protected function massageFormValuesFromWebform(WebformSubmission $webform_submission): mixed {
+    $values = $webform_submission->getData();
+
+    if (isset($values['community_address']) && $values['community_address'] !== NULL) {
+      $values += $values['community_address'];
+      unset($values['community_address']);
+      unset($values['community_address_select']);
+    }
+
+    return $values;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(
@@ -614,7 +635,7 @@ class GrantsHandler extends WebformHandlerBase {
     // 3_yhteison_tiedot
     // lisatiedot_ja_liitteet
     // webform_preview
-    $this->submittedFormData = $webform_submission->getData();
+    $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
     $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
 
     foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
@@ -761,7 +782,7 @@ class GrantsHandler extends WebformHandlerBase {
     // If submission has applicant type set, ie we're editing submission
     // use that, if not then get selected from profile.
     // we know that.
-    $submissionData = $webform_submission->getData();
+    $submissionData = $this->massageFormValuesFromWebform($webform_submission);
     if (isset($submissionData['applicant_type'])) {
       $applicantType = $submissionData['applicant_type'];
     }
@@ -810,7 +831,7 @@ class GrantsHandler extends WebformHandlerBase {
     $webform_submission->remote_addr->value = '';
 
     if (empty($this->submittedFormData)) {
-      $this->submittedFormData = $webform_submission->getData();
+      $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
     }
 
     // If for some reason applicant type is not present, make sure it get's

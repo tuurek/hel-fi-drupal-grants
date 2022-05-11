@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\Exception\ReadOnlyException;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\Url;
 use Drupal\grants_profile\TypedData\Definition\AddressDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -89,6 +90,24 @@ class AddressForm extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Send'),
+    ];
+
+    $url = Url::fromRoute(
+      'grants_profile.company_addresses.remove',
+      ['address_id' => $address_id]
+    );
+
+    $form['actions']['delete'] = [
+      '#type' => 'link',
+      '#title' => t('Delete'),
+      '#attributes' => ['class' => ['button', 'delete']],
+      '#url' => $url,
+      '#cache' => [
+        'contexts' => [
+          'url.query_args:destination',
+        ],
+      ],
+      '#weight' => 10,
     ];
 
     return $form;

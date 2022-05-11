@@ -194,6 +194,66 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
       }
       $element["#default_value"] = $newValues;
     }
+
+    // for some reason this selection cannot be done in address composite class.
+    // so we'll need to hack this here.
+    // @todo Can the composite default value be added here?
+    if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_address')) {
+
+      /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+      $grantsProfileService = \Drupal::service('grants_profile.service');
+
+      $selectedCompany = $grantsProfileService->getSelectedCompany();
+      $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+      if (isset($element['#default_value'])) {
+        $formValues = $element['#default_value'];
+        $formSelection = $formValues['community_street'] . ', ' .
+          $formValues['community_post_code'] . ', ' .
+          $formValues['community_city'] . ', ' .
+          $formValues['community_country'];
+
+        $defaultDelta = '0';
+
+        foreach ($profileData['addresses'] as $delta => $address) {
+          $deltaString = (string) $delta;
+          $optionSelection = $address['street'] . ', ' . $address['postCode'] .
+            ', ' . $address['city'] . ', ' . $address['country'];
+
+          if ($formSelection == $optionSelection) {
+            $defaultDelta = $deltaString;
+          }
+        }
+        $element["#default_value"]["community_address_select"] = $defaultDelta;
+      }
+    }
+
+    // for some reason this selection cannot be done in official composite class.
+    // so we'll need to hack this here.
+    // @todo Can the composite default value be added here?
+    if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_officials')) {
+
+      /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+      $grantsProfileService = \Drupal::service('grants_profile.service');
+
+      $selectedCompany = $grantsProfileService->getSelectedCompany();
+      $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+      $defaultDelta = '0';
+
+      foreach ($element['#default_value'] as $delta => $official) {
+        $valueName = $official['name'];
+
+        foreach ($profileData['officials'] as $profileDelta => $profileOfficial) {
+          $deltaString = (string) $profileDelta;
+
+          if ($valueName == $profileOfficial['name']) {
+            $defaultDelta = $deltaString;
+          }
+        }
+        $element['#default_value'][$delta]['community_officials_select'] = $defaultDelta;
+      }
+    }
   }
 
 
@@ -289,7 +349,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     // pass variable to Drupal.Settings
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
 
-    $bankAccountOptions = [];
+    $bankAccountOptions = [
+      '' => '-' . t('Select address') . '-',
+    ];
     foreach ($grantsProfile['bankAccounts'] as $key => $account) {
       if (isset($account['confirmationFile'])) {
         $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
@@ -317,24 +379,24 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     <div class="hds-notification__content">
       <div class="hds-notification__label" role="heading" aria-level="2">
         <span class="hds-icon hds-icon--info-circle-fill" aria-hidden="true"></span>
-        <span>'.t('Some information fetched from personal information').'</span>
+        <span>' . t('Some information fetched from personal information') . '</span>
       </div>
       <div class="hds-notification__body">
-        '.t('Check the information on the form before sending the application. You can change your own information from personal information section of the site.').'
+        ' . t('Check the information on the form before sending the application. You can change your own information from personal information section of the site.') . '
       </div>
     </div>
   </section>
   ',
       ],
     ];
-  $required_fields_info_element = [
+    $required_fields_info_element = [
       'required_fields_infobox' => [
         '#markup' => '
   <section aria-label="Notification" class="hds-notification">
     <div class="hds-notification__content">
       <div class="hds-notification__label" role="heading" aria-level="2">
         <span class="hds-icon hds-icon--info-circle-fill" aria-hidden="true"></span>
-        <span>'.t('Fields marked with an asterisk * are required, that need to be filled before saving.').'</span>
+        <span>' . t('Fields marked with an asterisk * are required, that need to be filled before saving.') . '</span>
       </div>
     </div>
   </section>

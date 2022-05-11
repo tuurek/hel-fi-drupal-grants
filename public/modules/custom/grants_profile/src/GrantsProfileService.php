@@ -287,10 +287,10 @@ class GrantsProfileService {
             ));
 
             $this->messenger->addError(
-                        $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
-                          ['%account' => $bank_account['bankAccount']]
-                        )
-                      );
+              $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
+                ['%account' => $bank_account['bankAccount']]
+              )
+            );
           }
 
         }
@@ -327,6 +327,23 @@ class GrantsProfileService {
     }
 
     $addresses[$nextId] = $address;
+    $profileContent['addresses'] = $addresses;
+    return $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Remove address from profile & CACHE.
+   *
+   * @param string $address_id
+   *   Address id in store.
+   */
+  public function removeAddress(string $address_id): bool {
+    $selectedCompany = $this->getSelectedCompany();
+    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
+
+    unset($addresses[$address_id]);
+
     $profileContent['addresses'] = $addresses;
     return $this->setToCache($selectedCompany, $profileContent);
   }
@@ -454,6 +471,23 @@ class GrantsProfileService {
   }
 
   /**
+   * Remove official from profile data & save to CACHE.
+   *
+   * @param string $official_id
+   *   Id to save, "new" if adding a new.
+   */
+  public function removeOfficial(string $official_id) {
+    $selectedCompany = $this->getSelectedCompany();
+    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
+
+    unset($officials[(int) $official_id]);
+
+    $profileContent['officials'] = $officials;
+    return $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
    * Save bank account to ATV.
    *
    * @param string $bank_account_id
@@ -474,6 +508,23 @@ class GrantsProfileService {
     }
 
     $bankAccounts[$nextId] = $bank_account;
+    $profileContent['bankAccounts'] = $bankAccounts;
+    $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Save bank account to ATV.
+   *
+   * @param string $bank_account_id
+   *   Id to save, "new" if adding a new.
+   */
+  public function removeBankAccount(string $bank_account_id) {
+    $selectedCompany = $this->getSelectedCompany();
+    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $bankAccounts = (isset($profileContent['bankAccounts']) && $profileContent['bankAccounts'] !== NULL) ? $profileContent['bankAccounts'] : [];
+
+    unset($bankAccounts[$bank_account_id]);
+
     $profileContent['bankAccounts'] = $bankAccounts;
     $this->setToCache($selectedCompany, $profileContent);
   }

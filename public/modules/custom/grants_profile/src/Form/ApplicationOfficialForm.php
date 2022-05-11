@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\Exception\ReadOnlyException;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\Url;
 use Drupal\grants_profile\TypedData\Definition\ApplicationOfficialDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -104,6 +105,24 @@ class ApplicationOfficialForm extends FormBase {
       '#value' => $this->t('Send'),
     ];
 
+    $url = Url::fromRoute(
+      'grants_profile.application_official.remove',
+      ['official_id' => $official_id]
+    );
+
+    $form['actions']['delete'] = [
+      '#type' => 'link',
+      '#title' => t('Delete'),
+      '#attributes' => ['class' => ['button', 'delete']],
+      '#url' => $url,
+      '#cache' => [
+        'contexts' => [
+          'url.query_args:destination',
+        ],
+      ],
+      '#weight' => 10,
+    ];
+
     return $form;
   }
 
@@ -156,7 +175,8 @@ class ApplicationOfficialForm extends FormBase {
 
     $storage = $form_state->getStorage();
     if (!isset($storage['applicationOfficialData'])) {
-      $this->messenger()->addError($this->t('applicationOfficialData not found!'));
+      $this->messenger()
+        ->addError($this->t('applicationOfficialData not found!'));
       return;
     }
 

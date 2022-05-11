@@ -30,6 +30,14 @@ grants_profile.company_addresses:
   requirements:
     _permission: 'administer own grants_profile'
 
+grants_profile.company_addresses.remove:
+  path: '/grants-profile/address/{address_id}/delete'
+  defaults:
+    _title: 'Delete addresses'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteAddress'
+  requirements:
+    _permission: 'administer own grants_profile'
+
 grants_profile.company_address_form:
   path: '/grants-profile/address/{address_id}'
   defaults:
@@ -54,6 +62,14 @@ grants_profile.application_official_form:
   requirements:
     _permission: 'administer own grants_profile'
 
+grants_profile.application_official.remove:
+  path: '/grants-profile/application-officials/{official_id}/delete'
+  defaults:
+    _title: 'Delete official'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteOfficial'
+  requirements:
+    _permission: 'administer own grants_profile'
+
 grants_profile.bank_account:
   path: '/grants-profile/bank-accounts'
   defaults:
@@ -67,6 +83,14 @@ grants_profile.bank_account_form:
   defaults:
     _title: 'Bank account'
     _form: 'Drupal\grants_profile\Form\BankAccountForm'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.bank_account.remove:
+  path: '/grants-profile/bank-accounts/{bank_account_id}/delete'
+  defaults:
+    _title: 'Delete bank account'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteBankAccount'
   requirements:
     _permission: 'administer own grants_profile'
 
