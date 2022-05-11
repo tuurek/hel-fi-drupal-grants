@@ -85,12 +85,6 @@ elements: |-
         '#title': Perustamisvuosi
         '#title_display': invisible
         '#readonly': true
-        '#field_suffix':
-          '#type': webform_markup
-          '#markup': |-
-            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
-            </a>
     yhteison_lyhenne:
       '#type': webform_section
       '#title': 'Yhteisön lyhenne'
@@ -98,12 +92,6 @@ elements: |-
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
         '#title_display': invisible
-        '#field_suffix':
-          '#type': webform_markup
-          '#markup': |-
-            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
-            </a>
     sahkoposti:
       '#type': webform_section
       '#title': 'Sähköpostiosoite'
@@ -118,12 +106,6 @@ elements: |-
         '#type': textfield
         '#title': www-sivut
         '#title_display': invisible
-        '#field_suffix':
-          '#type': webform_markup
-          '#markup': |-
-            <a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-              <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa</span>
-            </a>
     osoite:
       '#type': webform_section
       '#title': Osoite
