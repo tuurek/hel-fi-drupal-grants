@@ -349,9 +349,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     // pass variable to Drupal.Settings
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
 
-    $bankAccountOptions = [
-      '' => '-' . t('Select address') . '-',
-    ];
+    $bankAccountOptions = [];
     foreach ($grantsProfile['bankAccounts'] as $key => $account) {
       if (isset($account['confirmationFile'])) {
         $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
