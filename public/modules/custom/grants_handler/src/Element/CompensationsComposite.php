@@ -33,7 +33,7 @@ class CompensationsComposite extends WebformCompositeBase {
     // ];
     $elements['subventionTypeTitle'] = [
       '#type' => 'textfield',
-      '#title' => t('Subvention Name'),
+      '#title' => t('Subvention name'),
       '#attributes' => ['readonly' => 'readonly'],
     ];
     $elements['subventionType'] = [

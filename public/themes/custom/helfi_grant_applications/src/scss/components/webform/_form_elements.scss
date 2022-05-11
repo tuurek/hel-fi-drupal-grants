@@ -106,3 +106,17 @@ form .hds-checkbox {
     content: '';
   }
 }
+
+#subventions_table {
+  .form-item-subventions {
+    > label {
+      display: none;
+    }
+    table {
+      margin: 0;
+    }
+    .fieldset-wrapper {
+      display:flex;
+    }
+  }
+}

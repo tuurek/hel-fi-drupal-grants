@@ -215,6 +215,11 @@ elements: |-
         '#type': grants_compensations
         '#title': Avustukset
         '#multiple': true
+        '#multiple__add': false
+        '#multiple__add_more': false
+        '#multiple__empty_items': 0
+        '#multiple__remove': false
+        '#multiple__sorting': false
         '#subventionType':
           6: '6'
         '#subvention_type':
@@ -223,6 +228,9 @@ elements: |-
         '#subvention_type_id__access': false
         '#subvention_type__title': Avustuslaji
         '#subvention_amount__title': 'Avustuksen summa'
+        '#attributes':
+          class:
+            - subventions
     kayttotarkoitus:
       '#type': webform_section
       '#title': Käyttötarkoitus

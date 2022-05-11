@@ -221,6 +221,12 @@ function _grants_handler_imported_handler(
   $array['#description'] = \Drupal\Core\Field\FieldFilteredMarkup::create($show_checkmark ? $value .
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
+  if ($show_checkmark === FALSE) {
+    $array['#field_suffix'] = '<a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">'.t('Edit').'</span>
+          </a>';
+  }
+
 }
 
 /**
