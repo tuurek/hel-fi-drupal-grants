@@ -241,17 +241,19 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
 
       $defaultDelta = '0';
 
-      foreach ($element['#default_value'] as $delta => $official) {
-        $valueName = $official['name'];
+      if (isset($element['##default_value'])) {
+        foreach ($element['#default_value'] as $delta => $official) {
+          $valueName = $official['name'];
 
-        foreach ($profileData['officials'] as $profileDelta => $profileOfficial) {
-          $deltaString = (string) $profileDelta;
+          foreach ($profileData['officials'] as $profileDelta => $profileOfficial) {
+            $deltaString = (string) $profileDelta;
 
-          if ($valueName == $profileOfficial['name']) {
-            $defaultDelta = $deltaString;
+            if ($valueName == $profileOfficial['name']) {
+              $defaultDelta = $deltaString;
+            }
           }
+          $element['#default_value'][$delta]['community_officials_select'] = $defaultDelta;
         }
-        $element['#default_value'][$delta]['community_officials_select'] = $defaultDelta;
       }
     }
   }
