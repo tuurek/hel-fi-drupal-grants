@@ -45,13 +45,24 @@ class ApplicationOfficialForm extends FormBase {
     return 'grants_profile_application_official';
   }
 
+  public static function getOfficialRoles() {
+    return [
+      1 => t('Chairperson'),
+      2 => t('Financial officer'),
+      3 => t('Secretary'),
+      4 => t('Operative manager'),
+      5 => t('Vice Chairperson'),
+      6 => t('Other'),
+    ];
+  }
+
   /**
    * {@inheritdoc}
    */
   public function buildForm(
-    array $form,
+    array              $form,
     FormStateInterface $form_state,
-    string $official_id = ''): array {
+    string             $official_id = ''): array {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -69,14 +80,7 @@ class ApplicationOfficialForm extends FormBase {
       '#title' => $this->t('Role'),
       '#required' => TRUE,
       '#default_value' => $selectedOfficial['role'],
-      '#options' => [
-        1 => $this->t('Chairperson'),
-        2 => $this->t('Financial officer'),
-        3 => $this->t('Secretary'),
-        4 => $this->t('Operative manager'),
-        5 => $this->t('Vice Chairperson'),
-        6 => $this->t('Other'),
-      ],
+      '#options' => ApplicationOfficialForm::getOfficialRoles(),
     ];
 
     $form['email'] = [
@@ -161,8 +165,7 @@ class ApplicationOfficialForm extends FormBase {
         // Move addressData object to form_state storage.
         $form_state->setStorage(['applicationOfficialData' => $applicationOfficialData]);
       }
-    }
-    catch (ReadOnlyException $e) {
+    } catch (ReadOnlyException $e) {
       $this->messenger()->addError('Data read only');
       $form_state->setError($form, 'Trying to write to readonly value');
     }

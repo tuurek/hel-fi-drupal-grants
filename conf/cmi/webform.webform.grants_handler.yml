@@ -31,6 +31,15 @@ elements: |-
         '#title': Value
         '#required': true
         '#description': 'Enter a value to displayed in a custom message.'
+  rytfhdfghdfghdfgh:
+    '#type': contact_person_composite
+    '#title': rytfhdfghdfghdfgh
+  xcvbxcvbxcvb:
+    '#type': contact_person_composite
+    '#title': xcvbxcvbxcvb
+  dsfasdfasdf:
+    '#type': contact_person_composite
+    '#title': dsfasdfasdf
 css: ''
 javascript: ''
 settings:
@@ -218,7 +227,7 @@ handlers:
     handler_id: grants_handler
     label: 'Grants Handler'
     notes: ''
-    status: true
+    status: false
     conditions: {  }
     weight: 0
     settings:

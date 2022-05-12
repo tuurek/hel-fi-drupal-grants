@@ -59,10 +59,10 @@ class CompensationsComposite extends WebformCompositeBase {
     $parent = parent::defineDefaultProperties();
 
     return [
-      'amount' => '',
-      'subventionType' => '',
-    // 'subventionTypeName' => '',
-    ] + $parent;
+        'amount' => '',
+        'subventionType' => '',
+        // 'subventionTypeName' => '',
+      ] + $parent;
   }
 
   /**
@@ -98,7 +98,7 @@ class CompensationsComposite extends WebformCompositeBase {
    * {@inheritdoc}
    */
   protected function formatHtmlItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
-
+    return $this->formatTextItemValue($element, $webform_submission, $options);
   }
 
   /**
@@ -107,7 +107,12 @@ class CompensationsComposite extends WebformCompositeBase {
   protected function formatTextItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []) {
     $value = $this->getValue($element, $webform_submission, $options);
 
-    return [];
+    $types = self::getOptionsForTypes();
+
+    return [
+      $types[$value['subventionType']] . ': ' . $value['amount'] . '€',
+      
+    ];
   }
 
 }

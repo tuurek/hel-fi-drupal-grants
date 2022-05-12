@@ -241,7 +241,7 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
 
       $defaultDelta = '0';
 
-      if (isset($element['##default_value'])) {
+      if (isset($element['#default_value'])) {
         foreach ($element['#default_value'] as $delta => $official) {
           $valueName = $official['name'];
 
@@ -254,6 +254,12 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
           }
           $element['#default_value'][$delta]['community_officials_select'] = $defaultDelta;
         }
+      }
+    }
+
+    if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_practices_business')) {
+      if (isset($webformData["community_practices_business"])) {
+        $element['#default_value'] = $webformData["community_practices_business"];
       }
     }
   }
@@ -351,12 +357,12 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     // pass variable to Drupal.Settings
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
 
-    $bankAccountOptions = [];
-    foreach ($grantsProfile['bankAccounts'] as $key => $account) {
-      if (isset($account['confirmationFile'])) {
-        $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
-      }
-    }
+    //    $bankAccountOptions = [];
+    //    foreach ($grantsProfile['bankAccounts'] as $key => $account) {
+    //      if (isset($account['confirmationFile'])) {
+    //        $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
+    //      }
+    //    }
 
     if ($grantsProfile["businessPurpose"]) {
       _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"], $grantsProfile["businessPurpose"], FALSE);
@@ -367,7 +373,8 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
         t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
 
-    $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;
+    //    $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;
+
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
       $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];
     }
@@ -456,6 +463,13 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   if (isset($data["application_number"])) {
     $variables['applicationNumber'] = $data["application_number"];
   }
+  if (isset($data["business_purpose"])) {
+    $variables["elements"]["data"]["3_yhteison_tiedot"]["#element"]["business_info"]["community_purpose"] = $data["business_purpose"];
+  }
+
+  $variables["elements"]["data"]["lisatiedot_ja_liitteet"]["#element"]
+  ["liitteet"]["talousarvio"]["#webform_composite_elements"]["attachmentName"] = 'ASDF ASDFASDFASDFASDFASDFASDF';
+
 
   // parse messages
   $variables['messages'] = [

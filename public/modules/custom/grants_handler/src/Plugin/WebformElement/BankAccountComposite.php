@@ -2,30 +2,29 @@
 
 namespace Drupal\grants_handler\Plugin\WebformElement;
 
-use Drupal\grants_profile\Form\ApplicationOfficialForm;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
 /**
- * Provides a 'community_officials_composite' element.
+ * Provides a 'community_address_composite' element.
  *
  * @WebformElement(
- *   id = "community_officials_composite",
- *   label = @Translation("Community officials composite"),
- *   description = @Translation("Provides a address element for company."),
+ *   id = "bank_account_composite",
+ *   label = @Translation("Community bank account"),
+ *   description = @Translation("Provides a bank account element for company."),
  *   category = @Translation("Helfi"),
  *   multiline = TRUE,
  *   composite = TRUE,
  *   states_wrapper = TRUE,
  * )
  *
- * @see \Drupal\grants_handler\Element\CommunityOfficialsComposite
+ * @see \Drupal\grants_handler\Element\BankAccountComposite
  * @see \Drupal\webform\Plugin\WebformElement\WebformCompositeBase
  * @see \Drupal\webform\Plugin\WebformElementBase
  * @see \Drupal\webform\Plugin\WebformElementInterface
  * @see \Drupal\webform\Annotation\WebformElement
  */
-class CommunityOfficialsComposite extends WebformCompositeBase {
+class BankAccountComposite extends WebformCompositeBase {
 
   /**
    * {@inheritdoc}
@@ -38,18 +37,10 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
    * {@inheritdoc}
    */
   protected function formatTextItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []): array {
-    $roles = ApplicationOfficialForm::getOfficialRoles();
     $value = $this->getValue($element, $webform_submission, $options);
-
-    /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $role */
-    $role = $roles[(int) $value['role']];
-
-    return [
-      $value['name'],
-      $role->render(),
-      $value['email'],
-      $value['phone'],
-    ];
+    $lines = [];
+    $lines[] = $value['account_number'];
+    return $lines;
   }
 
 }

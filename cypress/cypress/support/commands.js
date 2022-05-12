@@ -32,7 +32,7 @@ Cypress.Commands.add('login', (type) => {
 
         cy.visit('/user/login')
         cy.get('button.eu-cookie-compliance-default-button').click()
-        
+
         let perms = {};
         switch (type) {
             case 'admin':
@@ -86,6 +86,19 @@ Cypress.Commands.add('accept_cookies', (type) => {
     //     })
     cy.get('button.eu-cookie-compliance-default-button').click()
 });
+
+Cypress.Commands.add(
+    'selectNth',
+    {prevSubject: 'element'},
+    (subject, pos) => {
+        cy.wrap(subject)
+            .children('option')
+            .eq(pos)
+            .then(e => {
+                cy.wrap(subject).select(e.val())
+            })
+    }
+)
 
 Cypress.SelectorPlayground.defaults({
     onElement: ($el) => {

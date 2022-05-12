@@ -126,26 +126,15 @@ elements: |-
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
-      account_number_select:
-        '#type': select
-        '#title': Tilinumero
-        '#options':
-          noaccounts: 'No accounts.'
-        '#required': true
-      account_number:
-        '#type': textfield
-        '#title': Tilinumero
-        '#readonly': true
-        '#required': true
-        '#wrapper_attributes':
-          class:
-            - hidden
       account_markup:
         '#type': webform_markup
         '#markup': |-
           <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
           </a>
+      bank_account:
+        '#type': bank_account_composite
+        '#title': 'Bank account'
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'

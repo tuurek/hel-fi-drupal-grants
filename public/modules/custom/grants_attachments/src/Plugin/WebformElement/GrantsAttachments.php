@@ -83,13 +83,13 @@ class GrantsAttachments extends WebformCompositeBase {
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
     return [
-      'multiple' => '',
-      'size' => '',
-      'minlength' => '',
-      'maxlength' => '',
-      'placeholder' => '',
-      'filetype' => '',
-    ] + parent::defineDefaultProperties();
+        'multiple' => '',
+        'size' => '',
+        'minlength' => '',
+        'maxlength' => '',
+        'placeholder' => '',
+        'filetype' => '',
+      ] + parent::defineDefaultProperties();
   }
 
   /**
@@ -195,14 +195,19 @@ class GrantsAttachments extends WebformCompositeBase {
 
       $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
     }
-    if ($value["isDeliveredLater"] === '1') {
+
+    if ($value["isDeliveredLater"] === 'true') {
       $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
     }
-    if ($value["isIncludedInOtherFile"] === '1') {
+    if ($value["isIncludedInOtherFile"] === 'true') {
       $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
     }
-    if ($value["description"] !== NULL) {
+    if ($value["description"] !== NULL && $element["#webform_key"] == 'muu_liite') {
       $lines[] = $value["description"];
+    }
+
+    if (isset($value["fileName"])) {
+      $lines[] = $value["fileName"];
     }
 
     return $lines;

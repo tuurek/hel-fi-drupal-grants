@@ -26,7 +26,7 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
    * {@inheritdoc}
    */
   public function getInfo(): array {
-    return parent::getInfo() + ['#theme' => 'community_address_composite'];
+    return parent::getInfo() + ['#theme' => 'community_officials_composite'];
   }
 
   /**

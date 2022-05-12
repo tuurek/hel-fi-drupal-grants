@@ -1,0 +1,791 @@
+{
+  "compensation": {
+    "applicationInfoArray": [
+      {
+        "ID": "applicationType",
+        "label": "Hakemustyyppi",
+        "value": "ECONOMICGRANTAPPLICATION",
+        "valueType": "string"
+      },
+      {
+        "ID": "applicationTypeID",
+        "label": "Hakemustyypin numero",
+        "value": "29",
+        "valueType": "int"
+      },
+      {
+        "ID": "formTimeStamp",
+        "label": "Hakemuksen/sanoman lähetyshetki",
+        "value": "2021-06-10T09:35:12.000Z",
+        "valueType": "datetime"
+      },
+      {
+        "ID": "applicationNumber",
+        "label": "Hakemusnumero",
+        "value": "59595-JSON-VERSION-1",
+        "valueType": "string"
+      },
+      {
+        "ID": "status",
+        "label": "Tila",
+        "value": "Vastaanotettu",
+        "valueType": "string"
+      },
+      {
+        "ID": "actingYear",
+        "label": "Hakemusvuosi",
+        "value": "2021",
+        "valueType": "int"
+      }
+    ],
+    "currentAddressInfoArray": [
+      {
+        "ID": "contactPerson",
+        "label": "Yhteyshenkilö",
+        "value": "Teemu Testaushenkilö",
+        "valueType": "string"
+      },
+      {
+        "ID": "phoneNumber",
+        "label": "Puhelinnumero",
+        "value": "+358404040404",
+        "valueType": "string"
+      },
+      {
+        "ID": "street",
+        "label": "Katuosoite",
+        "value": "Annankatu 18 Ö 905",
+        "valueType": "string"
+      },
+      {
+        "ID": "city",
+        "label": "Postitoimipaikka",
+        "value": "Helsinki",
+        "valueType": "string"
+      },
+      {
+        "ID": "postCode",
+        "label": "Postinumero",
+        "value": "00120",
+        "valueType": "string"
+      },
+      {
+        "ID": "country",
+        "label": "Maa",
+        "value": "Suomi",
+        "valueType": "string"
+      }
+    ],
+    "applicantInfoArray": [
+      {
+        "ID": "applicantType",
+        "label": "Hakijan tyyppi",
+        "value": "2",
+        "valueType": "string"
+      },
+      {
+        "ID": "companyNumber",
+        "label": "Rekisterinumero",
+        "value": "5647641-1",
+        "valueType": "string"
+      },
+      {
+        "ID": "communityOfficialName",
+        "label": "Yhteisön nimi",
+        "value": "TietoTesti Kh yleis 001 10062021",
+        "valueType": "string"
+      },
+      {
+        "ID": "communityOfficialNameShort",
+        "label": "Yhteisön lyhenne",
+        "value": "TT ry",
+        "valueType": "string"
+      },
+      {
+        "ID": "registrationDate",
+        "label": "Rekisteröimispäivä",
+        "value": "2021-01-01T00:00:00.000Z",
+        "valueType": "datetime"
+      },
+      {
+        "ID": "foundingYear",
+        "label": "Perustamisvuosi",
+        "value": "2021",
+        "valueType": "int"
+      },
+      {
+        "ID": "home",
+        "label": "Kotipaikka",
+        "value": "Helsinki",
+        "valueType": "string"
+      },
+      {
+        "ID": "homePage",
+        "label": "www-sivut",
+        "value": "www.ttry.fi",
+        "valueType": "string"
+      },
+      {
+        "ID": "email",
+        "label": "Sähköpostiosoite",
+        "value": "tsto@ttry.fi",
+        "valueType": "string"
+      }
+    ],
+    "applicantOfficialsArray": [
+      [
+        {
+          "ID": "email",
+          "label": "Sähköposti",
+          "value": "teemu@ttry.fi",
+          "valueType": "string"
+        },
+        {
+          "ID": "role",
+          "label": "Rooli",
+          "value": "1",
+          "valueType": "string"
+        },
+        {
+          "ID": "name",
+          "label": "Nimi",
+          "value": "Teemu Testaushenkilö",
+          "valueType": "string"
+        },
+        {
+          "ID": "phone",
+          "label": "Puhelinnumero",
+          "value": "09-616527788",
+          "valueType": "string"
+        }
+      ]
+    ],
+    "bankAccountArray": [
+      {
+        "ID": "accountNumber",
+        "label": "Tilinumero",
+        "value": "FI9640231442000454",
+        "valueType": "string"
+      }
+    ],
+    "compensationInfo": {
+      "generalInfoArray": [
+        {
+          "ID": "totalAmount",
+          "label": "Haettavat avustukset yhteensä",
+          "value": "14387.00",
+          "valueType": "float"
+        },
+        {
+          "ID": "purpose",
+          "label": "Haetun avustuksen käyttötarkoitus",
+          "value": "Käyttötarkoituksenamme on se että ... kts. liite 10.",
+          "valueType": "string"
+        },
+        {
+          "ID": "compensationPreviousYear",
+          "label": "Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna",
+          "value": "true",
+          "valueType": "bool"
+        },
+        {
+          "ID": "explanation",
+          "label": "Selvitys edellisen avustuksen käytöstä",
+          "value": "Emme saaneet viime vuonna avustusta lainkaan.",
+          "valueType": "string"
+        }
+      ],
+      "compensationArray": [
+        [
+          {
+            "ID": "subventionType",
+            "label": "Avustuslaji",
+            "value": "1",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "3533.00",
+            "valueType": "float"
+          }
+        ],
+        [
+          {
+            "ID": "subventionType",
+            "label": "Avustuslaji",
+            "value": "4",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "2644.00",
+            "valueType": "float"
+          }
+        ],
+        [
+          {
+            "ID": "subventionType",
+            "label": "Avustuslaji",
+            "value": "8",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "1722.00",
+            "valueType": "float"
+          }
+        ],
+        [
+          {
+            "ID": "subventionType",
+            "label": "Avustuslaji",
+            "value": "5",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "4833.00",
+            "valueType": "float"
+          }
+        ],
+        [
+          {
+            "ID": "subventionType",
+            "label": "Avustuslaji",
+            "value": "9",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "1655.00",
+            "valueType": "float"
+          }
+        ]
+      ]
+    },
+    "otherCompensationsInfo": {
+      "otherCompensationsArray": [
+        [
+          {
+            "ID": "issuer",
+            "label": "Myöntäjä",
+            "value": "5",
+            "valueType": "string"
+          },
+          {
+            "ID": "issuerName",
+            "label": "Myöntäjän nimi",
+            "value": "Joku Säätiö Sr.",
+            "valueType": "string"
+          },
+          {
+            "ID": "year",
+            "label": "Vuosi",
+            "value": "2021",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "2800",
+            "valueType": "double"
+          },
+          {
+            "ID": "purpose",
+            "label": "Tarkoitus",
+            "value": "Matkakuluihin ja muihin ylimääräisiin menoihin.",
+            "valueType": "string"
+          }
+        ]
+      ],
+	  "otherAppliedCompensationsArray": [
+        [
+          {
+            "ID": "issuer",
+            "label": "Myöntäjä",
+            "value": "5",
+            "valueType": "string"
+          },
+          {
+            "ID": "issuerName",
+            "label": "Myöntäjän nimi",
+            "value": "Joku Säätiö Sr.",
+            "valueType": "string"
+          },
+          {
+            "ID": "year",
+            "label": "Vuosi",
+            "value": "2021",
+            "valueType": "string"
+          },
+          {
+            "ID": "amount",
+            "label": "Euroa",
+            "value": "3000.00",
+            "valueType": "double"
+          },
+          {
+            "ID": "purpose",
+            "label": "Tarkoitus",
+            "value": "Matkakuluihin ja muihin ylimääräisiin menoihin.",
+            "valueType": "string"
+          }
+        ]
+      ],
+	  "otherCompensationsInfoArray": [
+		  {
+			"ID": "otherCompensationsTotal",
+			"label": "Muut saadut avustukset yhteensä",
+			"value": "2800.0",
+			"valueType": "double"
+		  },
+		  {
+			"ID": "otherAppliedCompensationsTotal",
+			"label": "Muut haetut avustukset yhteensä",
+			"value": "3000.0",
+			"valueType": "double"
+		  }
+	  ]
+    },
+    "benefitsInfoArray": [
+      {
+        "ID": "premises",
+        "label": "Tilat, jotka kaupunki on antanut korvauksetta tai vuokrannut hakijan käyttöön (osoite, pinta-ala ja tiloista maksettava vuokra €/kk",
+        "value": "ei ole mitään tiloja kaupungilta käytössämme",
+        "valueType": "string"
+      },
+      {
+        "ID": "loans",
+        "label": "Kaupungilta saadut lainat ja/tai takaukset",
+        "value": "ei ole myöskään lainoja taikka takauksia",
+        "valueType": "string"
+      }
+    ],
+    "activitiesInfoArray": [
+      {
+        "ID": "businessPurpose",
+        "label": "Toiminnan tarkoitus",
+        "value": "Meidän toimintamme tarkoituksena on että ...",
+        "valueType": "string"
+      },
+      {
+        "ID": "communityPracticesBusiness",
+        "label": "Yhteisö harjoittaa liiketoimintaa",
+        "value": "false",
+        "valueType": "bool"
+      },
+      {
+        "ID": "membersApplicantPersonGlobal",
+        "label": "Hakijayhteisö, henkilöjäseniä",
+        "value": "50",
+        "valueType": "int"
+      },
+      {
+        "ID": "membersApplicantPersonLocal",
+        "label": "Hakijayhteisö, helsinkiläisiä henkilöjäseniä",
+        "value": "45",
+        "valueType": "int"
+      },
+      {
+        "ID": "feePerson",
+        "label": "Jäsenmaksun suuruus, Henkiöjäsen euroa",
+        "value": "38",
+        "valueType": "float"
+      },
+      {
+        "ID": "feeCommunity",
+        "label": "Jäsenmaksun suuruus, Yhteisöjäsen euroa",
+        "value": "98",
+        "valueType": "float"
+      }
+    ],
+    "additionalInformation": "Tällä kertaa ei ole muuta ilmoitettavaa tähän hakemukseen",
+    "senderInfoArray": [
+      {
+        "ID": "firstname",
+        "label": "Etunimi",
+        "value": "Testaaja",
+        "valueType": "string"
+      },
+      {
+        "ID": "lastname",
+        "label": "Sukunimi",
+        "value": "Tiina",
+        "valueType": "string"
+      },
+      {
+        "ID": "personID",
+        "label": "Henkilötunnus",
+        "value": "171756-1234",
+        "valueType": "string"
+      },
+      {
+        "ID": "userID",
+        "label": "Käyttäjätunnus",
+        "value": "testatii",
+        "valueType": "string"
+      },
+      {
+        "ID": "email",
+        "label": "Sähköposti",
+        "value": "tiina.testaaja@testiyhdistys.fi",
+        "valueType": "string"
+      }
+    ]
+  },
+  "attachmentsInfo": {
+    "attachmentsArray": [
+      [
+        {
+          "ID": "description",
+          "value": "Pankin ilmoitus tilinomistajasta tai tiliotekopio (uusilta hakijoilta tai pankkiyhteystiedot muuttuneet) *",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "01_pankin_ilmoitus_tilinomistajast_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/22",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Toimintasuunnitelma (vuodelle, jota hakemus koskee)",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "02_toimintasuunnitelma_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/21",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Talousarvio (vuodelle, jota hakemus koskee)",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "02_talousarvio_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/10",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Vahistettu tuloslaskelma ja tase (edelliseltä tilikaudelta)",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "04_vahvistettu_tuloslaskelma_ja_tase_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/11",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Toimintakertomus (edelliseltä tilikaudelta)",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "05_toimintakertomus_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/12",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Jäljennös tilintarkastuskertomuksesta/toiminnantarkastuskertomuksesta (edelliseltä tilikaudelta)",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "06_jäljennös_tilintarkastuskertomuksesta_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/13",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Yhteisön säännöt (uusi hakija tai säännöt muuttuneet)",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileName",
+          "value": "08_yhteisön_säännöt_.docx",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "integrationID",
+          "value": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/14",
+          "valueType": "string"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isNewAttachment",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Vuosikokouksen pöytäkirja",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "false",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "true",
+          "valueType": "bool"
+        }
+      ],
+      [
+        {
+          "ID": "description",
+          "value": "Muu liite",
+          "valueType": "string"
+        },
+        {
+          "ID": "fileType",
+          "value": "1",
+          "valueType": "int"
+        },
+        {
+          "ID": "isDeliveredLater",
+          "value": "true",
+          "valueType": "bool"
+        },
+        {
+          "ID": "isIncludedInOtherFile",
+          "value": "false",
+          "valueType": "bool"
+        }
+      ]
+    ],
+    "generalInfoArray": [
+      {
+        "ID": "extraInfo",
+        "label": "Lisäselvitys liitteistä",
+        "value": "Tässä voi olla joku kaikkia liitteitä yhteisesti koskeva selvitys",
+        "valueType": "string"
+      }
+    ]
+  },
+  "formUpdate": false,
+  "statusUpdates": [
+    {
+      "caseId": "drupal-1",
+      "citizenCaseStatus": "SUBMITTED",
+      "eventType": "STATUS_UPDATE",
+      "eventCode": 0,
+      "eventSource": "Avustustenkasittelyjarjestelma",
+      "timeUpdated": "2021-10-15T00:00:00Z"
+    }
+  ],
+  "events": [
+    {
+      "caseId": "drupal-1",
+      "eventType": "STATUS_UPDATE",
+      "eventCode": 0,
+      "eventSource": "Avustustenkasittelyjarjestelma",
+      "timeUpdated": "2021-10-15T00:00:00Z"
+    }
+  ],
+  "messages": [
+    {
+      "caseId": "drupal-1",
+      "body": "Sisältöä",
+      "sentBy": "Testikäyttäjä",
+      "sendDateTime": "2021-10-15T00:00:00Z",
+      "attachments": [
+        {
+          "description": "Liitetiedoston vapaa kuvaus",
+          "fileName": "tiedosto.pdf",
+          "integrationID": "v1/documents/485aa722-81d3-4415-ae6d-443530e4c8e2/attachments/15"
+        }
+      ]
+    }
+  ]
+}

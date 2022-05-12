@@ -83,7 +83,7 @@ class AtvSchema {
    *   Mapped dta from document.
    */
   public function documentContentToTypedData(
-    array $documentData,
+    array                          $documentData,
     ComplexDataDefinitionInterface $typedDataDefinition): array {
 
     if (isset($documentData['content']) && is_array($documentData['content'])) {
@@ -160,6 +160,21 @@ class AtvSchema {
       unset($typedDataValues['community_country']);
     }
     $typedDataValues['community_address'] = $community_address;
+
+    if (isset($typedDataValues['account_number'])) {
+      $typedDataValues['bank_account']['account_number'] = $typedDataValues['account_number'];
+      $typedDataValues['bank_account']['account_number_select'] = $typedDataValues['account_number'];
+    }
+
+    if (isset($typedDataValues['community_practices_business'])) {
+      if ($typedDataValues['community_practices_business'] === 'false') {
+        $typedDataValues['community_practices_business'] = 0;
+      }
+      if ($typedDataValues['community_practices_business'] === 'true') {
+        $typedDataValues['community_practices_business'] = 1;
+      }
+
+    }
 
     $typedDataValues['muu_liite'] = $other_attachments;
 
@@ -283,7 +298,7 @@ class AtvSchema {
    */
   public function typedDataToDocumentContent(
     ComplexDataInterface $typedData,
-    WebformSubmission $webformSubmission = NULL): array {
+    WebformSubmission    $webformSubmission = NULL): array {
 
     $documentStructure = [];
 
