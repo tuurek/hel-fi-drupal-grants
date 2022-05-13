@@ -45,6 +45,12 @@ class ApplicationOfficialForm extends FormBase {
     return 'grants_profile_application_official';
   }
 
+  /**
+   * Get roles for usage.
+   *
+   * @return array
+   *   Translated roles.
+   */
   public static function getOfficialRoles() {
     return [
       1 => t('Chairperson'),
@@ -60,9 +66,9 @@ class ApplicationOfficialForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(
-    array              $form,
+    array $form,
     FormStateInterface $form_state,
-    string             $official_id = ''): array {
+    string $official_id = ''): array {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -165,7 +171,8 @@ class ApplicationOfficialForm extends FormBase {
         // Move addressData object to form_state storage.
         $form_state->setStorage(['applicationOfficialData' => $applicationOfficialData]);
       }
-    } catch (ReadOnlyException $e) {
+    }
+    catch (ReadOnlyException $e) {
       $this->messenger()->addError('Data read only');
       $form_state->setError($form, 'Trying to write to readonly value');
     }

@@ -83,13 +83,13 @@ class GrantsAttachments extends WebformCompositeBase {
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultProperties
     // @see \Drupal\webform\Plugin\WebformElementBase::defaultBaseProperties
     return [
-        'multiple' => '',
-        'size' => '',
-        'minlength' => '',
-        'maxlength' => '',
-        'placeholder' => '',
-        'filetype' => '',
-      ] + parent::defineDefaultProperties();
+      'multiple' => '',
+      'size' => '',
+      'minlength' => '',
+      'maxlength' => '',
+      'placeholder' => '',
+      'filetype' => '',
+    ] + parent::defineDefaultProperties();
   }
 
   /**

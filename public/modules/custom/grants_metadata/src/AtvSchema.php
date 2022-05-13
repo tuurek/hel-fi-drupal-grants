@@ -83,7 +83,7 @@ class AtvSchema {
    *   Mapped dta from document.
    */
   public function documentContentToTypedData(
-    array                          $documentData,
+    array $documentData,
     ComplexDataDefinitionInterface $typedDataDefinition): array {
 
     if (isset($documentData['content']) && is_array($documentData['content'])) {
@@ -298,7 +298,7 @@ class AtvSchema {
    */
   public function typedDataToDocumentContent(
     ComplexDataInterface $typedData,
-    WebformSubmission    $webformSubmission = NULL): array {
+    WebformSubmission $webformSubmission = NULL): array {
 
     $documentStructure = [];
 

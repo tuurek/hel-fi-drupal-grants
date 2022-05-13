@@ -46,6 +46,14 @@ grants_profile.company_address_form:
   requirements:
     _permission: 'administer own grants_profile'
 
+grants_profile.company_address_modal_form:
+  path: '/grants-profile/address-modal/{address_id}/{nojs}'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\ModalAddressForm'
+    _title: 'Edit address'
+  requirements:
+    _permission: 'administer own grants_profile'
+
 grants_profile.application_official:
   path: '/grants-profile/application-officials'
   defaults:
@@ -59,6 +67,14 @@ grants_profile.application_official_form:
   defaults:
     _title: 'Application official'
     _form: 'Drupal\grants_profile\Form\ApplicationOfficialForm'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.application_official_modal_form:
+  path: '/grants-profile/application-official-modal/{official_id}/{nojs}'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\ModalApplicationOfficialForm'
+    _title: 'Edit official'
   requirements:
     _permission: 'administer own grants_profile'
 
@@ -83,6 +99,14 @@ grants_profile.bank_account_form:
   defaults:
     _title: 'Bank account'
     _form: 'Drupal\grants_profile\Form\BankAccountForm'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.bank_account_form_modal_form:
+  path: '/grants-profile/bank-accounts-modal/{bank_account_id}/{nojs}'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\ModalBankAccountForm'
+    _title: 'Edit bank account'
   requirements:
     _permission: 'administer own grants_profile'
 

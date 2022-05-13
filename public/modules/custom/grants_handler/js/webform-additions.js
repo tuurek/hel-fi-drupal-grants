@@ -24,17 +24,17 @@
                 const selectedOfficial = drupalSettings.grants_handler.grantsProfile.officials[selectedItem];
 
                 // set up data selectors for delta
-                const nameTarget = `[data-drupal-selector='edit-community-officials-items-${elementDelta}-item-name']`
-                const roleTarget = `[data-drupal-selector='edit-community-officials-items-${elementDelta}-item-role'`
-                const emailTarget = `[data-drupal-selector='edit-community-officials-items-${elementDelta}-item-email'`
-                const phoneTarget = `[data-drupal-selector='edit-community-officials-items-${elementDelta}-item-phone'`
+                const nameTarget = `[data - drupal - selector = 'edit-community-officials-items-${elementDelta}-item-name']`
+                const roleTarget = `[data - drupal - selector = 'edit-community-officials-items-${elementDelta}-item-role'`
+                const emailTarget = `[data - drupal - selector = 'edit-community-officials-items-${elementDelta}-item-email'`
+                const phoneTarget = `[data - drupal - selector = 'edit-community-officials-items-${elementDelta}-item-phone'`
 
                 // set values
                 $(nameTarget).val(selectedOfficial.name)
                 $(roleTarget).val(selectedOfficial.role)
                 $(emailTarget).val(selectedOfficial.email)
                 $(phoneTarget).val(selectedOfficial.phone)
-                
+
             });
         }
     };

@@ -59,10 +59,10 @@ class CompensationsComposite extends WebformCompositeBase {
     $parent = parent::defineDefaultProperties();
 
     return [
-        'amount' => '',
-        'subventionType' => '',
+      'amount' => '',
+      'subventionType' => '',
         // 'subventionTypeName' => '',
-      ] + $parent;
+    ] + $parent;
   }
 
   /**
@@ -111,7 +111,7 @@ class CompensationsComposite extends WebformCompositeBase {
 
     return [
       $types[$value['subventionType']] . ': ' . $value['amount'] . '€',
-      
+
     ];
   }
 

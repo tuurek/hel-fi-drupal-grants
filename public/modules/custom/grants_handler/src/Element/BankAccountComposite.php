@@ -50,6 +50,17 @@ class BankAccountComposite extends WebformCompositeBase {
     return $elements;
   }
 
+  /**
+   * Build options for bank account select.
+   *
+   * @param array $element
+   *   Element to add things to.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   *
+   * @return array
+   *   Edited element.
+   */
   public static function buildAccountOptions(array $element, FormStateInterface $form_state) {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');

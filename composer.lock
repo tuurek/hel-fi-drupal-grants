@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf5eaa9da3b5273a61510b903cb8a194",
+    "content-hash": "3aff00041bee2d5f55549a43499893e4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5677,108 +5677,6 @@
                 "source": "https://git.drupalcode.org/project/metatag",
                 "issues": "https://www.drupal.org/project/issues/metatag",
                 "docs": "https://www.drupal.org/docs/8/modules/metatag"
-            }
-        },
-        {
-            "name": "drupal/multivalue_form_element",
-            "version": "1.0.0-beta3",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/multivalue_form_element.git",
-                "reference": "1.0.0-beta3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/multivalue_form_element-1.0.0-beta3.zip",
-                "reference": "1.0.0-beta3",
-                "shasum": "8e0e46a0bcebdcc09108362598c760adfaecd00a"
-            },
-            "require": {
-                "drupal/core": "^9.2",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "composer/installers": "^1.11",
-                "drupal/core-composer-scaffold": "^9.2",
-                "drupal/core-dev": "^9.2",
-                "drupal/drupal-extension": "^4.1",
-                "drush/drush": "^10.3",
-                "egulias/email-validator": "^2.1.22 || ^3.0",
-                "openeuropa/code-review": "^2.0",
-                "openeuropa/task-runner-drupal-project-symlink": "^1.0.0-beta5",
-                "phpspec/prophecy-phpunit": "^2"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "1.0.0-beta3",
-                    "datestamp": "1644318395",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                },
-                "composer-exit-on-patch-failure": true,
-                "enable-patching": true,
-                "drupal-scaffold": {
-                    "locations": {
-                        "web-root": "./build"
-                    }
-                },
-                "installer-paths": {
-                    "build/core": [
-                        "type:drupal-core"
-                    ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
-                    "build/modules/contrib/{$name}": [
-                        "type:drupal-module"
-                    ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
-                    ]
-                },
-                "_readme": [
-                    "Explicit requirement for egulias/email-validator due to https://www.drupal.org/project/drupal/issues/3061074#comment-14300579. It can be removed when Drupal core 9.2 support is droppped."
-                ]
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\multivalue_form_element\\": "./src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\multivalue_form_element\\": "./tests/src/"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "scripts": {
-                "post-install-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ],
-                "post-update-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ]
-            },
-            "license": [
-                "EUPL-1.2"
-            ],
-            "authors": [
-                {
-                    "name": "hernani",
-                    "homepage": "https://www.drupal.org/user/448086"
-                },
-                {
-                    "name": "sardara",
-                    "homepage": "https://www.drupal.org/user/2353864"
-                }
-            ],
-            "description": "Provides a form element that wraps existing form elements, making them multi-value.",
-            "homepage": "https://www.drupal.org/project/multivalue_form_element",
-            "support": {
-                "source": "https://git.drupalcode.org/project/multivalue_form_element"
             }
         },
         {
@@ -16812,7 +16710,6 @@
         "drupal/helfi_formtool_embed": 20,
         "drupal/helfi_helsinki_profiili": 20,
         "drupal/helfi_yjdh": 20,
-        "drupal/multivalue_form_element": 10,
         "drupal/webform_views": 15
     },
     "prefer-stable": true,

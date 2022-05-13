@@ -36,7 +36,6 @@
         "drupal/helfi_yjdh": "dev-develop",
         "drupal/http_client_log": "^1.0",
         "drupal/menu_link_attributes": "^1.2",
-        "drupal/multivalue_form_element": "^1.0@beta",
         "drupal/oembed_providers": "^2.0",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
