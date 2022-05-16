@@ -483,7 +483,8 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * Generate application number from submission id.
+   * Get submission object from local database & fill form data from ATV or if
+   * local submission is not found, create new and set data.
    *
    * @param string $applicationNumber
    *   String to try and parse submission id from. Ie GRANTS-DEV-00000098.
@@ -506,6 +507,12 @@ class GrantsHandler extends WebformHandlerBase {
         'serial' => $submissionSerial,
       ]);
 
+    /** @var \Drupal\helfi_atv\AtvService $atvService */
+    $atvService = \Drupal::service('helfi_atv.atv_service');
+
+    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
@@ -518,12 +525,6 @@ class GrantsHandler extends WebformHandlerBase {
         ]);
         // Make sure serial is set.
         $createdSubmissionObject->set('serial', $submissionSerial);
-
-        /** @var \Drupal\helfi_atv\AtvService $atvService */
-        $atvService = \Drupal::service('helfi_atv.atv_service');
-
-        /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-        $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
         // Get document from ATV.
         $document = $atvService->searchDocuments([
@@ -545,18 +546,38 @@ class GrantsHandler extends WebformHandlerBase {
 
         return $createdSubmissionObject;
 
-      }
-      catch (
-      AtvDocumentNotFoundException |
-      AtvFailedToConnectException |
-      GuzzleException |
-      TempStoreException |
+      } catch (
+      AtvDocumentNotFoundException|
+      AtvFailedToConnectException|
+      GuzzleException|
+      TempStoreException|
       EntityStorageException $e) {
         return NULL;
       }
     }
+    else {
+      $submissionObject = reset($result);
 
-    return reset($result);
+      // Get document from ATV.
+      try {
+        $document = $atvService->searchDocuments([
+          'transaction_id' => $applicationNumber,
+        ],
+          TRUE);
+      } catch (TempStoreException|AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+        return NULL;
+      }
+
+      /** @var \Drupal\helfi_atv\AtvDocument $document */
+      $document = reset($document);
+
+      // Set submission data from parsed mapper.
+      $submissionObject->setData($atvSchema->documentContentToTypedData(
+        $document->getContent(),
+        YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
+
+      return $submissionObject;
+    }
   }
 
   /**
@@ -625,12 +646,14 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission
   ) {
 
     parent::validateForm($form, $form_state, $webform_submission);
+
+    //    $officials = $form_state->getValue('community_officials');
 
     // Get current page.
     $currentPage = $form["progress"]["#current_page"];
@@ -938,8 +961,8 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function confirmForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission) {
 
     $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
@@ -951,8 +974,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     try {
       $applicationData->setValue($this->submittedFormData);
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
     }
 
     $violations = $applicationData->validate();
@@ -1081,8 +1103,7 @@ class GrantsHandler extends WebformHandlerBase {
               $webform_submission->id()
             );
           }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
           $this->messenger()->addError($e->getMessage());
           $this->getLogger('grants_handler')->error($e->getMessage());
         }
@@ -1211,8 +1232,7 @@ class GrantsHandler extends WebformHandlerBase {
           'transaction_id' => $this->applicationNumber,
         ]);
         $applicationDocument = reset($applicationDocumentResults);
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
       }
 
       $accountConfirmationExists = FALSE;
@@ -1267,8 +1287,7 @@ class GrantsHandler extends WebformHandlerBase {
             $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
             // Add file to attachments for uploading.
             $this->attachmentFileIds[] = $file->id();
-          }
-          catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+          } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
             $this->loggerFactory->get('grants_handler')
               ->error($e->getMessage());
             $this->messenger()

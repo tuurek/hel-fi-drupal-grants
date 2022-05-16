@@ -263,8 +263,6 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
       }
     }
   }
-
-
 }
 
 /**
@@ -357,13 +355,6 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     // pass variable to Drupal.Settings
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
 
-    //    $bankAccountOptions = [];
-    //    foreach ($grantsProfile['bankAccounts'] as $key => $account) {
-    //      if (isset($account['confirmationFile'])) {
-    //        $bankAccountOptions[$account['bankAccount']] = $account['bankAccount'];
-    //      }
-    //    }
-
     if ($grantsProfile["businessPurpose"]) {
       _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"], $grantsProfile["businessPurpose"], FALSE);
     }
@@ -372,9 +363,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
         t('Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'), t('Lisää toiminnan kuvaus'),
         t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
-
-    //    $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#options"] = $bankAccountOptions;
-
+    
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
       $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];
     }

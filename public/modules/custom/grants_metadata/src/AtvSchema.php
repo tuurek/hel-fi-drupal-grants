@@ -83,7 +83,7 @@ class AtvSchema {
    *   Mapped dta from document.
    */
   public function documentContentToTypedData(
-    array $documentData,
+    array                          $documentData,
     ComplexDataDefinitionInterface $typedDataDefinition): array {
 
     if (isset($documentData['content']) && is_array($documentData['content'])) {
@@ -222,7 +222,7 @@ class AtvSchema {
                 foreach ($element0['properties'] as $k1 => $element1) {
                   if ($element1['type'] == 'array') {
                     if ($element1['items']['type'] == 'object') {
-                      if (array_key_exists('enum', $element1['items']['properties']['ID'])) {
+                      if (isset($element1['items']['properties']['ID']) && array_key_exists('enum', $element1['items']['properties']['ID'])) {
                         if (is_array($element1['items']['properties']['ID']['enum']) && in_array($elementName, $element1['items']['properties']['ID']['enum'])) {
                           return $element1['items'];
                         }
@@ -298,7 +298,7 @@ class AtvSchema {
    */
   public function typedDataToDocumentContent(
     ComplexDataInterface $typedData,
-    WebformSubmission $webformSubmission = NULL): array {
+    WebformSubmission    $webformSubmission = NULL): array {
 
     $documentStructure = [];
 
