@@ -118,5 +118,8 @@ form .hds-checkbox {
     .fieldset-wrapper {
       display:flex;
     }
+    .form-item {
+      margin-top: var(--spacing-layout-xs);
+    }
   }
 }

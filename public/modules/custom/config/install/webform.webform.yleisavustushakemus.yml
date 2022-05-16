@@ -247,6 +247,9 @@ elements: |-
             '#required': true
             '#title': 'Myönnetyn avustuksen summa'
             '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+            '#attributes':
+              class:
+                - webform--small
           purpose:
             '#type': textarea
             '#title': 'Kuvaus käyttötarkoituksesta'
@@ -307,6 +310,9 @@ elements: |-
             '#required': true
             '#title': 'Haetun avustuksen summa'
             '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
+            '#attributes':
+              class:
+                - webform--small
           purpose:
             '#type': textarea
             '#title': 'Kuvaus käyttötarkoituksesta'
@@ -381,7 +387,7 @@ elements: |-
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#attributes':
           class:
-            - input--short
+            - webform--small
       fee_community:
         '#type': textfield
         '#title': 'Yhteisöjäsen (€ / vuosi)'

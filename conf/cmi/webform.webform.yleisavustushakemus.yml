@@ -220,6 +220,7 @@ elements: |-
         '#multiple__empty_items': 0
         '#multiple__remove': false
         '#multiple__sorting': false
+        '#multiple__header': true
         '#subventionType':
           6: '6'
         '#subvention_type':
