@@ -94,7 +94,7 @@ elements: |-
         '#title_display': invisible
     sahkoposti:
       '#type': webform_section
-      '#title': 'Sähköpostiosoite'
+      '#title': Sähköpostiosoite
       email:
         '#type': email
         '#title': Sähköpostiosoite
@@ -106,92 +106,42 @@ elements: |-
         '#type': textfield
         '#title': www-sivut
         '#title_display': invisible
+    contact_person_section:
+      '#type': webform_section
+      '#title': 'Contact Person'
+      contact_person:
+        '#type': textfield
+        '#title': 'Contact Person'
+        '#autocomplete': 'off'
+      contact_person_phone_number:
+        '#type': textfield
+        '#title': 'Contact person phone'
+        '#autocomplete': 'off'
     osoite:
       '#type': webform_section
       '#title': Osoite
-      contact_person_street:
-        '#type': textfield
-        '#title': Katuosoite
-        '#required': true
-      contact_person_post_code:
-        '#type': textfield
-        '#title': Postinumero
-        '#required': true
-      contact_person_city:
-        '#type': textfield
-        '#title': Postitoimipaikka
-        '#required': true
-      contact_person_country:
-        '#type': textfield
-        '#title': Maa
-        '#required': true
-      contact_person:
-        '#type': textfield
-        '#title': Yhteyshenkilö
-        '#required': true
-      contact_person_phone_number:
-        '#type': textfield
-        '#title': Puhelinnumero
-        '#required': true
+      community_address:
+        '#type': community_address_composite
+        '#title': 'Community Address'
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
-      account_number_select:
-        '#type': select
-        '#title': Tilinumero
-        '#options':
-          noaccounts: 'No accounts.'
-        '#required': true
-      account_number:
-        '#type': textfield
-        '#title': Tilinumero
-        '#readonly': true
-        '#required': true
-        '#wrapper_attributes':
-          class:
-            - hidden
       account_markup:
         '#type': webform_markup
         '#markup': |-
           <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
           </a>
+      bank_account:
+        '#type': bank_account_composite
+        '#title': 'Bank account'
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
-      applicant_officials:
-        '#type': webform_custom_composite
-        '#title': 'Toiminnasta vastaavat henkilöt'
-        '#title_display': before
-        '#multiple__header': false
-        '#multiple__item_label': henkilö
-        '#multiple__no_items_message': 'Ei toiminnasta vastaavia henkil&ouml;it&auml;. Lis&auml;&auml; uusi henkil&ouml; alta.'
-        '#multiple__min_items': 1
-        '#multiple__sorting': false
-        '#multiple__add': false
-        '#multiple__add_more_input': false
-        '#multiple__add_more_button_label': 'Lisää henkilö'
-        '#format_items': hr
-        '#element':
-          name:
-            '#type': textfield
-            '#title': Nimi
-          role:
-            '#type': select
-            '#options':
-              1: Puheenjohtaja
-              2: Yhteyshenkilö
-              3: Muu
-              4: 'Taloudesta vastaava'
-              5: 'Tilin- / Toiminnantarkastaja'
-              7: Sihteeri
-            '#title': Rooli
-          email:
-            '#type': email
-            '#title': Sähköposti
-          phone:
-            '#type': textfield
-            '#title': Puhelinnumero
+      community_officials:
+        '#type': community_officials_composite
+        '#title': 'Community officials'
+        '#multiple': true
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'

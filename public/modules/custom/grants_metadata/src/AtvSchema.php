@@ -83,7 +83,7 @@ class AtvSchema {
    *   Mapped dta from document.
    */
   public function documentContentToTypedData(
-    array $documentData,
+    array                          $documentData,
     ComplexDataDefinitionInterface $typedDataDefinition): array {
 
     if (isset($documentData['content']) && is_array($documentData['content'])) {
@@ -142,6 +142,39 @@ class AtvSchema {
         }
       }
     }
+    $community_address = [];
+    if (isset($typedDataValues['community_street'])) {
+      $community_address['community_street'] = $typedDataValues['community_street'];
+      unset($typedDataValues['community_street']);
+    }
+    if (isset($typedDataValues['community_city'])) {
+      $community_address['community_city'] = $typedDataValues['community_city'];
+      unset($typedDataValues['community_city']);
+    }
+    if (isset($typedDataValues['community_post_code'])) {
+      $community_address['community_post_code'] = $typedDataValues['community_post_code'];
+      unset($typedDataValues['community_post_code']);
+    }
+    if (isset($typedDataValues['community_country'])) {
+      $community_address['community_country'] = $typedDataValues['community_country'];
+      unset($typedDataValues['community_country']);
+    }
+    $typedDataValues['community_address'] = $community_address;
+
+    if (isset($typedDataValues['account_number'])) {
+      $typedDataValues['bank_account']['account_number'] = $typedDataValues['account_number'];
+      $typedDataValues['bank_account']['account_number_select'] = $typedDataValues['account_number'];
+    }
+
+    if (isset($typedDataValues['community_practices_business'])) {
+      if ($typedDataValues['community_practices_business'] === 'false') {
+        $typedDataValues['community_practices_business'] = 0;
+      }
+      if ($typedDataValues['community_practices_business'] === 'true') {
+        $typedDataValues['community_practices_business'] = 1;
+      }
+
+    }
 
     $typedDataValues['muu_liite'] = $other_attachments;
 
@@ -189,7 +222,7 @@ class AtvSchema {
                 foreach ($element0['properties'] as $k1 => $element1) {
                   if ($element1['type'] == 'array') {
                     if ($element1['items']['type'] == 'object') {
-                      if (array_key_exists('enum', $element1['items']['properties']['ID'])) {
+                      if (isset($element1['items']['properties']['ID']) && array_key_exists('enum', $element1['items']['properties']['ID'])) {
                         if (is_array($element1['items']['properties']['ID']['enum']) && in_array($elementName, $element1['items']['properties']['ID']['enum'])) {
                           return $element1['items'];
                         }
@@ -265,7 +298,7 @@ class AtvSchema {
    */
   public function typedDataToDocumentContent(
     ComplexDataInterface $typedData,
-    WebformSubmission $webformSubmission = NULL): array {
+    WebformSubmission    $webformSubmission = NULL): array {
 
     $documentStructure = [];
 
@@ -304,9 +337,10 @@ class AtvSchema {
         continue;
       }
 
-      // If ($propertyName === 'status_updates') {
-      // continue;
-      // }.
+      if ($propertyName === 'community_officials') {
+        $d = 'asdf';
+      }
+
       $types = $this->getJsonTypeForDataType($definition);
       $schema = $this->getPropertySchema($elementName, $this->structure);
 

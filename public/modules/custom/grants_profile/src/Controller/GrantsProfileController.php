@@ -10,7 +10,7 @@ use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use GuzzleHttp\Exception\GuzzleException;
-use Laminas\Diactoros\Response\RedirectResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for Grants Profile routes.
@@ -171,8 +171,7 @@ class GrantsProfileController extends ControllerBase {
         ];
         $build['#applications'] = $table;
 
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException|TempStoreException $e) {
       }
 
       $build['#profile'] = $profile;
@@ -285,8 +284,10 @@ class GrantsProfileController extends ControllerBase {
    * @param string $bank_account_id
    *   ID / Index of bank account.
    *
-   * @return \Laminas\Diactoros\Response\RedirectResponse
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirect to profile page.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function deleteBankAccountAttachment(string $bank_account_id): RedirectResponse {
 
@@ -309,15 +310,13 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Bank account confirmation successfully deleted'));
 
-    }
-    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
       unset($bankAccount['confirmationFile']);
 
       $grantsProfileService->saveBankAccount($bank_account_id, $bankAccount);
       try {
         $grantsProfileService->saveGrantsProfileAtv();
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
         $this->getLogger('grants_profile')
           ->error('Profile saving failed. ' . $e->getMessage());
         $this->messenger()
@@ -326,6 +325,117 @@ class GrantsProfileController extends ControllerBase {
     }
 
     return new RedirectResponse('/grants-profile/bank-accounts/' . $bank_account_id);
+
+  }
+
+  /**
+   * Remove address from profile data.
+   *
+   * @param string $address_id
+   *   Address id/delta to be deleted.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   REdirect to profile
+   */
+  public function deleteAddress(string $address_id): RedirectResponse {
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $grantsProfileService = \Drupal::service('grants_profile.service');
+
+    $grantsProfileService->removeAddress($address_id);
+
+    try {
+      $grantsProfileService->saveGrantsProfileAtv();
+
+      $this->messenger()
+        ->addStatus($this->t('Address deleted.'));
+
+    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      $this->getLogger('grants_profile')
+        ->error('Profile saving failed. ' . $e->getMessage());
+      $this->messenger()
+        ->addStatus($this->t('Official deleted & profile saved.'));
+    }
+
+    return new RedirectResponse('/grants-profile');
+  }
+
+  /**
+   * Remove official.
+   *
+   * @param string $official_id
+   *   Official id / delta to be removed.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirect to profile.
+   */
+  public function deleteOfficial(string $official_id): RedirectResponse {
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $grantsProfileService = \Drupal::service('grants_profile.service');
+
+    $grantsProfileService->removeOfficial($official_id);
+
+    try {
+      $grantsProfileService->saveGrantsProfileAtv();
+
+      $this->messenger()
+        ->addStatus($this->t('Official deleted.'));
+
+    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      $this->getLogger('grants_profile')
+        ->error('Profile saving failed. ' . $e->getMessage());
+      $this->messenger()
+        ->addStatus($this->t('Official deleted & profile saved.'));
+    }
+
+    return new RedirectResponse('/grants-profile');
+  }
+
+  /**
+   * Remove bank account.
+   *
+   * @param string $bank_account_id
+   *   BAnk account id/delta.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirect to profile page.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function deleteBankAccount(string $bank_account_id): RedirectResponse {
+
+    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
+    $grantsProfileService = \Drupal::service('grants_profile.service');
+    $selectedCompany = $grantsProfileService->getSelectedCompany();
+    $grantsProfile = $grantsProfileService->getGrantsProfile($selectedCompany);
+
+    $bankAccount = $grantsProfileService->getBankAccount($bank_account_id);
+
+    $attachment = $grantsProfile->getAttachmentForFilename($bankAccount['confirmationFile']);
+    try {
+      $grantsProfileService->deleteAttachment($selectedCompany, $attachment['id']);
+
+      unset($bankAccount['confirmationFile']);
+
+      $grantsProfileService->removeBankAccount($bank_account_id);
+      $grantsProfileService->saveGrantsProfileAtv();
+
+      $this->messenger()
+        ->addStatus($this->t('Bank account deleted'));
+
+    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      unset($bankAccount['confirmationFile']);
+      $grantsProfileService->removeBankAccount($bank_account_id);
+      try {
+        $grantsProfileService->saveGrantsProfileAtv();
+      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+        $this->getLogger('grants_profile')
+          ->error('Profile saving failed. ' . $e->getMessage());
+        $this->messenger()
+          ->addStatus($this->t('Bank account deletion failed, and error has been logged.'));
+      }
+    }
+
+    return new RedirectResponse('/grants-profile');
 
   }
 
