@@ -138,7 +138,22 @@ class GrantsProfileForm extends FormBase {
           ]
         );
 
+        $deleteAddressUrl = Url::fromRoute(
+          'grants_profile.company_addresses.remove',
+          [
+            'address_id' => $key,
+          ],
+          [
+            'attributes' => [
+              // Add this id so that we can test this form.
+              'id' => 'delete-address-link-' . $key,
+              'class' => ['delete-address-link'],
+            ],
+          ]
+        );
+
         $linkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
+        $deleteAddressLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span>');
 
         $addressMarkup .= '
     <li class="grants-profile--officials-item">
@@ -149,6 +164,10 @@ class GrantsProfileForm extends FormBase {
         </div>
         <div class="grants-profile--officials-edit-wrapper">' .
           Link::fromTextAndUrl($linkText, $editAddressUrl)->toString()
+          . '</div>
+        <div class="grants-profile--officials-edit-wrapper">' .
+          Link::fromTextAndUrl($deleteAddressLinkText, $deleteAddressUrl)
+            ->toString()
           . '</div>
     </li>';
       }
@@ -206,7 +225,23 @@ class GrantsProfileForm extends FormBase {
           ]
         );
 
+
+        $deleteAccountUrl = Url::fromRoute(
+          'grants_profile.bank_account.remove',
+          [
+            'bank_account_id' => $key,
+          ],
+          [
+            'attributes' => [
+              // Add this id so that we can test this form.
+              'id' => 'delete-bankaccount-link-' . $key,
+              'class' => ['delete-bankaccount-link'],
+            ],
+          ]
+        );
+
         $bankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
+        $deleteBankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span>');
 
         $bankAccountMarkup .= '
     <li class="grants-profile--officials-item">
@@ -217,6 +252,10 @@ class GrantsProfileForm extends FormBase {
         </div>
         <div class="grants-profile--officials-edit-wrapper">
         ' . Link::fromTextAndUrl($bankAccountLinkText, $editAccountUrl)
+            ->toString() . '
+       </div>
+        <div class="grants-profile--officials-delete-wrapper">
+        ' . Link::fromTextAndUrl($deleteBankAccountLinkText, $deleteAccountUrl)
             ->toString() . '
        </div>
     </li>';
@@ -294,6 +333,13 @@ class GrantsProfileForm extends FormBase {
         [
           'official_id' => $key,
         ],
+        [
+          'attributes' => [
+            // Add this id so that we can test this form.
+            'id' => 'delete-official-link-' . $key,
+            'class' => ['delete-official-link'],
+          ],
+        ]
       );
 
       $officialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
