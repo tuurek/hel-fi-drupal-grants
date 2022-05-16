@@ -4,7 +4,10 @@ namespace Drupal\grants_profile\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\Url;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,8 +48,6 @@ class GrantsProfileForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
 
@@ -55,6 +56,8 @@ class GrantsProfileForm extends FormBase {
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
+
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
 
     if (empty($grantsProfileContent)) {
       $this->messenger()->addError($this->t('Error fetching profile data'));
@@ -95,9 +98,63 @@ class GrantsProfileForm extends FormBase {
       '#default_value' => $grantsProfileContent['companyHomePage'],
     ];
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
+
     if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
+
+      $addAddressUrl = Url::fromRoute(
+        'grants_profile.company_address_modal_form',
+        [
+          'address_id' => 'new',
+          'nojs' => 'ajax',
+        ],
+        [
+          'attributes' => [
+            'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+            // Add this id so that we can test this form.
+            'id' => 'add-addres-modal-form-link',
+          ],
+        ]
+      );
+
       $addressMarkup .= '<ul class="grants-profile--officials">';
       foreach ($grantsProfileContent["addresses"] as $key => $address) {
+
+        $editAddressUrl = Url::fromRoute(
+          'grants_profile.company_address_modal_form',
+          [
+            'address_id' => $key,
+            'nojs' => 'ajax',
+          ],
+          [
+            'attributes' => [
+              'class' => ['use-ajax'],
+              'data-dialog-type' => 'modal',
+              'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+              // Add this id so that we can test this form.
+              'id' => 'edit-addres-modal-form-link',
+            ],
+          ]
+        );
+
+        $deleteAddressUrl = Url::fromRoute(
+          'grants_profile.company_addresses.remove',
+          [
+            'address_id' => $key,
+          ],
+          [
+            'attributes' => [
+              // Add this id so that we can test this form.
+              'id' => 'delete-address-link-' . $key,
+              'class' => ['delete-address-link'],
+            ],
+          ]
+        );
+
+        $linkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
+        $deleteAddressLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span>');
+
         $addressMarkup .= '
     <li class="grants-profile--officials-item">
         <div class="grants-profile--officials-item-wrapper">
@@ -105,11 +162,13 @@ class GrantsProfileForm extends FormBase {
             ' . $address['street'] . ', ' . $address['postCode'] . ' ' . $address['city'] . '
           </div>
         </div>
-        <div class="grants-profile--officials-edit-wrapper">
-        <a class="hds-link hds-link--medium" href="/grants-profile/address/' . $key . '">
-<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
-       </div>
-
+        <div class="grants-profile--officials-edit-wrapper">' .
+          Link::fromTextAndUrl($linkText, $editAddressUrl)->toString()
+          . '</div>
+        <div class="grants-profile--officials-edit-wrapper">' .
+          Link::fromTextAndUrl($deleteAddressLinkText, $deleteAddressUrl)
+            ->toString()
+          . '</div>
     </li>';
       }
       $addressMarkup .= '</ul>';
@@ -125,8 +184,12 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $addressMarkup .= '<div class="form-item"><a class="hds-link hds-link--medium" href="/grants-profile/address/new">
-<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Address') . '</span></a></div>';
+    $addressMarkup .= '<div class="form-item">';
+
+    $addressMarkup .= Link::fromTextAndUrl($this->t('New address'), $addAddressUrl)
+      ->toString();
+
+    $addressMarkup .= '<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Address') . '</span></a></div>';
     $addressMarkup = '<div>' . $addressMarkup . '</div>';
 
     $form['addressWrapper'] = [
@@ -143,17 +206,57 @@ class GrantsProfileForm extends FormBase {
 
     if (is_array($grantsProfileContent["bankAccounts"]) && count($grantsProfileContent["bankAccounts"]) > 0) {
       $bankAccountMarkup .= '<ul class="grants-profile--officials">';
-      foreach ($grantsProfileContent["bankAccounts"] as $key => $address) {
+      foreach ($grantsProfileContent["bankAccounts"] as $key => $bankAccount) {
+
+        $editAccountUrl = Url::fromRoute(
+          'grants_profile.bank_account_form_modal_form',
+          [
+            'bank_account_id' => $key,
+            'nojs' => 'ajax',
+          ],
+          [
+            'attributes' => [
+              'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
+              'data-dialog-type' => 'modal',
+              'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+              // Add this id so that we can test this form.
+              'id' => 'add-bankaccount-modal-form-link',
+            ],
+          ]
+        );
+
+
+        $deleteAccountUrl = Url::fromRoute(
+          'grants_profile.bank_account.remove',
+          [
+            'bank_account_id' => $key,
+          ],
+          [
+            'attributes' => [
+              // Add this id so that we can test this form.
+              'id' => 'delete-bankaccount-link-' . $key,
+              'class' => ['delete-bankaccount-link'],
+            ],
+          ]
+        );
+
+        $bankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
+        $deleteBankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span>');
+
         $bankAccountMarkup .= '
     <li class="grants-profile--officials-item">
         <div class="grants-profile--officials-item-wrapper">
           <div class="grants-profile--officials-item--name">
-            ' . $address['bankAccount'] . '
+            ' . $bankAccount['bankAccount'] . '
           </div>
         </div>
         <div class="grants-profile--officials-edit-wrapper">
-        <a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/' . $key . '">
-<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
+        ' . Link::fromTextAndUrl($bankAccountLinkText, $editAccountUrl)
+            ->toString() . '
+       </div>
+        <div class="grants-profile--officials-delete-wrapper">
+        ' . Link::fromTextAndUrl($deleteBankAccountLinkText, $deleteAccountUrl)
+            ->toString() . '
        </div>
     </li>';
       }
@@ -170,8 +273,30 @@ class GrantsProfileForm extends FormBase {
       </div>
     </section>';
     }
-    $bankAccountMarkup .= '<div class="form-item"><a class="hds-link hds-link--medium" href="/grants-profile/bank-accounts/new">
-<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Bank account') . '</span></a></div>';
+
+    $addAccountUrl = Url::fromRoute(
+      'grants_profile.bank_account_form_modal_form',
+      [
+        'bank_account_id' => 'new',
+        'nojs' => 'ajax',
+      ],
+      [
+        'attributes' => [
+          'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+          // Add this id so that we can test this form.
+          'id' => 'add-bankaccount-modal-form-link',
+        ],
+      ]
+    );
+
+    $bankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Bank account') . '</span>');
+
+    $bankAccountMarkup .= '<div class="form-item">';
+    $bankAccountMarkup .= Link::fromTextAndUrl($bankAccountLinkText, $addAccountUrl)
+      ->toString();
+    $bankAccountMarkup .= '</div>';
 
     $form['bankAccountWrapper'] = [
       '#type' => 'webform_section',
@@ -185,32 +310,46 @@ class GrantsProfileForm extends FormBase {
     $officialsMarkup .= '<p>' . $this->t("The information you give are usable during grants applciations.") . '</p>';
     $officialsMarkup .= '<ul class="grants-profile--officials">';
     foreach ($grantsProfileContent["officials"] as $key => $official) {
-      $officialRole = $this->t('Other');
-      switch ($official['role']) {
-        case 1:
-          $officialRole = $this->t('Chairperson');
-          break;
 
-        case 2:
-          $officialRole = $this->t('Financial officer');
-          break;
+      $editOfficialUrl = Url::fromRoute(
+        'grants_profile.application_official_modal_form',
+        [
+          'official_id' => $key,
+          'nojs' => 'ajax',
+        ],
+        [
+          'attributes' => [
+            'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+            // Add this id so that we can test this form.
+            'id' => 'add-bankaccount-modal-form-link',
+          ],
+        ]
+      );
 
-        case 3:
-          $officialRole = $this->t('Secretary');
-          break;
+      $deleteOfficialUrl = Url::fromRoute(
+        'grants_profile.application_official.remove',
+        [
+          'official_id' => $key,
+        ],
+        [
+          'attributes' => [
+            // Add this id so that we can test this form.
+            'id' => 'delete-official-link-' . $key,
+            'class' => ['delete-official-link'],
+          ],
+        ]
+      );
 
-        case 4:
-          $officialRole = $this->t('Operative manager');
-          break;
+      $officialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
 
-        case 5:
-          $officialRole = $this->t('Vice Chairperson');
-          break;
+      $deleteOfficialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--cross hds-icon--size-s"></span></span><span class="link-label">' . $this->t('Delete') . '</span>');
 
-        default:
-          $officialRole = $this->t('Other');
-          break;
-      }
+      $roles = ModalApplicationOfficialForm::getOfficialRoles();
+
+      $officialRole = $roles[$official['role']];
+
       $officialsMarkup .= '
     <li class="grants-profile--officials-item">
         <div class="grants-profile--officials-item-wrapper">
@@ -227,18 +366,40 @@ class GrantsProfileForm extends FormBase {
             ' . $official['email'] . '
           </div>
         </div>
-        <div class="grants-profile--officials-edit-wrapper">
-        <a class="hds-link hds-link--medium" href="/grants-profile/application-officials/' . $key . '">
-<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span></a>
-        <a class="hds-link hds-link--medium" href="/grants-profile/application-officials/' . $key . '">
-<span aria-hidden="true" class="hds-icon hds-icon--cross hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span></a>
-        </div>
+        <div class="grants-profile--officials-edit-wrapper">' .
+        Link::fromTextAndUrl($officialLinkText, $editOfficialUrl)
+          ->toString()
+        .
+        Link::fromTextAndUrl($deleteOfficialLinkText, $deleteOfficialUrl)
+          ->toString()
+        . '</div>
 
     </li>';
     }
     $officialsMarkup .= '</ul>';
-    $officialsMarkup .= '<div class="form-item"><a class="hds-link hds-link--medium" href="/grants-profile/application-officials/new">
-<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New official') . '</span></a></div>';
+
+    $addOfficialUrl = Url::fromRoute(
+      'grants_profile.application_official_modal_form',
+      [
+        'official_id' => 'new',
+        'nojs' => 'ajax',
+      ],
+      [
+        'attributes' => [
+          'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+          // Add this id so that we can test this form.
+          'id' => 'add-official-modal-form-link',
+        ],
+      ]
+    );
+
+    $officialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Official') . '</span>');
+
+    $officialsMarkup .= '<div class="form-item">' .
+      Link::fromTextAndUrl($officialLinkText, $addOfficialUrl)->toString()
+      . '</div>';
     $officialsMarkup = '<div>' . $officialsMarkup . '</div>';
     $form['businessPurposeWrapper'] = [
       '#type' => 'webform_section',
