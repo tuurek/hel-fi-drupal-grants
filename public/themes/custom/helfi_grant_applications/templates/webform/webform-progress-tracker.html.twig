@@ -19,44 +19,43 @@
 #}
 {{ attach_library('webform/webform.progress.tracker') }}
 <div class="webform-progress-tracker-mobile">
-  <div class="webform-progress-tracker-mobile-wrapper">
-    <div class="progress-marker" data-webform-progress-step data-webform-progress-link data-text="{{current_index + 1 }} / {{ progress|length }}"></div>
-    <div class="progress-info"><h3>{{progress[current_index].title}}</h3></div>
-  </div>
-  <div>
-  {% if current_index < progress|length %}
-  {{ 'Seuraava'|t }}: {{progress[current_index + 1].title}}
-  {% endif %}
-  </div>
+    <div class="webform-progress-tracker-mobile-wrapper">
+        <div class="progress-marker" data-webform-progress-step data-webform-progress-link
+             data-text="{{ current_index + 1 }} / {{ progress|length }}"></div>
+        <div class="progress-info"><h3>{{ progress[current_index].title }}</h3></div>
+    </div>
+    <div>
+        {% if current_index < progress|length %}
+            {{ 'Seuraava'|t }}: {{ progress[current_index + 1].title }}
+        {% endif %}
+    </div>
 </div>
 <ul class="webform-progress-tracker progress-tracker progress-tracker--center" data-webform-progress-steps>
-  {% for index, page in progress %}
-    {% set is_completed = index < current_index %}
-    {% set is_active = index == current_index %}
-    {%
-      set classes = [
-        'progress-step',
-        is_completed ? 'is-complete',
-        is_active ? 'is-active',
-      ]
-    %}
-    {%
-      set attributes = create_attribute()
-        .setAttribute('data-webform-' ~ page.type, page.name)
-        .setAttribute('title', page.title)
-        .setAttribute('class', '')
-        .addClass(classes)
-    %}
-    <li{{ attributes }}>
-      <div class="progress-marker" data-webform-progress-step data-webform-progress-link data-text="{{ index + 1 }}"></div>
-      {% if progress|length < max_pages %}
-        <div class="progress-text">
-          <div class="progress-title" data-webform-progress-link>
-            <span class="visually-hidden" data-webform-progress-state>{% if is_active or is_completed %}{{ is_active ? 'Current'|t : 'Completed'|t }}{% endif %}</span>
-            {{ page.title }}
-          </div>
-        </div>
-      {% endif %}
-    </li>
-  {% endfor %}
+    {% for index, page in progress %}
+        {% set is_completed = index < current_index %}
+        {% set is_active = index == current_index %}
+        {% set classes = [
+            'progress-step',
+            is_completed ? 'is-complete',
+            is_active ? 'is-active',
+        ] %}
+        {% set attributes = create_attribute()
+            .setAttribute('data-webform-' ~ page.type, page.name)
+            .setAttribute('title', page.title)
+            .setAttribute('class', '')
+            .addClass(classes) %}
+        <li{{ attributes }}>
+            <div class="progress-marker" data-webform-progress-step data-webform-progress-link
+                 data-text="{{ index + 1 }}"></div>
+            {% if progress|length < max_pages %}
+                <div class="progress-text">
+                    <div class="progress-title" data-webform-progress-link>
+                        <span class="visually-hidden"
+                              data-webform-progress-state>{% if is_active or is_completed %}{{ is_active ? 'Current'|t : 'Completed'|t }}{% endif %}</span>
+                        {{ page.title }}
+                    </div>
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
 </ul>

@@ -44,7 +44,7 @@ class CompensationsComposite extends WebformCompositeBase {
     $elements['amount'] = [
       '#type' => 'textfield',
       '#title' => t('Subvention amount'),
-      '#required' => TRUE,
+      //      '#required' => TRUE,
     ];
 
     return $elements;

@@ -37,7 +37,7 @@ class CommunityAddressComposite extends WebformCompositeBase {
 
     $elements['community_address_select'] = [
       '#type' => 'select',
-      '#required' => TRUE,
+      //      '#required' => TRUE,
       '#title' => t('Select address'),
       '#after_build' => [[get_called_class(), 'buildAddressOptions']],
       '#options' => [],
@@ -87,10 +87,10 @@ class CommunityAddressComposite extends WebformCompositeBase {
     $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
     $formValues = $form_state->getValues();
-    $formSelection = $formValues['community_address']['community_street'] . ', ' .
-      $formValues['community_address']['community_post_code'] . ', ' .
-      $formValues['community_address']['community_city'] . ', ' .
-      $formValues['community_address']['community_country'];
+    $formSelection = ($formValues['community_address']['community_street'] ?? '') . ', ' .
+      ($formValues['community_address']['community_post_code'] ?? '') . ', ' .
+      ($formValues['community_address']['community_city'] ?? '') . ', ' .
+      ($formValues['community_address']['community_country'] ?? '');
 
     $defaultDelta = '0';
 

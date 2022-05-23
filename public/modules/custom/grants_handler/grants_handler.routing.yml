@@ -1,0 +1,7 @@
+grants_handler.clear-navigations:
+  path: '/grants-handler/clearnavigation/{submission_id}'
+  defaults:
+    _title: 'Clear navigations'
+    _controller: '\Drupal\grants_handler\Controller\WebformNavigationController::clearDraftData'
+  requirements:
+    _permission: 'access content'

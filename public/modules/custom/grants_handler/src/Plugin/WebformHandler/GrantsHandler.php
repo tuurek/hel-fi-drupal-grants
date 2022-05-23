@@ -651,9 +651,9 @@ class GrantsHandler extends WebformHandlerBase {
     WebformSubmissionInterface $webform_submission
   ) {
 
+
     parent::validateForm($form, $form_state, $webform_submission);
 
-    //    $officials = $form_state->getValue('community_officials');
 
     // Get current page.
     $currentPage = $form["progress"]["#current_page"];
@@ -676,23 +676,32 @@ class GrantsHandler extends WebformHandlerBase {
     }
 
     // Only validate set forms.
-    if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
-      // Loop through fieldnames and validate fields.
-      foreach (self::getAttachmentFieldNames() as $fieldName) {
-        $fValues = $form_state->getValue($fieldName);
-        $this->validateAttachmentField(
-          $fieldName,
-          $form_state,
-          $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
-        );
-      }
-    }
+    //    if ($currentPage === 'lisatiedot_ja_liitteet' || $currentPage === 'webform_preview') {
+    //      // Loop through fieldnames and validate fields.
+    //      foreach (self::getAttachmentFieldNames() as $fieldName) {
+    //        $fValues = $form_state->getValue($fieldName);
+    //        $this->validateAttachmentField(
+    //          $fieldName,
+    //          $form_state,
+    //          $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
+    //        );
+    //      }
+    //    }
 
-    $errors = $form_state->getErrors();
-    if (!empty($errors)) {
-      $this->messenger()
-        ->addWarning($this->t('Errors in form data, please fix them before going on.'));
-    }
+    //    $errors = $form_state->getErrors();
+    //    if (!empty($errors)) {
+    //      $this->messenger()
+    //        ->addWarning($this->t('Errors in form data, please fix them before going on.'));
+    //    }
+
+
+    //    $fieldName = 'compensation_purpose';
+    //    $fieldTitle = 'ADDD INFOOOOOO';
+    //    $form_state->setErrorByName($fieldName, $this->t('@fieldname field is required', [
+    //      '@fieldname' => $fieldTitle,
+    //    ]));
+
+    $d = 'asdf';
   }
 
   /**
@@ -758,8 +767,17 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
+
+    $triggeringElement = $form_state->getTriggeringElement();
+
+    $state = $webform_submission->getState();
+    $isDraft = $webform_submission->isDraft();
+
+    $d = 'asdf';
+
+
   }
+
 
   /**
    * {@inheritdoc}
@@ -841,7 +859,7 @@ class GrantsHandler extends WebformHandlerBase {
     $thisYearPlus1 = $thisYear + 1;
     $thisYearPlus2 = $thisYear + 2;
 
-    $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]['#required'] = TRUE;
+    //    $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]['#required'] = TRUE;
     $form["elements"]["2_avustustiedot"]["avustuksen_tiedot"]["acting_year"]["#options"] = [
       $thisYear => $thisYear,
       $thisYearPlus1 => $thisYearPlus1,
@@ -877,7 +895,8 @@ class GrantsHandler extends WebformHandlerBase {
       $this->parseSenderDetails();
       // Set submission data to empty.
       // form will still contain submission details, IP time etc etc.
-      $webform_submission->setData([]);
+      //$webform_submission->setData([]);
+      $d = 'asdf';
     }
   }
 

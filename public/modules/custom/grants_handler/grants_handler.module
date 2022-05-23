@@ -338,7 +338,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
 
-  $form["actions"]["draft"]['#disabled'] = TRUE;
+  //  $form["actions"]["draft"]['#disabled'] = TRUE;
 
   if ($selectedCompany != NULL) {
 
@@ -363,7 +363,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
         t('Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'), t('Lisää toiminnan kuvaus'),
         t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
-    
+
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
       $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];
     }
@@ -643,3 +643,8 @@ function grants_handler_preprocess_webform_submission_message_attachments(&$vari
   $variables['attachments_to_print'] = $table;
 }
 
+function grants_handler_preprocess_webform_progress_bar($variables) {
+
+
+  $d = 'asdf';
+}
