@@ -132,6 +132,9 @@ elements: |-
       community_address:
         '#type': community_address_composite
         '#title': 'Yhteisön osoite'
+        '#attributes':
+          class:
+            - webform--large
       address_markup:
         '#type': webform_markup
         '#markup': |-
@@ -165,9 +168,9 @@ elements: |-
         '#multiple__add_more_input': false
         '#multiple__add_more_button_label': 'Lisää henkilö'
         '#multiple': true
-        '#wrapper_attributes':
+        '#attributes':
           class:
-            - hidden-head
+            - webform--large
       officials_markup:
         '#type': webform_markup
         '#markup': |-

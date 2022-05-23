@@ -89,7 +89,7 @@
 }
 
 form .hds-text-input__input-wrapper {
-  input, textarea {
+  input, textarea,  {
     &.webform--small {
       max-width: 125px;
     }
@@ -99,7 +99,13 @@ form .hds-text-input__input-wrapper {
     }
   }
 }
+  .webform--small div.grant-applications--select-wrapper {
+    max-width: 125px;
+  }
 
+  .webform--large div.grant-applications--select-wrapper {
+    max-width: 588px;
+  }
 form .hds-checkbox {
   display:block;
   label.hds-checkbox__label::after {

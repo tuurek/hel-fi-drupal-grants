@@ -65,3 +65,10 @@ div.table-layout-form {
 .hds-text-input .hds-text-input__input.input--borderless {
   border: 0px transparent solid;
 }
+#subventions_table {
+  td, th {
+    &.webform-multiple-table--operations {
+      display:none;
+    }
+  }
+}

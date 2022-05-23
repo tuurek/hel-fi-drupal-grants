@@ -95,8 +95,12 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
   $form_object = $form_state->getFormObject();
-  if ($element['#type'] == 'webform_multiple' && isset($element['#multiple__header']) && $element['#multiple__header'] === TRUE) {
-    $element['#wrapper_attributes']['class'][] = 'table-layout-form';
+  if ($element['#type'] == 'webform_multiple') {
+    if (isset($element['#multiple__header']) && $element['#multiple__header'] === TRUE) {
+      $element['#wrapper_attributes']['class'][] = 'table-layout-form';
+    } else {
+      $element['#wrapper_attributes']['class'][] = 'hidden-head';
+    }
   }
   if (get_class($form_object) == 'Drupal\webform\WebformSubmissionForm') {
     /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
