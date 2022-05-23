@@ -69,8 +69,8 @@ class MessageService {
    */
   public function __construct(
     HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata,
-    ClientInterface $http_client,
-    LoggerChannelFactory $loggerFactory,
+    ClientInterface          $http_client,
+    LoggerChannelFactory     $loggerFactory,
   ) {
     $this->helfiHelsinkiProfiiliUserdata = $helfi_helsinki_profiili_userdata;
     $this->httpClient = $http_client;
@@ -100,9 +100,6 @@ class MessageService {
     $submissionData = $submission->getData();
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
 
-    $dt = new \DateTime();
-    // $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-    $dt->setTimezone(new \DateTimeZone('UTC'));
 
     if (isset($submissionData["application_number"]) && !empty($submissionData["application_number"])) {
       $messageData['caseId'] = $submissionData["application_number"];
@@ -114,7 +111,12 @@ class MessageService {
         $messageData['sentBy'] = $userData['name'];
       }
 
-      $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
+      $dt = new \DateTime();
+      // $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+      $dt->setTimezone(new \DateTimeZone('UTC'));
+
+      $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0');
+      //      $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [$this->username, $this->password, "Basic"],

@@ -919,15 +919,20 @@ class GrantsHandler extends WebformHandlerBase {
 
     $dt = new \DateTime();
     // $dt->setTimestamp($webform_submission->getCreatedTime());
+
     $dt->setTimezone(new \DateTimeZone('UTC'));
-    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
+    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
+    //    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
     // Get regdate from profile data and format it for Avustus2
     // This data is immutable for end user so safe to this way.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+
     $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
-    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s\.\0\0\0\Z');
+    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s');
+    //    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
     if (isset($this->submittedFormData["finalize_application"]) &&
       $this->submittedFormData["finalize_application"] == 1) {
