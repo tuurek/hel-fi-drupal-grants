@@ -127,8 +127,8 @@ msgstr "Yhteisön sähköpostiosoite"
 msgid "Business Purpose"
 msgstr "Toiminna tarkoitus"
 
-msgid "Description of business purpose"
-msgstr "Kuvaus yhteisön toiminnan tarkoituksesta"
+msgid "Description of business purpose (max. 500 characters)"
+msgstr "Kuvaus yhteisön toiminnan tarkoituksesta (500 merkkiä)"
 
 msgid "Company Addresses"
 msgstr "Yhteisön osoitteet"

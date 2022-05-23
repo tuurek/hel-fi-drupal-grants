@@ -74,7 +74,7 @@
     font-size: $base-font-size;
     font-weight: bold;
     margin-bottom: $spacing;
-
+    display: block;
   }
   label.hds-radio-button__label {
     font-weight: normal;
@@ -107,19 +107,7 @@ form .hds-checkbox {
   }
 }
 
-#subventions_table {
-  .form-item-subventions {
-    > label {
-      display: none;
-    }
-    table {
-      margin: 0;
-    }
-    .fieldset-wrapper {
-      display:flex;
-    }
-    .form-item {
-      margin-top: var(--spacing-layout-xs);
-    }
-  }
+fieldset.webform-composite-hidden-title {
+  margin-top: -1em;
+  margin-bottom: var(--spacing-layout-xs);
 }

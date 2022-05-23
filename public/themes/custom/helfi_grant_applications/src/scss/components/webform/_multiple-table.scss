@@ -3,23 +3,65 @@
     margin-bottom: var(--spacing-2-xs);
     border: 0px var(--color-white) solid;
     border-collapse: collapse;
+    max-width: 588px;
   }
   .webform-multiple-table--operations-two {
     min-width: 60px;
   }
-  tbody tr {
-    background: var(--color-black-10);
-    border-bottom: var(--spacing-s) var(--color-white) solid;
+  tbody, thead {
+  }
+  tbody tr, thead tr {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
 
+  tbody tr {
+    border-bottom: var(--spacing-s) var(--color-white) solid;
     &:hover {
       background: var(--color-black-10);
     }
   }
-  td {
+  td, th {
     padding-top: 0;
     padding-bottom: 0;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+  td.webform-multiple-table--handle, td.webform-multiple-table--operations {
+
   }
   table thead th {
-    padding: 0 var(--spacing-s);
+    padding: var(--spacing-layout-2-xs);
   }
+
+}
+div.hidden-head table thead th {
+  padding: 0;
+}
+div.table-layout-form {
+  table {
+    border: 1px var(--color-black) solid;
+
+    tbody {
+      tr {
+        border: §0px var(--color-black-30) solid;
+        td {
+          padding: 0;
+          border: 1px var(--color-black-30) solid;
+
+          input.hds-text-input__input[readonly] {
+            padding: var(--spacing-layout-2-xs);
+          }
+        }
+      }
+    }
+    .form-item {
+      margin-bottom: 0;
+    }
+  }
+}
+.hds-text-input .hds-text-input__input.input--borderless {
+  border: 0px transparent solid;
 }

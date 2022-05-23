@@ -46,7 +46,7 @@ class CompensationsComposite extends WebformCompositeBase {
       '#title' => t('Subvention amount'),
       '#required' => TRUE,
       '#input_mask' => "'alias': 'currency', 'prefix': '', 'suffix': '€','groupSeparator': ' ','radixPoint':','",
-      '#attributes' => ['class' => ['webform--small']],
+      '#attributes' => ['class' => ['input--borderless']],
     ];
 
     return $elements;

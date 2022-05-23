@@ -99,6 +99,9 @@ elements: |-
         '#type': email
         '#title': Sähköpostiosoite
         '#required': true
+        '#attributes':
+          class:
+            - webform--large
     verkkosivut:
       '#type': webform_section
       '#title': www-sivut
@@ -108,40 +111,69 @@ elements: |-
         '#title_display': invisible
     contact_person_section:
       '#type': webform_section
-      '#title': 'Contact Person'
+      '#title': 'Yhteyshenkilö'
       contact_person:
         '#type': textfield
-        '#title': 'Contact Person'
+        '#title': 'Yhteyshenkilö'
         '#autocomplete': 'off'
+        '#attributes':
+          class:
+            - webform--large
       contact_person_phone_number:
         '#type': textfield
-        '#title': 'Contact person phone'
+        '#title': 'Yhteyshenkilön puhelinnumero'
         '#autocomplete': 'off'
+        '#attributes':
+          class:
+            - webform--large
     osoite:
       '#type': webform_section
       '#title': Osoite
       community_address:
         '#type': community_address_composite
-        '#title': 'Community Address'
+        '#title': 'Yhteisön osoite'
+      address_markup:
+        '#type': webform_markup
+        '#markup': |-
+          <a class="hds-link hds-link--medium" href="/grants-profile/">
+            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa osoitteita</span>
+          </a>
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
+      bank_account:
+        '#type': bank_account_composite
+        '#title': Tilinumero
       account_markup:
         '#type': webform_markup
         '#markup': |-
           <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
           </a>
-      bank_account:
-        '#type': bank_account_composite
-        '#title': 'Bank account'
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
       community_officials:
         '#type': community_officials_composite
-        '#title': 'Community officials'
+        '#title': 'Yhteisön vastaavat henkilöt'
+        '#multiple__header': false
+        '#multiple__item_label': henkilö
+        '#multiple__no_items_message': 'Ei toiminnasta vastaavia henkil&ouml;it&auml;. Lis&auml;&auml; uusi henkil&ouml; alta.'
+        '#multiple__min_items': 1
+        '#multiple__sorting': false
+        '#multiple__add': false
+        '#multiple__add_more_input': false
+        '#multiple__add_more_button_label': 'Lisää henkilö'
         '#multiple': true
+        '#wrapper_attributes':
+          class:
+            - hidden-head
+      officials_markup:
+        '#type': webform_markup
+        '#markup': |-
+          <a class="hds-link hds-link--medium" href="/grants-profile/">
+            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa henkilöitä</span>
+          </a>
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'
