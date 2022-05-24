@@ -920,7 +920,7 @@ class GrantsHandler extends WebformHandlerBase {
     $dt = new \DateTime();
     // $dt->setTimestamp($webform_submission->getCreatedTime());
 
-    $dt->setTimezone(new \DateTimeZone('UTC'));
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
     //    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
