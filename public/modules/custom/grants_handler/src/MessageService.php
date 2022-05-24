@@ -112,11 +112,9 @@ class MessageService {
       }
 
       $dt = new \DateTime();
-      // $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $dt->setTimezone(new \DateTimeZone('UTC'));
+      $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
 
       $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0');
-      //      $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s\.\0\0\0\Z');
 
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [$this->username, $this->password, "Basic"],
