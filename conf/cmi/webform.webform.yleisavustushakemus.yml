@@ -92,16 +92,6 @@ elements: |-
         '#type': textfield
         '#title': 'Yhteisön lyhenne'
         '#title_display': invisible
-    sahkoposti:
-      '#type': webform_section
-      '#title': Sähköpostiosoite
-      email:
-        '#type': email
-        '#title': Sähköpostiosoite
-        '#required': true
-        '#attributes':
-          class:
-            - webform--large
     verkkosivut:
       '#type': webform_section
       '#title': www-sivut
@@ -111,21 +101,29 @@ elements: |-
         '#title_display': invisible
     contact_person_section:
       '#type': webform_section
-      '#title': 'Yhteyshenkilö'
+      '#title': 'Hakemuksen yhteyshenkilö'
+      contact_markup:
+        '#type': webform_markup
+        '#markup': 'Yhteyshenki&ouml;lle l&auml;hetet&auml;&auml;n hakemukseen liittyvi&auml; yhteydenottoja kuten t&auml;ydennys- ja lis&auml;selvityspyynt&ouml;j&auml;. Ilmoita tässä sellainen sähköpostiosoite, jota luetaan aktiivisesti.'
       contact_person:
         '#type': textfield
         '#title': 'Yhteyshenkilö'
         '#autocomplete': 'off'
-        '#attributes':
-          class:
-            - webform--large
+        '#required': true
+        '#size': 63
+      email:
+        '#type': email
+        '#title': Sähköpostiosoite
+        '#required': true
+        '#autocomplete': 'off'
+        '#size': 63
+        '#help': 'Ilmoita s&auml;hk&ouml;postiosoite, johon t&auml;h&auml;n hakemukseen liittyvät viestit sek&auml; her&auml;tteet osoitetaan ja jota luetaan aktiivisesti'
       contact_person_phone_number:
         '#type': textfield
-        '#title': 'Yhteyshenkilön puhelinnumero'
+        '#title': 'Puhelinnumero'
+        '#required': true
         '#autocomplete': 'off'
-        '#attributes':
-          class:
-            - webform--large
+        '#size': 32
     osoite:
       '#type': webform_section
       '#title': Osoite
@@ -147,6 +145,9 @@ elements: |-
       bank_account:
         '#type': bank_account_composite
         '#title': Tilinumero
+        '#attributes':
+          class:
+            - webform--medium
       account_markup:
         '#type': webform_markup
         '#markup': |-
@@ -227,10 +228,8 @@ elements: |-
         '#required': true
         '#counter_type': character
         '#counter_maximum': 5000
+        '#cols': 63
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
-        '#attributes':
-          class:
-            - webform--large
     muut_samaan_tarkoitukseen_myonnetyt_avustukset:
       '#type': webform_section
       '#title': 'Muut samaan tarkoitukseen myönnetyt avustukset'
@@ -365,9 +364,7 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
-        '#attributes':
-          class:
-            - webform--large
+        '#cols': 63
     kaupungilta_saatu_tiloihin_liittyva_tuki:
       '#type': webform_section
       '#title': 'Kaupungilta saatu tiloihin liittyvä tuki'
@@ -381,9 +378,7 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
-        '#attributes':
-          class:
-            - webform--large
+        '#cols': 63
     edellisen_avustuksen_kayttoselvitys:
       '#type': webform_section
       '#title': 'Edellisen avustuksen käyttöselvitys'
@@ -404,9 +399,7 @@ elements: |-
         '#counter_minimum': 1
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
-        '#attributes':
-          class:
-            - webform--large
+        '#cols': 63
   3_yhteison_tiedot:
     '#type': webform_wizard_page
     '#title': '3. Yhteisön toiminta'
@@ -438,17 +431,13 @@ elements: |-
         '#title': 'Henkilöjäsenen jäsenmaksu (€ / vuosi)'
         '#maxlength': 50
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
-        '#attributes':
-          class:
-            - webform--small
+        '#size': 16
       fee_community:
         '#type': textfield
         '#title': 'Yhteisöjäsen (€ / vuosi)'
         '#maxlength': 50
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
-        '#attributes':
-          class:
-            - webform--small
+        '#size': 16
     jasenmaara:
       '#type': webform_section
       '#title': Jäsenmäärä
@@ -459,9 +448,7 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
-        '#attributes':
-          class:
-            - webform--small
+        '#size': 16
       members_applicant_person_global:
         '#type': textfield
         '#title': 'Henkilöjäseniä yhteensä'
@@ -469,9 +456,7 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
-        '#attributes':
-          class:
-            - webform--small
+        '#size': 16
       members_applicant_community_local:
         '#type': textfield
         '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'
@@ -479,9 +464,7 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
-        '#attributes':
-          class:
-            - webform--small
+        '#size': 16
       members_applicant_community_global:
         '#type': textfield
         '#title': Yhteisöjäseniä
@@ -489,9 +472,7 @@ elements: |-
         '#maxlength': 7
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
-        '#attributes':
-          class:
-            - webform--small
+        '#size': 16
   lisatiedot_ja_liitteet:
     '#type': webform_wizard_page
     '#title': '4. Lisätiedot ja liitteet'
@@ -505,9 +486,7 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
-        '#attributes':
-          class:
-            - webform--large
+        '#cols': 63
     liitteet:
       '#type': webform_section
       '#title': Liitteet
@@ -602,9 +581,7 @@ elements: |-
         '#counter_type': character
         '#counter_maximum': 5000
         '#counter_maximum_message': 'Max 5000 characters.'
-        '#attributes':
-          class:
-            - webform--large
+        '#cols': 63
       muu_liite:
         '#type': grants_attachments
         '#title': 'Muu liite'

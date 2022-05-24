@@ -3,7 +3,7 @@
     margin-bottom: var(--spacing-2-xs);
     border: 0px var(--color-white) solid;
     border-collapse: collapse;
-    max-width: 588px;
+    max-width: fit-content;
   }
   .webform-multiple-table--operations-two {
     min-width: 60px;
@@ -41,9 +41,12 @@ div.hidden-head table thead th {
   padding: 0;
 }
 div.table-layout-form {
+  input.hds-text-input__input {
+    width: 100%;
+  }
   table {
     border: 1px var(--color-black) solid;
-
+    max-width: 588px;
     tbody {
       tr {
         border: §0px var(--color-black-30) solid;

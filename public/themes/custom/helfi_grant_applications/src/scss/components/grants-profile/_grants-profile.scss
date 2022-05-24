@@ -129,7 +129,8 @@
     display: inline-block;
   }
 }
-.grants-handler--prefilled-field, .grants-profile-prh-info {
+div.grants-handler--prefilled-field, .grants-profile-prh-info {
+  min-width: 100%;
   .field-suffix {
     float:right;
   }
