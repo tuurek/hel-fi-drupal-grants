@@ -3,6 +3,7 @@ langcode: fi
 status: open
 dependencies:
   module:
+    - grants_formnavigation
     - grants_handler
     - grants_metadata
 third_party_settings:
@@ -29,10 +30,6 @@ elements: |-
       '#type': textfield
       '#title': 'Hakemuksen tila'
       '#readonly': true
-    finalize_application:
-      '#type': checkbox
-      '#title': 'Finalize application'
-      '#description': 'Check this to submit application for handling and disable editing.&nbsp;'
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
@@ -678,7 +675,7 @@ settings:
   preview_excluded_elements: {  }
   preview_exclude_empty: false
   preview_exclude_empty_checkbox: false
-  draft: authenticated
+  draft: all
   draft_multiple: false
   draft_auto_save: false
   draft_saved_message: ''
@@ -708,8 +705,8 @@ settings:
   entity_limit_total_interval: null
   entity_limit_user: null
   entity_limit_user_interval: null
-  purge: none
-  purge_days: null
+  purge: draft
+  purge_days: 365
   results_disabled: false
   results_disabled_ignore: false
   results_customize: false
@@ -776,4 +773,14 @@ handlers:
     settings:
       endpoint: 'This is a custom endpoint.'
       debug: true
+  grants_webform_navigation:
+    id: grants_formnavigation
+    handler_id: grants_webform_navigation
+    label: 'Grants Webform Navigation'
+    notes: ''
+    status: true
+    conditions: {  }
+    weight: 0
+    settings:
+      debug: false
 variants: {  }

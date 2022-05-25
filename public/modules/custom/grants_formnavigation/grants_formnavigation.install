@@ -47,7 +47,7 @@ function grants_formnavigation_schema() {
       'user_uuid' => [
         'description' => 'User helsinkiprofiili id',
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 40,
         'not null' => TRUE,
       ],
       'operation' => [

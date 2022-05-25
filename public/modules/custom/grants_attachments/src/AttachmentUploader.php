@@ -77,6 +77,9 @@ class AttachmentUploader {
     $this->messenger = $messenger;
     $this->loggerChannel = $loggerFactory->get('grants_attachments');
     $this->connection = $connection;
+
+    $this->debug = FALSE;
+
   }
 
   /**
@@ -106,8 +109,6 @@ class AttachmentUploader {
    *   Array of file ids to upload.
    * @param string $applicationNumber
    *   Generated application number.
-   * @param bool $debug
-   *   Is debug mode on?
    * @param string $mode
    *   Mode to run in, "application" will function as was.
    *
@@ -117,10 +118,14 @@ class AttachmentUploader {
   public function uploadAttachments(
     array $attachments,
     string $applicationNumber,
-    bool $debug,
     string $mode = 'application'
   ): array {
-    $this->setDebug($debug);
+
+    if (empty($attachments)) {
+      // If no new files are uploaded,
+      // just skip everything and return empty array.
+      return [];
+    }
 
     if ($mode !== 'application') {
       $endpoint = getenv('AVUSTUS2_MESSAGE_LIITE_ENDPOINT');

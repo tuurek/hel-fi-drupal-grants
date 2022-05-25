@@ -2,7 +2,8 @@
 
 namespace Drupal\grants_formnavigation;
 
-use Drupal;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -30,7 +31,7 @@ class GrantsFormNavigationHelper {
   const ERROR_OPERATION = 'errors';
 
   /**
-   * Name of the page visited operation
+   * Name of the page visited operation.
    */
   const PAGE_VISITED_OPERATION = 'page visited';
 
@@ -45,9 +46,11 @@ class GrantsFormNavigationHelper {
   const TEMP_STORE_KEY = 'grants_formnavigation_errors';
 
   /**
+   * Log manager.
+   *
    * @var \Drupal\webform_submission_log\WebformSubmissionLogManager
    */
-  protected $webform_submission_log_manager;
+  protected WebformSubmissionLogManager $webformSubmissionLogManager;
 
   /**
    * The database service.
@@ -68,45 +71,51 @@ class GrantsFormNavigationHelper {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entity_type_manager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The form builder service.
    *
    * @var \Drupal\Core\Form\FormBuilderInterface
    */
-  protected $form_builder;
+  protected FormBuilderInterface $formBuilder;
 
   /**
-   * @var HelsinkiProfiiliUserData
+   * Access to profile data.
+   *
+   * @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData
    */
   protected HelsinkiProfiiliUserData $helsinkiProfiiliUserData;
 
   /**
-   * AutosaveHelper constructor.
+   * Access to private session store.
    *
-   * @param \Drupal\webform_submission_log\WebformSubmissionLogManager $webform_submission_log_manager
-   * @param \Drupal\Core\Database\Connection $datababse
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helsinkiProfiiliUserData
+   * @var \Drupal\Core\TempStore\PrivateTempStore
+   */
+  protected PrivateTempStore $store;
+
+  /**
+   * AutosaveHelper constructor.
    */
   public function __construct(
     WebformSubmissionLogManager $webform_submission_log_manager,
-    Connection                  $datababse,
-    MessengerInterface          $messenger,
-    EntityTypeManagerInterface  $entity_type_manager,
-    FormBuilderInterface        $form_builder,
-    HelsinkiProfiiliUserData    $helsinkiProfiiliUserData
+    Connection $datababse,
+    MessengerInterface $messenger,
+    EntityTypeManagerInterface $entity_type_manager,
+    FormBuilderInterface $form_builder,
+    HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
+    PrivateTempStoreFactory $tempStoreFactory
   ) {
 
-    $this->webform_submission_log_manager = $webform_submission_log_manager;
+    $this->webformSubmissionLogManager = $webform_submission_log_manager;
     $this->database = $datababse;
     $this->messenger = $messenger;
-    $this->entity_type_manager = $entity_type_manager;
-    $this->form_builder = $form_builder;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->formBuilder = $form_builder;
     $this->helsinkiProfiiliUserData = $helsinkiProfiiliUserData;
+
+    /** @var \Drupal\Core\TempStore\PrivateTempStore $store */
+    $this->store = $tempStoreFactory->get('grants_formnavigation');
   }
 
   /**
@@ -162,7 +171,6 @@ class GrantsFormNavigationHelper {
    *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
    *   A webform submission entity.
-   *
    * @param string|null $page
    *   Set to page name if you only want the data for a particular page.
    *
@@ -217,10 +225,10 @@ class GrantsFormNavigationHelper {
         'sid' => $webform_submission->id(),
         'operation' => self::PAGE_VISITED_OPERATION,
         'handler_id' => self::HANDLER_ID,
-        'uid' => Drupal::currentUser()->id(),
+        'uid' => \Drupal::currentUser()->id(),
         'user_uuid' => $userData['sub'],
         'data' => $page,
-        'timestamp' => (string) Drupal::time()->getRequestTime(),
+        'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
       $query = $this->database->insert(self::TABLE, $fields);
       $query->fields($fields)->execute();
@@ -236,9 +244,8 @@ class GrantsFormNavigationHelper {
    * @throws \Exception
    */
   public function logStashedPageErrors(WebformSubmissionInterface $webform_submission) {
-    /** @var \Drupal\Core\TempStore\PrivateTempStore $store */
-    $store = Drupal::service('tempstore.private')->get('grants_formnavigation');
-    $errors = $store->get(self::TEMP_STORE_KEY);
+
+    $errors = $this->store->get(self::TEMP_STORE_KEY);
     // Get outta here if there are not any stashed errors.
     if (empty($errors)) {
       return;
@@ -248,7 +255,7 @@ class GrantsFormNavigationHelper {
     // Log the stashed errors.
     $this->logErrors($webform_submission, $new_errors);
     // Clear the stashed errors now that they are logged.
-    $store->delete(self::TEMP_STORE_KEY);
+    $this->store->delete(self::TEMP_STORE_KEY);
   }
 
   /**
@@ -281,10 +288,7 @@ class GrantsFormNavigationHelper {
     }
     // Stash the errors and return if the submission hasn't been created yet.
     if (empty($webform_submission->id())) {
-      /** @var \Drupal\Core\TempStore\PrivateTempStore $store */
-      $store = Drupal::service('tempstore.private')
-        ->get('grants_formnavigation');
-      $store->set(self::TEMP_STORE_KEY, $paged_errors);
+      $this->store->set(self::TEMP_STORE_KEY, $paged_errors);
       return;
     }
     $this->logErrors($webform_submission, $paged_errors);
@@ -311,9 +315,9 @@ class GrantsFormNavigationHelper {
         'sid' => $webform_submission->id(),
         'operation' => self::ERROR_OPERATION,
         'handler_id' => self::HANDLER_ID,
-        'uid' => Drupal::currentUser()->id(),
+        'uid' => \Drupal::currentUser()->id(),
         'data' => serialize($errors),
-        'timestamp' => (string) Drupal::time()->getRequestTime(),
+        'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
       $this->database->insert(self::TABLE)->fields($fields)->execute();
     }
@@ -347,7 +351,7 @@ class GrantsFormNavigationHelper {
    * @return mixed
    *   A page an element belongs to.
    */
-  public function getElementPage(WebformInterface $webform, $element) {
+  public function getElementPage(WebformInterface $webform, $element): mixed {
     $element = $webform->getElement($element);
     return !empty($element) && array_key_exists('#webform_parents', $element) ? $element['#webform_parents'][0] : NULL;
   }
@@ -406,7 +410,7 @@ class GrantsFormNavigationHelper {
     $webform_submission->setCurrentPage($page)->save();
     // Build a new form for this submission.
     /** @var \Drupal\webform\WebformSubmissionForm $form_object */
-    $form_object = $this->entity_type_manager->getFormObject('webform_submission', 'api');
+    $form_object = $this->entityTypeManager->getFormObject('webform_submission', 'api');
     $form_object->setEntity($webform_submission);
     // Create an empty form state which will be populated when the submission
     // form is submitted.
@@ -414,7 +418,7 @@ class GrantsFormNavigationHelper {
     // Lets make sure we don't create a validation loop.
     $new_form_state->set('validating', TRUE);
     // Submit the form.
-    $this->form_builder->submitForm($form_object, $new_form_state);
+    $this->formBuilder->submitForm($form_object, $new_form_state);
     $this->logPageVisit($webform_submission, $page);
     $this->logPageErrors($webform_submission, $new_form_state);
     // Return to the original page.

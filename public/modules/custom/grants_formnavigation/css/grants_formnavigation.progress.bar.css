@@ -12,5 +12,5 @@
  * @see https://coderwall.com/p/-7trcg/simple-css-only-wizard-progress-tracker
  */
 li.webform-progress-bar__page--error > b {
-  background-color: #FF0000;
+  background-color: #ff0000;
 }

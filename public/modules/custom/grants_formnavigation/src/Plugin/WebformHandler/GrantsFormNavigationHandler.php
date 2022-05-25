@@ -2,7 +2,7 @@
 
 namespace Drupal\grants_formnavigation\Plugin\WebformHandler;
 
-use Drupal;
+use Drupal\grants_formnavigation\GrantsFormNavigationHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformInterface;
@@ -38,7 +38,7 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
    *
    * @var \Drupal\grants_formnavigation\GrantsFormNavigationHelper
    */
-  protected Drupal\grants_formnavigation\GrantsFormNavigationHelper $grantsFormNavigationHelper;
+  protected GrantsFormNavigationHelper $grantsFormNavigationHelper;
 
   /**
    * {@inheritdoc}
@@ -101,7 +101,6 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
     $this->debug(__FUNCTION__);
   }
 
-
   /**
    * {@inheritdoc}
    *
@@ -150,7 +149,7 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
         // Make sure we haven't already set errors.
         if (!empty($errors[$current_page])) {
           foreach ($errors[$current_page] as $error) {
-            Drupal::messenger()->addError($error);
+            \Drupal::messenger()->addError($error);
           }
         }
       }
@@ -240,7 +239,7 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
     // Log the initial page if this is an insert.
     if (!$update && $forward_navigation && $webform->hasWizardPages()) {
       $pages = $webform->getPages('add', $webform_submission);
-      // Log the first page
+      // Log the first page.
       $this->grantsFormNavigationHelper->logPageVisit($webform_submission, array_keys($pages)[0]);
       // Log any stashed errors.
       $this->grantsFormNavigationHelper->logStashedPageErrors($webform_submission);

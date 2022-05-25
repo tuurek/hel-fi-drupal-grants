@@ -3,7 +3,7 @@
 namespace Drupal\grants_attachments\Plugin\WebformElement;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
+use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -130,7 +130,7 @@ class GrantsAttachments extends WebformCompositeBase {
       $value = $data[$webform_key];
     }
     else {
-      foreach (GrantsHandler::getAttachmentFieldNames() as $fieldName) {
+      foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
         if (!isset($data[$fieldName])) {
           continue;
         }

@@ -101,9 +101,8 @@ class MessageService {
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
 
     $dt = new \DateTime();
-    // $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-    $dt->setTimezone(new \DateTimeZone('UTC'));
-
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+    // $dt->setTimezone(new \DateTimeZone('UTC'));
     if (isset($submissionData["application_number"]) && !empty($submissionData["application_number"])) {
       $messageData['caseId'] = $submissionData["application_number"];
 

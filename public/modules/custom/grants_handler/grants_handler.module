@@ -9,6 +9,7 @@
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Link;
 use \Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 
@@ -166,7 +167,7 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
 
     if (
       isset($webformData['status']) &&
-      !GrantsHandler::isSubmissionEditable(NULL, $webformData['status']) &&
+      !ApplicationHandler::isSubmissionEditable(NULL, $webformData['status']) &&
       $element['#type'] != 'webform_actions') {
       $element['#disabled'] = TRUE;
     }
@@ -344,10 +345,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     if (
       isset($form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"]) &&
-      !GrantsHandler::isSubmissionEditable(NULL, $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"])
+      !ApplicationHandler::isSubmissionEditable(NULL, $form["elements"]["1_hakijan_tiedot"]["status"]["#default_value"])
     ) {
       $form["actions"]["submit"]['#disabled'] = TRUE;
-      unset($form["elements"]["finalize_application"]);
     }
 
     $grantsProfile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
@@ -490,7 +490,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   $submissionData = $submission->getData();
 
   // if submission is ok for messaging
-  if (GrantsHandler::isSubmissionMessageable($submission, NULL)) {
+  if (ApplicationHandler::isSubmissionMessageable($submission, NULL)) {
     // add message form
     $variables['message_form'] = \Drupal::formBuilder()
       ->getForm('Drupal\grants_handler\Form\MessageForm', $submission);

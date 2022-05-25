@@ -460,7 +460,7 @@ trait ApplicationDefinitionTrait {
     // ->addConstraint('NotBlank')
     $info['community_practices_business'] = DataDefinition::create('boolean')
       // ->setRequired(TRUE)
-      ->setLabel('activitiesInfoArray=>communityPracticesBusiness')
+      ->setLabel('communityPracticesBusiness')
       ->setSetting('defaultValue', FALSE)
       ->setSetting('jsonPath', [
         'compensation',

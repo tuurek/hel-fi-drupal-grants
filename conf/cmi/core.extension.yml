@@ -38,6 +38,7 @@ module:
   gin_toolbar: 0
   grant_applications_content: 0
   grants_attachments: 0
+  grants_formnavigation: 0
   grants_metadata: 0
   grants_profile: 0
   hal: 0
@@ -107,6 +108,7 @@ module:
   views_ui: 0
   webform: 0
   webform_rest: 0
+  webform_submission_log: 0
   webform_ui: 0
   pathauto: 1
   content_translation: 10

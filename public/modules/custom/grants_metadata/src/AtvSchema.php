@@ -5,13 +5,13 @@ namespace Drupal\grants_metadata;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
-use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\webform\Entity\WebformSubmission;
 
 /**
@@ -83,7 +83,7 @@ class AtvSchema {
    *   Mapped dta from document.
    */
   public function documentContentToTypedData(
-    array                          $documentData,
+    array $documentData,
     ComplexDataDefinitionInterface $typedDataDefinition): array {
 
     if (isset($documentData['content']) && is_array($documentData['content'])) {
@@ -117,8 +117,13 @@ class AtvSchema {
     }
 
     $other_attachments = [];
-    $attachmentFileTypes = GrantsHandler::getAttachmentFieldNames(TRUE);
+    $attachmentFileTypes = AttachmentHandler::getAttachmentFieldNames(TRUE);
     $attachmentHeaders = GrantsAttachments::$fileTypes;
+
+    if (!isset($typedDataValues["attachments"])) {
+      $typedDataValues["attachments"] = [];
+    }
+
     foreach ($typedDataValues["attachments"] as $key => $attachment) {
       $headerKey = array_search($attachment["description"], $attachmentHeaders);
       $thisHeader = $attachmentHeaders[$headerKey];
@@ -288,7 +293,7 @@ class AtvSchema {
   /**
    * Generate document content JSON from typed data.
    *
-   * @param \Drupal\Core\TypedData\ComplexDataInterface $typedData
+   * @param \Drupal\Core\TypedData\TypedDataInterface $typedData
    *   Typed data to export.
    * @param \Drupal\webform\Entity\WebformSubmission|null $webformSubmission
    *   Form submission entity.
@@ -297,8 +302,8 @@ class AtvSchema {
    *   Document structure based on schema.
    */
   public function typedDataToDocumentContent(
-    ComplexDataInterface $typedData,
-    WebformSubmission    $webformSubmission = NULL): array {
+    TypedDataInterface $typedData,
+    WebformSubmission $webformSubmission = NULL): array {
 
     $documentStructure = [];
 

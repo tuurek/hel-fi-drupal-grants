@@ -1,5 +1,7 @@
 <?php
+
 use Drupal\Core\Render\Element;
+
 /**
  * @file
  * Primary module hooks for grants_attachments module.
@@ -37,6 +39,7 @@ function grants_attachments_theme(): array {
 function template_preprocess_grants_attachments(array &$variables) {
 
 }
+
 /**
  * Implements hook_cron().
  */
@@ -56,7 +59,7 @@ function grants_attachments_cron() {
   $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
   foreach ($resultParsed as $applicationNumber => $item) {
     // try to upload again with added data.
-    $attachmentUploader->uploadAttachments($item['fid'], $applicationNumber, FALSE);
+    $attachmentUploader->uploadAttachments($item['fid'], $applicationNumber);
   }
 
   /**

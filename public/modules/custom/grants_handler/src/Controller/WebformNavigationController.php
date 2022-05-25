@@ -11,10 +11,16 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class WebformNavigationController extends ControllerBase {
 
-
+  /**
+   * Clear submission logs for given submission.
+   *
+   * @param $submission_id
+   *   SUbmission.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirect to form. @todo this needs a dynamic version.
+   */
   public function clearDraftData($submission_id) {
-
-    $request = \Drupal::request();
 
     $submission = WebformSubmission::load($submission_id);
 

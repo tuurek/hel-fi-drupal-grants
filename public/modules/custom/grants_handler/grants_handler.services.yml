@@ -7,4 +7,15 @@ services:
 
   grants_handler.message_service:
     class: Drupal\grants_handler\MessageService
-    arguments: ['@helfi_helsinki_profiili.userdata','@http_client', '@logger.factory']
+    arguments: [ '@helfi_helsinki_profiili.userdata','@http_client', '@logger.factory' ]
+
+  grants_handler.application_handler:
+    class: Drupal\grants_handler\ApplicationHandler
+    arguments: [ '@http_client',
+                 '@helfi_helsinki_profiili.userdata',
+                 '@helfi_atv.atv_service',
+                 '@grants_metadata.atv_schema',
+                 '@grants_profile.service',
+                 '@logger.factory',
+                 '@messenger'
+    ]

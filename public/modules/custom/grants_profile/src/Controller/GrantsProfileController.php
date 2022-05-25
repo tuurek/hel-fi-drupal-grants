@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\Url;
+use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
@@ -30,7 +31,7 @@ class GrantsProfileController extends ControllerBase {
    */
   public function viewApplication(string $document_uuid) {
 
-    $submissionObject = GrantsHandler::submissionObjectFromApplicationNumber($document_uuid);
+    $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($document_uuid);
 
     if ($submissionObject) {
       $data = $submissionObject->getData();
@@ -171,7 +172,8 @@ class GrantsProfileController extends ControllerBase {
         ];
         $build['#applications'] = $table;
 
-      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException|TempStoreException $e) {
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
       }
 
       $build['#profile'] = $profile;
@@ -310,13 +312,15 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Bank account confirmation successfully deleted'));
 
-    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       unset($bankAccount['confirmationFile']);
 
       $grantsProfileService->saveBankAccount($bank_account_id, $bankAccount);
       try {
         $grantsProfileService->saveGrantsProfileAtv();
-      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
           ->error('Profile saving failed. ' . $e->getMessage());
         $this->messenger()
@@ -349,7 +353,8 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Address deleted.'));
 
-    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       $this->getLogger('grants_profile')
         ->error('Profile saving failed. ' . $e->getMessage());
       $this->messenger()
@@ -380,7 +385,8 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Official deleted.'));
 
-    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       $this->getLogger('grants_profile')
         ->error('Profile saving failed. ' . $e->getMessage());
       $this->messenger()
@@ -422,12 +428,14 @@ class GrantsProfileController extends ControllerBase {
       $this->messenger()
         ->addStatus($this->t('Bank account deleted'));
 
-    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       unset($bankAccount['confirmationFile']);
       $grantsProfileService->removeBankAccount($bank_account_id);
       try {
         $grantsProfileService->saveGrantsProfileAtv();
-      } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
           ->error('Profile saving failed. ' . $e->getMessage());
         $this->messenger()

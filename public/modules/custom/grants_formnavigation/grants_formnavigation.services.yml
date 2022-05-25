@@ -6,4 +6,6 @@ services:
         '@database', '@messenger',
         '@entity_type.manager',
         '@form_builder',
-        '@helfi_helsinki_profiili.userdata' ]
+        '@helfi_helsinki_profiili.userdata',
+        '@tempstore.private'
+    ]
