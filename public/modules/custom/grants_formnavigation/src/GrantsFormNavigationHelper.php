@@ -269,23 +269,7 @@ class GrantsFormNavigationHelper {
    * @throws \Exception
    */
   public function logPageErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state) {
-    $form_errors = $form_state->getErrors();
-    $current_errors = $this->getErrors($webform_submission);
-    $paged_errors = empty($current_errors) ? [] : $current_errors;
-    $current_page = $webform_submission->getCurrentPage();
-    // Reset the current page's errors with those set in the form state.
-    $paged_errors[$current_page] = [];
-    foreach ($form_errors as $element => $error) {
-      $base_element = explode('][', $element)[0];
-      $page = $this->getElementPage($webform_submission->getWebform(), $base_element);
-      // Place error on current page if the page is empty.
-      if (!empty($page) && is_string($page)) {
-        $paged_errors[$page][$element] = $error;
-      }
-      else {
-        $paged_errors[$current_page][$element] = $error;
-      }
-    }
+    $paged_errors = $this->getPagedErrors($form_state, $webform_submission);
     // Stash the errors and return if the submission hasn't been created yet.
     if (empty($webform_submission->id())) {
       $this->store->set(self::TEMP_STORE_KEY, $paged_errors);
@@ -351,7 +335,7 @@ class GrantsFormNavigationHelper {
    * @return mixed
    *   A page an element belongs to.
    */
-  public function getElementPage(WebformInterface $webform, $element): mixed {
+  public function getElementPage(WebformInterface $webform, string $element): mixed {
     $element = $webform->getElement($element);
     return !empty($element) && array_key_exists('#webform_parents', $element) ? $element['#webform_parents'][0] : NULL;
   }
@@ -423,6 +407,38 @@ class GrantsFormNavigationHelper {
     $this->logPageErrors($webform_submission, $new_form_state);
     // Return to the original page.
     $webform_submission->setCurrentPage($current_page);
+  }
+
+  /**
+   * Get all errors for webform submission.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   *   Submission object.
+   *
+   * @return array
+   *   All errors paged.
+   */
+  public function getPagedErrors(FormStateInterface $form_state, WebformSubmissionInterface $webform_submission): array {
+    $form_errors = $form_state->getErrors();
+    $current_errors = $this->getErrors($webform_submission);
+    $paged_errors = empty($current_errors) ? [] : $current_errors;
+    $current_page = $webform_submission->getCurrentPage();
+    // Reset the current page's errors with those set in the form state.
+    $paged_errors[$current_page] = [];
+    foreach ($form_errors as $element => $error) {
+      $base_element = explode('][', $element)[0];
+      $page = $this->getElementPage($webform_submission->getWebform(), $base_element);
+      // Place error on current page if the page is empty.
+      if (!empty($page) && is_string($page)) {
+        $paged_errors[$page][$element] = $error;
+      }
+      else {
+        $paged_errors[$current_page][$element] = $error;
+      }
+    }
+    return $paged_errors;
   }
 
 }

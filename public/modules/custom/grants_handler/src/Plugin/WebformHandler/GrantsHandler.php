@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\grants_attachments\AttachmentHandler;
+use Drupal\grants_formnavigation\GrantsFormNavigationHelper;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
@@ -133,6 +134,8 @@ class GrantsHandler extends WebformHandlerBase {
    */
   protected array $formTemp;
 
+  protected GrantsFormNavigationHelper $grantsFormNavigationHelper;
+
   /**
    * {@inheritdoc}
    */
@@ -155,10 +158,13 @@ class GrantsHandler extends WebformHandlerBase {
     /** @var \Drupal\grants_handler\ApplicationHandler */
     $instance->applicationHandler = \Drupal::service('grants_handler.application_handler');
 
+    $instance->grantsFormNavigationHelper = \Drupal::service('grants_formnavigation.helper');
+
     $instance->applicationHandler->setDebug($instance->isDebug());
     $instance->attachmentHandler->setDebug($instance->isDebug());
 
     $instance->triggeringElement = '';
+    $instance->applicationNumber = '';
 
     return $instance;
   }
@@ -370,10 +376,6 @@ class GrantsHandler extends WebformHandlerBase {
       $this->applicationTypeID = $webform_submission->getWebform()
         ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
     }
-    else {
-      $serial = $webform_submission->serial();
-      $d = 'asdf';
-    }
 
     // If submission has applicant type set, ie we're editing submission
     // use that, if not then get selected from profile.
@@ -480,7 +482,7 @@ class GrantsHandler extends WebformHandlerBase {
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
 
     if (!isset($this->submittedFormData['application_number'])) {
-      if (!isset($this->applicationNumber)) {
+      if (!isset($this->applicationNumber) || $this->applicationNumber == '') {
         $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
       }
       $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
@@ -490,9 +492,6 @@ class GrantsHandler extends WebformHandlerBase {
     else {
       $this->applicationNumber = $this->submittedFormData['application_number'];
     }
-
-    $state = $webform_submission->getState();
-    $isDraft = $webform_submission->isDraft();
 
     // If triggering element is either draft save or proper one,
     // we want to parse attachments from form.
@@ -597,24 +596,8 @@ class GrantsHandler extends WebformHandlerBase {
 
     parent::validateForm($form, $form_state, $webform_submission);
 
-    // Because of funky naming convention, we need to manually
-    // set purpose field value.
-    // This is populated from grants profile so it's just passing this on.
-    if (isset($this->submittedFormData["community_purpose"])) {
-      $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
-    }
-
-    $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
-    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
-
-    foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
-      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
-      unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
-    }
-    foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
-      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
-      unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
-    }
+    $form_errors = $form_state->getErrors();
+    $current_errors = $this->grantsFormNavigationHelper->getPagedErrors($form_state, $webform_submission);
 
     if ($this->getTriggeringElementName($form_state) == '::submit') {
 
@@ -627,8 +610,6 @@ class GrantsHandler extends WebformHandlerBase {
           $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
         );
       }
-
-      $formErrors = $form_state->getErrors();
 
       // If (empty($formErrors)) {
       // $applicationData = $this->applicationHandler->getApplicationData(
@@ -662,7 +643,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   protected function getTriggeringElementName(?FormStateInterface $form_state): mixed {
 
-    if (!isset($this->triggeringElement)) {
+    if ($this->triggeringElement == '') {
       $triggeringElement = $form_state->getTriggeringElement();
       if (is_string($triggeringElement['#submit'][0])) {
         $this->triggeringElement = $triggeringElement['#submit'][0];
@@ -677,6 +658,25 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
+
+    // Because of funky naming convention, we need to manually
+    // set purpose field value.
+    // This is populated from grants profile so it's just passing this on.
+    if (isset($this->submittedFormData["community_purpose"])) {
+      $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
+    }
+
+    $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
+    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
+
+    foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
+      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
+    }
+    foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
+      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
+    }
 
     $dt = new \DateTime();
 
@@ -703,6 +703,7 @@ class GrantsHandler extends WebformHandlerBase {
         if ($webform_submission->id()) {
           $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
         }
+        $serial = $webform_submission->serial();
         $this->submittedFormData['application_number'] = $this->applicationNumber;
       }
     }
