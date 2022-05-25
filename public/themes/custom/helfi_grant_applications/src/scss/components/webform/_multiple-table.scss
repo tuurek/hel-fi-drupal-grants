@@ -8,8 +8,6 @@
   .webform-multiple-table--operations-two {
     min-width: 60px;
   }
-  tbody, thead {
-  }
   tbody tr, thead tr {
     width: 100%;
     justify-content: space-between;
@@ -28,9 +26,6 @@
     min-width: 0;
     max-width: 100%;
     width: 100%;
-  }
-  td.webform-multiple-table--handle, td.webform-multiple-table--operations {
-
   }
   table thead th {
     padding: var(--spacing-layout-2-xs);
