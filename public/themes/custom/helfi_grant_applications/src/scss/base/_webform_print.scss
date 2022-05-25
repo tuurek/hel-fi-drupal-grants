@@ -1,10 +1,9 @@
-.webform-submission-data-preview-page, .webform-print-page-html {
+.webform-submission--view-mode-html, .webform-submission-data-preview-page, .webform-print-page-html {
   .webform-print-wrapper-table {
     border: 0px transparent solid;
     width: 100%;
     max-width: 100%;
     overflow-x: initial;
-
     thead,
     tbody,
     tfoot,
@@ -34,7 +33,9 @@
     tfoot {
       display: table-footer-group;
     }
-    .webform-submission-data > section {
+  }
+
+  .webform-submission-data > section {
       border-top: 1px var(--color-black-20) solid;
       padding-top: $spacing-quadruple;
       > .webform-section-flex-wrapper {
@@ -53,7 +54,6 @@
             font-weight: 500;
           }
         }
-      }
     }
   }
 
