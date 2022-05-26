@@ -445,8 +445,9 @@ class ApplicationHandler {
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \Drupal\helfi_atv\AtvFailedToConnectException
    * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \Drupal\Core\TempStore\TempStoreException
    */
-  protected function getAtvDocument(string $transactionId): AtvDocument {
+  public function getAtvDocument(string $transactionId): AtvDocument {
 
     if (!isset($this->atvDocument)) {
       $res = $this->atvService->searchDocuments([

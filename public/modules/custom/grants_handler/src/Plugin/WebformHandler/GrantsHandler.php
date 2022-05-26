@@ -7,15 +7,19 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\Url;
 use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_formnavigation\GrantsFormNavigationHelper;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
+use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -452,28 +456,59 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Method to figure out if formUpdate should be false/true?
    *
-   * The thing is that the Avustus2 is not very clear about when it fetches
+   * The thing is that the Avustus2 is not very smart about when it fetches
    * data from ATV. Initial import from ATV MUST have fromUpdate FALSE, and
-   * any subsequent update will have to have it as FALSE. The application status
+   * any subsequent update will have to have it as TRUE. The application status
    * handling makes this possibly very complicated, hence separate method
    * figuring it out.
    *
-   * @param \Drupal\webform\Entity\WebformSubmission $webformSubmission
-   *   Submission being saved. If status of submission is needed.
+   * @return bool
+   *   Set form update value either TRUE / FALSE
    */
-  private function setFormUpdate(WebformSubmission $webformSubmission) {
-    if (!isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'DRAFT') {
-      $this->submittedFormData['form_update'] = FALSE;
+  private function getFormUpdate(): bool {
+
+    $applicationNumber = !empty($this->applicationNumber) ? $this->applicationNumber : $this->submittedFormData["application_number"];
+    $newStatus = $this->submittedFormData["status"];
+    $oldStatus = '';
+
+    if ($applicationNumber != '') {
+      // Get document from ATV.
+      try {
+        $document = $this->applicationHandler->getAtvDocument($applicationNumber);
+        $oldStatus = $document->getStatus();
+      }
+      catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      }
     }
-    elseif (!isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'SUBMITTED') {
-      $this->submittedFormData['form_update'] = FALSE;
+    // If new status is submitted, ie save to Avus2..
+    if ($newStatus == ApplicationHandler::$applicationStatuses['SUBMITTED']) {
+      // ..and if application is not yet in Avus2, form update needs to be FALSE
+      // or we get error updating nonexistent application
+      if ($oldStatus == ApplicationHandler::$applicationStatuses['DRAFT']) {
+        return FALSE;
+      }
+      // also, if this is new application but put directly to submitted mode,
+      // we need to have update also FALSE.
+      elseif ($oldStatus == '') {
+        return FALSE;
+      }
+      // In all other cases we can have update as TRUE since we want to
+      // actually update data in Avus2 & ATV.
+      else {
+        return TRUE;
+      }
     }
-    elseif (isset($this->submittedFormData['application_number']) && $this->submittedFormData['status'] === 'SUBMITTED') {
-      $this->submittedFormData['form_update'] = FALSE;
+
+    // If new status is DRAFT, we don't really care about this value since
+    // these are not uploaded to Avus2 just put it to false in case of some
+    // other things need this.
+    if ($newStatus == ApplicationHandler::$applicationStatuses['DRAFT']) {
+      return FALSE;
     }
-    else {
-      $this->submittedFormData['form_update'] = TRUE;
-    }
+
+    // In other statuses and situations we can just return true bc we want to
+    // actually update data.
+    return TRUE;
   }
 
   /**
@@ -578,9 +613,6 @@ class GrantsHandler extends WebformHandlerBase {
       if (ApplicationHandler::canSubmissionBeSubmitted($webform_submission, NULL)) {
         $this->submittedFormData['status'] = ApplicationHandler::$applicationStatuses['SUBMITTED'];
       }
-
-      $d = 'adsf';
-
     }
 
   }
@@ -659,6 +691,8 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
 
+    $triggeringElement = $this->getTriggeringElementName($form_state);
+
     // Because of funky naming convention, we need to manually
     // set purpose field value.
     // This is populated from grants profile so it's just passing this on.
@@ -669,6 +703,13 @@ class GrantsHandler extends WebformHandlerBase {
     $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
     $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
 
+    if ($triggeringElement == '::submit') {
+      // Try to update status only if it's allowed.
+      if (ApplicationHandler::canSubmissionBeSubmitted($webform_submission, NULL)) {
+        $this->submittedFormData['status'] = ApplicationHandler::$applicationStatuses['SUBMITTED'];
+      }
+    }
+
     foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
       $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
       unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
@@ -678,8 +719,9 @@ class GrantsHandler extends WebformHandlerBase {
       unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
     }
 
+    // Set form timestamp to current time.
+    // apparently this is always set to latest submission.
     $dt = new \DateTime();
-
     $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
 
@@ -690,24 +732,30 @@ class GrantsHandler extends WebformHandlerBase {
     $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
     $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s');
 
-    // This needs to be called before setting applicationNumber
-    // with new submission.
-    $this->setFormUpdate($webform_submission);
+    // Set form update value based on new & old status + Avus2 logic.
+    $this->submittedFormData["form_update"] = $this->getFormUpdate();
 
+    // If for some reason we don't have application number at this point.
     if (!isset($this->applicationNumber)) {
+      // But if one is coming from form (hidden field)
       if (isset($this->submittedFormData['application_number'])) {
+        // Use it.
         $this->applicationNumber = $this->submittedFormData['application_number'];
       }
       else {
-        // If we have an existing submission, then load application number.
+        // But if we have saved webform earlier, we can get the application
+        // number from submission serial.
         if ($webform_submission->id()) {
           $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
         }
-        $serial = $webform_submission->serial();
-        $this->submittedFormData['application_number'] = $this->applicationNumber;
+        // Hopefully we never reach here, but there should be additional checks
+        // for application number to exists.
+        // and it's no biggie since we can always get it from the method above
+        // as long as we have our submission object.
       }
     }
 
+    // Make sure we have application type id set.
     if (!isset($this->applicationTypeID)) {
       if (isset($this->submittedFormData['application_type_id'])) {
         $this->applicationTypeID = $this->submittedFormData['application_type_id'];
@@ -719,6 +767,7 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
+    // Make sure we have our application type set.
     if (!isset($this->applicationType)) {
       if (isset($this->submittedFormData['application_type'])) {
         $this->applicationTypeID = $this->submittedFormData['application_type'];
@@ -730,9 +779,13 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
+    // These need to be set here to the handler object, bc we do the saving to
+    // ATV in postSave and in that method these are not available.
+    // and the triggering element is pivotal in figuring if we're
+    // saving draft or not.
     $this->triggeringElement = $this->getTriggeringElementName($form_state);
+    // Form values are needed for parsing attachment in postSave.
     $this->formTemp = $form;
-
   }
 
   /**
