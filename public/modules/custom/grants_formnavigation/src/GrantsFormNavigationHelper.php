@@ -99,12 +99,12 @@ class GrantsFormNavigationHelper {
    */
   public function __construct(
     WebformSubmissionLogManager $webform_submission_log_manager,
-    Connection $datababse,
-    MessengerInterface $messenger,
-    EntityTypeManagerInterface $entity_type_manager,
-    FormBuilderInterface $form_builder,
-    HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
-    PrivateTempStoreFactory $tempStoreFactory
+    Connection                  $datababse,
+    MessengerInterface          $messenger,
+    EntityTypeManagerInterface  $entity_type_manager,
+    FormBuilderInterface        $form_builder,
+    HelsinkiProfiiliUserData    $helsinkiProfiiliUserData,
+    PrivateTempStoreFactory     $tempStoreFactory
   ) {
 
     $this->webformSubmissionLogManager = $webform_submission_log_manager;
@@ -226,10 +226,11 @@ class GrantsFormNavigationHelper {
         'operation' => self::PAGE_VISITED_OPERATION,
         'handler_id' => self::HANDLER_ID,
         'uid' => \Drupal::currentUser()->id(),
-        'user_uuid' => $userData['sub'],
+        'user_uuid' => $userData['sub'] ?? '',
         'data' => $page,
         'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
+
       $query = $this->database->insert(self::TABLE, $fields);
       $query->fields($fields)->execute();
     }

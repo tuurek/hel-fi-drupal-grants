@@ -49,6 +49,7 @@ function grants_formnavigation_schema() {
         'type' => 'varchar',
         'length' => 40,
         'not null' => TRUE,
+        'default' => '',
       ],
       'operation' => [
         'type' => 'varchar',
