@@ -95,7 +95,13 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
   $form_object = $form_state->getFormObject();
-
+  if ($element['#type'] == 'webform_multiple') {
+    if (isset($element['#multiple__header']) && $element['#multiple__header'] === TRUE) {
+      $element['#wrapper_attributes']['class'][] = 'table-layout-form';
+    } else {
+      $element['#wrapper_attributes']['class'][] = 'hidden-head';
+    }
+  }
   if (get_class($form_object) == 'Drupal\webform\WebformSubmissionForm') {
     /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
     $webformSubmission = $form_object->getEntity();
@@ -369,7 +375,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
         t('Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'), t('Lisää toiminnan kuvaus'),
         t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
     }
-    
+
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
       $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number_select"]["#default_value"] = $form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"];
     }

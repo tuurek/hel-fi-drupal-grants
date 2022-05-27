@@ -1,7 +1,12 @@
 .webform-element-help {
   background: var(--color-white);
   color: var(--hdbt-color-black);
-  border-color: var(--hdbt-color-black);
+  border: 2px solid transparent;
+  width: var(--spacing-layout-xs);
+  height: var(--spacing-layout-xs);
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .tippy-box {
   background-color: var(--color-black-5);

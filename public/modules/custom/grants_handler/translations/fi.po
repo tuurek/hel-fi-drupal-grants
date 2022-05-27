@@ -60,3 +60,15 @@ msgstr 'Avustustyypin koodi'
 
 msgid 'Subvention amount'
 msgstr 'Avustussumma'
+
+msgid 'Select address'
+msgstr 'Valitse osoite'
+
+msgid 'Select official'
+msgstr 'Valitse vastaava henkilö'
+
+msgid 'Select account'
+msgstr 'Valitse tilinumero'
+
+msgid 'Bank account'
+msgstr 'Tilinumero'
