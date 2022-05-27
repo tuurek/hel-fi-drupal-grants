@@ -66,8 +66,10 @@
   </div>
 
   <div tabindex="0" role="tabpanel" id="applications-tab" aria-labelledby="applications" class="is-hidden tabs--content-wrapper">
-    {% if applications %}
-      {{ applications }}
-    {% endif %}
-´  </div>
+    <div class="container">
+      {% if applications %}
+        {{ applications }}
+      {% endif %}
+    </div>
+  </div>
 </div>

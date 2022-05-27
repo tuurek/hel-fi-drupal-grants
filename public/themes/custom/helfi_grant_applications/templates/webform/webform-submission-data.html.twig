@@ -17,21 +17,26 @@
     'webform-submission-data--webform-' ~ webform.id()|clean_class,
     view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
 ] %}
+<div class="container">
+  <h3 id="submission-application-number">{{ applicationNumber }}</h3>
 
-<h3 id="submission-application-number">{{ applicationNumber }}</h3>
-
-<div id="message-form-wrapper">
+  <div id="message-form-wrapper">
     {{ messages }}
-</div>
+  </div>
 
-<div>
+  <div>
     {{ events }}
-</div>
+  </div>
 
-<div>
+  <div>
     {{ history }}
-</div>
+  </div>
 
-<div{{ attributes.addClass(classes) }}>
+  <div{{ attributes.addClass(classes) }}>
     {{ elements }}
+  </div>
+  <a class="hds-button hds-button--secondary" href="{{ webform_submission.id() }}/edit">
+    <span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>
+    <span class="hds-button__label">{{ 'Edit submission'|t }}</span>
+  </a>
 </div>

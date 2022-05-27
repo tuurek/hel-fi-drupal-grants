@@ -33,7 +33,7 @@ class CompensationsComposite extends WebformCompositeBase {
     // ];
     $elements['subventionTypeTitle'] = [
       '#type' => 'textfield',
-      '#title' => t('Subvention Name'),
+      '#title' => t('Subvention name'),
       '#attributes' => ['readonly' => 'readonly'],
     ];
     $elements['subventionType'] = [
@@ -44,7 +44,9 @@ class CompensationsComposite extends WebformCompositeBase {
     $elements['amount'] = [
       '#type' => 'textfield',
       '#title' => t('Subvention amount'),
-      // '#required' => TRUE,
+      '#required' => TRUE,
+      '#input_mask' => "'alias': 'currency', 'prefix': '', 'suffix': '€','groupSeparator': ' ','radixPoint':','",
+      '#attributes' => ['class' => ['input--borderless']],
     ];
 
     return $elements;

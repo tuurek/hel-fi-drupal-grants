@@ -96,7 +96,13 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
   $form_object = $form_state->getFormObject();
-
+  if ($element['#type'] == 'webform_multiple') {
+    if (isset($element['#multiple__header']) && $element['#multiple__header'] === TRUE) {
+      $element['#wrapper_attributes']['class'][] = 'table-layout-form';
+    } else {
+      $element['#wrapper_attributes']['class'][] = 'hidden-head';
+    }
+  }
   if (get_class($form_object) == 'Drupal\webform\WebformSubmissionForm') {
     /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
     $webformSubmission = $form_object->getEntity();
@@ -288,6 +294,12 @@ function _grants_handler_imported_handler(
   $array['#description'] = \Drupal\Core\Field\FieldFilteredMarkup::create($show_checkmark ? $value .
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
+  if ($show_checkmark === FALSE) {
+    $array['#field_suffix'] = '<a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">'.t('Edit').'</span>
+          </a>';
+  }
+
 }
 
 /**
