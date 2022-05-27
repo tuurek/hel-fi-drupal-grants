@@ -106,7 +106,7 @@ trait ApplicationDefinitionTrait {
       ->addConstraint('NotBlank')
       ->addConstraint('Email');
 
-    $info['applicant_officials'] = ListDataDefinition::create('grants_profile_application_official')
+    $info['community_officials'] = ListDataDefinition::create('grants_profile_application_official')
       // ->setRequired(TRUE)
       ->setSetting('jsonPath', ['compensation', 'applicantOfficialsArray'])
       ->setSetting('defaultValue', [])
@@ -132,7 +132,7 @@ trait ApplicationDefinitionTrait {
       ])
       ->addConstraint('NotBlank');
 
-    $info['contact_person_street'] = DataDefinition::create('string')
+    $info['community_street'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('currentAddressInfoArray=>street')
       ->setSetting('jsonPath', [
@@ -142,7 +142,7 @@ trait ApplicationDefinitionTrait {
       ])
       ->addConstraint('NotBlank');
 
-    $info['contact_person_city'] = DataDefinition::create('string')
+    $info['community_city'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('currentAddressInfoArray=>city')
       ->setSetting('jsonPath', [
@@ -152,7 +152,7 @@ trait ApplicationDefinitionTrait {
       ])
       ->addConstraint('NotBlank');
 
-    $info['contact_person_post_code'] = DataDefinition::create('string')
+    $info['community_post_code'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('currentAddressInfoArray=>postCode')
       ->setSetting('jsonPath', [
@@ -162,7 +162,7 @@ trait ApplicationDefinitionTrait {
       ])
       ->addConstraint('NotBlank');
 
-    $info['contact_person_country'] = DataDefinition::create('string')
+    $info['community_country'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
       ->setLabel('currentAddressInfoArray=>country')
       ->setSetting('jsonPath', [

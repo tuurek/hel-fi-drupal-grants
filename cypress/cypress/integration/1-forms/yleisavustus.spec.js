@@ -45,26 +45,35 @@ describe('Login, cookies, Profile, Applicant type, Yleisavustushakemus.', () => 
         cy.get('[data-drupal-selector="edit-email"]').type('testi@mailiosoite.com')
 
         // company details
-        cy.get('[data-drupal-selector="edit-contact-person-street"]').type('Katuosoite 12 a 34')
-        cy.get('[data-drupal-selector="edit-contact-person-post-code"]').type('00870')
-        cy.get('[data-drupal-selector="edit-contact-person-city"]').type('00870')
-        cy.get('[data-drupal-selector="edit-contact-person-country"]').type('00870')
-        cy.get('[data-drupal-selector="edit-contact-person"]').type('00870')
-        cy.get('[data-drupal-selector="edit-contact-person-phone-number"]').type('00870')
+        cy.get('[data-drupal-selector="edit-contact-person"]').type('Calle Kontaktihenkilö')
+        cy.get('[data-drupal-selector="edit-contact-person-phone-number"]').type('0509821346')
 
         // account number selection / value
-        cy.get('[data-drupal-selector="edit-account-number-select"]').select(1).then((value) => {
-            cy.get('[data-drupal-selector="edit-account-number"]').should('have.value', value.val())
+        cy.get('[data-drupal-selector="edit-community-address-community-address-select"]').select(1).then((value) => {
+            cy.get('[data-drupal-selector="edit-community-address-community-address-select"]').should('have.value', value.val())
         })
 
-        cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-name"]').type('00870')
+        // cy.get('[data-drupal-selector="edit-contact-person-street"]').type('Katuosoite 12 a 34')
+        // cy.get('[data-drupal-selector="edit-contact-person-post-code"]').type('00870')
+        // cy.get('[data-drupal-selector="edit-contact-person-city"]').type('00870')
+        // cy.get('[data-drupal-selector="edit-contact-person-country"]').type('00870')
 
-        cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-role"]').select(1).then((value) => {
-            cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-role"]').should('have.value', value.val())
+
+        // account number selection / value
+        cy.get('[data-drupal-selector="edit-bank-account-account-number-select"]').selectNth(1).then((value) => {
+            cy.get('[data-drupal-selector="edit-bank-account-account-number-select"]').should('have.value', value.val())
         })
 
-        cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-email"]').type('testi@maili.com')
-        cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-phone"]').type('00870')
+        cy.get('[data-drupal-selector="edit-community-officials-items-0-item-community-officials-select"]').select(1).then((value) => {
+            cy.get('[data-drupal-selector="edit-community-officials-items-0-item-community-officials-select"]').should('have.value', value.val())
+        })
+
+        // cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-name"]').type('00870')
+        // cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-role"]').select(1).then((value) => {
+        //     cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-role"]').should('have.value', value.val())
+        // })
+        // cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-email"]').type('testi@maili.com')
+        // cy.get('[data-drupal-selector="edit-applicant-officials-items-0-item-phone"]').type('00870')
 
         cy.get('[data-drupal-selector="edit-actions-wizard-next"]').click()
 

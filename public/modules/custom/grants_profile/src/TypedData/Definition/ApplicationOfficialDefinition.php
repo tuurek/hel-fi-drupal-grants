@@ -18,28 +18,28 @@ class ApplicationOfficialDefinition extends ComplexDataDefinitionBase {
       $info = &$this->propertyDefinitions;
 
       $info['name'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
         ->setLabel('Nimi')
         ->setSetting('jsonPath', ['grantsProfile', 'officialsArray', 'name'])
+        ->setRequired(TRUE)
         ->addConstraint('NotBlank');
 
       $info['role'] = DataDefinition::create('integer')
-        ->setRequired(TRUE)
         ->setLabel('Rooli')
         ->setSetting('jsonPath', ['grantsProfile', 'officialsArray', 'role'])
-        ->addConstraint('NotBlank');
+        ->addConstraint('NotBlank')
+        ->setRequired(TRUE);
 
       $info['email'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
         ->setLabel('Sähköposti')
         ->setSetting('jsonPath', ['grantsProfile', 'officialsArray', 'email'])
+        ->addConstraint('Email')
         ->addConstraint('NotBlank')
-        ->addConstraint('Email');
+        ->setRequired(TRUE);
 
       $info['phone'] = DataDefinition::create('string')
-        ->setRequired(TRUE)
         ->setLabel('Puhelinnumero')
         ->setSetting('jsonPath', ['grantsProfile', 'officialsArray', 'phone'])
+        ->setRequired(TRUE)
         ->addConstraint('NotBlank');
 
     }

@@ -30,11 +30,27 @@ grants_profile.company_addresses:
   requirements:
     _permission: 'administer own grants_profile'
 
+grants_profile.company_addresses.remove:
+  path: '/grants-profile/address/{address_id}/delete'
+  defaults:
+    _title: 'Delete addresses'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteAddress'
+  requirements:
+    _permission: 'administer own grants_profile'
+
 grants_profile.company_address_form:
   path: '/grants-profile/address/{address_id}'
   defaults:
     _title: 'Add / edit address'
     _form: '\Drupal\grants_profile\Form\AddressForm'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.company_address_modal_form:
+  path: '/grants-profile/address-modal/{address_id}/{nojs}'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\ModalAddressForm'
+    _title: 'Edit address'
   requirements:
     _permission: 'administer own grants_profile'
 
@@ -54,6 +70,22 @@ grants_profile.application_official_form:
   requirements:
     _permission: 'administer own grants_profile'
 
+grants_profile.application_official_modal_form:
+  path: '/grants-profile/application-official-modal/{official_id}/{nojs}'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\ModalApplicationOfficialForm'
+    _title: 'Edit official'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.application_official.remove:
+  path: '/grants-profile/application-officials/{official_id}/delete'
+  defaults:
+    _title: 'Delete official'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteOfficial'
+  requirements:
+    _permission: 'administer own grants_profile'
+
 grants_profile.bank_account:
   path: '/grants-profile/bank-accounts'
   defaults:
@@ -67,6 +99,22 @@ grants_profile.bank_account_form:
   defaults:
     _title: 'Bank account'
     _form: 'Drupal\grants_profile\Form\BankAccountForm'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.bank_account_form_modal_form:
+  path: '/grants-profile/bank-accounts-modal/{bank_account_id}/{nojs}'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\ModalBankAccountForm'
+    _title: 'Edit bank account'
+  requirements:
+    _permission: 'administer own grants_profile'
+
+grants_profile.bank_account.remove:
+  path: '/grants-profile/bank-accounts/{bank_account_id}/delete'
+  defaults:
+    _title: 'Delete bank account'
+    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteBankAccount'
   requirements:
     _permission: 'administer own grants_profile'
 

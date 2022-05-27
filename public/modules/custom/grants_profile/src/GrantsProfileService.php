@@ -100,13 +100,13 @@ class GrantsProfileService {
    *   Logger service.
    */
   public function __construct(
-    AtvService $helfi_atv,
-    PrivateTempStoreFactory $tempstore,
-    MessengerInterface $messenger,
+    AtvService               $helfi_atv,
+    PrivateTempStoreFactory  $tempstore,
+    MessengerInterface       $messenger,
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
-    AtvSchema $atv_schema,
-    YjdhClient $yjdhClient,
-    LoggerChannelFactory $loggerFactory
+    AtvSchema                $atv_schema,
+    YjdhClient               $yjdhClient,
+    LoggerChannelFactory     $loggerFactory
   ) {
     $this->atvService = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
@@ -268,8 +268,7 @@ class GrantsProfileService {
                   '%id' => $fileEntity->id(),
                 ]
               ));
-            }
-            catch (EntityStorageException $e) {
+            } catch (EntityStorageException $e) {
               $this->logger->error($this->t(
                 'File deleting failed: %id.',
                 [
@@ -287,10 +286,10 @@ class GrantsProfileService {
             ));
 
             $this->messenger->addError(
-                        $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
-                          ['%account' => $bank_account['bankAccount']]
-                        )
-                      );
+              $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
+                ['%account' => $bank_account['bankAccount']]
+              )
+            );
           }
 
         }
@@ -319,6 +318,9 @@ class GrantsProfileService {
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
     $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
 
+    // reset keys
+    $addresses = array_values($addresses);
+
     if ($address_id == 'new') {
       $nextId = count($addresses);
     }
@@ -327,6 +329,23 @@ class GrantsProfileService {
     }
 
     $addresses[$nextId] = $address;
+    $profileContent['addresses'] = $addresses;
+    return $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Remove address from profile & CACHE.
+   *
+   * @param string $address_id
+   *   Address id in store.
+   */
+  public function removeAddress(string $address_id): bool {
+    $selectedCompany = $this->getSelectedCompany();
+    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
+
+    unset($addresses[$address_id]);
+
     $profileContent['addresses'] = $addresses;
     return $this->setToCache($selectedCompany, $profileContent);
   }
@@ -441,6 +460,9 @@ class GrantsProfileService {
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
     $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
 
+    // reset keys
+    $officials = array_values($officials);
+
     if ($official_id == 'new') {
       $nextId = count($officials);
     }
@@ -450,7 +472,24 @@ class GrantsProfileService {
 
     $officials[$nextId] = $official;
     $profileContent['officials'] = $officials;
-    $this->setToCache($selectedCompany, $profileContent);
+    return $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Remove official from profile data & save to CACHE.
+   *
+   * @param string $official_id
+   *   Id to save, "new" if adding a new.
+   */
+  public function removeOfficial(string $official_id) {
+    $selectedCompany = $this->getSelectedCompany();
+    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
+
+    unset($officials[(int) $official_id]);
+
+    $profileContent['officials'] = $officials;
+    return $this->setToCache($selectedCompany, $profileContent);
   }
 
   /**
@@ -466,6 +505,9 @@ class GrantsProfileService {
     $profileContent = $this->getGrantsProfileContent($selectedCompany);
     $bankAccounts = (isset($profileContent['bankAccounts']) && $profileContent['bankAccounts'] !== NULL) ? $profileContent['bankAccounts'] : [];
 
+    // reset keys
+    $bankAccounts = array_values($bankAccounts);
+
     if ($bank_account_id == 'new') {
       $nextId = count($bankAccounts);
     }
@@ -474,6 +516,23 @@ class GrantsProfileService {
     }
 
     $bankAccounts[$nextId] = $bank_account;
+    $profileContent['bankAccounts'] = $bankAccounts;
+    $this->setToCache($selectedCompany, $profileContent);
+  }
+
+  /**
+   * Save bank account to ATV.
+   *
+   * @param string $bank_account_id
+   *   Id to save, "new" if adding a new.
+   */
+  public function removeBankAccount(string $bank_account_id) {
+    $selectedCompany = $this->getSelectedCompany();
+    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $bankAccounts = (isset($profileContent['bankAccounts']) && $profileContent['bankAccounts'] !== NULL) ? $profileContent['bankAccounts'] : [];
+
+    unset($bankAccounts[$bank_account_id]);
+
     $profileContent['bankAccounts'] = $bankAccounts;
     $this->setToCache($selectedCompany, $profileContent);
   }
@@ -610,8 +669,7 @@ class GrantsProfileService {
     // Get profile document from ATV.
     try {
       $profileDocument = $this->getGrantsProfileFromAtv($businessId, $refetch);
-    }
-    catch (AtvDocumentNotFoundException $e) {
+    } catch (AtvDocumentNotFoundException $e) {
       $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
       $this->logger->info($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
       // Initialize new profile.
@@ -651,11 +709,9 @@ class GrantsProfileService {
 
     try {
       $searchDocuments = $this->atvService->searchDocuments($searchParams, $refetch);
-    }
-    catch (AtvFailedToConnectException) {
+    } catch (AtvFailedToConnectException) {
       throw new AtvDocumentNotFoundException('Not found');
-    }
-    catch (GuzzleException $e) {
+    } catch (GuzzleException $e) {
       throw $e;
     }
 
@@ -737,7 +793,7 @@ class GrantsProfileService {
    * @return array|\Drupal\helfi_atv\AtvDocument|null
    *   Data in cache or null
    */
-  private function getFromCache(string $key): array|AtvDocument|NULL {
+  private function getFromCache(string $key): array|AtvDocument|null {
     $retval = !empty($this->tempStore->get($key)) ? $this->tempStore->get($key) : NULL;
     return $retval;
   }
@@ -779,8 +835,7 @@ class GrantsProfileService {
         $this->tempStore->set($key, $grantsProfile);
         return TRUE;
       }
-    }
-    catch (TempStoreException $e) {
+    } catch (TempStoreException $e) {
       return FALSE;
     }
   }
