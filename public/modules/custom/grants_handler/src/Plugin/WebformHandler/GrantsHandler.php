@@ -467,7 +467,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   private function getFormUpdate(): bool {
 
-    $applicationNumber = !empty($this->applicationNumber) ? $this->applicationNumber : $this->submittedFormData["application_number"];
+    $applicationNumber = !empty($this->applicationNumber) ? $this->applicationNumber : $this->submittedFormData["application_number"] ?? '';
     $newStatus = $this->submittedFormData["status"];
     $oldStatus = '';
 
@@ -476,8 +476,7 @@ class GrantsHandler extends WebformHandlerBase {
       try {
         $document = $this->applicationHandler->getAtvDocument($applicationNumber);
         $oldStatus = $document->getStatus();
-      }
-      catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      } catch (TempStoreException|AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
       }
     }
     // If new status is submitted, ie save to Avus2..
@@ -621,8 +620,8 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function validateForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission
   ) {
 
@@ -792,8 +791,8 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function confirmForm(
-    array &$form,
-    FormStateInterface $form_state,
+    array                      &$form,
+    FormStateInterface         $form_state,
     WebformSubmissionInterface $webform_submission) {
 
     try {
@@ -860,8 +859,7 @@ class GrantsHandler extends WebformHandlerBase {
               ]));
       }
 
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $d = 'asdf';
     }
 

@@ -39,8 +39,8 @@
         "drupal/oembed_providers": "^2.0",
         "drupal/webform": "^6.0",
         "drupal/webform_rest": "^4.0",
+        "drupal/webform_submission_log": "^6.1",
         "drupal/webform_views": "^5.0@alpha",
-        "drupal/webformnavigation": "^2.0@RC",
         "drush/drush": "^10.4",
         "globalcitizen/php-iban": "^4.1"
     },

@@ -104,7 +104,7 @@ elements: |-
         '#markup': 'Yhteyshenki&ouml;lle l&auml;hetet&auml;&auml;n hakemukseen liittyvi&auml; yhteydenottoja kuten t&auml;ydennys- ja lis&auml;selvityspyynt&ouml;j&auml;. Ilmoita tässä sellainen sähköpostiosoite, jota luetaan aktiivisesti.'
       contact_person:
         '#type': textfield
-        '#title': 'Yhteyshenkilö'
+        '#title': Yhteyshenkilö
         '#autocomplete': 'off'
         '#required': true
         '#size': 63
@@ -117,7 +117,7 @@ elements: |-
         '#help': 'Ilmoita s&auml;hk&ouml;postiosoite, johon t&auml;h&auml;n hakemukseen liittyvät viestit sek&auml; her&auml;tteet osoitetaan ja jota luetaan aktiivisesti'
       contact_person_phone_number:
         '#type': textfield
-        '#title': 'Puhelinnumero'
+        '#title': Puhelinnumero
         '#required': true
         '#autocomplete': 'off'
         '#size': 32
