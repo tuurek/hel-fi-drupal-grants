@@ -3,6 +3,7 @@
 namespace Drupal\grants_handler\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_profile\Form\ApplicationOfficialForm;
 use Drupal\webform\Element\WebformCompositeBase;
 
 /**
@@ -87,7 +88,7 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-
+    $officialRole = ApplicationOfficialForm::getOfficialRoles();
     $selectedCompany = $grantsProfileService->getSelectedCompany();
     $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
@@ -98,7 +99,7 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
     ];
     foreach ($profileData['officials'] as $delta => $official) {
       $deltaString = (string) $delta;
-      $optionSelection = $official['name'];
+      $optionSelection = $official['name'] . ' (' . $officialRole[$official['role']] . ')';
       $options[$deltaString] = $optionSelection;
     }
 
