@@ -88,9 +88,8 @@ class CommunityAddressComposite extends WebformCompositeBase {
 
     $formValues = $form_state->getValues();
     $formSelection = $formValues['community_address']['community_street'] . ', ' .
-      $formValues['community_address']['community_post_code'] . ', ' .
-      $formValues['community_address']['community_city'] . ', ' .
-      $formValues['community_address']['community_country'];
+      $formValues['community_address']['community_post_code'] . ' ' .
+      $formValues['community_address']['community_city'];
 
     $defaultDelta = '0';
 
@@ -100,7 +99,7 @@ class CommunityAddressComposite extends WebformCompositeBase {
     foreach ($profileData['addresses'] as $delta => $address) {
       $deltaString = (string) $delta;
       $optionSelection = $address['street'] . ', ' . $address['postCode'] .
-        ', ' . $address['city'] . ', ' . $address['country'];
+        ' ' . $address['city'];
       $options[$deltaString] = $optionSelection;
 
       if ($formSelection == $optionSelection) {

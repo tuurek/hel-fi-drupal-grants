@@ -132,7 +132,10 @@
 div.grants-handler--prefilled-field, .grants-profile-prh-info {
   min-width: 100%;
   .field-suffix {
-    float:right;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: var(--spacing-layout-2-xs);
   }
   .description {
     white-space: normal;
