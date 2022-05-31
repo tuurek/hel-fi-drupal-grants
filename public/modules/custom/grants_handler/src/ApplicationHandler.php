@@ -20,6 +20,8 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -154,13 +156,13 @@ class ApplicationHandler {
    *   Messenger.
    */
   public function __construct(
-    ClientInterface $http_client,
+    ClientInterface          $http_client,
     HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata,
-    AtvService $atvService,
-    AtvSchema $atvSchema,
-    GrantsProfileService $grantsProfileService,
-    LoggerChannelFactory $loggerChannelFactory,
-    Messenger $messenger
+    AtvService               $atvService,
+    AtvSchema                $atvSchema,
+    GrantsProfileService     $grantsProfileService,
+    LoggerChannelFactory     $loggerChannelFactory,
+    Messenger                $messenger
   ) {
 
     $this->httpClient = $http_client;
@@ -332,6 +334,17 @@ class ApplicationHandler {
   }
 
   /**
+   * @param string $applicationNumber
+   *
+   * @return array
+   */
+  public static function getSerialFromApplicationNumber(string $applicationNumber): string {
+    $exploded = explode('-', $applicationNumber);
+    $number = end($exploded);
+    return ltrim($number, '0');
+  }
+
+  /**
    * Get submission object from local database & fill form data from ATV.
    *
    * Or if local submission is not found, create new and set data.
@@ -345,12 +358,11 @@ class ApplicationHandler {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    */
   public static function submissionObjectFromApplicationNumber(string $applicationNumber): ?WebformSubmission {
 
-    $exploded = explode('-', $applicationNumber);
-    $number = end($exploded);
-    $submissionSerial = ltrim($number, '0');
+    $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
 
     $result = \Drupal::entityTypeManager()
       ->getStorage('webform_submission')
@@ -367,45 +379,48 @@ class ApplicationHandler {
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-      try {
-        // Create submission.
-        // @todo remove hardcoded form type at some point.
-        $createdSubmissionObject = WebformSubmission::create([
-          'webform_id' => 'yleisavustushakemus',
-          'serial' => $submissionSerial,
-        ]);
-        // Make sure serial is set.
-        $createdSubmissionObject->set('serial', $submissionSerial);
 
-        // Get document from ATV.
-        $document = $atvService->searchDocuments([
-          'transaction_id' => $applicationNumber,
-        ],
-          TRUE);
+      throw new AtvDocumentNotFoundException('Submission not found.');
 
-        /** @var \Drupal\helfi_atv\AtvDocument $document */
-        $document = reset($document);
-
-        // Save submission BEFORE setting data so we don't accidentally
-        // save anything.
-        $createdSubmissionObject->save();
-
-        // Set submission data from parsed mapper.
-        $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
-          $document->getContent(),
-          YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
-
-        return $createdSubmissionObject;
-
-      }
-      catch (
-      AtvDocumentNotFoundException |
-      AtvFailedToConnectException |
-      GuzzleException |
-      TempStoreException |
-      EntityStorageException $e) {
-        return NULL;
-      }
+      //      try {
+      //        // Create submission.
+      //        // @todo remove hardcoded form type at some point.
+      //        $createdSubmissionObject = WebformSubmission::create([
+      //          'webform_id' => 'yleisavustushakemus',
+      //          'serial' => $submissionSerial,
+      //        ]);
+      //        // Make sure serial is set.
+      //        $createdSubmissionObject->set('serial', $submissionSerial);
+      //
+      //        // Get document from ATV.
+      //        $document = $atvService->searchDocuments([
+      //          'transaction_id' => $applicationNumber,
+      //        ],
+      //          TRUE);
+      //
+      //        /** @var \Drupal\helfi_atv\AtvDocument $document */
+      //        $document = reset($document);
+      //
+      //        // Save submission BEFORE setting data so we don't accidentally
+      //        // save anything.
+      //        $createdSubmissionObject->save();
+      //
+      //        // Set submission data from parsed mapper.
+      //        $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
+      //          $document->getContent(),
+      //          YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
+      //
+      //        return $createdSubmissionObject;
+      //
+      //      } catch (
+      //      AtvDocumentNotFoundException|
+      //      AtvFailedToConnectException|
+      //      GuzzleException|
+      //      TempStoreException|
+      //      ConnectException|
+      //      EntityStorageException $e) {
+      //        throw new AtvDocumentNotFoundException($e->getMessage());
+      //      }
     }
     else {
       $submissionObject = reset($result);
@@ -416,8 +431,7 @@ class ApplicationHandler {
           'transaction_id' => $applicationNumber,
         ],
           TRUE);
-      }
-      catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+      } catch (TempStoreException|AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
         return NULL;
       }
 
@@ -465,7 +479,7 @@ class ApplicationHandler {
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function webformToTypedData(
-    array $submittedFormData,
+    array  $submittedFormData,
     string $definitionClass,
     string $definitionKey
   ): TypedDataInterface {
@@ -495,23 +509,23 @@ class ApplicationHandler {
 
     $violations = $applicationData->validate();
 
-    if ($violations->count() > 0) {
-      foreach ($violations as $violation) {
-        if ($this->isDebug()) {
-          $this->logger
-            ->debug(t('Error with data. Property: %property. Message: %message', [
-              '%property' => $violation->getPropertyPath(),
-              '%message' => $violation->getMessage(),
-            ]));
-        }
-        $this->logger
-          ->error(t('Application data fails validation. Property: %property. Message: %message', [
-            '%property' => $violation->getPropertyPath(),
-            '%message' => $violation->getMessage(),
-          ]));
-      }
-
-    }
+    // If ($violations->count() > 0) {
+    //      foreach ($violations as $violation) {
+    //        if ($this->isDebug()) {
+    //          $this->logger
+    //            ->debug(t('Error with data. Property: %property. Message: %message', [
+    //              '%property' => $violation->getPropertyPath(),
+    //              '%message' => $violation->getMessage(),
+    //            ]));
+    //        }
+    //        $this->logger
+    //          ->error(t('Application data fails validation. Property: %property. Message: %message', [
+    //            '%property' => $violation->getPropertyPath(),
+    //            '%message' => $violation->getMessage(),
+    //          ]));
+    //      }
+    //
+    //    }
     return $violations;
   }
 
@@ -573,8 +587,7 @@ class ApplicationHandler {
       if ($status === 201) {
         return TRUE;
       }
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $this->messenger->addError($e->getMessage());
       $this->logger->error($e->getMessage());
       return FALSE;

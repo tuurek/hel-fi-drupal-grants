@@ -65,7 +65,7 @@ function grants_formnavigation_preprocess_webform_progress_tracker(&$variables) 
 
   $pages = $webform->getPages($variables['operation'], $webform_submission);
   // Get the logged errors for the form.
-  /** @var \Drupal\grants_formnavigation\GrantsFormNavigation $grants_formnavigation_helper */
+  /** @var \Drupal\grants_formnavigation\GrantsFormNavigationHelper $grants_formnavigation_helper */
   $grants_formnavigation_helper = Drupal::service('grants_formnavigation.helper');
   $current_errors = $grants_formnavigation_helper->getErrors($webform_submission);
   // Iterate through the pages and set appropriate page classes.
@@ -146,6 +146,9 @@ function grants_formnavigation_submission_validation(array &$form, FormStateInte
   //  $form_state->clearErrors();
   //  // Validate our submission values.
   //  $logged_errors = $grants_formnavigation_helper->getErrors($webform_submission);
+
+  $d = 'asfd';
+
   //  // Set form errors if the values are in-valid.
   //  foreach ($webform_submission->getWebform()
   //             ->getPages('edit', $webform_submission) as $page_key => $page) {

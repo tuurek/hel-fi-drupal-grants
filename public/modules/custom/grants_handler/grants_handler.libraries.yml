@@ -1,7 +1,20 @@
 webform-additions:
   version: 1.x
   js:
-    js/webform-additions.js: {}
+    js/webform-additions.js: { }
   dependencies:
     - core/jquery
     - core/drupalSettings
+# Navigation.
+
+grants_handler.progress.bar:
+  version: VERSION
+  css:
+    component:
+      css/grants_handler.progress.bar.css: { }
+
+grants_handler.progress.tracker:
+  version: VERSION
+  css:
+    component:
+      css/grants_handler.progress.tracker.css: { }

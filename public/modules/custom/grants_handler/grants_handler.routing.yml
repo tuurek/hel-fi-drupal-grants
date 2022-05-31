@@ -5,3 +5,27 @@ grants_handler.clear-navigations:
     _controller: '\Drupal\grants_handler\Controller\WebformNavigationController::clearDraftData'
   requirements:
     _permission: 'access content'
+
+grants_handler.completion:
+  path: 'hakemus/{submission_id}/completion'
+  defaults:
+    _title_callback: '\Drupal\grants_handler\Controller\CompletionController::getTitle'
+    _controller: '\Drupal\grants_handler\Controller\CompletionController::build'
+  requirements:
+    _permission: 'access content'
+
+grants_handler.view_application:
+  path: 'hakemus/{submission_id}/view'
+  defaults:
+    _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getTitle'
+    _controller: '\Drupal\grants_handler\Controller\ApplicationController::view'
+  requirements:
+    _permission: 'view own webform submission'
+
+grants_handler.edit_application:
+  path: 'hakemus/{submission_id}/edit'
+  defaults:
+    _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getEditTitle'
+    _controller: '\Drupal\grants_handler\Controller\ApplicationController::edit'
+  requirements:
+    _permission: 'edit own webform submission'
