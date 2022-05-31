@@ -291,6 +291,30 @@ class AtvSchema {
   }
 
   /**
+   * Sanitize input to make sure there's no illegal input.
+   *
+   * @param $property
+   *   Property to be sanitized.
+   *
+   * @return mixed
+   */
+  private function sanitizeInput(mixed $value): mixed {
+
+    if (is_array($value)) {
+      array_walk_recursive($value, function (&$item) {
+        if (is_string($item)) {
+          $item = filter_var($item, FILTER_SANITIZE_STRING);
+        }
+      });
+    }
+    else {
+      $value = filter_var($value, FILTER_SANITIZE_STRING);
+    }
+
+    return $value;
+  }
+
+  /**
    * Generate document content JSON from typed data.
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $typedData
@@ -319,18 +343,11 @@ class AtvSchema {
       $propertyLabel = $definition->getLabel();
       $propertyType = $definition->getDataType();
 
-      if (
-        $propertyName === 'messages' ||
-        $propertyName === 'events' ||
-        $propertyName === 'status_updates'
-      ) {
-        $d = 'asdf';
-      }
-
       $numberOfItems = count($jsonPath);
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
-      $value = $property->getValue();
+
+      $value = $this->sanitizeInput($property->getValue());
 
       if ($jsonPath == NULL &&
         ($propertyName !== 'form_update' &&
