@@ -124,7 +124,7 @@ trait ApplicationDefinitionTrait {
 
     $info['contact_person_phone_number'] = DataDefinition::create('string')
       // ->setRequired(TRUE)
-      ->setLabel('currentAddressInfoArray=>phoneNumber')
+      ->setLabel('Contact person phone')
       ->setSetting('jsonPath', [
         'compensation',
         'currentAddressInfoArray',
@@ -133,47 +133,63 @@ trait ApplicationDefinitionTrait {
       ->addConstraint('NotBlank');
 
     $info['community_street'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
-      ->setLabel('currentAddressInfoArray=>street')
+      ->setRequired(TRUE)
+      ->setLabel('Community street')
       ->setSetting('jsonPath', [
         'compensation',
         'currentAddressInfoArray',
         'street',
       ])
+      ->setSetting('formSettings', [
+        'formElement' => 'community_address',
+        'formError' => 'You must select address',
+      ])
       ->addConstraint('NotBlank');
 
     $info['community_city'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
-      ->setLabel('currentAddressInfoArray=>city')
+      ->setRequired(TRUE)
+      ->setLabel('Community city')
       ->setSetting('jsonPath', [
         'compensation',
         'currentAddressInfoArray',
         'city',
       ])
+      ->setSetting('formErrorElement', [
+        'formElement' => 'community_address',
+        'formError' => 'You must select address',
+      ])
       ->addConstraint('NotBlank');
 
     $info['community_post_code'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
-      ->setLabel('currentAddressInfoArray=>postCode')
+      ->setRequired(TRUE)
+      ->setLabel('Community postal code')
       ->setSetting('jsonPath', [
         'compensation',
         'currentAddressInfoArray',
         'postCode',
       ])
+      ->setSetting('formErrorElement', [
+        'formElement' => 'community_address',
+        'formError' => 'You must select address',
+      ])
       ->addConstraint('NotBlank');
 
     $info['community_country'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
-      ->setLabel('currentAddressInfoArray=>country')
+      ->setRequired(TRUE)
+      ->setLabel('Community country')
       ->setSetting('jsonPath', [
         'compensation',
         'currentAddressInfoArray',
         'country',
       ])
+      ->setSetting('formErrorElement', [
+        'formElement' => 'community_address',
+        'formError' => 'You must select address',
+      ])
       ->addConstraint('NotBlank');
 
     $info['application_type'] = DataDefinition::create('string')
-      // ->setRequired(TRUE)
+      ->setRequired(TRUE)
       ->setLabel('Application type')
       ->setSetting('jsonPath', [
         'compensation',

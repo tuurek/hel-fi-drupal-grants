@@ -35,8 +35,12 @@
     <div{{ attributes.addClass(classes) }}>
         {{ elements }}
     </div>
-    <a class="hds-button hds-button--secondary" href="{{ editSubmissionUrl.toString() }}">
+    <a class="hds-button hds-button--secondary" href="{{ editSubmissionUrlCustom.toString() }}">
         <span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>
         <span class="hds-button__label">{{ 'Edit submission'|t }}</span>
+    </a>
+    <a class="hds-button hds-button--secondary" href="{{ editSubmissionUrlWebform.toString() }}">
+        <span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>
+        <span class="hds-button__label">{{ 'Edit submission (Webform)' }}</span>
     </a>
 </div>

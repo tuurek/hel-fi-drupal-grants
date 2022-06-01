@@ -4,6 +4,7 @@ namespace Drupal\grants_handler;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\Messenger;
@@ -504,28 +505,76 @@ class ApplicationHandler {
    *   Constraint violation object.
    */
   public function validateApplication(
-    TypedDataInterface $applicationData
+    TypedDataInterface $applicationData,
+    array              &$form,
+    FormStateInterface &$formState,
+    WebformSubmission  $webform_submission
   ): ConstraintViolationListInterface {
 
     $violations = $applicationData->validate();
+    $webform = $webform_submission->getWebform();
 
-    // If ($violations->count() > 0) {
-    //      foreach ($violations as $violation) {
-    //        if ($this->isDebug()) {
-    //          $this->logger
-    //            ->debug(t('Error with data. Property: %property. Message: %message', [
-    //              '%property' => $violation->getPropertyPath(),
-    //              '%message' => $violation->getMessage(),
-    //            ]));
-    //        }
-    //        $this->logger
-    //          ->error(t('Application data fails validation. Property: %property. Message: %message', [
-    //            '%property' => $violation->getPropertyPath(),
-    //            '%message' => $violation->getMessage(),
-    //          ]));
-    //      }
-    //
-    //    }
+    $appProps = $applicationData->getProperties();
+
+    $erroredItems = [];
+
+    if ($violations->count() > 0) {
+      foreach ($violations as $violation) {
+        $propertyPath = $violation->getPropertyPath();
+        $root = $violation->getRoot();
+        $cause = $violation->getCause();
+        $constraint = $violation->getConstraint();
+        $code = $violation->getCode();
+
+        $thisProperty = $appProps[$propertyPath];
+        //            $webformElement = $webformElements[$propertyPath];
+        $thisDefinition = $thisProperty->getDataDefinition();
+        $label = $thisDefinition->getLabel();
+        $thisDefinitionSettings = $thisDefinition->getSettings();
+        $parent = $thisProperty->getParent();
+        $message = $violation->getMessage();
+
+        // formErrorElement setting controls what element on form errors
+        // if data validation fails.
+        if (isset($thisDefinitionSettings['formSettings']['formElement'])) {
+          // set property path to one defined in settings.
+          $propertyPath = $thisDefinitionSettings['formSettings']['formElement'];
+          // if not added already
+          if (!in_array($propertyPath, $erroredItems)) {
+
+            $errorMsg = $thisDefinitionSettings['formSettings']['formError'] ?? $violation->getMessage();
+
+            // Set message
+            $message = t(
+              '@label: @msg',
+              [
+                '@label' => $label,
+                '@msg' => $errorMsg,
+              ]
+            );
+            // Add errors to form.
+            $formState->setErrorByName(
+              $propertyPath,
+              $message
+            );
+            // add propertypath to errored items to have only
+            // single error from whole address item.
+            $erroredItems[] = $propertyPath;
+          }
+        }
+        else {
+          // Add errors to form.
+          $formState->setErrorByName(
+            $propertyPath,
+            $message
+          );
+          // add propertypath to errored items to have only
+          // single error from whole address item.
+          $erroredItems[] = $propertyPath;
+        }
+
+      }
+    }
     return $violations;
   }
 

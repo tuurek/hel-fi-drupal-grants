@@ -296,7 +296,7 @@ class GrantsHandlerNavigationHelper {
     // Stash the errors and return if the submission hasn't been created yet.
     if (empty($webform_submission->id())) {
       $this->store->set(self::TEMP_STORE_KEY, $paged_errors);
-      return;
+      return $paged_errors;
     }
     $this->logErrors($webform_submission, $paged_errors);
     return $paged_errors;

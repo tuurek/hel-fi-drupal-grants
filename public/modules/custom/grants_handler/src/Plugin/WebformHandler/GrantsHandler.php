@@ -20,6 +20,7 @@ use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
+use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -398,12 +399,6 @@ class GrantsHandler extends WebformHandlerBase {
 
     $this->alterFormNavigation($form, $form_state, $webform_submission);
 
-    // If we have an existing submission, then load application number.
-    //    if ($webform_submission->id()) {
-    //      //      $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-    //      $d = 'asdf';
-    //    }
-
     $this->applicationType = $webform_submission->getWebform()
       ->getThirdPartySetting('grants_metadata', 'applicationType');
     $this->applicationTypeID = $webform_submission->getWebform()
@@ -494,16 +489,44 @@ class GrantsHandler extends WebformHandlerBase {
       if (!$visited) {
         $this->grantsFormNavigationHelper->logPageVisit($webform_submission, $current_page);
       }
-      elseif ($current_page != 'webform_confirmation') {
-        // Display any errors.
-        $errors = $this->grantsFormNavigationHelper->getErrors($webform_submission);
-        // Make sure we haven't already set errors.
-        if (!empty($errors[$current_page])) {
-          foreach ($errors[$current_page] as $error) {
+
+      $current_errors = $webform->getState('current_errors');
+      if (!GrantsHandler::emptyRecursive($current_errors)) {
+        \Drupal::messenger()
+          ->addError('These are printed as Drupal messages in GrantsHAndler::alterForm');
+
+        foreach ($current_errors as $page) {
+          foreach ($page as $error) {
             \Drupal::messenger()->addError($error);
           }
         }
+
+        $form["actions"]["submit"]['#disabled'] = TRUE;
+
+        $d = 'asfd';
+
       }
+
+      // Make sure we haven't already set errors.
+      //      if (!empty($errors[$current_page])) {
+      //        foreach ($errors[$current_page] as $error) {
+      //          \Drupal::messenger()->addError($error);
+      //        }
+      //      }
+
+      //      elseif ($current_page != 'webform_confirmation') {
+      //        // Display any errors.
+      //        $errors = $this->grantsFormNavigationHelper->getErrors($webform_submission);
+      //
+      //        $current_errors = $webform->getState('current_errors');
+      //
+      //        // Make sure we haven't already set errors.
+      //        if (!empty($errors[$current_page])) {
+      //          foreach ($errors[$current_page] as $error) {
+      //            \Drupal::messenger()->addError($error);
+      //          }
+      //        }
+      //      }
     }
   }
 
@@ -598,26 +621,21 @@ class GrantsHandler extends WebformHandlerBase {
 
     parent::validateForm($form, $form_state, $webform_submission);
 
+    //    $form_state->clearErrors();
+
     // Loop through fieldnames and validate fields.
-    foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
-      //      $fValues = $form_state->getValue($fieldName);
-      AttachmentHandler::validateAttachmentField(
-        $fieldName,
-        $form_state,
-        $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
-      );
-    }
+    //    foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
+    //      //      $fValues = $form_state->getValue($fieldName);
+    //      AttachmentHandler::validateAttachmentField(
+    //        $fieldName,
+    //        $form_state,
+    //        $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
+    //      );
+    //    }
 
-    try {
-      $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
+    $current_errors = $this->logErrors($webform_submission, $form_state);
 
-      $webform = $webform_submission->getWebform();
-      $webform->setState('current_errors', $current_errors);
-    } catch (\Exception $e) {
-      // TODO: add logger
-    }
     $current_page = $webform_submission->getCurrentPage();
-
 
     // These need to be set here to the handler object, bc we do the saving to
     // ATV in postSave and in that method these are not available.
@@ -652,17 +670,22 @@ class GrantsHandler extends WebformHandlerBase {
           '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
           'grants_metadata_yleisavustushakemus'
         );
-        $violations = $this->applicationHandler->validateApplication($applicationData);
+        $violations = $this->applicationHandler->validateApplication(
+          $applicationData,
+          $form,
+          $form_state,
+          $webform_submission
+        );
 
-        $d = 'c<';
-
-        if ($violations->count() > 0) {
-          foreach ($violations as $violation) {
-            // Print errors by form item name.
-            $form_state->setErrorByName(
-              $violation->getPropertyPath(),
-              $violation->getMessage());
-          }
+        if ($violations->count() === 0) {
+          // if we have no violations clear all errors
+          $form_state->clearErrors();
+          // so we well proceed to confirmForm
+        }
+        else {
+          // if we HAVE errors, then refresh them from the
+          $current_errors = $this->logErrors($webform_submission, $form_state);
+          $d = 'asdf';
         }
       }
       else {
@@ -862,7 +885,7 @@ class GrantsHandler extends WebformHandlerBase {
           'grants_metadata_yleisavustushakemus'
         );
       } catch (ReadOnlyException $e) {
-        $d = 'adsf';
+        // TODO:
       }
 
       $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
@@ -884,13 +907,12 @@ class GrantsHandler extends WebformHandlerBase {
                 '@number' => $this->applicationNumber,
               ]));
 
-        $redirectUrl = Url::fromRoute('entity.webform.user.submission.edit', [
-          'webform' => $webForm->id(),
-          'webform_submission' => $webform_submission->id(),
+        $redirectUrl = Url::fromRoute('grants_handler.edit_application', [
+          'submission_id' => $this->applicationNumber,
         ]);
 
-        return new RedirectResponse($redirectUrl->toString());
-
+        $redirectResponse = new RedirectResponse($redirectUrl->toString());
+        $redirectResponse->send();
       }
       else {
         $url = Url::fromRoute(
@@ -970,9 +992,10 @@ class GrantsHandler extends WebformHandlerBase {
                 '@number' => $this->applicationNumber,
               ]));
 
-        $url = Url::fromRoute(
+
+        $form_state->setRedirect(
           'grants_handler.completion',
-          ['submissionId' => $this->applicationNumber],
+          ['submission_id' => $this->applicationNumber],
           [
             'attributes' => [
               'data-drupal-selector' => 'application-saved-successfully-link',
@@ -980,7 +1003,17 @@ class GrantsHandler extends WebformHandlerBase {
           ]
         );
 
-        $form_state->setRedirectUrl($url);
+        //        $redirectUrl = Url::fromRoute(
+        //          'grants_handler.completion',
+        //          ['submissionId' => $this->applicationNumber],
+        //          [
+        //            'attributes' => [
+        //              'data-drupal-selector' => 'application-saved-successfully-link',
+        //            ],
+        //          ]
+        //        );
+        //        $redirectResponse = new RedirectResponse($redirectUrl->toString());
+        //        $redirectResponse->send();
 
       }
       else {
@@ -1078,6 +1111,27 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
     return $retval;
+  }
+
+  /**
+   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return array
+   */
+  public function logErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state): array {
+    try {
+      // log current errors
+      $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
+
+      // and add existing ones to form state to be processed in theme files.
+      $webform = $webform_submission->getWebform();
+      $webform->setState('current_errors', $current_errors);
+    } catch (\Exception $e) {
+      $current_errors = [];
+      // TODO: add logger
+    }
+    return $current_errors;
   }
 
 }

@@ -11,6 +11,7 @@ use Drupal\Core\TempStore\TempStoreException;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
 use Drupal\grants_profile\GrantsProfileService;
+use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
@@ -112,11 +113,11 @@ class AttachmentHandler {
    *   Profile service.
    */
   public function __construct(
-    AttachmentUploader $grants_attachments_attachment_uploader,
-    AttachmentRemover $grants_attachments_attachment_remover,
-    Messenger $messenger,
+    AttachmentUploader   $grants_attachments_attachment_uploader,
+    AttachmentRemover    $grants_attachments_attachment_remover,
+    Messenger            $messenger,
     LoggerChannelFactory $loggerChannelFactory,
-    AtvService $atvService,
+    AtvService           $atvService,
     GrantsProfileService $grantsProfileService,
   ) {
 
@@ -179,9 +180,9 @@ class AttachmentHandler {
    *   Field title for errors.
    */
   public static function validateAttachmentField(
-    string $fieldName,
+    string             $fieldName,
     FormStateInterface $form_state,
-    string $fieldTitle
+    string             $fieldTitle
   ) {
     // Get value.
     $values = $form_state->getValue($fieldName);
@@ -242,8 +243,8 @@ class AttachmentHandler {
    *   Parsed attachments.
    */
   public function parseAttachments(
-    array $form,
-    array $submittedFormData,
+    array  $form,
+    array  $submittedFormData,
     string $applicationNumber): array {
 
     $attachmentsArray = [];
@@ -306,8 +307,7 @@ class AttachmentHandler {
           $filenames,
           $attachmentsArray
         );
-      }
-      catch (TempStoreException | GuzzleException $e) {
+      } catch (TempStoreException|GuzzleException $e) {
         $this->logger->error($e->getMessage());
       }
     }
@@ -336,8 +336,8 @@ class AttachmentHandler {
   public function handleBankAccountConfirmation(
     string $accountNumber,
     string $applicationNumber,
-    array $filenames,
-    array &$attachmentsArray
+    array  $filenames,
+    array  &$attachmentsArray
   ) {
 
     // If no accountNumber is selected, do nothing.
@@ -357,8 +357,7 @@ class AttachmentHandler {
         'transaction_id' => $applicationNumber,
       ]);
       $applicationDocument = reset($applicationDocumentResults);
-    }
-    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
     }
 
     $accountConfirmationExists = FALSE;
@@ -421,8 +420,7 @@ class AttachmentHandler {
           $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
           // Add file to attachments for uploading.
           $this->attachmentFileIds[] = $file->id();
-        }
-        catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+        } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
           $this->logger
             ->error($e->getMessage());
           $this->messenger
@@ -494,7 +492,7 @@ class AttachmentHandler {
    *   Data for JSON.
    */
   public function getAttachmentByFieldValue(
-    array $field,
+    array  $field,
     string $fieldDescription,
     string $fileType): array {
 
@@ -575,7 +573,7 @@ class AttachmentHandler {
    *   Submission object.
    */
   public function handleApplicationAttachments(
-    string $applicationNumber,
+    string            $applicationNumber,
     WebformSubmission $webformSubmission
   ) {
 
@@ -616,5 +614,66 @@ class AttachmentHandler {
     );
 
   }
+
+
+  /**
+   * Find out what attachments are uploaded and what are not.
+   *
+   * @return array
+   *   Attachments sorted by upload status.
+   */
+  public static function attachmentsUploadStatus(AtvDocument $document): array {
+    $attachments = $document->getAttachments();
+    $content = $document->getContent();
+
+    $contentAttachments = $content["attachmentsInfo"]["attachmentsArray"] ?? [];
+
+    $uploadedByContent = array_filter($contentAttachments, function ($item) {
+      foreach ($item as $itemArray) {
+        if ($itemArray['ID'] === 'fileName') {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    });
+
+    $up = [];
+    $not = [];
+
+    foreach ($uploadedByContent as $ca) {
+
+      $filesInContent = array_filter($ca, function ($caItem) {
+        if ($caItem['ID'] === 'fileName') {
+          return TRUE;
+        }
+        else {
+          return FALSE;
+        }
+      });
+      $fn1 = reset($filesInContent);
+      $fn = $fn1['value'];
+
+      $attFound = FALSE;
+
+      foreach ($attachments as $k => $v) {
+        if (str_contains($v['filename'], $fn)) {
+          $attFound = TRUE;
+        }
+      }
+
+      if ($attFound) {
+        $up[] = $fn;
+      }
+      else {
+        $not[] = $fn;
+      }
+    }
+
+    return [
+      'uploaded' => $up,
+      'not-uploaded' => $not,
+    ];
+  }
+
 
 }

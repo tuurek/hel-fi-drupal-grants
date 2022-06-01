@@ -141,6 +141,8 @@ class ApplicationController extends ControllerBase {
 
     } catch (InvalidPluginDefinitionException|PluginNotFoundException|AtvDocumentNotFoundException|GuzzleException $e) {
       throw new NotFoundHttpException($e->getMessage());
+    } catch (\Exception $e) {
+      throw new NotFoundHttpException($e->getMessage());
     }
     return [];
   }
@@ -192,15 +194,15 @@ class ApplicationController extends ControllerBase {
       ];
 
     } catch (InvalidPluginDefinitionException $e) {
-      return new NotFoundHttpException('Application not found');
+      throw new NotFoundHttpException('Application not found');
     } catch (PluginNotFoundException $e) {
-      return new NotFoundHttpException('Application not found');
+      throw new NotFoundHttpException('Application not found');
     } catch (AtvDocumentNotFoundException $e) {
-      return new NotFoundHttpException('Application not found');
+      throw new NotFoundHttpException('Application not found');
     } catch (GuzzleException $e) {
-      return new NotFoundHttpException('Application not found');
+      throw new NotFoundHttpException('Application not found');
     } catch (\Exception $e) {
-      return new NotFoundHttpException('Application not found');
+      throw new NotFoundHttpException('Application not found');
     }
   }
 

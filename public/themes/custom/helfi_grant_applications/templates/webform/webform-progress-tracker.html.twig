@@ -30,20 +30,21 @@
         {% endif %}
     </div>
 </div>
+
 <ul class="webform-progress-tracker progress-tracker progress-tracker--center" data-webform-progress-steps>
     {% for index, page in progress %}
         {% set is_completed = index < current_index %}
         {% set is_active = index == current_index %}
-        {% set classes = [
-            'progress-step',
-            is_completed ? 'is-complete',
-            is_active ? 'is-active',
-        ] %}
+        {#        {% set classes = [ #}
+        {#            'progress-step', #}
+        {#            is_completed ? 'is-complete', #}
+        {#            is_active ? 'is-active', #}
+        {#        ] %} #}
         {% set attributes = create_attribute()
             .setAttribute('data-webform-' ~ page.type, page.name)
             .setAttribute('title', page.title)
             .setAttribute('class', '')
-            .addClass(classes) %}
+            .addClass(page_classes[page.name]) %}
         <li{{ attributes }}>
             <div class="progress-marker" data-webform-progress-step data-webform-progress-link
                  data-text="{{ index + 1 }}"></div>

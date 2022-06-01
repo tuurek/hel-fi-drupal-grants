@@ -516,12 +516,26 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   // get submission object
   /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables['webform_submission'];
+  $webform = $submission->getWebform();
   $data = $submission->getData();
   $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
 
-  $url = Url::fromRoute(
+  $urlCustom = Url::fromRoute(
     'grants_handler.edit_application',
     ['submission_id' => $applicationNumber],
+    [
+      'attributes' => [
+        'data-drupal-selector' => 'application-edit-link',
+      ],
+    ]
+  );
+
+  $urlWebform = Url::fromRoute(
+    'entity.webform.user.submission.edit',
+    [
+      'webform' => $webform->id(),
+      'webform_submission' => $submission->id(),
+    ],
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
@@ -539,7 +553,8 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   $variables["elements"]["data"]["lisatiedot_ja_liitteet"]["#element"]
   ["liitteet"]["talousarvio"]["#webform_composite_elements"]["attachmentName"] = 'ASDF ASDFASDFASDFASDFASDFASDF';
 
-  $variables['editSubmissionUrl'] = $url;
+  $variables['editSubmissionUrlCustom'] = $urlCustom;
+  $variables['editSubmissionUrlWebform'] = $urlWebform;
 
   // parse messages
   $variables['messages'] = [
@@ -746,10 +761,10 @@ function grants_handler_preprocess_webform_progress_tracker(&$variables) {
     // Add the default class for the page.
     $variables['page_classes'][$key][] = 'progress-step';
     // Add the visited and error classes if it has been logged.
-    //    if (isset($current_errors[$key])) {
-    //      // Add an error class if the page has errors or complete class if not.
-    //      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'is-complete' : 'has-errors';
-    //    }
+    if (isset($current_errors[$key])) {
+      // Add an error class if the page has errors or complete class if not.
+      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'is-complete' : 'has-errors';
+    }
     // Add an active class to the current page.
     if ($variables['current_page'] == $key) {
       $variables['page_classes'][$key][] = 'is-active';
@@ -770,16 +785,17 @@ function grants_handler_preprocess_webform_progress_bar(&$variables) {
   // Get the logged errors for the form.
   /** @var \Drupal\grants_formnavigation\GrantsFormNavigationHelper $grants_formnavigation_helper */
   $grants_formnavigation_helper = Drupal::service('grants_handler.navigation_helper');
-  //  $current_errors = $grants_formnavigation_helper->getErrors($webform_submission);
+  $current_errors = $webform->getState('current_errors');
+
   // Iterate through the pages and set appropriate page classes.
   foreach ($pages as $key => $page) {
     // Add the default class for the page.
     $variables['page_classes'][$key][] = 'webform-progress-bar__page';
     // Add the visited and error classes if it has been logged.
-    //    if (isset($current_errors[$key])) {
-    //      // Add an error class if the page has errors or complete class if not.
-    //      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'webform-progress-bar__page--done' : 'webform-progress-bar__page--errors';
-    //    }
+    if (isset($current_errors[$key])) {
+      // Add an error class if the page has errors or complete class if not.
+      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'webform-progress-bar__page--done' : 'webform-progress-bar__page--errors';
+    }
     // Add an active class to the current page.
     if ($variables['current_page'] == $key) {
       $variables['page_classes'][$key][] = 'webform-progress-bar__page--current';
@@ -878,4 +894,22 @@ function grants_handler_webform_presave(WebformInterface $webform) {
   if (empty($webform->getSetting('wizard_progress_link'))) {
     $webform->setSetting('wizard_progress_link', TRUE);
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_webform_submission_form(&$variables) {
+
+  $d = 'asdf';
+
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_webform(&$variables) {
+
+  $d = 'asdf';
+
 }
