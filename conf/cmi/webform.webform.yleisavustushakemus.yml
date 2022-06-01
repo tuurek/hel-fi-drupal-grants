@@ -3,7 +3,6 @@ langcode: fi
 status: open
 dependencies:
   module:
-    - grants_formnavigation
     - grants_handler
     - grants_metadata
 third_party_settings:
@@ -792,16 +791,5 @@ handlers:
     conditions: {  }
     weight: 0
     settings:
-      endpoint: 'This is a custom endpoint.'
       debug: true
-  grants_webform_navigation:
-    id: grants_formnavigation
-    handler_id: grants_webform_navigation
-    label: 'Grants Webform Navigation'
-    notes: ''
-    status: true
-    conditions: {  }
-    weight: 0
-    settings:
-      debug: false
 variants: {  }
