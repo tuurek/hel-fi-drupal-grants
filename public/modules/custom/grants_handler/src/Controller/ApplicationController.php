@@ -93,10 +93,9 @@ class ApplicationController extends ControllerBase {
 
     try {
       $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
-      $webform = $webform_submission->getWebform();
 
-      if ($webform_submission) {
-
+      if ($webform_submission != NULL) {
+        $webform = $webform_submission->getWebform();
 
         // Set webform submission template.
         $build = [
@@ -137,6 +136,11 @@ class ApplicationController extends ControllerBase {
         return $build;
 
       }
+      else {
+        throw new NotFoundHttpException($this->t('Application @number not found.', [
+          '@number' => $submission_id,
+        ]));
+      }
 
 
     } catch (InvalidPluginDefinitionException|PluginNotFoundException|AtvDocumentNotFoundException|GuzzleException $e) {
@@ -157,10 +161,15 @@ class ApplicationController extends ControllerBase {
    *   Build for the page.
    */
   public function edit(string $submission_id, $view_mode = 'full', $langcode = 'fi'): mixed {
+    $d = 'asdf';
     try {
       $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
+      if ($webform_submission == NULL) {
+        throw new NotFoundHttpException($this->t('Application @number not found.', [
+          '@number' => $submission_id,
+        ]));
+      }
 
-      $my_webform_machinename = 'check the name in webform configuration';
       $my_form = \Drupal::entityTypeManager()
         ->getStorage('webform')
         ->load($webform_submission->getWebform()->id());

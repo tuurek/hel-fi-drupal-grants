@@ -907,7 +907,7 @@ class GrantsHandler extends WebformHandlerBase {
                 '@number' => $this->applicationNumber,
               ]));
 
-        $redirectUrl = Url::fromRoute('grants_handler.edit_application', [
+        $redirectUrl = Url::fromRoute('grants_handler.view_application', [
           'submission_id' => $this->applicationNumber,
         ]);
 
