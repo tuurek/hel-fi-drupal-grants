@@ -905,14 +905,15 @@ class GrantsHandler extends WebformHandlerBase {
               'Grant application (<span id="saved-application-number">@number</span>) saved as DRAFT',
               [
                 '@number' => $this->applicationNumber,
-              ]));
+              ]), TRUE);
 
-        $redirectUrl = Url::fromRoute('grants_handler.view_application', [
-          'submission_id' => $this->applicationNumber,
-        ]);
+        //        $redirectUrl = Url::fromRoute('grants_handler.view_application', [
+        //          'submission_id' => $this->applicationNumber,
+        //        ]);
+        //
+        //        $redirectResponse = new RedirectResponse($redirectUrl->toString());
+        //        $redirectResponse->send();
 
-        $redirectResponse = new RedirectResponse($redirectUrl->toString());
-        $redirectResponse->send();
       }
       else {
         $url = Url::fromRoute(
@@ -1083,7 +1084,7 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * {@inheritdoc} * * * * * * * * *
+   * {@inheritdoc}
    */
   function preprocessConfirmation(array &$variables) {
     $this->debug(__FUNCTION__);
