@@ -697,11 +697,11 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * @param array $value
+   * @param array|null $value
    *
    * @return bool
    */
-  public static function emptyRecursive(array $value): bool {
+  public static function emptyRecursive(?array $value): bool {
     $empty = TRUE;
     array_walk_recursive($value, function ($item) use (&$empty) {
       $empty = $empty && empty($item);
