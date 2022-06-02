@@ -491,7 +491,7 @@ class GrantsHandler extends WebformHandlerBase {
       }
 
       $current_errors = $webform->getState('current_errors');
-      if (!GrantsHandler::emptyRecursive($current_errors)) {
+      if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
         \Drupal::messenger()
           ->addError('These are printed as Drupal messages in GrantsHAndler::alterForm');
 
@@ -663,7 +663,7 @@ class GrantsHandler extends WebformHandlerBase {
     if ($triggeringElement == '::submit') {
 
       $d = 'asdf';
-      if (self::emptyRecursive($current_errors)) {
+      if (is_array($current_errors) && self::emptyRecursive($current_errors)) {
 
         $applicationData = $this->applicationHandler->webformToTypedData(
           $this->submittedFormData,
@@ -697,11 +697,11 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * @param array|null $value
+   * @param array $value
    *
    * @return bool
    */
-  public static function emptyRecursive(?array $value): bool {
+  public static function emptyRecursive(array $value): bool {
     $empty = TRUE;
     array_walk_recursive($value, function ($item) use (&$empty) {
       $empty = $empty && empty($item);
