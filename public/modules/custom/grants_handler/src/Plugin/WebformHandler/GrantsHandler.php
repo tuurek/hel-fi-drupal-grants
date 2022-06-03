@@ -753,8 +753,8 @@ class GrantsHandler extends WebformHandlerBase {
 
     // Set form timestamp to current time.
     // apparently this is always set to latest submission.
-    $dt = new DateTime();
-    $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
+    $dt = new \DateTime();
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
 
     // Get regdate from profile data and format it for Avustus2
@@ -918,12 +918,12 @@ class GrantsHandler extends WebformHandlerBase {
             TRUE
           );
 
-        // $redirectUrl = Url::fromRoute('grants_handler.view_application', [
-        //          'submission_id' => $this->applicationNumber,
-        //        ]);
-        //
-        //        $redirectResponse = new RedirectResponse($redirectUrl->toString());
-        //        $redirectResponse->send();
+        $redirectUrl = Url::fromRoute('grants_handler.view_application', [
+          'submission_id' => $this->applicationNumber,
+        ]);
+
+        $redirectResponse = new RedirectResponse($redirectUrl->toString());
+        $redirectResponse->send();
       }
       else {
         $url = Url::fromRoute(
