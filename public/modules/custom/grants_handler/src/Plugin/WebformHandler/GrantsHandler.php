@@ -362,37 +362,43 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function preCreate(array &$values) {
 
+    $currentUser = \Drupal::currentUser();
+    $currentUserRoles = $currentUser->getRoles();
+
     // These both are required to be selected.
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $applicantType = $this->grantsProfileService->getApplicantType();
-    if ($applicantType === NULL) {
-      \Drupal::messenger()
-        ->addError(t('You need to select applicant type.'));
+    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
+      ($currentUser->id() != '1')) {
+      if ($applicantType === NULL) {
+        \Drupal::messenger()
+          ->addError(t('You need to select applicant type.'));
 
-      $url = Url::fromRoute('grants_profile.applicant_type', [
-        'destination' => $values["uri"],
-      ])
-        ->setAbsolute()
-        ->toString();
-      $response = new RedirectResponse($url);
-      $response->send();
-    }
-    else {
-      $this->applicantType = $this->grantsProfileService->getApplicantType();
-    }
+        $url = Url::fromRoute('grants_profile.applicant_type', [
+          'destination' => $values["uri"],
+        ])
+          ->setAbsolute()
+          ->toString();
+        $response = new RedirectResponse($url);
+        $response->send();
+      }
+      else {
+        $this->applicantType = $this->grantsProfileService->getApplicantType();
+      }
 
-    if ($selectedCompany == NULL) {
-      \Drupal::messenger()
-        ->addError(t("You need to select company you're acting behalf of."));
+      if ($selectedCompany == NULL) {
+        \Drupal::messenger()
+          ->addError(t("You need to select company you're acting behalf of."));
 
-      $url = Url::fromRoute('grants_profile.show', [
-        'destination' => $values["uri"],
-      ])
-        ->setAbsolute()
-        ->toString();
-      $response = new RedirectResponse($url);
-      $response->send();
+        $url = Url::fromRoute('grants_profile.show', [
+          'destination' => $values["uri"],
+        ])
+          ->setAbsolute()
+          ->toString();
+        $response = new RedirectResponse($url);
+        $response->send();
+      }
     }
   }
 

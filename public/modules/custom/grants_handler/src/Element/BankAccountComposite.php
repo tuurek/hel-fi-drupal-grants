@@ -66,7 +66,7 @@ class BankAccountComposite extends WebformCompositeBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
 
     $selectedCompany = $grantsProfileService->getSelectedCompany();
-    $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
 
     $accOoptions = [
       '' => '-' . t('Select account') . '-',

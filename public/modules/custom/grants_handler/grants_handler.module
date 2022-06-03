@@ -259,7 +259,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       $grantsProfileService = Drupal::service('grants_profile.service');
 
       $selectedCompany = $grantsProfileService->getSelectedCompany();
-      $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+      $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
 
       if (isset($element['#default_value'])) {
         $formValues = $element['#default_value'];
@@ -292,7 +292,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       $grantsProfileService = Drupal::service('grants_profile.service');
 
       $selectedCompany = $grantsProfileService->getSelectedCompany();
-      $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+      $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
 
       $defaultDelta = '0';
 

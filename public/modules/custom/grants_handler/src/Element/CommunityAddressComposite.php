@@ -84,7 +84,7 @@ class CommunityAddressComposite extends WebformCompositeBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
 
     $selectedCompany = $grantsProfileService->getSelectedCompany();
-    $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
 
     $formValues = $form_state->getValues();
     $formSelection = ($formValues['community_address']['community_street'] ?? '') . ', ' .

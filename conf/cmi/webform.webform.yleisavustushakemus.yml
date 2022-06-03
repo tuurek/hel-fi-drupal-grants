@@ -25,6 +25,10 @@ elements: |-
     '#title': '1. Hakijan tiedot'
     '#prev_button_label': '< Edellinen'
     '#next_button_label': 'Seuraava >'
+    application_number:
+      '#type': textfield
+      '#title': 'Application Number'
+      '#disabled': true
     status:
       '#type': textfield
       '#title': 'Hakemuksen tila'

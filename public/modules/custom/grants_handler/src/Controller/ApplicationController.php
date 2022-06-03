@@ -124,10 +124,9 @@ class ApplicationController extends ControllerBase {
         $build['#attached']['library'][] = 'webform/webform.admin';
 
         // Add entities cacheable dependency.
-        $this->renderer->addCacheableDependency($build, $this->currentUser);
-        $this->renderer->addCacheableDependency($build, $webform);
-        $this->renderer->addCacheableDependency($build, $webform_submission);
-
+        //        $this->renderer->addCacheableDependency($build, $this->currentUser);
+        //        $this->renderer->addCacheableDependency($build, $webform);
+        //        $this->renderer->addCacheableDependency($build, $webform_submission);.
         return $build;
 
       }
