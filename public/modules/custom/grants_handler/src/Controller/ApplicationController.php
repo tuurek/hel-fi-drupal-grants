@@ -5,14 +5,9 @@ namespace Drupal\grants_handler\Controller;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Link;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Url;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\webform\WebformRequestInterface;
@@ -102,7 +97,7 @@ class ApplicationController extends ControllerBase {
           '#theme' => 'webform_submission',
           '#view_mode' => $view_mode,
           '#webform_submission' => $webform_submission,
-          //          '#editSubmissionLink' => Link::fromTextAndUrl(t('Edit application'), $url),
+          // '#editSubmissionLink' => Link::fromTextAndUrl(t('Edit application'), $url),
         ];
 
         // Navigation.
@@ -142,10 +137,11 @@ class ApplicationController extends ControllerBase {
         ]));
       }
 
-
-    } catch (InvalidPluginDefinitionException|PluginNotFoundException|AtvDocumentNotFoundException|GuzzleException $e) {
+    }
+    catch (InvalidPluginDefinitionException | PluginNotFoundException | AtvDocumentNotFoundException | GuzzleException $e) {
       throw new NotFoundHttpException($e->getMessage());
-    } catch (\Exception $e) {
+    }
+    catch (Exception $e) {
       throw new NotFoundHttpException($e->getMessage());
     }
     return [];
@@ -160,8 +156,7 @@ class ApplicationController extends ControllerBase {
    * @return array
    *   Build for the page.
    */
-  public function edit(string $submission_id, $view_mode = 'full', $langcode = 'fi'): mixed {
-    $d = 'asdf';
+  public function edit(string $submission_id, $view_mode = 'full', $langcode = 'fi'): array {
     try {
       $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
       if ($webform_submission == NULL) {
@@ -170,7 +165,7 @@ class ApplicationController extends ControllerBase {
         ]));
       }
 
-      $my_form = \Drupal::entityTypeManager()
+      $my_form = Drupal::entityTypeManager()
         ->getStorage('webform')
         ->load($webform_submission->getWebform()->id());
 
@@ -178,15 +173,12 @@ class ApplicationController extends ControllerBase {
 
       $form = $my_form->getSubmissionForm(['data' => $webform_submission->getData()]);
 
-
-      //      $webform = $webform_submission->getWebform();
+      // $webform = $webform_submission->getWebform();
       //      $webform->entity = $webform_submission;
       //
-
-      //      $form = \Drupal::entityTypeManager()
+      // $form = \Drupal::entityTypeManager()
       //        ->getViewBuilder('webform')
       //        ->view($rr);
-
       $d = 'asdf';
 
       return [
@@ -194,23 +186,28 @@ class ApplicationController extends ControllerBase {
         '#view_mode' => $view_mode,
         '#submissionObject' => $webform_submission,
         '#submissionId' => $submission_id,
-        '#editForm' => $form
-        //        '#editForm' => [
+        '#editForm' => $form,
+        // '#editForm' => [
         //          '#type' => 'webform',
         //          '#webform' => $webform_submission->getWebform()->id(),
         //          '#default_data' =>
         //        ],
       ];
 
-    } catch (InvalidPluginDefinitionException $e) {
+    }
+    catch (InvalidPluginDefinitionException $e) {
       throw new NotFoundHttpException('Application not found');
-    } catch (PluginNotFoundException $e) {
+    }
+    catch (PluginNotFoundException $e) {
       throw new NotFoundHttpException('Application not found');
-    } catch (AtvDocumentNotFoundException $e) {
+    }
+    catch (AtvDocumentNotFoundException $e) {
       throw new NotFoundHttpException('Application not found');
-    } catch (GuzzleException $e) {
+    }
+    catch (GuzzleException $e) {
       throw new NotFoundHttpException('Application not found');
-    } catch (\Exception $e) {
+    }
+    catch (Exception $e) {
       throw new NotFoundHttpException('Application not found');
     }
   }
@@ -218,8 +215,9 @@ class ApplicationController extends ControllerBase {
   /**
    * Returns a page title.
    */
-  public function getEditTitle($submission_id): TranslatableMarkup {
-    return $this->t('Edit application: @submissionId', ['@submissionId' => $submission_id]);
+  public function getEditTitle($webform_submission): TranslatableMarkup {
+    $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
+    return $this->t('Edit application: @submissionId', ['@submissionId' => $applicationNumber]);
   }
 
   /**

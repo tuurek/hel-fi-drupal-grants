@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_handler;
 
+use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Database\Connection;
@@ -99,12 +100,12 @@ class GrantsHandlerNavigationHelper {
    */
   public function __construct(
     WebformSubmissionLogManager $webform_submission_log_manager,
-    Connection                  $datababse,
-    MessengerInterface          $messenger,
-    EntityTypeManagerInterface  $entity_type_manager,
-    FormBuilderInterface        $form_builder,
-    HelsinkiProfiiliUserData    $helsinkiProfiiliUserData,
-    PrivateTempStoreFactory     $tempStoreFactory
+    Connection $datababse,
+    MessengerInterface $messenger,
+    EntityTypeManagerInterface $entity_type_manager,
+    FormBuilderInterface $form_builder,
+    HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
+    PrivateTempStoreFactory $tempStoreFactory
   ) {
 
     $this->webformSubmissionLogManager = $webform_submission_log_manager;
@@ -180,7 +181,7 @@ class GrantsHandlerNavigationHelper {
   public function getErrors(WebformSubmissionInterface $webform_submission, $page = NULL) {
     // Get outta here if the submission hasn't been saved yet.
     if (empty($webform_submission->id())) {
-      return [];
+      return $this->store->get(self::TEMP_STORE_KEY);
     }
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
@@ -195,6 +196,23 @@ class GrantsHandlerNavigationHelper {
     $query->range(0, 1);
     $submission_log = $query->execute()->fetch();
     $data = !empty($submission_log->data) ? unserialize($submission_log->data) : [];
+
+    if ($storedData = $this->store->get(self::TEMP_STORE_KEY)) {
+      // In case we have stored errors in users' session, merge those with the ones from DB.
+      $data = array_merge($data, $storedData);
+      try {
+        $this->store->delete(self::TEMP_STORE_KEY);
+      }
+      catch (TempStoreException $e) {
+        \Drupal::logger('grants_handler_navigation_helper')
+          ->error('Deleting of store data failed. Submission serial @serial. @error',
+            [
+              '@serial' => $webform_submission->serial(),
+              '@error' => $e->getMessage(),
+            ]);
+      }
+    }
+
     return (!empty($page) && !empty($data[$page])) ? $data[$page] : $data;
   }
 
@@ -259,11 +277,30 @@ class GrantsHandlerNavigationHelper {
     $this->store->delete(self::TEMP_STORE_KEY);
   }
 
+  /**
+   * Save value to store.
+   *
+   * @param string $key
+   *   Key of the value.
+   * @param array $data
+   *   And the value itself.
+   *
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   */
   public function setToStore(string $key, array $data) {
     $this->store->set($key, $data);
   }
 
-  public function getFromStore(string $key) {
+  /**
+   * Get item from store.
+   *
+   * @param string $key
+   *   Item to get.
+   *
+   * @return mixed
+   *   Store value.
+   */
+  public function getFromStore(string $key): mixed {
     return $this->store->get($key);
   }
 
@@ -271,10 +308,11 @@ class GrantsHandlerNavigationHelper {
    * Delete variable from store.
    *
    * @param string $key
-   *  Item to delete.
+   *   Item to delete.
    *
    * @return bool
-   *  Deleted?
+   *   Deleted?
+   *
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
   public function deleteFromStore(string $key): bool {

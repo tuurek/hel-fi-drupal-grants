@@ -7,8 +7,9 @@
 
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
-use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
@@ -138,7 +139,7 @@ function grants_handler_entity_type_alter(array &$entity_types) {
  * @see \Drupal\webform\WebformSubmissionForm::prepareElements()
  * @see hook_webform_element_ELEMENT_TYPE_alter()
  */
-function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+function grants_handler_webform_element_alter(array &$element, FormStateInterface $form_state, array $context) {
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
   $form_object = $form_state->getFormObject();
@@ -255,7 +256,7 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_address')) {
 
       /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-      $grantsProfileService = \Drupal::service('grants_profile.service');
+      $grantsProfileService = Drupal::service('grants_profile.service');
 
       $selectedCompany = $grantsProfileService->getSelectedCompany();
       $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
@@ -288,7 +289,7 @@ function grants_handler_webform_element_alter(array &$element, \Drupal\Core\Form
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_officials')) {
 
       /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-      $grantsProfileService = \Drupal::service('grants_profile.service');
+      $grantsProfileService = Drupal::service('grants_profile.service');
 
       $selectedCompany = $grantsProfileService->getSelectedCompany();
       $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
@@ -338,7 +339,7 @@ function _grants_handler_imported_handler(
 
   $array["#value"] = $value;
   $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
-  $array['#description'] = \Drupal\Core\Field\FieldFilteredMarkup::create($show_checkmark ? $value .
+  $array['#description'] = FieldFilteredMarkup::create($show_checkmark ? $value .
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
   if ($show_checkmark === FALSE) {
@@ -395,7 +396,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   $form['actions']['wizard_next']['#validate'][] = '::noValidate';
 
   /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-  $grantsProfileService = \Drupal::service('grants_profile.service');
+  $grantsProfileService = Drupal::service('grants_profile.service');
   $selectedCompany = $grantsProfileService->getSelectedCompany();
 
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
@@ -496,7 +497,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
   }
   else {
-    \Drupal::messenger()
+    Drupal::messenger()
       ->addError(t("You don't have company selected, no fields are prepopulated"));
   }
 }
@@ -522,7 +523,10 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
 
   $urlCustom = Url::fromRoute(
     'grants_handler.edit_application',
-    ['submission_id' => $applicationNumber],
+    [
+      'webform' => $webform->id(),
+      'webform_submission' => $submission->id()
+    ],
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
@@ -572,7 +576,7 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',
     '#submission' => $submission,
-  ];;
+  ];
 }
 
 /**
@@ -588,15 +592,15 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   // if submission is ok for messaging
   if (ApplicationHandler::isSubmissionMessageable($submission, NULL)) {
     // add message form
-    $variables['message_form'] = \Drupal::formBuilder()
+    $variables['message_form'] = Drupal::formBuilder()
       ->getForm('Drupal\grants_handler\Form\MessageForm', $submission);
   }
 
   $messages = [];
   if (isset($submissionData['messages']) && is_array($submissionData['messages'])) {
     foreach ($submissionData['messages'] as $message) {
-      $dt = new \DateTime($message['sendDateTime']);
-      $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+      $dt = new DateTime($message['sendDateTime']);
+      $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
 
       $build = [
         '#theme' => 'webform_submission_message_attachments',
@@ -607,7 +611,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
         'date' => $dt->format('d.m.Y h:i:s'),
         'sender' => $message['sentBy'],
         'body' => $message['body'] ?? '',
-        'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')
+        'attachments' => isset($message['attachments']) ? Drupal::service('renderer')
           ->render($build) : '',
       ];
     }
@@ -684,7 +688,7 @@ function grants_handler_preprocess_webform_submission_events(&$variables) {
     foreach ($submissionData['events'] as $event) {
       $events[] = [
         'date' => '12.04.2021 14:54:32',
-        'eventSource' => $event['eventSource'],
+        'eventSource' => $event['eventSource'] ?? '',
         'eventDescription' => $event['eventDescription'] ?? '',
       ];
     }

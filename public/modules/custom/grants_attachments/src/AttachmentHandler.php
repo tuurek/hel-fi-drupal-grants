@@ -113,11 +113,11 @@ class AttachmentHandler {
    *   Profile service.
    */
   public function __construct(
-    AttachmentUploader   $grants_attachments_attachment_uploader,
-    AttachmentRemover    $grants_attachments_attachment_remover,
-    Messenger            $messenger,
+    AttachmentUploader $grants_attachments_attachment_uploader,
+    AttachmentRemover $grants_attachments_attachment_remover,
+    Messenger $messenger,
     LoggerChannelFactory $loggerChannelFactory,
-    AtvService           $atvService,
+    AtvService $atvService,
     GrantsProfileService $grantsProfileService,
   ) {
 
@@ -180,9 +180,9 @@ class AttachmentHandler {
    *   Field title for errors.
    */
   public static function validateAttachmentField(
-    string             $fieldName,
+    string $fieldName,
     FormStateInterface $form_state,
-    string             $fieldTitle
+    string $fieldTitle
   ) {
     // Get value.
     $values = $form_state->getValue($fieldName);
@@ -243,8 +243,8 @@ class AttachmentHandler {
    *   Parsed attachments.
    */
   public function parseAttachments(
-    array  $form,
-    array  $submittedFormData,
+    array $form,
+    array $submittedFormData,
     string $applicationNumber): array {
 
     $attachmentsArray = [];
@@ -307,7 +307,8 @@ class AttachmentHandler {
           $filenames,
           $attachmentsArray
         );
-      } catch (TempStoreException|GuzzleException $e) {
+      }
+      catch (TempStoreException | GuzzleException $e) {
         $this->logger->error($e->getMessage());
       }
     }
@@ -336,8 +337,8 @@ class AttachmentHandler {
   public function handleBankAccountConfirmation(
     string $accountNumber,
     string $applicationNumber,
-    array  $filenames,
-    array  &$attachmentsArray
+    array $filenames,
+    array &$attachmentsArray
   ) {
 
     // If no accountNumber is selected, do nothing.
@@ -357,7 +358,8 @@ class AttachmentHandler {
         'transaction_id' => $applicationNumber,
       ]);
       $applicationDocument = reset($applicationDocumentResults);
-    } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+    }
+    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
     }
 
     $accountConfirmationExists = FALSE;
@@ -420,7 +422,8 @@ class AttachmentHandler {
           $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
           // Add file to attachments for uploading.
           $this->attachmentFileIds[] = $file->id();
-        } catch (AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+        }
+        catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
           $this->logger
             ->error($e->getMessage());
           $this->messenger
@@ -492,7 +495,7 @@ class AttachmentHandler {
    *   Data for JSON.
    */
   public function getAttachmentByFieldValue(
-    array  $field,
+    array $field,
     string $fieldDescription,
     string $fileType): array {
 
@@ -573,7 +576,7 @@ class AttachmentHandler {
    *   Submission object.
    */
   public function handleApplicationAttachments(
-    string            $applicationNumber,
+    string $applicationNumber,
     WebformSubmission $webformSubmission
   ) {
 
@@ -614,7 +617,6 @@ class AttachmentHandler {
     );
 
   }
-
 
   /**
    * Find out what attachments are uploaded and what are not.
@@ -674,6 +676,5 @@ class AttachmentHandler {
       'not-uploaded' => $not,
     ];
   }
-
 
 }

@@ -2,8 +2,8 @@
 
 namespace Drupal\grants_handler;
 
+use Drupal;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -20,8 +20,9 @@ use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
+use Drupal\webform\WebformSubmissionInterface;
+use Exception;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -157,13 +158,13 @@ class ApplicationHandler {
    *   Messenger.
    */
   public function __construct(
-    ClientInterface          $http_client,
+    ClientInterface $http_client,
     HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata,
-    AtvService               $atvService,
-    AtvSchema                $atvSchema,
-    GrantsProfileService     $grantsProfileService,
-    LoggerChannelFactory     $loggerChannelFactory,
-    Messenger                $messenger
+    AtvService $atvService,
+    AtvSchema $atvSchema,
+    GrantsProfileService $grantsProfileService,
+    LoggerChannelFactory $loggerChannelFactory,
+    Messenger $messenger
   ) {
 
     $this->httpClient = $http_client;
@@ -180,7 +181,6 @@ class ApplicationHandler {
     $this->endpoint = getenv('AVUSTUS2_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
     $this->password = getenv('AVUSTUS2_PASSWORD');
-
   }
 
   /*
@@ -247,6 +247,46 @@ class ApplicationHandler {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Figure out status for new or updated application submission.
+   *
+   * @param string $triggeringElement
+   *   Element clicked.
+   * @param array $form
+   *   Form specs.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   State of form.
+   * @param array $submittedFormData
+   *   Submitted data.
+   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   *   Submission object.
+   *
+   * @return string
+   *   Status for application, unchanged if no specific update done.
+   */
+  public function getNewStatus(
+    string $triggeringElement,
+    array $form,
+    FormStateInterface $form_state,
+    array $submittedFormData,
+    WebformSubmissionInterface $webform_submission
+  ): string {
+
+    if ($triggeringElement == '::submitForm') {
+      return self::$applicationStatuses['DRAFT'];
+    }
+
+    if ($triggeringElement == '::submit') {
+      // Try to update status only if it's allowed.
+      if (self::canSubmissionBeSubmitted($webform_submission, NULL)) {
+        return ApplicationHandler::$applicationStatuses['SUBMITTED'];
+      }
+    }
+
+    // If no other status determined, return existing one without changing.
+    return $submittedFormData['status'] ?? self::$applicationStatuses['DRAFT'];
   }
 
   /**
@@ -365,25 +405,24 @@ class ApplicationHandler {
 
     $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
 
-    $result = \Drupal::entityTypeManager()
+    $result = Drupal::entityTypeManager()
       ->getStorage('webform_submission')
       ->loadByProperties([
         'serial' => $submissionSerial,
       ]);
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
-    $atvService = \Drupal::service('helfi_atv.atv_service');
+    $atvService = Drupal::service('helfi_atv.atv_service');
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+    $atvSchema = Drupal::service('grants_metadata.atv_schema');
 
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-
       throw new AtvDocumentNotFoundException('Submission not found.');
 
-      //      try {
+      // Try {
       //        // Create submission.
       //        // @todo remove hardcoded form type at some point.
       //        $createdSubmissionObject = WebformSubmission::create([
@@ -428,11 +467,14 @@ class ApplicationHandler {
 
       // Get document from ATV.
       try {
-        $document = $atvService->searchDocuments([
-          'transaction_id' => $applicationNumber,
-        ],
-          TRUE);
-      } catch (TempStoreException|AtvDocumentNotFoundException|AtvFailedToConnectException|GuzzleException $e) {
+        $document = $atvService->searchDocuments(
+          [
+            'transaction_id' => $applicationNumber,
+          ],
+          TRUE
+        );
+      }
+      catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         return NULL;
       }
 
@@ -442,7 +484,8 @@ class ApplicationHandler {
       // Set submission data from parsed mapper.
       $submissionObject->setData($atvSchema->documentContentToTypedData(
         $document->getContent(),
-        YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
+        YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')
+      ));
 
       return $submissionObject;
     }
@@ -480,7 +523,7 @@ class ApplicationHandler {
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    */
   public function webformToTypedData(
-    array  $submittedFormData,
+    array $submittedFormData,
     string $definitionClass,
     string $definitionKey
   ): TypedDataInterface {
@@ -506,9 +549,9 @@ class ApplicationHandler {
    */
   public function validateApplication(
     TypedDataInterface $applicationData,
-    array              &$form,
+    array &$form,
     FormStateInterface &$formState,
-    WebformSubmission  $webform_submission
+    WebformSubmission $webform_submission
   ): ConstraintViolationListInterface {
 
     $violations = $applicationData->validate();
@@ -527,7 +570,7 @@ class ApplicationHandler {
         $code = $violation->getCode();
 
         $thisProperty = $appProps[$propertyPath];
-        //            $webformElement = $webformElements[$propertyPath];
+        // $webformElement = $webformElements[$propertyPath];
         $thisDefinition = $thisProperty->getDataDefinition();
         $label = $thisDefinition->getLabel();
         $thisDefinitionSettings = $thisDefinition->getSettings();
@@ -537,14 +580,13 @@ class ApplicationHandler {
         // formErrorElement setting controls what element on form errors
         // if data validation fails.
         if (isset($thisDefinitionSettings['formSettings']['formElement'])) {
-          // set property path to one defined in settings.
+          // Set property path to one defined in settings.
           $propertyPath = $thisDefinitionSettings['formSettings']['formElement'];
-          // if not added already
+          // If not added already.
           if (!in_array($propertyPath, $erroredItems)) {
-
             $errorMsg = $thisDefinitionSettings['formSettings']['formError'] ?? $violation->getMessage();
 
-            // Set message
+            // Set message.
             $message = t(
               '@label: @msg',
               [
@@ -557,7 +599,7 @@ class ApplicationHandler {
               $propertyPath,
               $message
             );
-            // add propertypath to errored items to have only
+            // Add propertypath to errored items to have only
             // single error from whole address item.
             $erroredItems[] = $propertyPath;
           }
@@ -568,11 +610,10 @@ class ApplicationHandler {
             $propertyPath,
             $message
           );
-          // add propertypath to errored items to have only
+          // Add propertypath to errored items to have only
           // single error from whole address item.
           $erroredItems[] = $propertyPath;
         }
-
       }
     }
     return $violations;
@@ -636,7 +677,8 @@ class ApplicationHandler {
       if ($status === 201) {
         return TRUE;
       }
-    } catch (\Exception $e) {
+    }
+    catch (Exception $e) {
       $this->messenger->addError($e->getMessage());
       $this->logger->error($e->getMessage());
       return FALSE;

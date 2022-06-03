@@ -38,9 +38,9 @@ module:
   gin_toolbar: 0
   grant_applications_content: 0
   grants_attachments: 0
+  grants_profile: 0
   grants_handler: 0
   grants_metadata: 0
-  grants_profile: 0
   hal: 0
   hdbt_admin_editorial: 0
   hdbt_admin_tools: 0
