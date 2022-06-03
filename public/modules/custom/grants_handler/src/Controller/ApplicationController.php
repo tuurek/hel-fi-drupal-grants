@@ -165,7 +165,7 @@ class ApplicationController extends ControllerBase {
         ]));
       }
 
-      $my_form = Drupal::entityTypeManager()
+      $my_form = \Drupal::entityTypeManager()
         ->getStorage('webform')
         ->load($webform_submission->getWebform()->id());
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\grants_handler;
 
-use Drupal;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
@@ -21,7 +20,6 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionInterface;
-use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -405,17 +403,17 @@ class ApplicationHandler {
 
     $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
 
-    $result = Drupal::entityTypeManager()
+    $result = \Drupal::entityTypeManager()
       ->getStorage('webform_submission')
       ->loadByProperties([
         'serial' => $submissionSerial,
       ]);
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
-    $atvService = Drupal::service('helfi_atv.atv_service');
+    $atvService = \Drupal::service('helfi_atv.atv_service');
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-    $atvSchema = Drupal::service('grants_metadata.atv_schema');
+    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
@@ -678,7 +676,7 @@ class ApplicationHandler {
         return TRUE;
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->messenger->addError($e->getMessage());
       $this->logger->error($e->getMessage());
       return FALSE;

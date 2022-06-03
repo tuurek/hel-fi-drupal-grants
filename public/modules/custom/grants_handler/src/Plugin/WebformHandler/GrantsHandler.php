@@ -148,6 +148,11 @@ class GrantsHandler extends WebformHandlerBase {
    */
   protected array $formTemp;
 
+  /**
+   * Help with stored errors.
+   *
+   * @var \Drupal\grants_handler\GrantsHandlerNavigationHelper
+   */
   protected GrantsHandlerNavigationHelper $grantsFormNavigationHelper;
 
   /**
@@ -161,19 +166,19 @@ class GrantsHandler extends WebformHandlerBase {
     $instance->userExternalData = $container->get('helfi_helsinki_profiili.userdata');
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-    $instance->grantsProfileService = Drupal::service('grants_profile.service');
+    $instance->grantsProfileService = \Drupal::service('grants_profile.service');
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-    $instance->dateFormatter = Drupal::service('date.formatter');
+    $instance->dateFormatter = \Drupal::service('date.formatter');
 
     /** @var \Drupal\grants_attachments\AttachmentHandler */
-    $instance->attachmentHandler = Drupal::service('grants_attachments.attachment_handler');
+    $instance->attachmentHandler = \Drupal::service('grants_attachments.attachment_handler');
     $instance->attachmentHandler->setDebug($instance->isDebug());
 
     /** @var \Drupal\grants_handler\ApplicationHandler */
-    $instance->applicationHandler = Drupal::service('grants_handler.application_handler');
+    $instance->applicationHandler = \Drupal::service('grants_handler.application_handler');
 
-    $instance->grantsFormNavigationHelper = Drupal::service('grants_handler.navigation_helper');
+    $instance->grantsFormNavigationHelper = \Drupal::service('grants_handler.navigation_helper');
 
     $instance->applicationHandler->setDebug($instance->isDebug());
 
@@ -362,7 +367,7 @@ class GrantsHandler extends WebformHandlerBase {
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $applicantType = $this->grantsProfileService->getApplicantType();
     if ($applicantType === NULL) {
-      Drupal::messenger()
+      \Drupal::messenger()
         ->addError(t('You need to select applicant type.'));
 
       $url = Url::fromRoute('grants_profile.applicant_type', [
@@ -378,7 +383,7 @@ class GrantsHandler extends WebformHandlerBase {
     }
 
     if ($selectedCompany == NULL) {
-      Drupal::messenger()
+      \Drupal::messenger()
         ->addError(t("You need to select company you're acting behalf of."));
 
       $url = Url::fromRoute('grants_profile.show', [
@@ -497,12 +502,12 @@ class GrantsHandler extends WebformHandlerBase {
 
       $current_errors = $webform->getState('current_errors');
       if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
-        Drupal::messenger()
+        \Drupal::messenger()
           ->addError('These are printed as Drupal messages in GrantsHAndler::alterForm');
 
         foreach ($current_errors as $page) {
           foreach ($page as $error) {
-            Drupal::messenger()->addError($error);
+            \Drupal::messenger()->addError($error);
           }
         }
 
