@@ -77,11 +77,15 @@ class ApplicationController extends ControllerBase {
    *
    * @param string $submission_id
    *   Application number for submission.
+   * @param string $view_mode
+   *   View mode.
+   * @param string $langcode
+   *   Language.
    *
    * @return array
    *   Build for the page.
    */
-  public function view(string $submission_id, $view_mode = 'full', $langcode = 'fi'): array {
+  public function view(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
 
     $view_mode = 'default';
     $langcode = 'fi';
@@ -97,7 +101,8 @@ class ApplicationController extends ControllerBase {
           '#theme' => 'webform_submission',
           '#view_mode' => $view_mode,
           '#webform_submission' => $webform_submission,
-          // '#editSubmissionLink' => Link::fromTextAndUrl(t('Edit application'), $url),
+          // '#editSubmissionLink' =>
+          // Link::fromTextAndUrl(t('Edit application'), $url),
         ];
 
         // Navigation.
@@ -124,9 +129,10 @@ class ApplicationController extends ControllerBase {
         $build['#attached']['library'][] = 'webform/webform.admin';
 
         // Add entities cacheable dependency.
-        //        $this->renderer->addCacheableDependency($build, $this->currentUser);
-        //        $this->renderer->addCacheableDependency($build, $webform);
-        //        $this->renderer->addCacheableDependency($build, $webform_submission);.
+        // $this->renderer->addCacheableDependency($build, $this->currentUser);
+        // $this->renderer->addCacheableDependency($build, $webform);
+        // $this->renderer->
+        // addCacheableDependency($build, $webform_submission);.
         return $build;
 
       }
@@ -151,11 +157,15 @@ class ApplicationController extends ControllerBase {
    *
    * @param string $submission_id
    *   Application number for submission.
+   * @param string $view_mode
+   *   A view mode.
+   * @param string $langcode
+   *   Language code.
    *
    * @return array
    *   Build for the page.
    */
-  public function edit(string $submission_id, $view_mode = 'full', $langcode = 'fi'): array {
+  public function edit(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
     try {
       $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
       if ($webform_submission == NULL) {
@@ -173,13 +183,11 @@ class ApplicationController extends ControllerBase {
       $form = $my_form->getSubmissionForm(['data' => $webform_submission->getData()]);
 
       // $webform = $webform_submission->getWebform();
-      //      $webform->entity = $webform_submission;
+      // $webform->entity = $webform_submission;
       //
       // $form = \Drupal::entityTypeManager()
-      //        ->getViewBuilder('webform')
-      //        ->view($rr);
-      $d = 'asdf';
-
+      // ->getViewBuilder('webform')
+      // ->view($rr);
       return [
         '#theme' => 'grants_handler_edit_application',
         '#view_mode' => $view_mode,
@@ -187,10 +195,10 @@ class ApplicationController extends ControllerBase {
         '#submissionId' => $submission_id,
         '#editForm' => $form,
         // '#editForm' => [
-        //          '#type' => 'webform',
-        //          '#webform' => $webform_submission->getWebform()->id(),
-        //          '#default_data' =>
-        //        ],
+        // '#type' => 'webform',
+        // '#webform' => $webform_submission->getWebform()->id(),
+        // '#default_data' =>
+        // ],
       ];
 
     }

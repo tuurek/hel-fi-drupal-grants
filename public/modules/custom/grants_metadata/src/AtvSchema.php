@@ -293,10 +293,11 @@ class AtvSchema {
   /**
    * Sanitize input to make sure there's no illegal input.
    *
-   * @param $property
-   *   Property to be sanitized.
+   * @param mixed $value
+   *   Value to be sanitized.
    *
    * @return mixed
+   *   Sanitized value.
    */
   private function sanitizeInput(mixed $value): mixed {
 

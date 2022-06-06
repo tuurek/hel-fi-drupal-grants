@@ -332,7 +332,7 @@ class GrantsFormNavigationHelper {
    *
    * @param \Drupal\webform\WebformInterface $webform
    *   A webform entity.
-   * @param $element
+   * @param string $element
    *   A webform element.
    *
    * @return mixed

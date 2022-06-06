@@ -523,24 +523,25 @@ class GrantsHandler extends WebformHandlerBase {
       }
 
       // Make sure we haven't already set errors.
-      //      if (!empty($errors[$current_page])) {
-      //        foreach ($errors[$current_page] as $error) {
-      //          \Drupal::messenger()->addError($error);
-      //        }
-      //      }
+      // if (!empty($errors[$current_page])) {
+      // foreach ($errors[$current_page] as $error) {
+      // \Drupal::messenger()->addError($error);
+      // }
+      // }
       // elseif ($current_page != 'webform_confirmation') {
-      //        // Display any errors.
-      //        $errors = $this->grantsFormNavigationHelper->getErrors($webform_submission);
+      // // Display any errors.
+      // $errors =
+      // $this->grantsFormNavigationHelper->getErrors($webform_submission);
       //
-      //        $current_errors = $webform->getState('current_errors');
+      // $current_errors = $webform->getState('current_errors');
       //
-      //        // Make sure we haven't already set errors.
-      //        if (!empty($errors[$current_page])) {
-      //          foreach ($errors[$current_page] as $error) {
-      //            \Drupal::messenger()->addError($error);
-      //          }
-      //        }
-      //      }
+      //  // Make sure we haven't already set errors.
+      // if (!empty($errors[$current_page])) {
+      // foreach ($errors[$current_page] as $error) {
+      // \Drupal::messenger()->addError($error);
+      // }
+      // }
+      // }
     }
   }
 
@@ -704,20 +705,19 @@ class GrantsHandler extends WebformHandlerBase {
         else {
           // If we HAVE errors, then refresh them from the.
           $current_errors = $this->logErrors($webform_submission, $form_state);
-          $d = 'asfsdf';
         }
       }
-      else {
-        $d = 'asfddf';
-      }
     }
-    $d = 'adfs';
   }
 
   /**
+   * Is recursive array empty.
+   *
    * @param array $value
+   *   Array to check.
    *
    * @return bool
+   *   Empty or not?
    */
   public static function emptyRecursive(array $value): bool {
     $empty = TRUE;
@@ -900,7 +900,7 @@ class GrantsHandler extends WebformHandlerBase {
         );
       }
       catch (ReadOnlyException $e) {
-        // @todo
+        // @todo log errors here.
       }
 
       $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
@@ -1021,16 +1021,16 @@ class GrantsHandler extends WebformHandlerBase {
         );
 
         // $redirectUrl = Url::fromRoute(
-        //          'grants_handler.completion',
-        //          ['submissionId' => $this->applicationNumber],
-        //          [
-        //            'attributes' => [
-        //              'data-drupal-selector' => 'application-saved-successfully-link',
-        //            ],
-        //          ]
-        //        );
-        //        $redirectResponse = new RedirectResponse($redirectUrl->toString());
-        //        $redirectResponse->send();
+        // 'grants_handler.completion',
+        // ['submissionId' => $this->applicationNumber],
+        // [
+        // 'attributes' => [
+        // 'data-drupal-selector' => 'application-saved-successfully-link',
+        // ],
+        // ]
+        // );
+        // $redirectResponse = new RedirectResponse($redirectUrl->toString());
+        // $redirectResponse->send();
       }
       else {
         $url = Url::fromRoute(
@@ -1054,8 +1054,8 @@ class GrantsHandler extends WebformHandlerBase {
           );
       }
     }
-    catch (Exception $e) {
-      $d = 'asdf';
+    catch (\Exception $e) {
+      // @todo log errors properly
     }
   }
 
@@ -1063,7 +1063,7 @@ class GrantsHandler extends WebformHandlerBase {
    * Helper to find out if we're debugging or not.
    *
    * @return bool
-   *   If debug mode is on or not. * * * * * * * * *
+   *   If debug mode is on or not.
    */
   public function isDebug(): bool {
     return !empty($this->configuration['debug']);
@@ -1092,7 +1092,7 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * {@inheritdoc} * * * * * * * * *
+   * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
@@ -1131,10 +1131,15 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Save logged errors to webform state.
+   *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   *   Submission object.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
    *
    * @return array
+   *   All current errors.
    */
   public function logErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state): array {
     try {
@@ -1145,7 +1150,7 @@ class GrantsHandler extends WebformHandlerBase {
       $webform = $webform_submission->getWebform();
       $webform->setState('current_errors', $current_errors);
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $current_errors = [];
       // @todo add logger
     }

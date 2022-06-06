@@ -14,13 +14,13 @@ class WebformNavigationController extends ControllerBase {
   /**
    * Clear submission logs for given submission.
    *
-   * @param $submission_id
+   * @param string $submission_id
    *   SUbmission.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirect to form. @todo this needs a dynamic version.
    */
-  public function clearDraftData($submission_id) {
+  public function clearDraftData(string $submission_id): RedirectResponse {
 
     $submission = WebformSubmission::load($submission_id);
 

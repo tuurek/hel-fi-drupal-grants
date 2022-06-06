@@ -249,11 +249,10 @@ class GrantsProfileForm extends FormBase {
             ' . $bankAccount['bankAccount'] . '
           </div>
         </div>
-        <div class="grants-profile--officials-edit-wrapper">
-        ' . Link::fromTextAndUrl($bankAccountLinkText, $editAccountUrl)
-            ->toString() . '</div>
-        <div class="grants-profile--officials-delete-wrapper">
-        ' . Link::fromTextAndUrl($deleteBankAccountLinkText, $deleteAccountUrl)
+        <div class="grants-profile--officials-edit-wrapper">' .
+          Link::fromTextAndUrl($bankAccountLinkText, $editAccountUrl)->toString()
+          . '</div><div class="grants-profile--officials-delete-wrapper">' .
+          Link::fromTextAndUrl($deleteBankAccountLinkText, $deleteAccountUrl)
             ->toString() . '
        </div>
     </li>';

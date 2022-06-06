@@ -198,7 +198,8 @@ class GrantsHandlerNavigationHelper {
     $data = !empty($submission_log->data) ? unserialize($submission_log->data) : [];
 
     if ($storedData = $this->store->get(self::TEMP_STORE_KEY)) {
-      // In case we have stored errors in users' session, merge those with the ones from DB.
+      // In case we have stored errors in users' session,
+      // merge those with the ones from DB.
       $data = array_merge($data, $storedData);
       try {
         $this->store->delete(self::TEMP_STORE_KEY);
@@ -393,7 +394,7 @@ class GrantsHandlerNavigationHelper {
    *
    * @param \Drupal\webform\WebformInterface $webform
    *   A webform entity.
-   * @param $element
+   * @param string $element
    *   A webform element.
    *
    * @return mixed

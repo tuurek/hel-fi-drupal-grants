@@ -373,9 +373,13 @@ class ApplicationHandler {
   }
 
   /**
-   * @param string $applicationNumber
+   * Extract serial numbor from application number string.
    *
-   * @return array
+   * @param string $applicationNumber
+   *   Application number.
+   *
+   * @return string
+   *   Webform submission serial.
    */
   public static function getSerialFromApplicationNumber(string $applicationNumber): string {
     $exploded = explode('-', $applicationNumber);
@@ -518,7 +522,15 @@ class ApplicationHandler {
   /**
    * Get typed data object for webform data.
    *
-   * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
+   * @param array $submittedFormData
+   *   Form data.
+   * @param string $definitionClass
+   *   Class name of the definition class.
+   * @param string $definitionKey
+   *   Name of the definition.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   Typed data with values set.
    */
   public function webformToTypedData(
     array $submittedFormData,
@@ -541,6 +553,12 @@ class ApplicationHandler {
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $applicationData
    *   Typed data object.
+   * @param array $form
+   *   Form array.
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   Form state object.
+   * @param \Drupal\webform\Entity\WebformSubmission $webform_submission
+   *   Submission object.
    *
    * @return \Symfony\Component\Validator\ConstraintViolationListInterface
    *   Constraint violation object.
