@@ -72,11 +72,13 @@ class GrantsAttachments extends WebformCompositeBase {
         }
       }
       if (isset($dataForElement['isIncludedInOtherFile'])) {
-        $element["isIncludedInOtherFile"]["#default_value"] = $dataForElement['isIncludedInOtherFile'] == 'true';
+        $element["isIncludedInOtherFile"]["#default_value"] = ($dataForElement['isIncludedInOtherFile'] == 'true' || $dataForElement['isIncludedInOtherFile'] == '1');
         if ($element["isIncludedInOtherFile"]["#default_value"] == TRUE) {
           $element["fileStatus"]["#value"] = 'otherFile';
         }
       }
+      //   AVUSTUS2_EVENT_ENDPOINT: "${AVUSTUS2_EVENT_ENDPOINT}"
+      //  EVENTS_SOURCE: "${EVENTS_SOURCE}"
       if (isset($dataForElement['fileName'])) {
         $element['attachmentName'] = [
           '#type' => 'textfield',

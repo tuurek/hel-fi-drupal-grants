@@ -217,11 +217,13 @@ class AttachmentHandler {
           }
         }
         else {
-          if ((!empty($value) && !isset($value['attachment']) && ($value['attachment'] === NULL && $value['attachmentName'] === ''))) {
-            if (empty($value['isDeliveredLater']) && empty($value['isIncludedInOtherFile'])) {
-              $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", t('@fieldname has no file uploaded, it must be either delivered later or be included in other file.', [
-                '@fieldname' => $fieldTitle,
-              ]));
+          if ($fieldName !== 'muu_liite') {
+            if ((!empty($value) && !isset($value['attachment']) && ($value['attachment'] === NULL && $value['attachmentName'] === ''))) {
+              if (empty($value['isDeliveredLater']) && empty($value['isIncludedInOtherFile'])) {
+                $form_state->setErrorByName("[" . $fieldName . "][isDeliveredLater]", t('@fieldname has no file uploaded, it must be either delivered later or be included in other file.', [
+                  '@fieldname' => $fieldTitle,
+                ]));
+              }
             }
           }
         }
@@ -538,6 +540,11 @@ class AttachmentHandler {
         }
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
+        $retval['isNewAttachment'] = FALSE;
+      }
+      if ($field['fileStatus'] === 'otherFile') {
+        $retval['isDeliveredLater'] = FALSE;
+        $retval['isIncludedInOtherFile'] = TRUE;
         $retval['isNewAttachment'] = FALSE;
       }
       if ($field['fileStatus'] == 'deliveredLater') {
