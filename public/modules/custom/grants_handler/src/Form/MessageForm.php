@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_handler\Form;
 
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\TypedDataManager;
@@ -9,6 +10,7 @@ use Drupal\file\Entity\File;
 use Drupal\grants_handler\MessageService;
 use Drupal\grants_profile\Form\AddressForm;
 use Drupal\webform\Entity\WebformSubmission;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,14 +33,23 @@ class MessageForm extends FormBase {
   protected MessageService $messageService;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new AddressForm object.
    */
   public function __construct(
     TypedDataManager $typed_data_manager,
-    MessageService $messageService
+    MessageService $messageService,
+    EntityTypeManager $entityTypeManager
   ) {
     $this->typedDataManager = $typed_data_manager;
     $this->messageService = $messageService;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -47,7 +58,8 @@ class MessageForm extends FormBase {
   public static function create(ContainerInterface $container): AddressForm|static {
     return new static(
       $container->get('typed_data_manager'),
-      $container->get('grants_handler.message_service')
+      $container->get('grants_handler.message_service'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -139,8 +151,8 @@ class MessageForm extends FormBase {
     /** @var \Drupal\webform\Entity\WebformSubmission $submission */
     $submission = $storage['webformSubmission'];
     $submissionData = $submission->getData();
-    $messageAmount = is_array($submissionData['messages']) ? count($submissionData['messages']) : 0;
-    $nextMessageId = $submissionData['application_number'] . '-' . $messageAmount + 1;
+
+    $nextMessageId = Uuid::uuid4();
 
     $attachment = $form_state->getValue('messageAttachment');
     $data = [
@@ -210,6 +222,12 @@ class MessageForm extends FormBase {
         ->addStatus($this->t('Your message has been sent. Please note that it may not show up on this page straight away.'));
       $this->messenger()
         ->addStatus($this->t('Your message: @message', ['@message' => $data['body']]));
+
+      // let's invalidate cache for this submission.
+      //      $this->entityTypeManager->getViewBuilder($submission->getWebform()
+      //        ->getEntityTypeId())->resetCache([
+      //          $submission,
+      //        ]);
     }
     else {
       $this->messenger()

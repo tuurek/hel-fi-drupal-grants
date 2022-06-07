@@ -2,6 +2,8 @@
 
 namespace Drupal\grants_profile\Controller;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\TempStore\TempStoreException;
@@ -49,6 +51,8 @@ class GrantsProfileController extends ControllerBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
+    $applications = [];
+
     if ($selectedCompany == NULL) {
       $this->messenger()
         ->addError($this->t('No profile data available, select company'), TRUE);
@@ -67,15 +71,35 @@ class GrantsProfileController extends ControllerBase {
           'business_id' => $selectedCompany,
         ],
           TRUE);
-        $applications = [];
+
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         foreach ($applicationDocuments as $document) {
           $transactionId = $document->getTransactionId();
+
+          if (empty($transactionId)) {
+            continue;
+          }
+
+          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($transactionId);
+
           if (str_contains($transactionId, 'GRANTS-' . ApplicationHandler::getAppEnv())) {
 
             $url = Url::fromRoute(
               'grants_handler.view_application',
               ['submission_id' => $transactionId],
+              [
+                'attributes' => [
+                  'data-drupal-selector' => 'application-view-link',
+                  'target' => '_blank',
+                ],
+              ]
+            );
+            $editUrl = Url::fromRoute(
+              'grants_handler.edit_application',
+              [
+                'webform' => $submission->getWebform()->id(),
+                'webform_submission' => $submission->id(),
+              ],
               [
                 'attributes' => [
                   'data-drupal-selector' => 'application-edit-link',
@@ -103,33 +127,42 @@ class GrantsProfileController extends ControllerBase {
             ];
 
             $applications[] = [
-              'transaction_id' => Link::fromTextAndUrl($transactionId, $url),
+              'transaction_id' => $transactionId,
               'uploadedAttachments' => \Drupal::service('renderer')
                 ->render($uploaded),
               'missingAttachments' => \Drupal::service('renderer')
                 ->render($non_uploaded),
               'status' => $document->getStatus(),
-              'statusHistory' => $document->getStatusHistory(),
+              'view' => Link::fromTextAndUrl($this->t('View'), $url),
+              'edit' => Link::fromTextAndUrl($this->t('Edit'), $editUrl),
             ];
           }
         }
-        $table = [
-          '#type' => 'table',
-          '#header' => [
-            'transaction_id' => $this->t('Application #'),
-            'uploadedAttachments' => $this->t('Attachments uploaded'),
-            'missingAttachments' => $this->t('Attachments en route'),
-            'status' => $this->t('Application status'),
-            'statusHistory' => $this->t('Status history'),
-          ],
-          '#rows' => $applications,
-          '#empty' => t('No content has been found.'),
-        ];
-        $build['#applications'] = $table;
+      }
+      catch (
+        AtvDocumentNotFoundException |
+        AtvFailedToConnectException |
+        GuzzleException |
+        TempStoreException |
+        InvalidPluginDefinitionException |
+        PluginNotFoundException $e) {
+        $d = 'asdf';
+      }
 
-      }
-      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException | TempStoreException $e) {
-      }
+      $table = [
+        '#type' => 'table',
+        '#header' => [
+          'transaction_id' => $this->t('Application #'),
+          'uploadedAttachments' => $this->t('Attachments uploaded'),
+          'missingAttachments' => $this->t('Attachments en route'),
+          'status' => $this->t('Application status'),
+          'view' => $this->t('View'),
+          'edit' => $this->t('Edit'),
+        ],
+        '#rows' => $applications,
+        '#empty' => t('No content has been found.'),
+      ];
+      $build['#applications'] = $table;
 
       $build['#profile'] = $profile;
     }

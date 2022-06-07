@@ -513,13 +513,12 @@ function grants_handler_preprocess_webform_section(&$variables) {
 /**
  * Implements hook_preprocess_HOOK().
  */
-function grants_handler_preprocess_webform_submission_data(&$variables) {
+function grants_handler_preprocess_webform_submission(&$variables) {
   // get submission object
   /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables['webform_submission'];
   $webform = $submission->getWebform();
   $data = $submission->getData();
-  $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
 
   $urlCustom = Url::fromRoute(
     'grants_handler.edit_application',
@@ -553,9 +552,6 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   if (isset($data["business_purpose"])) {
     $variables["elements"]["data"]["3_yhteison_tiedot"]["#element"]["business_info"]["community_purpose"] = $data["business_purpose"];
   }
-
-  $variables["elements"]["data"]["lisatiedot_ja_liitteet"]["#element"]
-  ["liitteet"]["talousarvio"]["#webform_composite_elements"]["attachmentName"] = 'ASDF ASDFASDFASDFASDFASDFASDF';
 
   $variables['editSubmissionUrlCustom'] = $urlCustom;
   $variables['editSubmissionUrlWebform'] = $urlWebform;

@@ -134,6 +134,7 @@ class AtvSchema {
       // If we have fileName property we know the file is definitely not new.
       if (isset($attachment["fileName"]) && $attachment["fileName"] !== '') {
         $newValues["isNewAttachment"] = 'false';
+        $newValues['attachmentName'] = $attachment['fileName'];
       }
 
       // @todo Do away with hard coded field name for muu liite.

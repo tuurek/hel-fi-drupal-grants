@@ -129,10 +129,9 @@ class ApplicationController extends ControllerBase {
         $build['#attached']['library'][] = 'webform/webform.admin';
 
         // Add entities cacheable dependency.
-        // $this->renderer->addCacheableDependency($build, $this->currentUser);
-        // $this->renderer->addCacheableDependency($build, $webform);
-        // $this->renderer->
-        // addCacheableDependency($build, $webform_submission);.
+        $this->renderer->addCacheableDependency($build, $this->currentUser);
+        $this->renderer->addCacheableDependency($build, $webform);
+        $this->renderer->addCacheableDependency($build, $webform_submission);
         return $build;
 
       }
@@ -146,7 +145,7 @@ class ApplicationController extends ControllerBase {
     catch (InvalidPluginDefinitionException | PluginNotFoundException | AtvDocumentNotFoundException | GuzzleException $e) {
       throw new NotFoundHttpException($e->getMessage());
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       throw new NotFoundHttpException($e->getMessage());
     }
     return [];
@@ -214,7 +213,7 @@ class ApplicationController extends ControllerBase {
     catch (GuzzleException $e) {
       throw new NotFoundHttpException('Application not found');
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       throw new NotFoundHttpException('Application not found');
     }
   }

@@ -770,7 +770,11 @@
       "eventType": "STATUS_UPDATE",
       "eventCode": 0,
       "eventSource": "Avustustenkasittelyjarjestelma",
-      "timeUpdated": "2021-10-15T00:00:00Z"
+      "eventID": "",
+      "eventTarget": "",
+      "timeUpdated": "2021-10-15T00:00:00Z",
+      "timeCreated": "",
+      "eventDescription": ""
     }
   ],
   "messages": [

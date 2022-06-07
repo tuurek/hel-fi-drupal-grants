@@ -42,7 +42,8 @@
         "drupal/webform_submission_log": "^6.1",
         "drupal/webform_views": "^5.0@alpha",
         "drush/drush": "^10.4",
-        "globalcitizen/php-iban": "^4.1"
+        "globalcitizen/php-iban": "^4.1",
+        "ramsey/uuid": "^4.3"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",

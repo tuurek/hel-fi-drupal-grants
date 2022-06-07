@@ -138,6 +138,13 @@ class ApplicationHandler {
   protected string $password;
 
   /**
+   * New status header text for integration.
+   *
+   * @var string
+   */
+  protected string $newStatusHeader;
+
+  /**
    * Constructs an ApplicationUploader object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -179,6 +186,9 @@ class ApplicationHandler {
     $this->endpoint = getenv('AVUSTUS2_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
     $this->password = getenv('AVUSTUS2_PASSWORD');
+
+    $this->newStatusHeader = '';
+
   }
 
   /*
@@ -273,17 +283,28 @@ class ApplicationHandler {
   ): string {
 
     if ($triggeringElement == '::submitForm') {
-      return self::$applicationStatuses['DRAFT'];
+      return ApplicationHandler::$applicationStatuses['DRAFT'];
     }
 
     if ($triggeringElement == '::submit') {
       // Try to update status only if it's allowed.
       if (self::canSubmissionBeSubmitted($webform_submission, NULL)) {
+        if (
+          $submittedFormData['status'] == 'DRAFT' ||
+          !isset($submittedFormData['status']) ||
+          $submittedFormData['status'] == '') {
+          // If old status is draft or it's not set, we'll update status in
+          // document with HEADER as well.
+          $this->newStatusHeader = ApplicationHandler::$applicationStatuses['SUBMITTED'];
+        }
+
         return ApplicationHandler::$applicationStatuses['SUBMITTED'];
       }
     }
 
     // If no other status determined, return existing one without changing.
+    // submission should ALWAYS have status set if it's something else
+    // than DRAFT.
     return $submittedFormData['status'] ?? self::$applicationStatuses['DRAFT'];
   }
 
@@ -671,6 +692,12 @@ class ApplicationHandler {
     }
 
     try {
+
+      $headers = [];
+      if ($this->newStatusHeader && $this->newStatusHeader != '') {
+        $headers['X-Case-Status'] = $this->newStatusHeader;
+      }
+
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
           $this->username,
@@ -678,6 +705,7 @@ class ApplicationHandler {
           "Basic",
         ],
         'body' => $myJSON,
+        'headers' => $headers,
       ]);
 
       $status = $res->getStatusCode();

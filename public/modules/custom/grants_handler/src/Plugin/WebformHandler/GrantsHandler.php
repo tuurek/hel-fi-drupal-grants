@@ -861,7 +861,13 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
 
-    if (!isset($this->submittedFormData['application_number'])) {
+    // let's invalidate cache for this submission.
+    $this->entityTypeManager->getViewBuilder($webform_submission->getWebform()
+      ->getEntityTypeId())->resetCache([
+        $webform_submission,
+      ]);
+
+    if (!isset($this->submittedFormData['application_number']) || $this->submittedFormData['application_number'] == '') {
       if (!isset($this->applicationNumber) || $this->applicationNumber == '') {
         $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
       }
@@ -979,10 +985,14 @@ class GrantsHandler extends WebformHandlerBase {
   ) {
 
     try {
-      // Try to update status only if it's allowed.
-      if (ApplicationHandler::canSubmissionBeSubmitted($webform_submission, NULL)) {
-        $this->submittedFormData['status'] = ApplicationHandler::$applicationStatuses['SUBMITTED'];
-      }
+
+      $this->submittedFormData['status'] = $this->applicationHandler->getNewStatus(
+        $this->triggeringElement,
+        $form,
+        $form_state,
+        $this->submittedFormData,
+        $webform_submission
+      );
 
       $applicationData = $this->applicationHandler->webformToTypedData(
         $this->submittedFormData,
@@ -1000,12 +1010,17 @@ class GrantsHandler extends WebformHandlerBase {
           $webform_submission
         );
 
+        $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
+          'submission_id' => $this->applicationNumber,
+        ]);
+
         $this->messenger()
           ->addStatus(
             t(
-              'Grant application (<span id="saved-application-number">@number</span>) saved.',
+              'Grant application (<span id="saved-application-number">@number</span>) saved. You can view your new application from @here.',
               [
                 '@number' => $this->applicationNumber,
+                '@here' => Link::fromTextAndUrl('here', $viewApplicationUrl)->toString(),
               ]
             )
           );
@@ -1019,6 +1034,8 @@ class GrantsHandler extends WebformHandlerBase {
             ],
           ]
         );
+
+        $d = 'asdf';
 
         // $redirectUrl = Url::fromRoute(
         // 'grants_handler.completion',
