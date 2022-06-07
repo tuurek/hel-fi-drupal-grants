@@ -300,7 +300,7 @@ class AtvSchema {
    * @return mixed
    *   Sanitized value.
    */
-  private function sanitizeInput(mixed $value): mixed {
+  public static function sanitizeInput(mixed $value): mixed {
 
     if (is_array($value)) {
       array_walk_recursive($value, function (&$item) {
@@ -349,7 +349,7 @@ class AtvSchema {
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
 
-      $value = $this->sanitizeInput($property->getValue());
+      $value = self::sanitizeInput($property->getValue());
 
       if ($jsonPath == NULL &&
         ($propertyName !== 'form_update' &&

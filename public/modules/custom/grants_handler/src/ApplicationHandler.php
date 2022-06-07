@@ -445,45 +445,6 @@ class ApplicationHandler {
     if (empty($result)) {
       throw new AtvDocumentNotFoundException('Submission not found.');
 
-      // Try {
-      //        // Create submission.
-      //        // @todo remove hardcoded form type at some point.
-      //        $createdSubmissionObject = WebformSubmission::create([
-      //          'webform_id' => 'yleisavustushakemus',
-      //          'serial' => $submissionSerial,
-      //        ]);
-      //        // Make sure serial is set.
-      //        $createdSubmissionObject->set('serial', $submissionSerial);
-      //
-      //        // Get document from ATV.
-      //        $document = $atvService->searchDocuments([
-      //          'transaction_id' => $applicationNumber,
-      //        ],
-      //          TRUE);
-      //
-      //        /** @var \Drupal\helfi_atv\AtvDocument $document */
-      //        $document = reset($document);
-      //
-      //        // Save submission BEFORE setting data so we don't accidentally
-      //        // save anything.
-      //        $createdSubmissionObject->save();
-      //
-      //        // Set submission data from parsed mapper.
-      //        $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
-      //          $document->getContent(),
-      //          YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
-      //
-      //        return $createdSubmissionObject;
-      //
-      //      } catch (
-      //      AtvDocumentNotFoundException|
-      //      AtvFailedToConnectException|
-      //      GuzzleException|
-      //      TempStoreException|
-      //      ConnectException|
-      //      EntityStorageException $e) {
-      //        throw new AtvDocumentNotFoundException($e->getMessage());
-      //      }
     }
     else {
       $submissionObject = reset($result);

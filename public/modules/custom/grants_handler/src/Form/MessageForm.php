@@ -222,12 +222,6 @@ class MessageForm extends FormBase {
         ->addStatus($this->t('Your message has been sent. Please note that it may not show up on this page straight away.'));
       $this->messenger()
         ->addStatus($this->t('Your message: @message', ['@message' => $data['body']]));
-
-      // let's invalidate cache for this submission.
-      //      $this->entityTypeManager->getViewBuilder($submission->getWebform()
-      //        ->getEntityTypeId())->resetCache([
-      //          $submission,
-      //        ]);
     }
     else {
       $this->messenger()
