@@ -648,6 +648,60 @@ class GrantsHandler extends WebformHandlerBase {
     // maybe the submittedData is even not required?
     $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
 
+    $this->setTotals();
+    $this->parseSenderDetails();
+
+    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
+
+    foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
+      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
+    }
+    foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
+      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
+      unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
+    }
+
+    // Set form timestamp to current time.
+    // apparently this is always set to latest submission.
+    $dt = new \DateTime();
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
+
+    // Get regdate from profile data and format it for Avustus2
+    // This data is immutable for end user so safe to this way.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
+    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s');
+
+    // Set form update value based on new & old status + Avus2 logic.
+    $this->submittedFormData["form_update"] = $this->getFormUpdate();
+
+    // Make sure we have application type id set.
+    if (!isset($this->applicationTypeID)) {
+      if (isset($this->submittedFormData['application_type_id'])) {
+        $this->applicationTypeID = $this->submittedFormData['application_type_id'];
+      }
+      else {
+        $this->applicationTypeID = $webform_submission->getWebform()
+          ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
+        $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
+      }
+    }
+
+    // Make sure we have our application type set.
+    if (!isset($this->applicationType)) {
+      if (isset($this->submittedFormData['application_type'])) {
+        $this->applicationTypeID = $this->submittedFormData['application_type'];
+      }
+      else {
+        $this->applicationType = $webform_submission->getWebform()
+          ->getThirdPartySetting('grants_metadata', 'applicationType');
+        $this->submittedFormData['application_type'] = $this->applicationType;
+      }
+    }
+
     // Figure out status for this application.
     $this->newStatus = $this->applicationHandler->getNewStatus(
       $triggeringElement,
@@ -659,14 +713,13 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    // $form_state->clearErrors();
     // Loop through fieldnames and validate fields.
     foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
-      // $fValues = $form_state->getValue($fieldName);
       AttachmentHandler::validateAttachmentField(
         $fieldName,
         $form_state,
-        $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"]
+        $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
+        $triggeringElement
       );
     }
     $current_errors = $this->logErrors($webform_submission, $form_state);
@@ -734,10 +787,6 @@ class GrantsHandler extends WebformHandlerBase {
 
     $triggeringElement = $this->getTriggeringElementName($form_state);
 
-    if ($triggeringElement == '::submitForm') {
-      $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
-    }
-
     // Because of funky naming convention, we need to manually
     // set purpose field value.
     // This is populated from grants profile so it's just passing this on.
@@ -745,34 +794,7 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
     }
 
-    $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
-    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
-
-    foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
-      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
-      unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
-    }
-    foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
-      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
-      unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
-    }
-
-    // Set form timestamp to current time.
-    // apparently this is always set to latest submission.
-    $dt = new \DateTime();
-    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-    $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
-
-    // Get regdate from profile data and format it for Avustus2
-    // This data is immutable for end user so safe to this way.
-    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
-    $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
-    $this->submittedFormData["registration_date"] = $regDate->format('Y-m-d\TH:i:s');
-
-    // Set form update value based on new & old status + Avus2 logic.
-    $this->submittedFormData["form_update"] = $this->getFormUpdate();
-
+    // $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
     // If for some reason we don't have application number at this point.
     if (!isset($this->applicationNumber)) {
       // But if one is coming from form (hidden field)
@@ -790,30 +812,6 @@ class GrantsHandler extends WebformHandlerBase {
         // for application number to exists.
         // and it's no biggie since we can always get it from the method above
         // as long as we have our submission object.
-      }
-    }
-
-    // Make sure we have application type id set.
-    if (!isset($this->applicationTypeID)) {
-      if (isset($this->submittedFormData['application_type_id'])) {
-        $this->applicationTypeID = $this->submittedFormData['application_type_id'];
-      }
-      else {
-        $this->applicationTypeID = $webform_submission->getWebform()
-          ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
-        $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
-      }
-    }
-
-    // Make sure we have our application type set.
-    if (!isset($this->applicationType)) {
-      if (isset($this->submittedFormData['application_type'])) {
-        $this->applicationTypeID = $this->submittedFormData['application_type'];
-      }
-      else {
-        $this->applicationType = $webform_submission->getWebform()
-          ->getThirdPartySetting('grants_metadata', 'applicationType');
-        $this->submittedFormData['application_type'] = $this->applicationType;
       }
     }
 
@@ -838,6 +836,7 @@ class GrantsHandler extends WebformHandlerBase {
       // Submission data is not saved in storage controller,
       // so save data here for later usage.
       $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
+
     }
 
     // If for some reason applicant type is not present, make sure it get's
@@ -850,10 +849,6 @@ class GrantsHandler extends WebformHandlerBase {
       $this->submittedFormData["business_purpose"] = $this->submittedFormData["community_purpose"];
     }
 
-    if (!empty($this->submittedFormData)) {
-      $this->setTotals();
-      $this->parseSenderDetails();
-    }
   }
 
   /**

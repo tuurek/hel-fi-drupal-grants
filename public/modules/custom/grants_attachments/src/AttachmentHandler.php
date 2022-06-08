@@ -182,7 +182,8 @@ class AttachmentHandler {
   public static function validateAttachmentField(
     string $fieldName,
     FormStateInterface $form_state,
-    string $fieldTitle
+    string $fieldTitle,
+    string $triggeringElement
   ) {
     // Get value.
     $values = $form_state->getValue($fieldName);
@@ -202,7 +203,8 @@ class AttachmentHandler {
           '@fieldname' => $fieldTitle,
         ]));
       }
-      if ($value !== NULL) {
+
+      if ($value !== NULL && !empty($value)) {
         // If attachment is uploaded, make sure no other field is selected.
         if (isset($value['attachment']) && is_int($value['attachment'])) {
           if ($value['isDeliveredLater'] === "1") {

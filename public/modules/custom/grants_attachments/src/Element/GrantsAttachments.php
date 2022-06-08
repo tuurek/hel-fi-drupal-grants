@@ -77,8 +77,6 @@ class GrantsAttachments extends WebformCompositeBase {
           $element["fileStatus"]["#value"] = 'otherFile';
         }
       }
-      //   AVUSTUS2_EVENT_ENDPOINT: "${AVUSTUS2_EVENT_ENDPOINT}"
-      //  EVENTS_SOURCE: "${EVENTS_SOURCE}"
       if (isset($dataForElement['fileName'])) {
         $element['attachmentName'] = [
           '#type' => 'textfield',
@@ -133,6 +131,12 @@ class GrantsAttachments extends WebformCompositeBase {
       }
       if (isset($dataForElement['description'])) {
         $element["description"]["#default_value"] = $dataForElement['description'];
+      }
+
+      if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '101') {
+        if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== ""){
+          $element["fileStatus"]["#value"] = 'uploaded';
+        }
       }
     }
 
