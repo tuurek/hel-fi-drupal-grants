@@ -72,7 +72,7 @@ class GrantsAttachments extends WebformCompositeBase {
         }
       }
       if (isset($dataForElement['isIncludedInOtherFile'])) {
-        $element["isIncludedInOtherFile"]["#default_value"] = $dataForElement['isIncludedInOtherFile'] == 'true';
+        $element["isIncludedInOtherFile"]["#default_value"] = ($dataForElement['isIncludedInOtherFile'] == 'true' || $dataForElement['isIncludedInOtherFile'] == '1');
         if ($element["isIncludedInOtherFile"]["#default_value"] == TRUE) {
           $element["fileStatus"]["#value"] = 'otherFile';
         }
@@ -131,6 +131,12 @@ class GrantsAttachments extends WebformCompositeBase {
       }
       if (isset($dataForElement['description'])) {
         $element["description"]["#default_value"] = $dataForElement['description'];
+      }
+
+      if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '101') {
+        if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== ""){
+          $element["fileStatus"]["#value"] = 'uploaded';
+        }
       }
     }
 

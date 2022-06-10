@@ -3,7 +3,7 @@
 namespace Drupal\grants_attachments\Plugin\WebformElement;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
+use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -130,7 +130,7 @@ class GrantsAttachments extends WebformCompositeBase {
       $value = $data[$webform_key];
     }
     else {
-      foreach (GrantsHandler::getAttachmentFieldNames() as $fieldName) {
+      foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
         if (!isset($data[$fieldName])) {
           continue;
         }
@@ -196,18 +196,18 @@ class GrantsAttachments extends WebformCompositeBase {
       $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
     }
 
-    if ($value["isDeliveredLater"] === 'true') {
-      $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
-    }
-    if ($value["isIncludedInOtherFile"] === 'true') {
-      $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
-    }
-    if ($value["description"] !== NULL && $element["#webform_key"] == 'muu_liite') {
-      $lines[] = $value["description"];
-    }
-
     if (isset($value["fileName"])) {
       $lines[] = $value["fileName"];
+    }
+
+    if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' || $value["isDeliveredLater"] === '1')) {
+      $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
+    }
+    if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' || $value["isIncludedInOtherFile"] === '1')) {
+      $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
+    }
+    if (isset($value["description"]) && (isset($element["#description"]) && $element["#description"] == 'muu_liite')) {
+      $lines[] = $value["description"];
     }
 
     return $lines;

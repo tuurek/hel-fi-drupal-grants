@@ -1,0 +1,11 @@
+services:
+  grants_formnavigation.helper:
+    class: \Drupal\grants_formnavigation\GrantsFormNavigationHelper
+    arguments: [
+        '@webform_submission_log.manager',
+        '@database', '@messenger',
+        '@entity_type.manager',
+        '@form_builder',
+        '@helfi_helsinki_profiili.userdata',
+        '@tempstore.private'
+    ]

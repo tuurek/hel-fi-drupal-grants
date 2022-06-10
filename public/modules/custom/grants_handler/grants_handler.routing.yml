@@ -1,0 +1,57 @@
+grants_handler.clear-navigations:
+  path: '/grants-handler/clearnavigation/{submission_id}'
+  defaults:
+    _title: 'Clear navigations'
+    _controller: '\Drupal\grants_handler\Controller\WebformNavigationController::clearDraftData'
+  requirements:
+    _permission: 'access content'
+
+grants_handler.completion:
+  path: 'hakemus/{submission_id}/completion'
+  defaults:
+    _title_callback: '\Drupal\grants_handler\Controller\CompletionController::getTitle'
+    _controller: '\Drupal\grants_handler\Controller\CompletionController::build'
+  requirements:
+    _permission: 'access content'
+
+grants_handler.view_application:
+  path: 'hakemus/{submission_id}/view'
+  defaults:
+    _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getTitle'
+    _controller: '\Drupal\grants_handler\Controller\ApplicationController::view'
+  requirements:
+    _permission: 'view own webform submission'
+
+
+grants_handler.edit_application:
+  path: '/hakemus/{webform}/{webform_submission}/edit'
+  defaults:
+    _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getEditTitle'
+    _entity_form: 'webform_submission.edit'
+  requirements:
+    _entity_access: 'webform_submission.update'
+#
+#
+#grants_handler.edit_application:
+#  path: '/hakemus/{submission_id}/edit'
+#  defaults:
+#    _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getEditTitle'
+#    _controller: '\Drupal\grants_handler\Controller\ApplicationController::edit'
+#  requirements:
+#    _permission: 'edit own webform submission'
+
+#entity.webform.user.submission.edit:
+#  path: '/webform/{webform}/submissions/{webform_submission}/edit'
+#  defaults:
+#    _entity_form: 'webform_submission.edit'
+#    _title_callback: '\Drupal\webform\Controller\WebformSubmissionViewController::title'
+#  requirements:
+#    _entity_access: 'webform_submission.update'
+
+grants_handler.applications_list:
+  path: '/hakemukset'
+  defaults:
+    _title: 'Hakemukset'
+    _controller: '\Drupal\grants_handler\Controller\ApplicationsListController::build'
+  requirements:
+    _permission: 'view own webform submission'

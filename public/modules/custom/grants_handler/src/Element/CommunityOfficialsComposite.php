@@ -38,7 +38,7 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
 
     $elements['community_officials_select'] = [
       '#type' => 'select',
-      '#required' => TRUE,
+      // '#required' => TRUE,
       '#title' => t('Select official'),
       '#after_build' => [[get_called_class(), 'buildOfficialOptions']],
       '#options' => [],
@@ -90,7 +90,7 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $officialRole = ApplicationOfficialForm::getOfficialRoles();
     $selectedCompany = $grantsProfileService->getSelectedCompany();
-    $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+    $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
 
     $defaultDelta = '0';
 

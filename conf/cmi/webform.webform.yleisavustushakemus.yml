@@ -25,14 +25,14 @@ elements: |-
     '#title': '1. Hakijan tiedot'
     '#prev_button_label': '< Edellinen'
     '#next_button_label': 'Seuraava >'
+    application_number:
+      '#type': textfield
+      '#title': 'Application Number'
+      '#disabled': true
     status:
       '#type': textfield
       '#title': 'Hakemuksen tila'
       '#readonly': true
-    finalize_application:
-      '#type': checkbox
-      '#title': 'Finalize application'
-      '#description': 'Check this to submit application for handling and disable editing.&nbsp;'
     yhteiso_jolle_haetaan_avustusta:
       '#type': webform_section
       '#title': 'Yhteisö, jolle haetaan avustusta'
@@ -107,7 +107,7 @@ elements: |-
         '#markup': 'Yhteyshenki&ouml;lle l&auml;hetet&auml;&auml;n hakemukseen liittyvi&auml; yhteydenottoja kuten t&auml;ydennys- ja lis&auml;selvityspyynt&ouml;j&auml;. Ilmoita tässä sellainen sähköpostiosoite, jota luetaan aktiivisesti.'
       contact_person:
         '#type': textfield
-        '#title': 'Yhteyshenkilö'
+        '#title': Yhteyshenkilö
         '#autocomplete': 'off'
         '#required': true
         '#size': 63
@@ -120,7 +120,7 @@ elements: |-
         '#help': 'Ilmoita s&auml;hk&ouml;postiosoite, johon t&auml;h&auml;n hakemukseen liittyvät viestit sek&auml; her&auml;tteet osoitetaan ja jota luetaan aktiivisesti'
       contact_person_phone_number:
         '#type': textfield
-        '#title': 'Puhelinnumero'
+        '#title': Puhelinnumero
         '#required': true
         '#autocomplete': 'off'
         '#size': 32
@@ -630,7 +630,7 @@ settings:
   form_prepopulate_source_entity: false
   form_prepopulate_source_entity_required: false
   form_prepopulate_source_entity_type: ''
-  form_unsaved: false
+  form_unsaved: true
   form_disable_back: false
   form_submit_back: true
   form_disable_autocomplete: false
@@ -699,7 +699,7 @@ settings:
   preview_excluded_elements: {  }
   preview_exclude_empty: false
   preview_exclude_empty_checkbox: false
-  draft: authenticated
+  draft: all
   draft_multiple: false
   draft_auto_save: false
   draft_saved_message: ''
@@ -729,8 +729,8 @@ settings:
   entity_limit_total_interval: null
   entity_limit_user: null
   entity_limit_user_interval: null
-  purge: none
-  purge_days: null
+  purge: draft
+  purge_days: 365
   results_disabled: false
   results_disabled_ignore: false
   results_customize: false
@@ -795,6 +795,5 @@ handlers:
     conditions: {  }
     weight: 0
     settings:
-      endpoint: 'This is a custom endpoint.'
       debug: true
 variants: {  }

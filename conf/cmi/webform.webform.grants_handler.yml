@@ -112,7 +112,7 @@ settings:
   wizard_progress_bar: true
   wizard_progress_pages: false
   wizard_progress_percentage: false
-  wizard_progress_link: false
+  wizard_progress_link: true
   wizard_progress_states: false
   wizard_start_label: ''
   wizard_preview_link: false
@@ -135,7 +135,7 @@ settings:
   preview_excluded_elements: {  }
   preview_exclude_empty: true
   preview_exclude_empty_checkbox: false
-  draft: none
+  draft: all
   draft_multiple: false
   draft_auto_save: false
   draft_saved_message: ''
@@ -165,8 +165,8 @@ settings:
   entity_limit_total_interval: null
   entity_limit_user: null
   entity_limit_user_interval: null
-  purge: none
-  purge_days: null
+  purge: draft
+  purge_days: 365
   results_disabled: false
   results_disabled_ignore: false
   results_customize: false
