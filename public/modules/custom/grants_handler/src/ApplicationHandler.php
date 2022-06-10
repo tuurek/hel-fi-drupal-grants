@@ -2,7 +2,9 @@
 
 namespace Drupal\grants_handler;
 
+use Drupal;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -20,7 +22,9 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionInterface;
+use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -441,32 +445,26 @@ class ApplicationHandler {
    * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    */
-  public static function submissionObjectFromApplicationNumber(string $applicationNumber): ?WebformSubmission {
+  public static function submissionObjectFromApplicationNumber(
+    string $applicationNumber,
+    AtvDocument $document = NULL
+  ): ?WebformSubmission {
 
     $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
 
-    $result = \Drupal::entityTypeManager()
+    $result = Drupal::entityTypeManager()
       ->getStorage('webform_submission')
       ->loadByProperties([
         'serial' => $submissionSerial,
       ]);
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
-    $atvService = \Drupal::service('helfi_atv.atv_service');
+    $atvService = Drupal::service('helfi_atv.atv_service');
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
+    $atvSchema = Drupal::service('grants_metadata.atv_schema');
 
-    // If there's no local submission with given serial
-    // we can actually create that object on the fly and use that for editing.
-    if (empty($result)) {
-      throw new AtvDocumentNotFoundException('Submission not found.');
-
-    }
-    else {
-      $submissionObject = reset($result);
-
-      // Get document from ATV.
+    if ($document == NULL) {
       try {
         $document = $atvService->searchDocuments(
           [
@@ -474,13 +472,49 @@ class ApplicationHandler {
           ],
           TRUE
         );
+        /** @var \Drupal\helfi_atv\AtvDocument $document */
+        $document = reset($document);
       }
       catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         return NULL;
       }
+    }
 
-      /** @var \Drupal\helfi_atv\AtvDocument $document */
-      $document = reset($document);
+    // If there's no local submission with given serial
+    // we can actually create that object on the fly and use that for editing.
+    if (empty($result)) {
+      // Throw new AtvDocumentNotFoundException('Submission not found.');.
+      try {
+        // Create submission.
+        // @todo remove hardcoded form type at some point.
+        $createdSubmissionObject = WebformSubmission::create([
+          'webform_id' => 'yleisavustushakemus',
+          'serial' => $submissionSerial,
+        ]);
+        // Make sure serial is set.
+        $createdSubmissionObject->set('serial', $submissionSerial);
+
+        // Save submission BEFORE setting data so we don't accidentally
+        // save anything.
+        $createdSubmissionObject->save();
+
+        // Set submission data from parsed mapper.
+        $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
+               $document->getContent(),
+               YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
+
+        return $createdSubmissionObject;
+
+      }
+      catch (
+            ConnectException |
+            EntityStorageException $e) {
+        throw new AtvDocumentNotFoundException($e->getMessage());
+      }
+
+    }
+    else {
+      $submissionObject = reset($result);
 
       // Set submission data from parsed mapper.
       $submissionObject->setData($atvSchema->documentContentToTypedData(
@@ -700,7 +734,7 @@ class ApplicationHandler {
         return TRUE;
       }
     }
-    catch (\Exception $e) {
+    catch (Exception $e) {
       $this->messenger->addError($e->getMessage());
       $this->logger->error($e->getMessage());
       return FALSE;
