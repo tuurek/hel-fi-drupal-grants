@@ -2,7 +2,6 @@
 
 namespace Drupal\grants_formnavigation;
 
-use Drupal;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Database\Connection;
@@ -106,6 +105,7 @@ class GrantsFormNavigationHelper {
 
     /** @var \Drupal\Core\TempStore\PrivateTempStore $store */
     $this->store = $tempStoreFactory->get('grants_formnavigation');
+    // What is this?
   }
 
   /**
@@ -215,10 +215,10 @@ class GrantsFormNavigationHelper {
         'sid' => $webform_submission->id(),
         'operation' => self::PAGE_VISITED_OPERATION,
         'handler_id' => self::HANDLER_ID,
-        'uid' => Drupal::currentUser()->id(),
+        'uid' => \Drupal::currentUser()->id(),
         'user_uuid' => $userData['sub'] ?? '',
         'data' => $page,
-        'timestamp' => (string) Drupal::time()->getRequestTime(),
+        'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
 
       $query = $this->database->insert(self::TABLE, $fields);
@@ -291,10 +291,10 @@ class GrantsFormNavigationHelper {
         'sid' => $webform_submission->id(),
         'operation' => self::ERROR_OPERATION,
         'handler_id' => self::HANDLER_ID,
-        'uid' => Drupal::currentUser()->id(),
+        'uid' => \Drupal::currentUser()->id(),
         'user_uuid' => $userData['sub'] ?? '',
         'data' => serialize($errors),
-        'timestamp' => (string) Drupal::time()->getRequestTime(),
+        'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
       $this->database->insert(self::TABLE)->fields($fields)->execute();
     }
