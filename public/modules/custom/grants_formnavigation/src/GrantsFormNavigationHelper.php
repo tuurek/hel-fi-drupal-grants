@@ -14,7 +14,6 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\webform_submission_log\WebformSubmissionLogManager;
 
 /**
  * Defines a helper class for the webform navigation module.
@@ -45,13 +44,6 @@ class GrantsFormNavigationHelper {
    * The temp_store key.
    */
   const TEMP_STORE_KEY = 'grants_formnavigation_errors';
-
-  /**
-   * Log manager.
-   *
-   * @var \Drupal\webform_submission_log\WebformSubmissionLogManager
-   */
-  protected WebformSubmissionLogManager $webformSubmissionLogManager;
 
   /**
    * The database service.
@@ -125,7 +117,7 @@ class GrantsFormNavigationHelper {
    * @return string
    *   The current submission page ID.
    */
-  public function getCurrentPage(WebformSubmissionInterface $webform_submission) {
+  public function getCurrentPage(WebformSubmissionInterface $webform_submission): string {
     $pages = $webform_submission->getWebform()
       ->getPages('edit', $webform_submission);
     return empty($webform_submission->getCurrentPage()) ? array_keys($pages)[0] : $webform_submission->getCurrentPage();
