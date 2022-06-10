@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42312ddbf0739cc525012680751af633",
+    "content-hash": "21c699461778386a9d19e6efd9f0a6f2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7683,56 +7683,6 @@
             "homepage": "https://www.drupal.org/project/webform_rest",
             "support": {
                 "source": "https://git.drupalcode.org/project/webform_rest"
-            }
-        },
-        {
-            "name": "drupal/webform_submission_log",
-            "version": "6.1.3",
-            "require": {
-                "drupal/core": "^8.8 || ^9",
-                "drupal/webform": "*"
-            },
-            "type": "metapackage",
-            "extra": {
-                "drupal": {
-                    "version": "6.1.3",
-                    "datestamp": "1644940723",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "DanChadwick",
-                    "homepage": "https://www.drupal.org/user/504278"
-                },
-                {
-                    "name": "Liam Morland",
-                    "homepage": "https://www.drupal.org/user/493050"
-                },
-                {
-                    "name": "jrockowitz",
-                    "homepage": "https://www.drupal.org/user/371407"
-                },
-                {
-                    "name": "quicksketch",
-                    "homepage": "https://www.drupal.org/user/35821"
-                },
-                {
-                    "name": "torotil",
-                    "homepage": "https://www.drupal.org/user/865256"
-                }
-            ],
-            "description": "Dedicated logging and reporting for webform submissions.",
-            "homepage": "https://www.drupal.org/project/webform",
-            "support": {
-                "source": "https://git.drupalcode.org/project/webform"
             }
         },
         {

@@ -106,8 +106,6 @@ class GrantsFormNavigationHelper {
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
     PrivateTempStoreFactory $tempStoreFactory
   ) {
-
-    $this->webformSubmissionLogManager = $webform_submission_log_manager;
     $this->database = $datababse;
     $this->messenger = $messenger;
     $this->entityTypeManager = $entity_type_manager;

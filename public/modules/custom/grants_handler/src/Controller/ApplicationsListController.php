@@ -144,6 +144,7 @@ class ApplicationsListController extends ControllerBase {
   public function build(): array {
 
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     try {
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
@@ -156,13 +157,31 @@ class ApplicationsListController extends ControllerBase {
 
       $appEnv = strtoupper(getenv('APP_ENV'));
       $rows = [];
+
+      /**
+       * Create rows for table.
+       *
+       * @var integer $key
+       * @var  \Drupal\helfi_atv\AtvDocument $document
+       */
       foreach ($applicationDocuments as $key => $document) {
-        if (str_contains($document->getTransactionId(), $appEnv)) {
+        // @todo when ATV/integration supports search via meta fields,
+        // we can search per environment.
+        if (
+          str_contains($document->getTransactionId(), $appEnv) &&
+          array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
+        ) {
           $typedData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+
+          $d = 'asdf';
+
           $rows[] = [
             $typedData['application_number'],
             $typedData['status'],
-            'data',
+            ApplicationHandler::$applicationTypes[$document->getType()],
+            '',
+            '',
+            '',
           ];
         }
       }
@@ -170,9 +189,12 @@ class ApplicationsListController extends ControllerBase {
       $datatable = [
         '#theme' => 'datatable',
         '#header' => [
-          'Application Number',
-          'Status',
-          'Otsikko 3',
+          $this->t('Application Number'),
+          $this->t('Status'),
+          $this->t('Type'),
+          $this->t('Created'),
+          $this->t('Updated'),
+          $this->t('Type'),
         ],
         '#rows' => $rows,
       ];

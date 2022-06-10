@@ -110,6 +110,23 @@ class ApplicationHandler {
   ];
 
   /**
+   * Application type codes & their translations.
+   *
+   * Array key is name of the form as is set to third party information.
+   * That contains strings for every language code.
+   *
+   * @var string[][]
+   */
+  public static array $applicationTypes = [
+    'ECONOMICGRANTAPPLICATION' => [
+      'fi' => 'Yleisavustushakemus',
+      'en' => 'EN Yleisavustushakemus',
+      'sv' => 'SV Yleisavustushakemus',
+      'ru' => 'RU Yleisavustushakemus',
+    ],
+  ];
+
+  /**
    * Debug status.
    *
    * @var bool
