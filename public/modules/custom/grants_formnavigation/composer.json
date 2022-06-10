@@ -1,0 +1,28 @@
+{
+  "name": "drupal/webformnavigation",
+  "description": "Allows for forward navigation through a multi-page webform.",
+  "type": "drupal-module",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "homepage": "https://drupal.org/project/webformnavigation",
+  "authors": [
+    {
+      "name": "Ryan McVeigh (rymcveigh)",
+      "homepage": "https://www.drupal.org/u/rymcveigh",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Contributors",
+      "homepage": "https://www.drupal.org/node/3099769/committers",
+      "role": "Contributor"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/webformnavigation",
+    "source": "https://git.drupalcode.org/project/webformnavigation"
+  },
+  "require": {
+    "drupal/core": "^8.8 || ^9.0",
+    "drupal/webform": "^5.16 || ^6.0"
+  }
+}

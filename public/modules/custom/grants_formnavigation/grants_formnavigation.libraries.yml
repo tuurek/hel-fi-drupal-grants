@@ -1,0 +1,13 @@
+# Navigation.
+
+grants_formnavigation.progress.bar:
+  version: VERSION
+  css:
+    component:
+      css/grants_formnavigation.progress.bar.css: { }
+
+grants_formnavigation.progress.tracker:
+  version: VERSION
+  css:
+    component:
+      css/grants_formnavigation.progress.tracker.css: { }

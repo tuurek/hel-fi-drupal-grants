@@ -2,12 +2,12 @@ describe('Login, cookies, Profile, Applicant type, Yleisavustushakemus.', () => 
 
     let applicationNumber;
 
-    before(function () {
-        cy.visit('/fi').then(() => {
-            cy.url().should('contain', '/avustukset')
-            // cy.accept_cookies()
-        })
-    });
+    // before(function () {
+    //     cy.visit('/fi').then(() => {
+    //         cy.url().should('contain', '/avustukset')
+    //         // cy.accept_cookies()
+    //     })
+    // });
 
     beforeEach(() => {
         cy.login('admin')
@@ -191,15 +191,16 @@ describe('Login, cookies, Profile, Applicant type, Yleisavustushakemus.', () => 
     })
 
     it('Load new Application', () => {
-        cy.visit(`/fi/grants-profile/applications/${applicationNumber}`)
+        cy.visit(` / fi / grants - profile / applications / ${applicationNumber}`)
             .then(() => {
                 cy.get('h3#submission-application-number').should('have.text', applicationNumber);
             })
         // here we can and must test the values on the page.
     });
 
+
     it('Send message to application', () => {
-        cy.visit(`/fi/grants-profile/applications/${applicationNumber}`)
+      cy.visit(` / fi / grants - profile / applications / ${applicationNumber}`)
             .then(() => {
                 cy.get('[data-drupal-selector="edit-message"]').type('Testiviesti 123')
                 cy.get('[data-drupal-selector="edit-submit"]').click()

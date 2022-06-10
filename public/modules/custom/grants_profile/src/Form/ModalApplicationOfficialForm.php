@@ -76,11 +76,12 @@ class ModalApplicationOfficialForm extends FormBase {
   public static function getOfficialRoles(): array {
     return [
       1 => t('Chairperson'),
-      2 => t('Financial officer'),
-      3 => t('Secretary'),
-      4 => t('Operative manager'),
-      5 => t('Vice Chairperson'),
-      6 => t('Other'),
+      2 => t('Contact person'),
+      3 => t('Other'),
+      4 => t('Financial officer'),
+      5 => t('Auditor'),
+      7 => t('Secretary'),
+      8 => t('Vice Chairperson'),
     ];
   }
 

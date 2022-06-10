@@ -5,10 +5,10 @@ namespace Drupal\grants_handler;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvService;
+use Drupal\webform\WebformSubmissionInterface;
 use Drupal\webform\WebformSubmissionStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,6 +64,17 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   }
 
   /**
+   * Make sure no form data is saved.
+   *
+   * Maybe we could save data to ATV here? Probably not though, depends how
+   * often this is called.
+   *
+   * @inheritdoc
+   */
+  public function saveData(WebformSubmissionInterface $webform_submission, $delete_first = TRUE) {
+  }
+
+  /**
    * Save webform submission data from the 'webform_submission_data' table.
    *
    * @param array $webform_submissions
@@ -81,7 +92,7 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
       $applicationNumber = '';
       try {
         if ($submission->getOwnerId() == $this->account->id()) {
-          $applicationNumber = GrantsHandler::createApplicationNumber($submission);
+          $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
           $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
 
           /** @var \Drupal\helfi_atv\AtvDocument $document */

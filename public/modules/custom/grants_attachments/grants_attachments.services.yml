@@ -1,14 +1,25 @@
 services:
   grants_attachments.event_subscriber:
     class: Drupal\grants_attachments\EventSubscriber\GrantsAttachmentsSubscriber
-    arguments: ['@messenger']
+    arguments: [ '@messenger' ]
     tags:
       - { name: event_subscriber }
 
   grants_attachments.attachment_remover:
     class: Drupal\grants_attachments\AttachmentRemover
-    arguments: ['@file.usage', '@messenger', '@logger.factory', '@database']
+    arguments: [ '@file.usage', '@messenger', '@logger.factory', '@database' ]
 
   grants_attachments.attachment_uploader:
     class: Drupal\grants_attachments\AttachmentUploader
-    arguments: ['@http_client', '@messenger', '@logger.factory', '@database']
+    arguments: [ '@http_client', '@messenger', '@logger.factory', '@database' ]
+
+  grants_attachments.attachment_handler:
+    class: Drupal\grants_attachments\AttachmentHandler
+    arguments: [
+        '@grants_attachments.attachment_uploader',
+        '@grants_attachments.attachment_remover',
+        '@messenger',
+        '@logger.factory',
+        '@helfi_atv.atv_service',
+        '@grants_profile.service',
+    ]

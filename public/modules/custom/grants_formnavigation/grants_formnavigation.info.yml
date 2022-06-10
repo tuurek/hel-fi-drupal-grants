@@ -1,0 +1,10 @@
+name: 'Grants Webform Navigation'
+type: module
+description: 'Creates a navigation setting for webform that allows users to navigate forwards and backwards through wizard pages when the wizard navigation progress bar is enabled.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Webform'
+dependencies:
+  - 'webform:webform'
+  - 'webform:webform_submission_log'
+

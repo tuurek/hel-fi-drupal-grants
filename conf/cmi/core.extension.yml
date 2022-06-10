@@ -39,6 +39,7 @@ module:
   gin_toolbar: 0
   grant_applications_content: 0
   grants_attachments: 0
+  grants_handler: 0
   grants_metadata: 0
   grants_profile: 0
   hal: 0
@@ -50,6 +51,7 @@ module:
   helfi_atv: 0
   helfi_charts: 0
   helfi_content: 0
+  helfi_events: 0
   helfi_gdpr_compliance: 0
   helfi_helsinki_profiili: 0
   helfi_languages: 0
@@ -66,6 +68,7 @@ module:
   linkit: 0
   locale: 0
   media: 0
+  media_entity_file_replace: 0
   media_entity_soundcloud: 0
   media_library: 0
   menu_block_current_language: 0
@@ -108,13 +111,13 @@ module:
   views_ui: 0
   webform: 0
   webform_rest: 0
+  webform_submission_log: 0
   webform_ui: 0
   pathauto: 1
   content_translation: 10
   externalauth: 10
   views: 10
   eu_cookie_compliance: 11
-  grants_handler: 11
   grants_user_fields: 11
   grants_webform_print: 11
   grants_webform_summation_field: 11
