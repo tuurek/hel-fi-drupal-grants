@@ -156,7 +156,7 @@ class ApplicationsListController extends ControllerBase {
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
       $appEnv = strtoupper(getenv('APP_ENV'));
-      $rows = [];
+      $items = [];
 
       /**
        * Create rows for table.
@@ -171,33 +171,15 @@ class ApplicationsListController extends ControllerBase {
           str_contains($document->getTransactionId(), $appEnv) &&
           array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
         ) {
-          $typedData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+          $submissionData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
 
-          $d = 'asdf';
-
-          $rows[] = [
-            $typedData['application_number'],
-            $typedData['status'],
-            ApplicationHandler::$applicationTypes[$document->getType()],
-            '',
-            '',
-            '',
+          $items[] = [
+            '#theme' => 'application_list_item',
+            '#document' => $document,
+            '#submission_data' => $submissionData,
           ];
         }
       }
-
-      $datatable = [
-        '#theme' => 'datatable',
-        '#header' => [
-          $this->t('Application Number'),
-          $this->t('Status'),
-          $this->t('Type'),
-          $this->t('Created'),
-          $this->t('Updated'),
-          $this->t('Type'),
-        ],
-        '#rows' => $rows,
-      ];
     }
     catch (
       TempStoreException |
@@ -209,7 +191,7 @@ class ApplicationsListController extends ControllerBase {
 
     $build = [
       '#theme' => 'application_list',
-      '#datatable' => $datatable,
+      '#items' => $items,
     ];
 
     return $build;
