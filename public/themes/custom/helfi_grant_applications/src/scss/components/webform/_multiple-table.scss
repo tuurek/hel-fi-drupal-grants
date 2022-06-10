@@ -14,12 +14,7 @@
     align-items: center;
   }
 
-  tbody tr {
-    border-bottom: var(--spacing-s) var(--color-white) solid;
-    &:hover {
-      background: var(--color-black-10);
-    }
-  }
+
   td, th {
     padding-top: 0;
     padding-bottom: 0;
@@ -32,8 +27,19 @@
   }
 
 }
-div.hidden-head table thead th {
-  padding: 0;
+div.hidden-head table {
+  display:table;
+  thead th {
+    padding: 0;
+  }
+
+  tbody tr {
+    border-bottom: var(--spacing-s) var(--color-white) solid;
+
+    &:hover {
+      background: transparent;
+    }
+  }
 }
 div.table-layout-form {
   input.hds-text-input__input {
@@ -70,3 +76,4 @@ div.table-layout-form {
     }
   }
 }
+
