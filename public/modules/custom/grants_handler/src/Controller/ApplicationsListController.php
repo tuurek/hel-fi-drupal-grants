@@ -2,6 +2,8 @@
 
 namespace Drupal\grants_handler\Controller;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -170,12 +172,13 @@ class ApplicationsListController extends ControllerBase {
           str_contains($document->getTransactionId(), $appEnv) &&
           array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
         ) {
-          $submissionData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+
+          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
 
           $items[] = [
             '#theme' => 'application_list_item',
             '#document' => $document,
-            '#submission_data' => $submissionData,
+            '#submission' => $submission,
           ];
         }
       }
@@ -186,6 +189,10 @@ class ApplicationsListController extends ControllerBase {
       AtvFailedToConnectException |
       GuzzleException $e) {
       throw new NotFoundHttpException($this->t('No documents found'));
+    }
+    catch (InvalidPluginDefinitionException $e) {
+    }
+    catch (PluginNotFoundException $e) {
     }
 
     $build = [

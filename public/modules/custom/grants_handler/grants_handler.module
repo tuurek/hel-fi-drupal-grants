@@ -110,7 +110,7 @@ function grants_handler_theme(): array {
     ],
     'application_list_item' => [
       'variables' => [
-        'submission_data' => NULL,
+        'submission' => NULL,
         'document' => NULL,
       ],
     ],
@@ -955,9 +955,15 @@ function grants_handler_preprocess_webform(&$variables) {
  */
 function grants_handler_preprocess_application_list_item(&$variables) {
   $language = Drupal::languageManager()->getCurrentLanguage()->getId();
-  $variables['applicationFormName'] = ApplicationHandler::$applicationTypes[$variables["submission_data"]["application_type"]][$language];
-  $variables['statusString'] = t(ApplicationHandler::$applicationStatuses[$variables["submission_data"]["status"]]);
-  $variables['applicationNumber'] = $variables["submission_data"]["application_number"];
+
+  /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+  $submission = $variables['submission'];
+  $webform = $submission->getWebform();
+  $submissionData = $submission->getData();
+
+  $variables['applicationFormName'] = ApplicationHandler::$applicationTypes[$submissionData["application_type"]][$language];
+  $variables['statusString'] = t(ApplicationHandler::$applicationStatuses[$submissionData["status"]]);
+  $variables['applicationNumber'] = $submissionData["application_number"];
 
   try {
     $dt = new DateTime($variables['document']->getCreatedAt());
@@ -965,6 +971,23 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
   } catch (Exception $e) {
   }
+
+  $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
+    'submission_id' => $variables['applicationNumber']
+  ]);
+
+  $editApplicationUrl = Url::fromRoute(
+    'grants_handler.edit_application',
+    [
+      'webform' => $webform->id(),
+      'webform_submission' => $submission->id(),
+    ],
+    [
+      'attributes' => [
+        'data-drupal-selector' => 'application-edit-link',
+      ],
+    ]
+  );
 
 
 
