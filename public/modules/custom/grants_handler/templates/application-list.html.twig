@@ -6,3 +6,11 @@
     <label for="applicationListFilter">Filter / hae</label>
     <input type="text" name="applicationListFilter" />
 </div>
+
+<div>
+    <ul>
+        {% for item in items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>

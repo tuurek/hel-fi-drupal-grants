@@ -954,6 +954,21 @@ function grants_handler_preprocess_webform(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function grants_handler_preprocess_application_list_item(&$variables) {
+  $language = Drupal::languageManager()->getCurrentLanguage()->getId();
+  $variables['applicationFormName'] = ApplicationHandler::$applicationTypes[$variables["submission_data"]["application_type"]][$language];
+  $variables['statusString'] = t(ApplicationHandler::$applicationStatuses[$variables["submission_data"]["status"]]);
+  $variables['applicationNumber'] = $variables["submission_data"]["application_number"];
+
+  try {
+    $dt = new DateTime($variables['document']->getCreatedAt());
+    $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
+    $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+  } catch (Exception $e) {
+  }
+
+
+
+
 
   $d = 'asdf';
 

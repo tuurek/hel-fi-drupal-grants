@@ -144,14 +144,13 @@ class ApplicationsListController extends ControllerBase {
   public function build(): array {
 
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     try {
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
         'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany,
       ],
-        TRUE);
+        FALSE);
 
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
