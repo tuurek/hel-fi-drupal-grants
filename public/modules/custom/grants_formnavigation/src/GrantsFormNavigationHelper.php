@@ -89,8 +89,7 @@ class GrantsFormNavigationHelper {
   /**
    * AutosaveHelper constructor.
    */
-  public function __construct(
-    Connection $datababse,
+  public function __construct(Connection $datababse,
     MessengerInterface $messenger,
     EntityTypeManagerInterface $entity_type_manager,
     FormBuilderInterface $form_builder,
