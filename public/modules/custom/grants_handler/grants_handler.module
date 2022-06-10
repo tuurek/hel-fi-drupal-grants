@@ -102,6 +102,11 @@ function grants_handler_theme(): array {
         'page_classes' => [],
       ],
     ],
+    'application_list' => [
+      'variables' => [
+        'datatable' => NULL,
+      ],
+    ],
   ];
 }
 

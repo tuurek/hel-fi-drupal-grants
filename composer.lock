@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1759f5ef71b5357f24d6e70aeee7e17a",
+    "content-hash": "42312ddbf0739cc525012680751af633",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3367,6 +3367,58 @@
             }
         },
         {
+            "name": "drupal/datatables",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/datatables.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/datatables-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "7a1c2704f48023ed7ae90f4633ed11366f6ced61"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1597613139",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Arkener",
+                    "homepage": "https://www.drupal.org/user/2284182"
+                },
+                {
+                    "name": "diqidoq",
+                    "homepage": "https://www.drupal.org/user/1001934"
+                },
+                {
+                    "name": "duellj",
+                    "homepage": "https://www.drupal.org/user/168159"
+                }
+            ],
+            "description": "Provides integration of the jquery DataTables plugin into views.",
+            "homepage": "https://www.drupal.org/project/datatables",
+            "support": {
+                "source": "https://git.drupalcode.org/project/datatables"
+            }
+        },
+        {
             "name": "drupal/default_content",
             "version": "2.0.0-alpha1",
             "source": {
@@ -4846,12 +4898,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv.git",
-                "reference": "80958247c0bf78488eb6894beefcc3df04a7cb99"
+                "reference": "124c4523c8f75f83970d4ddbc39203db2564e494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/80958247c0bf78488eb6894beefcc3df04a7cb99",
-                "reference": "80958247c0bf78488eb6894beefcc3df04a7cb99",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/124c4523c8f75f83970d4ddbc39203db2564e494",
+                "reference": "124c4523c8f75f83970d4ddbc39203db2564e494",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -4868,7 +4920,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/issues"
             },
-            "time": "2022-05-27T07:14:29+00:00"
+            "time": "2022-06-09T06:22:38+00:00"
         },
         {
             "name": "drupal/helfi_drupal_tools",

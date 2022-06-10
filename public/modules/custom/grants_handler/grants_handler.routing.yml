@@ -47,3 +47,11 @@ grants_handler.edit_application:
 #    _title_callback: '\Drupal\webform\Controller\WebformSubmissionViewController::title'
 #  requirements:
 #    _entity_access: 'webform_submission.update'
+
+grants_handler.applications_list:
+  path: '/hakemukset'
+  defaults:
+    _title: 'Hakemukset'
+    _controller: '\Drupal\grants_handler\Controller\ApplicationsListController::build'
+  requirements:
+    _permission: 'view own webform submission'
