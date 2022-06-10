@@ -524,14 +524,17 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 function grants_handler_preprocess_webform_submission_data(&$variables) {
 
   $block = \Drupal\block_content\Entity\BlockContent::load(1);
-  $output = \Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
-  $render = \Drupal::service('renderer')->render($output);
 
+  if ($block !== NULL) {
+    $output = \Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
+    $render = \Drupal::service('renderer')->render($output);
 
-  $variables['confirm_text'] = '<div>'.$render.'</div><div class="hds-checkbox">
-  <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
-  <label for="checkbox"  class="hds-checkbox__label">'.t('I have read the terms and accept them').'</label>
-</div>';
+    $variables['confirm_text'] = '<div>'.$render.'</div><div class="hds-checkbox">
+      <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
+      <label for="checkbox"  class="hds-checkbox__label">'.t('I have read the terms and accept them').'</label>
+    </div>';
+  }
+
 }
 
 /**
