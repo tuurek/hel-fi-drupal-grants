@@ -24,9 +24,10 @@
 
 }
 .block--grants-profile--menuitem {
-  order: 2;
   display: flex;
   z-index: 2;
+  grid-area: brand;
+  align-items: center;
 }
 .block--branding {
   flex-grow: 10;

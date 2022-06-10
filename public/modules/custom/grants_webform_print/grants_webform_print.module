@@ -16,10 +16,10 @@ function grants_webform_print_preprocess_webform_container_base_html(&$variables
     $variables['element']['#attributes']['class'][] = "webform-preview-inner-section";
   }
   if ($variables['element']['#type'] == 'webform_wizard_page') {
-    $variables['value']['#type'] = 'webform_section';
+    $variables['value']['#type'] = 'details';
     unset($variables['value']['#open']);
-    $variables['element']['#type'] = 'webform_section';
-    $variables['element']['#webform_plugin_id'] = 'webform_section';
+    $variables['element']['#type'] = 'details';
+    $variables['element']['#webform_plugin_id'] = 'details';
   }
 }
 

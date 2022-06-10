@@ -1,0 +1,16 @@
+uuid: cb87debf-9555-4d3f-9dba-c9b26c0cc5b1
+langcode: fi
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_block
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: block_content.terms_block
+target_entity_type_id: block_content
+target_bundle: terms_block
+default_langcode: fi
+language_alterable: false

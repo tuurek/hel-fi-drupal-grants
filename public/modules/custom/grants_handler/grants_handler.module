@@ -294,7 +294,7 @@ function _grants_handler_imported_handler(
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
   if ($show_checkmark === FALSE) {
-    $array['#field_suffix'] = '<a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
+    $array['#field_prefix'] = '<a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">'.t('Edit').'</span>
           </a>';
   }
@@ -456,6 +456,19 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
  * Implements hook_preprocess_HOOK().
  */
 function grants_handler_preprocess_webform_submission_data(&$variables) {
+
+  $block = \Drupal\block_content\Entity\BlockContent::loadMultiple(NULL);
+  foreach ($block as $key => $value) {
+    echo $key.' '.$value.'<br>';
+  }
+  $output = \Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
+  $render = \Drupal::service('renderer')->render($output);
+
+
+  $variables['confirm_text'] = '<div>'.$pre_render.'</div><div class="hds-checkbox">
+  <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
+  <label for="checkbox"  class="hds-checkbox__label">'.t('I have read the terms and accept them').'</label>
+</div>';
   // get submission object
   /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables['webform_submission'];

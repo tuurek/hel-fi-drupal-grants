@@ -14,10 +14,10 @@
 #}
 {%
   set classes = [
-    'webform-submission-data',
-    'webform-submission-data--webform-' ~ webform.id()|clean_class,
-    view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
-  ]
+  'webform-submission-data',
+  'webform-submission-data--webform-' ~ webform.id()|clean_class,
+  view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
+]
 %}
 <button class="hds-button hds-button--primary" onClick="event.preventDefault();print();">
   <span aria-hidden="true" class="hds-icon hds-icon--printer"></span>
@@ -25,37 +25,38 @@
 </button>
 
 <script>
-var body = document.body;
-body.classList.add("webform-submission-data-preview-page");
+  var body = document.body;
+  body.classList.add("webform-submission-data-preview-page");
 </script>
 <table class="webform-print-wrapper-table">
   <thead><tr><td>
-    <div class="webform-print-header-space">&nbsp;</div>
-  </td></tr></thead>
+      <div class="webform-print-header-space">&nbsp;</div>
+    </td></tr></thead>
   <tbody><tr><td>
-    <div class="webform-print-content">
-<div{{ attributes.addClass(classes) }}>
-{{ elements }}
-</div>
-</div>
-  </td></tr></tbody>
+      <div class="webform-print-content">
+        <div{{ attributes.addClass(classes) }}>
+          {{ elements }}
+          {{ confirm_text|raw }}
+        </div>
+      </div>
+    </td></tr></tbody>
   <tfoot><tr><td>
-    <div class="webform-print-footer-space">&nbsp;</div>
-  </td></tr></tfoot>
+      <div class="webform-print-footer-space">&nbsp;</div>
+    </td></tr></tfoot>
 </table>
 <header class="webform-print-header">
   {{ helsinki_logo|raw }}
-    <div class="webform-print-header-left-text">
+  <div class="webform-print-header-left-text">
   </div>
   <div class="webform-print-header-right-text">
-  {{ title }}
+    {{ title }}
   </div>
 </header>
 <footer class="webform-print-footer">
   {{ helsinki_logo|raw }}
   <div class="webform-print-footer-left-text">
-  &copy; Helsingin kaupunki 2022 |
-  <a href="https://www.hel.fi">www.hel.fi</a>
+    &copy; Helsingin kaupunki 2022 |
+    <a href="https://www.hel.fi">www.hel.fi</a>
   </div>
   <div class="webform-print-footer-right-text">
 

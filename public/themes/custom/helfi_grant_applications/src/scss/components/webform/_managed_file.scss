@@ -32,5 +32,12 @@ fieldset.grants-attachments--wrapper {
       display: inline-block;
     }
   }
+}
 
+.grants-applications-managed_file label.hds-button {
+  display: flex;
+}
+
+.grants-attachments--wrapper .webform-readonly {
+  display: none;
 }

@@ -1,0 +1,23 @@
+uuid: 05d50a70-c115-4fd4-ad05-b0961bcb577d
+langcode: fi
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_block
+    - field.field.block_content.terms_block.body
+  module:
+    - text
+id: block_content.terms_block.default
+targetEntityType: block_content
+bundle: terms_block
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true

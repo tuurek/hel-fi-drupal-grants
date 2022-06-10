@@ -1,0 +1,8 @@
+uuid: c7e9b9e8-c3e5-4c93-bb90-4fb44a883c1e
+langcode: fi
+status: true
+dependencies: {  }
+id: terms_block
+label: Ehtolohko
+revision: 0
+description: 'Lohko esikatselusivulle'
