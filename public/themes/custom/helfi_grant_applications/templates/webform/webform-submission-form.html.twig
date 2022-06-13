@@ -11,7 +11,13 @@
 #}
 
 <div>
-    Tämä kohta submission-form templatessa, myös tähän vois tulostaa virheet muuten ku Drupalmessagesin avulla?
+    <ul>
+    {% for page in errors %}
+        {% for element in page %}
+            <li>{{ element }}</li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
 </div>
 
 {{ form }}
