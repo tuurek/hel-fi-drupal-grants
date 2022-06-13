@@ -10,30 +10,29 @@ fieldset.grants-attachments--wrapper {
   .form-item--error-message {
     width: 100%;
   }
-  .grants-applications-managed_file {
-    position:relative;
-    label {
-      position: relative;
-      left: 0;
-    }
-    input[type=file] {
-      visibility: hidden;
-      position: absolute;
-    }
-
+}
+.grants-applications-managed_file {
+  position:relative;
+  label {
+    position: relative;
+    left: 0;
   }
-  .form-managed-file {
-    white-space: unset;
-    display: flex;
-    > span {
-      background-color: var(--color-info-light);
-      border-bottom: 2px dotted var(--color-coat-of-arms);
-      padding: var(--spacing-s) var(--spacing-2-xs);
-      display: inline-block;
-    }
+  input[type=file] {
+    visibility: hidden;
+    position: absolute;
+  }
+
+}
+.form-managed-file {
+  white-space: unset;
+  display: flex;
+  > span {
+    background-color: var(--color-info-light);
+    border-bottom: 2px dotted var(--color-coat-of-arms);
+    padding: var(--spacing-s) var(--spacing-2-xs);
+    display: inline-block;
   }
 }
-
 .grants-applications-managed_file label.hds-button {
   display: flex;
 }
