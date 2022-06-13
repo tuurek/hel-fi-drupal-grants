@@ -8,6 +8,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvService;
+use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\WebformSubmissionInterface;
 use Drupal\webform\WebformSubmissionStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,6 +43,13 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   protected AccountInterface $account;
 
   /**
+   * Access to user profile data.
+   *
+   * @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData
+   */
+  protected HelsinkiProfiiliUserData $helsinkiProfiiliUserData;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(
@@ -59,6 +67,9 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
     /** @var \Drupal\Core\Session\AccountInterface account */
     $instance->account = \Drupal::currentUser();
+
+    /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData helsinkiProfiiliUserData */
+    $instance->helsinkiProfiiliUserData = \Drupal::service('helfi_helsinki_profiili.userdata');
 
     return $instance;
   }
@@ -85,36 +96,46 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   protected function loadData(array &$webform_submissions) {
     parent::loadData($webform_submissions);
 
-    // $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+    $userRoles = $this->account->getRoles();
 
-    // /** @var \Drupal\webform\Entity\WebformSubmission $submission */
-    // foreach ($webform_submissions as $submission) {
-    //   $applicationNumber = '';
-    //   try {
-    //     if ($submission->getOwnerId() == $this->account->id()) {
-    //       $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
-    //       $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
+    $userAuthLevel = $this->helsinkiProfiiliUserData->getAuthenticationLevel();
 
-    //       /** @var \Drupal\helfi_atv\AtvDocument $document */
-    //       $document = reset($results);
+    $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
-    //       // $attStatus = $document->attachmentsUploadStatus();
-    //       $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+    // if...
+    if (
+      // .. user is registered via tunnistamo / helsinkiprofiili AND
+      in_array('helsinkiprofiili', $userRoles) &&
+      // .user authentication level is strong, allow them to load things.
+      $userAuthLevel == 'strong'
+    ) {
 
-    //       // $data = $appData->toArray();
-    //       $submission->setData($appData);
+      /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+      foreach ($webform_submissions as $submission) {
+        $applicationNumber = '';
+        try {
+          $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
+          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
+          /** @var \Drupal\helfi_atv\AtvDocument $document */
+          $document = reset($results);
+          $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+          $submission->setData($appData);
 
-    //     }
-    //   }
-    //   catch (\Exception $exception) {
-    //     $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
-    //       ->error('Document ' . $applicationNumber .
-    //         ' not found when loading WebformSubmission: ' .
-    //         $submission->uuid() . '. Error: ' . $exception->getMessage());
-    //     $submission->setData([]);
-    //   }
+          // Try to invalidate caches for this submission so that updated data
+          // is updated in UI as well.
+          \Drupal::cache()
+            ->invalidate('webform_submission:' . $submission->id());
+        }
+        catch (\Exception $exception) {
+          $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
+            ->error('Document ' . $applicationNumber .
+              ' not found when loading WebformSubmission: ' .
+              $submission->uuid() . '. Error: ' . $exception->getMessage());
+          $submission->setData([]);
+        }
+      }
+    }
 
-    // }
   }
 
 }
