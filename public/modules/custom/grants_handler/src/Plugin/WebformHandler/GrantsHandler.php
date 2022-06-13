@@ -184,6 +184,9 @@ class GrantsHandler extends WebformHandlerBase {
 
     $instance->triggeringElement = '';
     $instance->applicationNumber = '';
+    $instance->applicantType = '';
+    $instance->applicationTypeID = '';
+    $instance->applicationType = '';
 
     return $instance;
   }

@@ -49,14 +49,14 @@ class GrantsFormNavigationHelper {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
-  protected $messenger;
+  protected MessengerInterface $messenger;
 
   /**
    * The entity type manager service.
@@ -89,7 +89,8 @@ class GrantsFormNavigationHelper {
   /**
    * AutosaveHelper constructor. Small change.
    */
-  public function __construct(Connection $datababse,
+  public function __construct(
+    Connection $datababse,
     MessengerInterface $messenger,
     EntityTypeManagerInterface $entity_type_manager,
     FormBuilderInterface $form_builder,
@@ -104,7 +105,6 @@ class GrantsFormNavigationHelper {
 
     /** @var \Drupal\Core\TempStore\PrivateTempStore $store */
     $this->store = $tempStoreFactory->get('grants_formnavigation');
-    // What is this?
   }
 
   /**
