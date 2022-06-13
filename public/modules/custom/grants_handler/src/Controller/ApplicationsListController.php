@@ -185,10 +185,12 @@ class ApplicationsListController extends ControllerBase {
     }
     catch (
       TempStoreException |
-      AtvDocumentNotFoundException |
       AtvFailedToConnectException |
       GuzzleException $e) {
       throw new NotFoundHttpException($this->t('No documents found'));
+    }
+    catch (AtvDocumentNotFoundException $e) {
+      $d = 'asdf';
     }
     catch (InvalidPluginDefinitionException $e) {
     }
