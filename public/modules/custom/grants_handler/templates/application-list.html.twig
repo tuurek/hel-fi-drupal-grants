@@ -1,5 +1,21 @@
 
 
-<h3>Otsikko</h3>
+<h3>Omat hakemukset</h3>
 
-{{ datatable }}
+<div>
+    <label for="filterApplications">Suodata / Hae</label>
+    <input type="text" name="filterApplications"/>
+</div>
+
+<div>
+    <label for="applicationListFilter">Filter / hae</label>
+    <input type="text" name="applicationListFilter" />
+</div>
+
+<div>
+    <ul>
+        {% for item in items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</div>

@@ -6,6 +6,7 @@
  */
 
 
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
@@ -104,7 +105,13 @@ function grants_handler_theme(): array {
     ],
     'application_list' => [
       'variables' => [
-        'datatable' => NULL,
+        'items' => NULL,
+      ],
+    ],
+    'application_list_item' => [
+      'variables' => [
+        'submission' => NULL,
+        'document' => NULL,
       ],
     ],
   ];
@@ -523,15 +530,18 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
  */
 function grants_handler_preprocess_webform_submission_data(&$variables) {
 
-  $block = \Drupal\block_content\Entity\BlockContent::load(1);
-  $output = \Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
-  $render = \Drupal::service('renderer')->render($output);
+  $block = BlockContent::load(1);
 
+  if ($block !== NULL) {
+    $output = Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
+    $render = Drupal::service('renderer')->render($output);
 
-  $variables['confirm_text'] = '<div>'.$render.'</div><div class="hds-checkbox">
-  <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
-  <label for="checkbox"  class="hds-checkbox__label">'.t('I have read the terms and accept them').'</label>
-</div>';
+    $variables['confirm_text'] = '<div>'.$render.'</div><div class="hds-checkbox">
+      <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
+      <label for="checkbox"  class="hds-checkbox__label">'.t('I have read the terms and accept them').'</label>
+    </div>';
+  }
+
 }
 
 /**
@@ -938,14 +948,60 @@ function grants_handler_preprocess_webform(&$variables) {
 
 }
 
-//
-//
-//'community_officials_composite' => [
-//  'variables' => [],
-//],
-//    'bank_account_composite' => [
-//  'variables' => [],
-//],
-//    'community_address_composite' => [
-//  'variables' => [],
-//],
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_application_list_item(&$variables) {
+  $language = Drupal::languageManager()->getCurrentLanguage()->getId();
+
+  /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+  $submission = $variables['submission'];
+  $webform = $submission->getWebform();
+  $submissionData = $submission->getData();
+
+  $variables['applicationFormName'] = ApplicationHandler::$applicationTypes[$submissionData["application_type"]][$language];
+  $variables['statusString'] = t(ApplicationHandler::$applicationStatuses[$submissionData["status"]]);
+  $variables['applicationNumber'] = $submissionData["application_number"];
+
+  try {
+    $dt = new DateTime($variables['document']->getCreatedAt());
+    $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
+    $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+  } catch (Exception $e) {
+  }
+
+  $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
+    'submission_id' => $variables['applicationNumber']
+  ]);
+
+  $editApplicationUrl = Url::fromRoute(
+    'grants_handler.edit_application',
+    [
+      'webform' => $webform->id(),
+      'webform_submission' => $submission->id(),
+    ],
+    [
+      'attributes' => [
+        'data-drupal-selector' => 'application-edit-link',
+      ],
+    ]
+  );
+
+
+
+
+
+  $d = 'asdf';
+
+}
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_application_list(&$variables) {
+
+  $d = 'asdf';
+
+}
+

@@ -14,7 +14,6 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\webform_submission_log\WebformSubmissionLogManager;
 
 /**
  * Defines a helper class for the webform navigation module.
@@ -45,13 +44,6 @@ class GrantsHandlerNavigationHelper {
    * The temp_store key.
    */
   const TEMP_STORE_KEY = 'webform_handler_form_errors';
-
-  /**
-   * Log manager.
-   *
-   * @var \Drupal\webform_submission_log\WebformSubmissionLogManager
-   */
-  protected WebformSubmissionLogManager $webformSubmissionLogManager;
 
   /**
    * The database service.
@@ -99,7 +91,6 @@ class GrantsHandlerNavigationHelper {
    * AutosaveHelper constructor.
    */
   public function __construct(
-    WebformSubmissionLogManager $webform_submission_log_manager,
     Connection $datababse,
     MessengerInterface $messenger,
     EntityTypeManagerInterface $entity_type_manager,

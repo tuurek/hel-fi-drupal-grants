@@ -2,6 +2,8 @@
 
 namespace Drupal\grants_handler\Controller;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -150,32 +152,36 @@ class ApplicationsListController extends ControllerBase {
         'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany,
       ],
-        TRUE);
+        FALSE);
 
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
       $appEnv = strtoupper(getenv('APP_ENV'));
-      $rows = [];
+      $items = [];
+
+      /**
+       * Create rows for table.
+       *
+       * @var integer $key
+       * @var  \Drupal\helfi_atv\AtvDocument $document
+       */
       foreach ($applicationDocuments as $key => $document) {
-        if (str_contains($document->getTransactionId(), $appEnv)) {
-          $typedData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
-          $rows[] = [
-            $typedData['application_number'],
-            $typedData['status'],
-            'data',
+        // @todo when ATV/integration supports search via meta fields,
+        // we can search per environment.
+        if (
+          str_contains($document->getTransactionId(), $appEnv) &&
+          array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
+        ) {
+
+          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
+
+          $items[] = [
+            '#theme' => 'application_list_item',
+            '#document' => $document,
+            '#submission' => $submission,
           ];
         }
       }
-
-      $datatable = [
-        '#theme' => 'datatable',
-        '#header' => [
-          'Application Number',
-          'Status',
-          'Otsikko 3',
-        ],
-        '#rows' => $rows,
-      ];
     }
     catch (
       TempStoreException |
@@ -184,10 +190,14 @@ class ApplicationsListController extends ControllerBase {
       GuzzleException $e) {
       throw new NotFoundHttpException($this->t('No documents found'));
     }
+    catch (InvalidPluginDefinitionException $e) {
+    }
+    catch (PluginNotFoundException $e) {
+    }
 
     $build = [
       '#theme' => 'application_list',
-      '#datatable' => $datatable,
+      '#items' => $items,
     ];
 
     return $build;

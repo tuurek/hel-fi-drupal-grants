@@ -13,7 +13,6 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\webform_submission_log\WebformSubmissionLogManager;
 
 /**
  * Defines a helper class for the webform navigation module.
@@ -46,25 +45,18 @@ class GrantsFormNavigationHelper {
   const TEMP_STORE_KEY = 'grants_formnavigation_errors';
 
   /**
-   * Log manager.
-   *
-   * @var \Drupal\webform_submission_log\WebformSubmissionLogManager
-   */
-  protected WebformSubmissionLogManager $webformSubmissionLogManager;
-
-  /**
    * The database service.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
-  protected $messenger;
+  protected MessengerInterface $messenger;
 
   /**
    * The entity type manager service.
@@ -95,10 +87,9 @@ class GrantsFormNavigationHelper {
   protected PrivateTempStore $store;
 
   /**
-   * AutosaveHelper constructor.
+   * AutosaveHelper constructor. Small change.
    */
   public function __construct(
-    WebformSubmissionLogManager $webform_submission_log_manager,
     Connection $datababse,
     MessengerInterface $messenger,
     EntityTypeManagerInterface $entity_type_manager,
@@ -106,8 +97,6 @@ class GrantsFormNavigationHelper {
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
     PrivateTempStoreFactory $tempStoreFactory
   ) {
-
-    $this->webformSubmissionLogManager = $webform_submission_log_manager;
     $this->database = $datababse;
     $this->messenger = $messenger;
     $this->entityTypeManager = $entity_type_manager;
@@ -127,7 +116,7 @@ class GrantsFormNavigationHelper {
    * @return string
    *   The current submission page ID.
    */
-  public function getCurrentPage(WebformSubmissionInterface $webform_submission) {
+  public function getCurrentPage(WebformSubmissionInterface $webform_submission): string {
     $pages = $webform_submission->getWebform()
       ->getPages('edit', $webform_submission);
     return empty($webform_submission->getCurrentPage()) ? array_keys($pages)[0] : $webform_submission->getCurrentPage();
