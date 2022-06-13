@@ -990,6 +990,8 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   );
 
 
+  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application'), $viewApplicationUrl);
+  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
 
 
 

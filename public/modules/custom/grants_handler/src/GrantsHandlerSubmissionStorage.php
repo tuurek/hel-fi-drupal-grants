@@ -85,36 +85,36 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   protected function loadData(array &$webform_submissions) {
     parent::loadData($webform_submissions);
 
-    $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+    // $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
-    /** @var \Drupal\webform\Entity\WebformSubmission $submission */
-    foreach ($webform_submissions as $submission) {
-      $applicationNumber = '';
-      try {
-        if ($submission->getOwnerId() == $this->account->id()) {
-          $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
-          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
+    // /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+    // foreach ($webform_submissions as $submission) {
+    //   $applicationNumber = '';
+    //   try {
+    //     if ($submission->getOwnerId() == $this->account->id()) {
+    //       $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
+    //       $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
 
-          /** @var \Drupal\helfi_atv\AtvDocument $document */
-          $document = reset($results);
+    //       /** @var \Drupal\helfi_atv\AtvDocument $document */
+    //       $document = reset($results);
 
-          // $attStatus = $document->attachmentsUploadStatus();
-          $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+    //       // $attStatus = $document->attachmentsUploadStatus();
+    //       $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
 
-          // $data = $appData->toArray();
-          $submission->setData($appData);
+    //       // $data = $appData->toArray();
+    //       $submission->setData($appData);
 
-        }
-      }
-      catch (\Exception $exception) {
-        $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
-          ->error('Document ' . $applicationNumber .
-            ' not found when loading WebformSubmission: ' .
-            $submission->uuid() . '. Error: ' . $exception->getMessage());
-        $submission->setData([]);
-      }
+    //     }
+    //   }
+    //   catch (\Exception $exception) {
+    //     $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
+    //       ->error('Document ' . $applicationNumber .
+    //         ' not found when loading WebformSubmission: ' .
+    //         $submission->uuid() . '. Error: ' . $exception->getMessage());
+    //     $submission->setData([]);
+    //   }
 
-    }
+    // }
   }
 
 }

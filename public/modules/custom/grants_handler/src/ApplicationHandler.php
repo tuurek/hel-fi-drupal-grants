@@ -494,6 +494,8 @@ class ApplicationHandler {
         // Make sure serial is set.
         $createdSubmissionObject->set('serial', $submissionSerial);
 
+        $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
+
         // Save submission BEFORE setting data so we don't accidentally
         // save anything.
         $createdSubmissionObject->save();
@@ -501,7 +503,7 @@ class ApplicationHandler {
         // Set submission data from parsed mapper.
         $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
                $document->getContent(),
-               YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
+               $dataDefinition));
 
         return $createdSubmissionObject;
 

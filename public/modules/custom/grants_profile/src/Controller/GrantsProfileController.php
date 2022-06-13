@@ -61,108 +61,108 @@ class GrantsProfileController extends ControllerBase {
     else {
       $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
-      /** @var \Drupal\helfi_atv\AtvService $atvService */
-      $atvService = \Drupal::service('helfi_atv.atv_service');
+    //   /** @var \Drupal\helfi_atv\AtvService $atvService */
+    //   $atvService = \Drupal::service('helfi_atv.atv_service');
 
-      try {
-        // @todo Fix application search when ATV supports better methods.
-        $applicationDocuments = $atvService->searchDocuments([
-          'type' => 'ECONOMICGRANTAPPLICATION',
-          'business_id' => $selectedCompany,
-        ],
-          TRUE);
+    //   try {
+    //     // @todo Fix application search when ATV supports better methods.
+    //     $applicationDocuments = $atvService->searchDocuments([
+    //       'type' => 'ECONOMICGRANTAPPLICATION',
+    //       'business_id' => $selectedCompany,
+    //     ],
+    //       TRUE);
 
-        /** @var \Drupal\helfi_atv\AtvDocument $document */
-        foreach ($applicationDocuments as $document) {
-          $transactionId = $document->getTransactionId();
+    //     /** @var \Drupal\helfi_atv\AtvDocument $document */
+    //     foreach ($applicationDocuments as $document) {
+    //       $transactionId = $document->getTransactionId();
 
-          if (empty($transactionId)) {
-            continue;
-          }
+    //       if (empty($transactionId)) {
+    //         continue;
+    //       }
 
-          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($transactionId);
+    //       $submission = ApplicationHandler::submissionObjectFromApplicationNumber($transactionId);
 
-          if (str_contains($transactionId, 'GRANTS-' . ApplicationHandler::getAppEnv())) {
+    //       if (str_contains($transactionId, 'GRANTS-' . ApplicationHandler::getAppEnv())) {
 
-            $url = Url::fromRoute(
-              'grants_handler.view_application',
-              ['submission_id' => $transactionId],
-              [
-                'attributes' => [
-                  'data-drupal-selector' => 'application-view-link',
-                  'target' => '_blank',
-                ],
-              ]
-            );
-            $editUrl = Url::fromRoute(
-              'grants_handler.edit_application',
-              [
-                'webform' => $submission->getWebform()->id(),
-                'webform_submission' => $submission->id(),
-              ],
-              [
-                'attributes' => [
-                  'data-drupal-selector' => 'application-edit-link',
-                  'target' => '_blank',
-                ],
-              ]
-            );
+    //         $url = Url::fromRoute(
+    //           'grants_handler.view_application',
+    //           ['submission_id' => $transactionId],
+    //           [
+    //             'attributes' => [
+    //               'data-drupal-selector' => 'application-view-link',
+    //               'target' => '_blank',
+    //             ],
+    //           ]
+    //         );
+    //         $editUrl = Url::fromRoute(
+    //           'grants_handler.edit_application',
+    //           [
+    //             'webform' => $submission->getWebform()->id(),
+    //             'webform_submission' => $submission->id(),
+    //           ],
+    //           [
+    //             'attributes' => [
+    //               'data-drupal-selector' => 'application-edit-link',
+    //               'target' => '_blank',
+    //             ],
+    //           ]
+    //         );
 
-            $attachments = AttachmentHandler::attachmentsUploadStatus($document);
+    //         $attachments = AttachmentHandler::attachmentsUploadStatus($document);
 
-            $uploaded = [
-              '#theme' => 'item_list',
-              '#list_type' => 'ul',
-              '#items' => $attachments['uploaded'],
-              '#attributes' => ['class' => 'uploaded-attachments'],
-              '#wrapper_attributes' => ['class' => 'container'],
-            ];
+    //         $uploaded = [
+    //           '#theme' => 'item_list',
+    //           '#list_type' => 'ul',
+    //           '#items' => $attachments['uploaded'],
+    //           '#attributes' => ['class' => 'uploaded-attachments'],
+    //           '#wrapper_attributes' => ['class' => 'container'],
+    //         ];
 
-            $non_uploaded = [
-              '#theme' => 'item_list',
-              '#list_type' => 'ul',
-              '#items' => $attachments['not-uploaded'],
-              '#attributes' => ['class' => 'not-uploaded-attachments'],
-              '#wrapper_attributes' => ['class' => 'container'],
-            ];
+    //         $non_uploaded = [
+    //           '#theme' => 'item_list',
+    //           '#list_type' => 'ul',
+    //           '#items' => $attachments['not-uploaded'],
+    //           '#attributes' => ['class' => 'not-uploaded-attachments'],
+    //           '#wrapper_attributes' => ['class' => 'container'],
+    //         ];
 
-            $applications[] = [
-              'transaction_id' => $transactionId,
-              'uploadedAttachments' => \Drupal::service('renderer')
-                ->render($uploaded),
-              'missingAttachments' => \Drupal::service('renderer')
-                ->render($non_uploaded),
-              'status' => $document->getStatus(),
-              'view' => Link::fromTextAndUrl($this->t('View'), $url),
-              'edit' => Link::fromTextAndUrl($this->t('Edit'), $editUrl),
-            ];
-          }
-        }
-      }
-      catch (
-        AtvDocumentNotFoundException |
-        AtvFailedToConnectException |
-        GuzzleException |
-        TempStoreException |
-        InvalidPluginDefinitionException |
-        PluginNotFoundException $e) {
-        $d = 'asdf';
-      }
+    //         $applications[] = [
+    //           'transaction_id' => $transactionId,
+    //           'uploadedAttachments' => \Drupal::service('renderer')
+    //             ->render($uploaded),
+    //           'missingAttachments' => \Drupal::service('renderer')
+    //             ->render($non_uploaded),
+    //           'status' => $document->getStatus(),
+    //           'view' => Link::fromTextAndUrl($this->t('View'), $url),
+    //           'edit' => Link::fromTextAndUrl($this->t('Edit'), $editUrl),
+    //         ];
+    //       }
+    //     }
+    //   }
+    //   catch (
+    //     AtvDocumentNotFoundException |
+    //     AtvFailedToConnectException |
+    //     GuzzleException |
+    //     TempStoreException |
+    //     InvalidPluginDefinitionException |
+    //     PluginNotFoundException $e) {
+    //     $d = 'asdf';
+    //   }
 
-      $table = [
-        '#type' => 'table',
-        '#header' => [
-          'transaction_id' => $this->t('Application #'),
-          'uploadedAttachments' => $this->t('Attachments uploaded'),
-          'missingAttachments' => $this->t('Attachments en route'),
-          'status' => $this->t('Application status'),
-          'view' => $this->t('View'),
-          'edit' => $this->t('Edit'),
-        ],
-        '#rows' => $applications,
-        '#empty' => t('No content has been found.'),
-      ];
-      $build['#applications'] = $table;
+      // $table = [
+      //   '#type' => 'table',
+      //   '#header' => [
+      //     'transaction_id' => $this->t('Application #'),
+      //     'uploadedAttachments' => $this->t('Attachments uploaded'),
+      //     'missingAttachments' => $this->t('Attachments en route'),
+      //     'status' => $this->t('Application status'),
+      //     'view' => $this->t('View'),
+      //     'edit' => $this->t('Edit'),
+      //   ],
+      //   '#rows' => $applications,
+      //   '#empty' => t('No content has been found.'),
+      // ];
+      // $build['#applications'] = $table;
 
       $build['#profile'] = $profile;
     }

@@ -198,6 +198,11 @@ class ApplicationsListController extends ControllerBase {
     $build = [
       '#theme' => 'application_list',
       '#items' => $items,
+      '#attached' => [
+        'library' => [
+          'grants_handler/application-search-sort',
+        ],
+      ],
     ];
 
     return $build;

@@ -184,6 +184,10 @@ class GrantsHandler extends WebformHandlerBase {
 
     $instance->triggeringElement = '';
     $instance->applicationNumber = '';
+    $instance->applicantType = '';
+    $instance->applicationTypeID = '';
+    $instance->applicationType = '';
+
 
     return $instance;
   }
@@ -861,6 +865,12 @@ class GrantsHandler extends WebformHandlerBase {
       ->getEntityTypeId())->resetCache([
         $webform_submission,
       ]);
+
+    if(empty($this->submittedFormData)) {
+      return;
+    }
+
+
 
     if (!isset($this->submittedFormData['application_number']) || $this->submittedFormData['application_number'] == '') {
       if (!isset($this->applicationNumber) || $this->applicationNumber == '') {
