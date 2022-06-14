@@ -190,7 +190,6 @@ class ApplicationsListController extends ControllerBase {
       throw new NotFoundHttpException($this->t('No documents found'));
     }
     catch (AtvDocumentNotFoundException $e) {
-      $d = 'asdf';
     }
     catch (InvalidPluginDefinitionException $e) {
     }
