@@ -99,25 +99,24 @@ class GrantsProfileForm extends FormBase {
     ];
     $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
 
-    if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
-
-      $addAddressUrl = Url::fromRoute(
-        'grants_profile.company_address_modal_form',
-        [
-          'address_id' => 'new',
-          'nojs' => 'ajax',
+    $addAddressUrl = Url::fromRoute(
+      'grants_profile.company_address_modal_form',
+      [
+        'address_id' => 'new',
+        'nojs' => 'ajax',
+      ],
+      [
+        'attributes' => [
+          'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
+          // Add this id so that we can test this form.
+          'id' => 'add-addres-modal-form-link',
         ],
-        [
-          'attributes' => [
-            'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
-            'data-dialog-type' => 'modal',
-            'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-            // Add this id so that we can test this form.
-            'id' => 'add-addres-modal-form-link',
-          ],
-        ]
-      );
+      ]
+    );
 
+    if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
       $addressMarkup .= '<ul class="grants-profile--officials">';
       foreach ($grantsProfileContent["addresses"] as $key => $address) {
 
