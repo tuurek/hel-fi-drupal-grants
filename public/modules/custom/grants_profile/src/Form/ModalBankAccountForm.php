@@ -247,15 +247,14 @@ class ModalBankAccountForm extends FormBase {
     $grantsProfileService->saveBankAccount($bankAccountId, $bankAccountData->toArray());
     try {
       $grantsProfileService->saveGrantsProfileAtv();
+      $this->messenger()->addStatus($this->t('Bank account has been saved.'));
     }
     catch (
       AtvDocumentNotFoundException |
     AtvFailedToConnectException |
     GuzzleException $e) {
-      $d = 'asdf';
+      $this->messenger()->addStatus($this->t('Bank account saving failed.'));
     }
-
-    $this->messenger()->addStatus($this->t('Bank account has been saved.'));
 
     $form_state->setRedirect('grants_profile.show');
   }
