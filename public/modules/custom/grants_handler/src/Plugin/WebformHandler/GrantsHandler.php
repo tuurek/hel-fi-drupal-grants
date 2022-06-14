@@ -546,7 +546,6 @@ class GrantsHandler extends WebformHandlerBase {
       if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
         $form["actions"]["submit"]['#disabled'] = TRUE;
       }
-
     }
   }
 
@@ -696,8 +695,8 @@ class GrantsHandler extends WebformHandlerBase {
     }
 
     // Make sure we have our application type set.
-    if (!isset($this->applicationType)) {
-      if (isset($this->submittedFormData['application_type'])) {
+    if (!isset($this->applicationType) || $this->applicationType == '') {
+      if (isset($this->submittedFormData['application_type']) && $this->submittedFormData['application_type'] != '') {
         $this->applicationTypeID = $this->submittedFormData['application_type'];
       }
       else {

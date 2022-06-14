@@ -152,7 +152,7 @@ class ApplicationsListController extends ControllerBase {
         'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany,
       ],
-        FALSE);
+        TRUE);
 
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
