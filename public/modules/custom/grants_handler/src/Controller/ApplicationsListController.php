@@ -156,7 +156,8 @@ class ApplicationsListController extends ControllerBase {
 
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
-      $appEnv = strtoupper(getenv('APP_ENV'));
+      $appEnv = ApplicationHandler::getAppEnv();
+
       $items = [];
 
       /**
