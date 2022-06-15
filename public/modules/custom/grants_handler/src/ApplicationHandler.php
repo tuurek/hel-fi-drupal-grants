@@ -2,9 +2,7 @@
 
 namespace Drupal\grants_handler;
 
-use Drupal;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -22,9 +20,7 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionInterface;
-use Exception;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -110,7 +106,7 @@ class ApplicationHandler {
     'DONE' => 'DONE',
     'REJECTED' => 'REJECTED',
     'DELETED' => 'DELETED',
-    'CANCELED' => 'CANCELED',
+    'CANCELLED' => 'CANCELLED',
   ];
 
   /**
@@ -123,6 +119,7 @@ class ApplicationHandler {
    */
   public static array $applicationTypes = [
     'ECONOMICGRANTAPPLICATION' => [
+      'code' => 'YLEIS',
       'fi' => 'Yleisavustushakemus',
       'en' => 'EN Yleisavustushakemus',
       'sv' => 'SV Yleisavustushakemus',
@@ -411,7 +408,12 @@ class ApplicationHandler {
 
     $serial = $submission->serial();
 
-    return 'GRANTS-' . $appParam . '-' . sprintf('%08d', $serial);
+    $applicationType = $submission->getWebform()
+      ->getThirdPartySetting('grants_metadata', 'applicationType');
+
+    $typeCode = self::$applicationTypes[$applicationType]['code'] ?? '';
+
+    return 'GRANTS-' . $appParam . '-' . $typeCode . '-' . sprintf('%08d', $serial);
   }
 
   /**
@@ -436,13 +438,14 @@ class ApplicationHandler {
    *
    * @param string $applicationNumber
    *   String to try and parse submission id from. Ie GRANTS-DEV-00000098.
+   * @param \Drupal\helfi_atv\AtvDocument|null $document
+   *   Document to extract values from.
    *
    * @return \Drupal\webform\Entity\WebformSubmission|null
    *   Webform submission.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    */
   public static function submissionObjectFromApplicationNumber(
@@ -452,17 +455,17 @@ class ApplicationHandler {
 
     $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
 
-    $result = Drupal::entityTypeManager()
+    $result = \Drupal::entityTypeManager()
       ->getStorage('webform_submission')
       ->loadByProperties([
         'serial' => $submissionSerial,
       ]);
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
-    $atvService = Drupal::service('helfi_atv.atv_service');
+    $atvService = \Drupal::service('helfi_atv.atv_service');
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
-    $atvSchema = Drupal::service('grants_metadata.atv_schema');
+    $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
     if ($document == NULL) {
       try {
@@ -483,34 +486,7 @@ class ApplicationHandler {
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-      // Throw new AtvDocumentNotFoundException('Submission not found.');.
-      try {
-        // Create submission.
-        // @todo remove hardcoded form type at some point.
-        $createdSubmissionObject = WebformSubmission::create([
-          'webform_id' => 'yleisavustushakemus',
-          'serial' => $submissionSerial,
-        ]);
-        // Make sure serial is set.
-        $createdSubmissionObject->set('serial', $submissionSerial);
-
-        // Save submission BEFORE setting data so we don't accidentally
-        // save anything.
-        $createdSubmissionObject->save();
-
-        // Set submission data from parsed mapper.
-        $createdSubmissionObject->setData($atvSchema->documentContentToTypedData(
-               $document->getContent(),
-               YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')));
-
-        return $createdSubmissionObject;
-
-      }
-      catch (
-            ConnectException |
-            EntityStorageException $e) {
-        throw new AtvDocumentNotFoundException($e->getMessage());
-      }
+      throw new AtvDocumentNotFoundException('Submission not found.');
 
     }
     else {
@@ -673,12 +649,15 @@ class ApplicationHandler {
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $applicationData
    *   Typed data object.
+   * @param string $applicationNumber
+   *   Used application number.
    *
    * @return bool
    *   Result.
    */
   public function handleApplicationUpload(
-    TypedDataInterface $applicationData
+    TypedDataInterface $applicationData,
+    string $applicationNumber
   ): bool {
 
     /** @var \Drupal\Core\TypedData\DataDefinitionInterface $applicationData */
@@ -710,6 +689,11 @@ class ApplicationHandler {
         $headers['X-Case-Status'] = $this->newStatusHeader;
       }
 
+      // Current environment as a header to be added to meta -fields.
+      $headers['X-Meta-appEnv'] = self::getAppEnv();
+      // Set application number to meta as well to enable better searches.
+      $headers['X-Meta-applicationNumber'] = $applicationNumber;
+
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
           $this->username,
@@ -734,7 +718,7 @@ class ApplicationHandler {
         return TRUE;
       }
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       $this->messenger->addError($e->getMessage());
       $this->logger->error($e->getMessage());
       return FALSE;

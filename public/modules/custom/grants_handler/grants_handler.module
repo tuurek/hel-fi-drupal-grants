@@ -935,6 +935,16 @@ function grants_handler_webform_presave(WebformInterface $webform) {
  */
 function grants_handler_preprocess_webform_submission_form(&$variables) {
 
+  /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $navigationHelper */
+  $navigationHelper = Drupal::service('grants_handler.navigation_helper');
+  /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
+  $webform_submission = $variables["form"]["#webform_submission"];
+  /** @var \Drupal\Core\Form\FormState $form_state */
+  $form_state = $variables["form"]["#form_state"];
+
+  $variables['errors'] = $navigationHelper->getPagedErrors($form_state, $webform_submission);
+
+
   $d = 'asdf';
 
 }
@@ -989,11 +999,14 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     ]
   );
 
+  $variables['classes'] = [
+    strtolower(ApplicationHandler::$applicationStatuses[$submissionData["status"]]),
+    strtolower($submissionData["application_number"])
+  ];
 
 
-
-
-  $d = 'asdf';
+  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application'), $viewApplicationUrl);
+  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
 
 }
 /**
@@ -1005,3 +1018,21 @@ function grants_handler_preprocess_application_list(&$variables) {
 
 }
 
+/**
+ * Implements hook_entity_load().
+ */
+function grants_handler_entity_load(array $entities, $entity_type_id) {
+
+  if ($entity_type_id == 'webform_submission') {
+    $d = 'asdf';
+  }
+}
+
+/**
+ * Implements hook_entity_storage_load().
+ */
+function grants_handler_entity_storage_load(array $entities, $entity_type) {
+  if ($entity_type == 'webform_submission') {
+    $d = 'asdf';
+  }
+}

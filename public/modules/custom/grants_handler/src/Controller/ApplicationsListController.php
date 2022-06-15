@@ -152,11 +152,12 @@ class ApplicationsListController extends ControllerBase {
         'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany,
       ],
-        FALSE);
+        TRUE);
 
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
-      $appEnv = strtoupper(getenv('APP_ENV'));
+      $appEnv = ApplicationHandler::getAppEnv();
+
       $items = [];
 
       /**
@@ -185,10 +186,11 @@ class ApplicationsListController extends ControllerBase {
     }
     catch (
       TempStoreException |
-      AtvDocumentNotFoundException |
       AtvFailedToConnectException |
       GuzzleException $e) {
       throw new NotFoundHttpException($this->t('No documents found'));
+    }
+    catch (AtvDocumentNotFoundException $e) {
     }
     catch (InvalidPluginDefinitionException $e) {
     }
@@ -198,6 +200,11 @@ class ApplicationsListController extends ControllerBase {
     $build = [
       '#theme' => 'application_list',
       '#items' => $items,
+      '#attached' => [
+        'library' => [
+          'grants_handler/application-search-sort',
+        ],
+      ],
     ];
 
     return $build;

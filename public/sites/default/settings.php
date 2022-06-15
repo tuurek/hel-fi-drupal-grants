@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 use Symfony\Component\HttpFoundation\Request;
 
 if (PHP_SAPI === 'cli') {
@@ -31,8 +35,8 @@ $settings['hash_salt'] = getenv('DRUPAL_HASH_SALT') ?: '000';
 
 if ($ssl_ca_path = getenv('AZURE_SQL_SSL_CA_PATH')) {
   $databases['default']['default']['pdo'] = [
-    \PDO::MYSQL_ATTR_SSL_CA => $ssl_ca_path,
-    \PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
+    PDO::MYSQL_ATTR_SSL_CA => $ssl_ca_path,
+    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
   ];
   // Azure specific filesystem fixes.
   $settings['php_storage']['twig']['directory'] = '/tmp';
@@ -92,17 +96,15 @@ $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/
 $settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
-set_error_handler(['Drupal\error_page\ErrorPageErrorHandler', 'handleError']);
-set_exception_handler([
-  'Drupal\error_page\ErrorPageErrorHandler',
-  'handleException',
-]);
+// set_error_handler(['Drupal\error_page\ErrorPageErrorHandler', 'handleError']);
+// set_exception_handler([
+//  'Drupal\error_page\ErrorPageErrorHandler',
+//  'handleException',
+// ]);
 // Log the UUID in the Drupal logs.
-$settings['error_page']['uuid'] = TRUE;
+// $settings['error_page']['uuid'] = TRUE;
 // Your templates are located in path/to/templates, one level above the webroot.
-$settings['error_page']['template_dir'] = DRUPAL_ROOT . '/../error_templates';
-
-
+// $settings['error_page']['template_dir'] = DRUPAL_ROOT . '/../error_templates';.
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
   $reverse_proxy_address = explode(',', $reverse_proxy_address);
 

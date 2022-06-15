@@ -66,6 +66,13 @@ class MessageService {
   protected string $password;
 
   /**
+   * Print / log debug things.
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+  /**
    * Constructs a MessageService object.
    *
    * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata
@@ -91,6 +98,15 @@ class MessageService {
     $this->endpoint = getenv('AVUSTUS2_MESSAGE_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
     $this->password = getenv('AVUSTUS2_PASSWORD');
+
+    $debug = getenv('debug');
+
+    if ($debug == 'true') {
+      $this->debug = TRUE;
+    }
+    else {
+      $this->debug = FALSE;
+    }
 
   }
 
@@ -135,26 +151,33 @@ class MessageService {
       ]);
 
       if ($res->getStatusCode() == 201) {
-        try {
-          $eventId = $this->eventsService->logEvent(
-            $submissionData["application_number"],
-            'MESSAGE_NEW',
-            t('New message for @applicationNumber.',
-              ['@applicationNumber' => $submissionData["application_number"]]
-            ),
-            $nextMessageId
-          );
-
-          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent. Event logged: ' . $eventId);
-
+        if ($this->debug) {
+          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent.');
         }
-        catch (EventException $e) {
-          // Log event error.
-          $this->logger->error($e->getMessage());
-        }
-
         return TRUE;
       }
+
+      // If ($res->getStatusCode() == 201) {
+      //        try {
+      //          $eventId = $this->eventsService->logEvent(
+      //            $submissionData["application_number"],
+      //            'MESSAGE_NEW',
+      //            t('New message for @applicationNumber.',
+      //              ['@applicationNumber' => $submissionData["application_number"]]
+      //            ),
+      //            $nextMessageId
+      //          );
+      //
+      //          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent. Event logged: ' . $eventId);
+      //
+      //        }
+      //        catch (EventException $e) {
+      //          // Log event error.
+      //          $this->logger->error($e->getMessage());
+      //        }
+      //
+      //        return TRUE;
+      //      }.
     }
     return FALSE;
   }

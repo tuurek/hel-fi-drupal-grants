@@ -2,14 +2,11 @@
 
 namespace Drupal\grants_handler;
 
-use DateTime;
-use DateTimeZone;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\grants_metadata\AtvSchema;
-use Exception;
 use GuzzleHttp\ClientInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -130,8 +127,8 @@ class EventsService {
       $eventData['eventSource'] = getenv('EVENTS_SOURCE');
     }
 
-    $dt = new DateTime();
-    $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
+    $dt = new \DateTime();
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
 
     $eventData['timeCreated'] = $eventData['timeUpdated'] = $dt->format('Y-m-d\TH:i:s');
 
@@ -147,7 +144,7 @@ class EventsService {
       }
 
     }
-    catch (Exception $e) {
+    catch (\Exception $e) {
       throw new EventException($e->getMessage());
     }
 

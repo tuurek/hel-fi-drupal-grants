@@ -13,6 +13,9 @@ use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Url;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\grants_profile\TypedData\Definition\BankAccountDefinition;
+use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\helfi_atv\AtvFailedToConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -242,9 +245,16 @@ class ModalBankAccountForm extends FormBase {
     $grantsProfileService = \Drupal::service('grants_profile.service');
 
     $grantsProfileService->saveBankAccount($bankAccountId, $bankAccountData->toArray());
-    $grantsProfileService->saveGrantsProfileAtv();
-
-    $this->messenger()->addStatus($this->t('Bank account has been saved.'));
+    try {
+      $grantsProfileService->saveGrantsProfileAtv();
+      $this->messenger()->addStatus($this->t('Bank account has been saved.'));
+    }
+    catch (
+      AtvDocumentNotFoundException |
+    AtvFailedToConnectException |
+    GuzzleException $e) {
+      $this->messenger()->addStatus($this->t('Bank account saving failed.'));
+    }
 
     $form_state->setRedirect('grants_profile.show');
   }

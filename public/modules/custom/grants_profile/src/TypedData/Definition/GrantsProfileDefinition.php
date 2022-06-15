@@ -90,15 +90,15 @@ class GrantsProfileDefinition extends ComplexDataDefinitionBase {
           'profileInfoArray',
           'businessPurpose',
         ]);
-      $info['practisesBusiness'] = DataDefinition::create('boolean')
-        ->setRequired(TRUE)
-        ->setLabel('practisesBusiness')
-        ->setSetting('jsonPath', [
-          'grantsProfile',
-          'profileInfoArray',
-          'practisesBusiness',
-        ]);
 
+      // $info['practisesBusiness'] = DataDefinition::create('boolean')
+      //        ->setRequired(TRUE)
+      //        ->setLabel('practisesBusiness')
+      //        ->setSetting('jsonPath', [
+      //          'grantsProfile',
+      //          'profileInfoArray',
+      //          'practisesBusiness',
+      //        ]);
       $info['foundingYear'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('foundingYear')
@@ -118,17 +118,17 @@ class GrantsProfileDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['officials'] = ListDataDefinition::create('grants_profile_application_official')
-        ->setRequired(TRUE)
+        ->setRequired(FALSE)
         ->setSetting('jsonPath', ['grantsProfile', 'officialsArray'])
         ->setLabel('Officials');
 
       $info['addresses'] = ListDataDefinition::create('grants_profile_address')
-        ->setRequired(TRUE)
+        ->setRequired(FALSE)
         ->setSetting('jsonPath', ['grantsProfile', 'addressesArray'])
         ->setLabel('Addresses');
 
       $info['bankAccounts'] = ListDataDefinition::create('grants_profile_bank_account')
-        ->setRequired(TRUE)
+        ->setRequired(FALSE)
         ->setSetting('jsonPath', ['grantsProfile', 'bankAccountsArray'])
         ->setLabel('Bank Accounts');
 

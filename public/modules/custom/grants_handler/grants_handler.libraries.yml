@@ -18,3 +18,13 @@ grants_handler.progress.tracker:
   css:
     component:
       css/grants_handler.progress.tracker.css: { }
+
+
+# Search
+application-search-sort:
+  version: 1.x
+  js:
+    js/application-search.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
