@@ -4,12 +4,18 @@ namespace Drupal\grants_handler\Controller;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Http\RequestStack;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
+use Drupal\webform\Entity\Webform;
+use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformRequestInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -59,6 +65,13 @@ class ApplicationController extends ControllerBase {
   protected $renderer;
 
   /**
+   * The request service.
+   *
+   * @var \Drupal\Core\Http\RequestStack
+   */
+  protected RequestStack $request;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): ApplicationController {
@@ -69,7 +82,88 @@ class ApplicationController extends ControllerBase {
     $instance->requestHandler = $container->get('webform.request');
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->renderer = $container->get('renderer');
+    $instance->request = $container->get('request_stack');
     return $instance;
+  }
+
+  /**
+   * Checks access for a specific request.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Run access checks for this account.
+   * @param string $webform
+   *   Web form id.
+   * @param string $webform_submission
+   *   Submission id.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  public function access(AccountInterface $account, string $webform, string $webform_submission): AccessResultInterface {
+    $webformObject = Webform::load($webform);
+    $webform_submissionObject = WebformSubmission::load($webform_submission);
+
+    $uri = $this->request->getCurrentRequest()->getUri();
+
+    $operation = 'view';
+    if (str_ends_with($uri, '/edit')) {
+      $operation = 'edit';
+    }
+
+    // Parameters from the route and/or request as needed.
+    return AccessResult::allowedIf($account->hasPermission('view own webform submission') && $this->singleSubmissionAccess($account, $operation, $webformObject, $webform_submissionObject));
+  }
+
+  /**
+   * Checks access for a specific request.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Run access checks for this account.
+   * @param string $submission_id
+   *   Application number from Avus2 / ATV.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   */
+  public function accessByApplicationNumber(AccountInterface $account, string $submission_id): AccessResultInterface {
+    $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
+    $webform = $webform_submission->getWebform();
+
+    $uri = $this->request->getCurrentRequest()->getUri();
+
+    $operation = 'view';
+    if (str_ends_with($uri, '/edit')) {
+      $operation = 'edit';
+    }
+
+    // Parameters from the route and/or request as needed.
+    return AccessResult::allowedIf($account->hasPermission('view own webform submission') && $this->singleSubmissionAccess($account, $operation, $webform, $webform_submission));
+  }
+
+  /**
+   * Placeholder for proper submission content based access checking.
+   *
+   * Gets webform & submission with data and determines access.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   User account.
+   * @param string $operation
+   *   Operation we check access against.
+   * @param \Drupal\webform\Entity\Webform $webform
+   *   Webform object.
+   * @param \Drupal\webform\Entity\WebformSubmission $webform_submission
+   *   Submission object.
+   *
+   * @return bool
+   *   Access status
+   */
+  protected function singleSubmissionAccess(AccountInterface $account, string $operation, Webform $webform, WebformSubmission $webform_submission): bool {
+
+    return TRUE;
   }
 
   /**
