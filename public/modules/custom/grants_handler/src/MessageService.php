@@ -66,6 +66,13 @@ class MessageService {
   protected string $password;
 
   /**
+   * Print / log debug things.
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+  /**
    * Constructs a MessageService object.
    *
    * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata
@@ -91,6 +98,15 @@ class MessageService {
     $this->endpoint = getenv('AVUSTUS2_MESSAGE_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
     $this->password = getenv('AVUSTUS2_PASSWORD');
+
+    $debug = getenv('debug');
+
+    if ($debug == 'true') {
+      $this->debug = TRUE;
+    }
+    else {
+      $this->debug = FALSE;
+    }
 
   }
 
@@ -133,6 +149,13 @@ class MessageService {
         'auth' => [$this->username, $this->password, "Basic"],
         'body' => Json::encode($messageData),
       ]);
+
+      if ($res->getStatusCode() == 201) {
+        if ($this->debug) {
+          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent.');
+        }
+        return TRUE;
+      }
 
       // If ($res->getStatusCode() == 201) {
       //        try {

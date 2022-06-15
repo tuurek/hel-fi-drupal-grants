@@ -40,6 +40,13 @@ class MessageForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * Print / log debug things.
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+  /**
    * Constructs a new AddressForm object.
    */
   public function __construct(
@@ -50,6 +57,15 @@ class MessageForm extends FormBase {
     $this->typedDataManager = $typed_data_manager;
     $this->messageService = $messageService;
     $this->entityTypeManager = $entityTypeManager;
+    $debug = getenv('debug');
+
+    if ($debug == 'true') {
+      $this->debug = TRUE;
+    }
+    else {
+      $this->debug = FALSE;
+    }
+    $d = 'asdf';
   }
 
   /**
