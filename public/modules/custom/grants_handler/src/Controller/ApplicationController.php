@@ -103,6 +103,10 @@ class ApplicationController extends ControllerBase {
     $webformObject = Webform::load($webform);
     $webform_submissionObject = WebformSubmission::load($webform_submission);
 
+    if ($webformObject == NULL || $webform_submissionObject == NULL) {
+      return AccessResult::forbidden('No submission found');
+    }
+
     $uri = $this->request->getCurrentRequest()->getUri();
 
     $operation = 'view';
@@ -132,6 +136,10 @@ class ApplicationController extends ControllerBase {
   public function accessByApplicationNumber(AccountInterface $account, string $submission_id): AccessResultInterface {
     $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
     $webform = $webform_submission->getWebform();
+
+    if ($webform == NULL || $webform_submission == NULL) {
+      return AccessResult::forbidden('No submission found');
+    }
 
     $uri = $this->request->getCurrentRequest()->getUri();
 
