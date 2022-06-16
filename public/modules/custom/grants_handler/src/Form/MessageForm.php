@@ -192,12 +192,12 @@ class MessageForm extends FormBase {
     if ($this->messageService->sendMessage($data, $submission, $nextMessageId)) {
 
       if ($file !== NULL) {
+        /** @var \Drupal\grants_attachments\AttachmentUploader $attachmentUploader */
         $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
         $fileObjects = [$file->id() => $file->id()];
         $attachmentResult = $attachmentUploader->uploadAttachments(
           [$file->id() => $file->id()],
           $submissionData['application_number'],
-          TRUE,
           $nextMessageId
         );
 
