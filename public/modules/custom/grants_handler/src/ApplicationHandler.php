@@ -22,6 +22,7 @@ use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -693,6 +694,8 @@ class ApplicationHandler {
       $headers['X-Meta-appEnv'] = self::getAppEnv();
       // Set application number to meta as well to enable better searches.
       $headers['X-Meta-applicationNumber'] = $applicationNumber;
+      // Set application number to meta as well to enable better searches.
+      $headers['X-Meta-saveId'] = Uuid::uuid4();
 
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
