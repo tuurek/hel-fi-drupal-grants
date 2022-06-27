@@ -691,11 +691,11 @@ class ApplicationHandler {
       }
 
       // Current environment as a header to be added to meta -fields.
-      $headers['X-Meta-appEnv'] = self::getAppEnv();
+      $headers['X-hki-appEnv'] = self::getAppEnv();
       // Set application number to meta as well to enable better searches.
-      $headers['X-Meta-applicationNumber'] = $applicationNumber;
+      $headers['X-hki-applicationNumber'] = $applicationNumber;
       // Set application number to meta as well to enable better searches.
-      $headers['X-Meta-saveId'] = Uuid::uuid4();
+      $headers['X-hki-saveId'] = Uuid::uuid4();
 
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
