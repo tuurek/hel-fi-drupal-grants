@@ -168,7 +168,7 @@ class MessageForm extends FormBase {
     $submission = $storage['webformSubmission'];
     $submissionData = $submission->getData();
 
-    $nextMessageId = Uuid::uuid4();
+    $nextMessageId = Uuid::uuid4()->toString();
 
     $attachment = $form_state->getValue('messageAttachment');
     $data = [

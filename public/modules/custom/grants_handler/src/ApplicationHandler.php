@@ -695,7 +695,7 @@ class ApplicationHandler {
       // Set application number to meta as well to enable better searches.
       $headers['X-hki-applicationNumber'] = $applicationNumber;
       // Set application number to meta as well to enable better searches.
-      $headers['X-hki-saveId'] = Uuid::uuid4();
+      $headers['X-hki-saveId'] = Uuid::uuid4()->toString();
 
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
@@ -719,6 +719,9 @@ class ApplicationHandler {
 
       if ($status === 201) {
         return TRUE;
+      }
+      else {
+        return FALSE;
       }
     }
     catch (\Exception $e) {
