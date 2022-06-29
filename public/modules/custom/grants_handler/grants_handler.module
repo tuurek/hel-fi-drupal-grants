@@ -279,7 +279,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_address')) {
 
       /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-      $grantsProfileService = Drupal::service('grants_profile.service');
+      $grantsProfileService = \Drupal::service('grants_profile.service');
 
       $selectedCompany = $grantsProfileService->getSelectedCompany();
       $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
@@ -306,13 +306,14 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       }
     }
 
+
     // for some reason this selection cannot be done in official composite class.
     // so we'll need to hack this here.
     // @todo Can the composite default value be added here?
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_officials')) {
 
       /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-      $grantsProfileService = Drupal::service('grants_profile.service');
+      $grantsProfileService = \Drupal::service('grants_profile.service');
 
       $selectedCompany = $grantsProfileService->getSelectedCompany();
       $profileData = $grantsProfileService->getGrantsProfileContent($selectedCompany ?? '');
@@ -419,7 +420,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   $form['actions']['wizard_next']['#validate'][] = '::noValidate';
 
   /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-  $grantsProfileService = Drupal::service('grants_profile.service');
+  $grantsProfileService = \Drupal::service('grants_profile.service');
   $selectedCompany = $grantsProfileService->getSelectedCompany();
 
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
@@ -520,7 +521,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
   }
   else {
-    Drupal::messenger()
+    \Drupal::messenger()
       ->addError(t("You don't have company selected, no fields are prepopulated"));
   }
 }
@@ -533,12 +534,14 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   $block = BlockContent::load(1);
 
   if ($block !== NULL) {
-    $output = Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block);
-    $render = Drupal::service('renderer')->render($output);
+    $output = \Drupal::entityTypeManager()
+      ->getViewBuilder('block_content')
+      ->view($block);
+    $render = \Drupal::service('renderer')->render($output);
 
-    $variables['confirm_text'] = '<div>'.$render.'</div><div class="hds-checkbox">
+    $variables['confirm_text'] = '<div>' . $render . '</div><div class="hds-checkbox">
       <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
-      <label for="checkbox"  class="hds-checkbox__label">'.t('I have read the terms and accept them').'</label>
+      <label for="checkbox"  class="hds-checkbox__label">' . t('I have read the terms and accept them') . '</label>
     </div>';
   }
 
@@ -622,7 +625,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   // if submission is ok for messaging
   if (ApplicationHandler::isSubmissionMessageable($submission, NULL)) {
     // add message form
-    $variables['message_form'] = Drupal::formBuilder()
+    $variables['message_form'] = \Drupal::formBuilder()
       ->getForm('Drupal\grants_handler\Form\MessageForm', $submission);
   }
 
@@ -641,7 +644,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
         'date' => $dt->format('d.m.Y h:i:s'),
         'sender' => $message['sentBy'],
         'body' => $message['body'] ?? '',
-        'attachments' => isset($message['attachments']) ? Drupal::service('renderer')
+        'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')
           ->render($build) : '',
       ];
     }
@@ -784,7 +787,7 @@ function grants_handler_preprocess_webform_progress_tracker(&$variables) {
   $pages = $webform->getPages($variables['operation'], $webform_submission);
   // Get the logged errors for the form.
   /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
-  $grants_formnavigation_helper = Drupal::service('grants_handler.navigation_helper');
+  $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
 
   $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
 
@@ -818,7 +821,7 @@ function grants_handler_preprocess_webform_progress_bar(&$variables) {
   $pages = $webform->getPages($variables['operation'], $webform_submission);
   // Get the logged errors for the form.
   /** @var \Drupal\grants_formnavigation\GrantsFormNavigationHelper $grants_formnavigation_helper */
-  $grants_formnavigation_helper = Drupal::service('grants_handler.navigation_helper');
+  $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
   $current_errors = $webform->getState('current_errors');
 
   // Iterate through the pages and set appropriate page classes.
@@ -850,7 +853,7 @@ function grants_handler_preprocess_webform_progress_bar(&$variables) {
  */
 function grants_handler_submission_validation(array &$form, FormStateInterface $form_state) {
   //  /** @var \Drupal\grants_formnavigation\grants_formnavigationHelper $grants_formnavigation_helper */
-  //  $grants_formnavigation_helper = Drupal::service('grants_formnavigation.helper');
+  //  $grants_formnavigation_helper = \Drupal::service('grants_formnavigation.helper');
   //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
   //  $webform_submission = $form_state->getFormObject()->getEntity();
   //  $webform = $webform_submission->getWebform();
@@ -936,7 +939,7 @@ function grants_handler_webform_presave(WebformInterface $webform) {
 function grants_handler_preprocess_webform_submission_form(&$variables) {
 
   /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $navigationHelper */
-  $navigationHelper = Drupal::service('grants_handler.navigation_helper');
+  $navigationHelper = \Drupal::service('grants_handler.navigation_helper');
   /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
   $webform_submission = $variables["form"]["#webform_submission"];
   /** @var \Drupal\Core\Form\FormState $form_state */
@@ -959,12 +962,11 @@ function grants_handler_preprocess_webform(&$variables) {
 }
 
 
-
 /**
  * Implements hook_preprocess_HOOK().
  */
 function grants_handler_preprocess_application_list_item(&$variables) {
-  $language = Drupal::languageManager()->getCurrentLanguage()->getId();
+  $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
   /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables['submission'];
@@ -972,7 +974,15 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $submissionData = $submission->getData();
 
   $variables['applicationFormName'] = ApplicationHandler::$applicationTypes[$submissionData["application_type"]][$language];
-  $variables['statusString'] = t(ApplicationHandler::$applicationStatuses[$submissionData["status"]]);
+
+  if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
+    $variables['statusString'] = t(ApplicationHandler::$applicationStatuses[$submissionData["status"]]);
+  }
+  else {
+    \Drupal::logger('grants_handler')
+      ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+  }
+
   $variables['applicationNumber'] = $submissionData["application_number"];
 
   try {
@@ -983,7 +993,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   }
 
   $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
-    'submission_id' => $variables['applicationNumber']
+    'submission_id' => $variables['applicationNumber'],
   ]);
 
   $editApplicationUrl = Url::fromRoute(
@@ -1001,7 +1011,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
   $variables['classes'] = [
     strtolower(ApplicationHandler::$applicationStatuses[$submissionData["status"]]),
-    strtolower($submissionData["application_number"])
+    strtolower($submissionData["application_number"]),
   ];
 
 
@@ -1009,6 +1019,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
 
 }
+
 /**
  * Implements hook_preprocess_HOOK().
  */

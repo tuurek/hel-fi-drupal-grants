@@ -797,7 +797,7 @@ class GrantsProfileService {
    * @return array|\Drupal\helfi_atv\AtvDocument|null
    *   Data in cache or null
    */
-  private function getFromCache(string $key): array|AtvDocument|NULL {
+  private function getFromCache(string $key): array|AtvDocument|null {
     $retval = !empty($this->tempStore->get($key)) ? $this->tempStore->get($key) : NULL;
     return $retval;
   }
