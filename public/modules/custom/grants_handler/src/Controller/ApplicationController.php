@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_handler\Controller;
 
+use Drupal;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Access\AccessResult;
@@ -17,6 +18,7 @@ use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\webform\Entity\Webform;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformRequestInterface;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -137,7 +139,7 @@ class ApplicationController extends ControllerBase {
     $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
 
     if ($webform_submission == NULL) {
-      AccessResult::forbidden('No submission found');
+      return AccessResult::forbidden('No submission found');
     }
 
     $webform = $webform_submission->getWebform();
@@ -252,7 +254,7 @@ class ApplicationController extends ControllerBase {
     catch (InvalidPluginDefinitionException | PluginNotFoundException | AtvDocumentNotFoundException | GuzzleException $e) {
       throw new NotFoundHttpException($e->getMessage());
     }
-    catch (\Exception $e) {
+    catch (Exception $e) {
       throw new NotFoundHttpException($e->getMessage());
     }
     return [];
@@ -280,7 +282,7 @@ class ApplicationController extends ControllerBase {
         ]));
       }
 
-      $my_form = \Drupal::entityTypeManager()
+      $my_form = Drupal::entityTypeManager()
         ->getStorage('webform')
         ->load($webform_submission->getWebform()->id());
 
@@ -320,7 +322,7 @@ class ApplicationController extends ControllerBase {
     catch (GuzzleException $e) {
       throw new NotFoundHttpException('Application not found');
     }
-    catch (\Exception $e) {
+    catch (Exception $e) {
       throw new NotFoundHttpException('Application not found');
     }
   }

@@ -1,9 +1,11 @@
 <?php
 
-namespace Drupal\grants_profile\Form;
+namespace Drupal\grants_mandate\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\grants_mandate\GrantsMandateService;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a Grants Profile form.
  */
-class ApplicantTypeForm extends FormBase {
+class ApplicantMandateForm extends FormBase {
 
   /**
    * Access to profile data.
@@ -28,20 +30,33 @@ class ApplicantTypeForm extends FormBase {
   protected HelsinkiProfiiliUserData $helsinkiProfiiliUserData;
 
   /**
+   * Use mandate service things.
+   *
+   * @var \Drupal\grants_mandate\GrantsMandateService
+   */
+  protected GrantsMandateService $grantsMandateService;
+
+  /**
    * Constructs a new AddressForm object.
    */
-  public function __construct(GrantsProfileService $grantsProfileService, HelsinkiProfiiliUserData $helsinkiProfiiliUserData) {
+  public function __construct(
+    GrantsProfileService $grantsProfileService,
+    HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
+    GrantsMandateService $grantsMandateService
+  ) {
     $this->grantsProfileService = $grantsProfileService;
     $this->helsinkiProfiiliUserData = $helsinkiProfiiliUserData;
+    $this->grantsMandateService = $grantsMandateService;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): GrantsProfileForm|static {
+  public static function create(ContainerInterface $container): ApplicantMandateForm|static {
     return new static(
       $container->get('grants_profile.service'),
       $container->get('helfi_helsinki_profiili.userdata'),
+      $container->get('grants_mandate.service')
     );
   }
 
@@ -49,7 +64,7 @@ class ApplicantTypeForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'grants_profile_applicant_type';
+    return 'grants_mandate_type';
   }
 
   /**
@@ -77,7 +92,7 @@ class ApplicantTypeForm extends FormBase {
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Send'),
+      '#value' => $this->t('Select role & authorize mandate'),
     ];
 
     return $form;
@@ -96,14 +111,27 @@ class ApplicantTypeForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $selectedType = $form_state->getValue('applicant_type');
-
     $this->grantsProfileService->setApplicantType($selectedType);
 
-    $this->messenger()->addStatus('Applicant type selected.');
+    if ($selectedType == 'registered_community' || $selectedType == 'private_person') {
+      $mandateMode = '';
 
-    // $url = Url::fromUri('')
-    //
-    //    $form_state->setRedirectUrl()
+      if ($selectedType == 'registered_community') {
+        $mandateMode = 'ypa';
+      }
+
+      if ($selectedType == 'private_person') {
+        $mandateMode = 'hpa';
+      }
+
+      $redirectUrl = $this->grantsMandateService->getUserMandateRedirectUrl($mandateMode);
+      $redirect = new TrustedRedirectResponse($redirectUrl);
+      $form_state->setResponse($redirect);
+    }
+    else {
+      // @todo message user if no mandate is needed??
+    }
+
   }
 
 }

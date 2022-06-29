@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for grants_mandate module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_openid_connect_post_authorize().
+ */
+function grants_mandate_openid_connect_post_authorize(UserInterface $account, array $context) {
+
+  $d = 'asdf';
+}
