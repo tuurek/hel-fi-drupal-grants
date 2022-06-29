@@ -9,6 +9,10 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\grants_mandate\GrantsMandateService;
+use Drupal\grants_profile\GrantsProfileService;
+use Laminas\Diactoros\Response\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,12 +47,35 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
   protected $languageManager;
 
   /**
+   * Mandate service.
+   *
+   * @var \Drupal\grants_mandate\GrantsMandateService
+   */
+  protected GrantsMandateService $grantsMandateService;
+
+
+  /**
+   * Access to profile data.
+   *
+   * @var \Drupal\grants_profile\GrantsProfileService
+   */
+  protected GrantsProfileService $grantsProfileService;
+
+  /**
    * CompanyController constructor.
    */
-  public function __construct(RequestStack $requestStack, AccountProxyInterface $current_user, LanguageManagerInterface $language_manager) {
+  public function __construct(
+    RequestStack $requestStack,
+    AccountProxyInterface $current_user,
+    LanguageManagerInterface $language_manager,
+    GrantsMandateService $grantsMandateService,
+    GrantsProfileService $grantsProfileService
+  ) {
     $this->requestStack = $requestStack;
     $this->currentUser = $current_user;
     $this->languageManager = $language_manager;
+    $this->grantsMandateService = $grantsMandateService;
+    $this->grantsProfileService = $grantsProfileService;
   }
 
   /**
@@ -59,6 +86,8 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
       $container->get('request_stack'),
       $container->get('current_user'),
       $container->get('language_manager'),
+      $container->get('grants_mandate.service'),
+      $container->get('grants_profile.service'),
     );
   }
 
@@ -68,8 +97,21 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
   public function mandateCallbackYpa() {
 
     $code = $this->requestStack->getMainRequest()->query->get('code');
+    $state = $this->requestStack->getMainRequest()->query->get('state');
 
-    $d = 'asdf';
+    $callbackUrl = Url::fromRoute('grants_mandate.callback_ypa', [], ['absolute' => TRUE])
+      ->toString();
+
+    $callbackUrl = str_replace('/fi', '', $callbackUrl);
+    $callbackUrl = str_replace('/sv', '', $callbackUrl);
+    $callbackUrl = str_replace('/ru', '', $callbackUrl);
+
+    $this->grantsMandateService->changeCodeToToken($code, '', $callbackUrl);
+    $roles = $this->grantsMandateService->getRoles();
+
+    $this->grantsProfileService->setSelectedCompany(reset($roles));
+
+    return new RedirectResponse('/grants-profile');
   }
 
   /**

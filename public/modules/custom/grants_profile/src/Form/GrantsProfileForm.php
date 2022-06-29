@@ -53,7 +53,8 @@ class GrantsProfileForm extends FormBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-    $selectedCompany = $grantsProfileService->getSelectedCompany();
+    $selectedCompanyArray = $grantsProfileService->getSelectedCompany();
+    $selectedCompany = $selectedCompanyArray['identifier'];
 
     $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
@@ -445,9 +446,6 @@ class GrantsProfileForm extends FormBase {
       return;
     }
 
-    /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
-    // $grantsProfileService = \Drupal::service('grants_profile.service');
-    // $selectedCompany = $grantsProfileService->getSelectedCompany();
     $values = $form_state->getValues();
 
     $grantsProfileContent = $storage['grantsProfileContent'];
@@ -495,7 +493,8 @@ class GrantsProfileForm extends FormBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-    $selectedCompany = $grantsProfileService->getSelectedCompany();
+    $selectedCompanyArray = $grantsProfileService->getSelectedCompany();
+    $selectedCompany = $selectedCompanyArray['identifier'];
 
     $profileDataArray = $grantsProfileData->toArray();
 

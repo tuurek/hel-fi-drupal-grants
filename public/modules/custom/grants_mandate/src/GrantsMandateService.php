@@ -2,8 +2,6 @@
 
 namespace Drupal\grants_mandate;
 
-use DateTime;
-use DateTimeZone;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -11,31 +9,16 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\Url;
-use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
-use GrantsMandateException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Ramsey\Uuid\Uuid;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 
 /**
  * GrantsMandateAuthorize service.
  */
 class GrantsMandateService {
-
-  /**
-   * The helfi_helsinki_profiili service.
-   *
-   * @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData
-   */
-  protected HelsinkiProfiiliUserData $helsinkiProfiiliUserData;
-
-  /**
-   * The grants_profile service.
-   *
-   * @var \Drupal\grants_profile\GrantsProfileService
-   */
-  protected GrantsProfileService $grantsProfileService;
 
   /**
    * Client id.
@@ -80,34 +63,39 @@ class GrantsMandateService {
   protected LoggerChannelFactory|LoggerChannelInterface|LoggerChannel $logger;
 
   /**
+   * Private store.
+   *
    * @var \Drupal\Core\TempStore\PrivateTempStore
    */
   protected PrivateTempStore $tempStore;
 
   /**
+   * Profile data.
+   *
+   * @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData
+   */
+  protected HelsinkiProfiiliUserData $helsinkiProfiiliUserData;
+
+  /**
    * Construct the service object.
    *
-   * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helsinkiProfiiliUserData
-   *   Access to helsinkiprofiili data.
-   * @param \Drupal\grants_profile\GrantsProfileService $grantsProfileService
-   *   Access to grants profile.
    * @param \GuzzleHttp\ClientInterface $httpClient
    *   Http client.
    * @param \Drupal\Core\Logger\LoggerChannelFactory $loggerFactory
    *   Logger.
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   *   Store for session id.
    */
   public function __construct(
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
-    GrantsProfileService $grantsProfileService,
     ClientInterface $httpClient,
     LoggerChannelFactory $loggerFactory,
     PrivateTempStoreFactory $temp_store_factory
   ) {
-    $this->helsinkiProfiiliUserData = $helsinkiProfiiliUserData;
-    $this->grantsProfileService = $grantsProfileService;
     $this->httpClient = $httpClient;
     $this->logger = $loggerFactory->get('grants_mandate');
     $this->tempStore = $temp_store_factory->get('grants_mandate');
+    $this->helsinkiProfiiliUserData = $helsinkiProfiiliUserData;
 
     $this->clientId = getenv('DVV_WEBAPI_CLIENT_ID');
     $this->clientSecret = getenv('DVV_WEBAPI_CLIENT_SECRET');
@@ -117,7 +105,10 @@ class GrantsMandateService {
   }
 
   /**
+   * @param string $mode
    *
+   * @return string
+   * @throws \GrantsMandateException
    */
   public function getUserMandateRedirectUrl(string $mode) {
 
@@ -137,6 +128,79 @@ class GrantsMandateService {
     $url = str_replace('/ru', '', $url);
 
     return $this->webApiUrl . '/oauth/authorize?client_id=' . $this->clientId . '&response_type=code&redirect_uri=' . $url . '&user=' . $sessionData['userId'];
+  }
+
+  /**
+   * Exchange session tokens to auth token.
+   *
+   * @param string $webApiSessionId
+   * @param string $code
+   * @param string $issue
+   * @param string $callbackUri
+   */
+  public function changeCodeToToken(string $code, string $issue, string $callbackUri) {
+
+    $url = $this->webApiUrl . '/oauth/token?code=' . $code . '&grant_type=authorization_code&redirect_uri=' . $callbackUri;
+
+    $options = [
+      'headers' => [
+        'Authorization' => $this->createBasicAuthorizationHeader(),
+      ],
+    ];
+
+    try {
+      $response = $this->httpClient->request(
+        'POST',
+        $url,
+        $options
+      );
+      // Get existing session details.
+      $sessionData = $this->getSessionData();
+      // Parse content.
+      $content = Json::decode($response->getBody()->getContents());
+      // Merge session data.
+      $sessionData = array_merge($sessionData, $content);
+      // Save updated session data.
+      $this->setSessionData($sessionData);
+    }
+    catch (\Exception $e) {
+      throw new \GrantsMandateException('Token exchange failed');
+    }
+  }
+
+  /**
+   *
+   */
+  public function getRoles() {
+    // Get existing session details.
+    $sessionData = $this->getSessionData();
+
+    $resourceUrl = '/service/' . $sessionData['mode'] . '/api/organizationRoles/' . $sessionData['sessionId'] . '?requestId=' . $sessionData['requestId'];
+    $checksumHeaderValue = $this->createxAuthorizationHeader($resourceUrl);
+
+    $options = [
+      'headers' => [
+        'Authorization' => 'Bearer ' . $sessionData['access_token'],
+        'X-AsiointivaltuudetAuthorization' => $checksumHeaderValue,
+      ],
+    ];
+
+    try {
+      $response = $this->httpClient->request(
+        'GET',
+        $this->webApiUrl . $resourceUrl,
+        $options
+      );
+
+      // Parse content.
+      $content = Json::decode($response->getBody()->getContents());
+
+      return $content;
+
+    }
+    catch (\Exception $exception) {
+      $d = 'asdf';
+    }
   }
 
   /**
@@ -164,7 +228,8 @@ class GrantsMandateService {
   protected function register(string $mode, string $personId, string $requestId): mixed {
 
     // Registering WEB API session.
-    $registerPath = '/service/' . $mode . '/user/register/' . $this->clientId . '/' . $personId . '?requestId=' . $requestId . '&endUserId=nodeEndUser';
+    $registerPath = '/service/' . $mode . '/user/register/' . $this->clientId . '/' . $personId . '?requestId=' . $requestId;
+    // . '&endUserId=nodeEndUser';
     // Adding X-AsiointivaltuudetAuthorization header.
     $checksumHeaderValue = $this->createxAuthorizationHeader($registerPath);
 
@@ -181,13 +246,17 @@ class GrantsMandateService {
 
       $data = Json::decode($response->getBody()->getContents());
 
-      $this->tempStore->set('user_session_data', $data);
+      // Save requestId for later usage.
+      $data['requestId'] = $requestId;
+      $data['mode'] = $mode;
+
+      $this->setSessionData($data);
 
       return $data;
 
     }
     catch (TempStoreException | GuzzleException $e) {
-      throw new GrantsMandateException($e->getMessage());
+      throw new \GrantsMandateException($e->getMessage());
     }
 
   }
@@ -203,8 +272,8 @@ class GrantsMandateService {
    */
   private function createxAuthorizationHeader(string $path): string {
 
-    $dt = new DateTime();
-    $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
+    $dt = new \DateTime();
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     // 'Y-m-d\TH:i:s'
     $timestamp = $dt->format('c');
 
@@ -216,11 +285,34 @@ class GrantsMandateService {
   }
 
   /**
+   * Create basic auth string from client details.
    *
+   * @return string
    */
   private function createBasicAuthorizationHeader() {
-    $encoded = base64_encode($this->clientId . ':' . $this->clientSecret);
+    $encoded = base64_encode($this->clientId . ':' . $this->apiKey);
     return 'Basic ' . $encoded;
+  }
+
+  /**
+   * Save user mandata session data to users' session.
+   *
+   * @param mixed $data
+   *
+   * @return void
+   *
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   */
+  protected function setSessionData(mixed $data): void {
+    $this->tempStore->set('user_session_data', $data);
+  }
+
+  /**
+   *
+   * @return mixed
+   */
+  public function getSessionData() {
+    return $this->tempStore->get('user_session_data');
   }
 
 }

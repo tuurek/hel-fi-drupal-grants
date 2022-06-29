@@ -129,7 +129,8 @@ class GrantsProfileService {
   public function newProfile(array $data): AtvDocument {
 
     $newProfileData = [];
-    $selectedCompany = $this->getSelectedCompany();
+    $selectedCompanyArray = $this->getSelectedCompany();
+    $selectedCompany = $selectedCompanyArray['identifier'];
     $userProfile = $this->helsinkiProfiili->getUserProfileData();
     $userData = $this->helsinkiProfiili->getUserData();
 
@@ -732,10 +733,9 @@ class GrantsProfileService {
    * @return string|null
    *   Selected company
    */
-  public function getSelectedCompany(): ?string {
+  public function getSelectedCompany(): ?array {
     if ($this->isCached('selected_company')) {
-      $data = $this->getFromCache('selected_company');
-      return $data['business_id'];
+      return $this->getFromCache('selected_company');
     }
     return NULL;
   }
@@ -746,8 +746,8 @@ class GrantsProfileService {
    * @param string $businessId
    *   ID to be saved.
    */
-  public function setSelectedCompany(string $businessId): bool {
-    return $this->setToCache('selected_company', ['business_id' => $businessId]);
+  public function setSelectedCompany(array $companyData): bool {
+    return $this->setToCache('selected_company', $companyData);
   }
 
   /**
