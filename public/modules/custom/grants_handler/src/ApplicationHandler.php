@@ -108,6 +108,7 @@ class ApplicationHandler {
     'REJECTED' => 'REJECTED',
     'DELETED' => 'DELETED',
     'CANCELED' => 'CANCELED',
+    'CANCELLED' => 'CANCELLED',
     'CLOSED' => 'CLOSED',
   ];
 
