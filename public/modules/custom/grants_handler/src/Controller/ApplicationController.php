@@ -137,7 +137,7 @@ class ApplicationController extends ControllerBase {
     $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
 
     if ($webform_submission == NULL) {
-      AccessResult::forbidden('No submission found');
+      return AccessResult::forbidden('No submission found');
     }
 
     $webform = $webform_submission->getWebform();
