@@ -38,7 +38,7 @@ class ModalBankAccountForm extends FormBase {
   protected GrantsProfileService $grantsProfileService;
 
   /**
-   * Constructs a new AddressForm object.
+   * Constructs a new Modal Bank account object.
    */
   public function __construct(TypedDataManager $typed_data_manager, GrantsProfileService $grantsProfileService) {
     $this->typedDataManager = $typed_data_manager;
@@ -48,7 +48,7 @@ class ModalBankAccountForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): AddressForm|static {
+  public static function create(ContainerInterface $container): ModalBankAccountForm|static {
 
     // Create a new form object and inject its services.
     $form = new static(

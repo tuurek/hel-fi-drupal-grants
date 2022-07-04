@@ -24,7 +24,7 @@ class GrantsProfileForm extends FormBase {
   protected TypedDataManager $typedDataManager;
 
   /**
-   * Constructs a new AddressForm object.
+   * Constructs a new GrantsProfileForm object.
    */
   public function __construct(TypedDataManager $typed_data_manager) {
     $this->typedDataManager = $typed_data_manager;
