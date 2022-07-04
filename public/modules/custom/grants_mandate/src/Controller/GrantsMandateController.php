@@ -14,6 +14,7 @@ use Drupal\grants_mandate\GrantsMandateService;
 use Drupal\grants_profile\GrantsProfileService;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\grants_mandate\GrantsMandateException;
 
 /**
  * Returns responses for grants_mandate routes.
@@ -120,7 +121,7 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
       $this->grantsProfileService->setSelectedCompany(reset($roles));
     }
     else {
-      throw new \GrantsMandateException("Code Exchange failed");
+      throw new GrantsMandateException("Code Exchange failed");
     }
 
     return new RedirectResponse('/grants-profile');

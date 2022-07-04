@@ -174,7 +174,7 @@ class GrantsMandateService {
       $this->setSessionData($sessionData);
     }
     catch (\Exception $e) {
-      throw new \GrantsMandateException('Token exchange failed');
+      throw new GrantsMandateException('Token exchange failed');
     }
   }
 
@@ -215,7 +215,7 @@ class GrantsMandateService {
 
     }
     catch (\Exception $exception) {
-      throw new \GrantsMandateException('Role exchange failed');
+      throw new GrantsMandateException('Role exchange failed');
     }
   }
 
@@ -272,7 +272,7 @@ class GrantsMandateService {
 
     }
     catch (TempStoreException | GuzzleException $e) {
-      throw new \GrantsMandateException($e->getMessage());
+      throw new GrantsMandateException($e->getMessage());
     }
 
   }
