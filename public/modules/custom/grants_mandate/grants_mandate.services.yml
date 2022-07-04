@@ -1,10 +1,4 @@
 services:
-  grants_mandate.event_subscriber:
-    class: Drupal\grants_mandate\EventSubscriber\GrantsMandateSubscriber
-    arguments: ['@messenger']
-    tags:
-      - { name: event_subscriber }
-
   grants_mandate.service:
     class: Drupal\grants_mandate\GrantsMandateService
     arguments: [

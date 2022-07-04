@@ -37,7 +37,7 @@ class ApplicantMandateForm extends FormBase {
   protected GrantsMandateService $grantsMandateService;
 
   /**
-   * Constructs a new AddressForm object.
+   * Constructs a new ModalAddressForm object.
    */
   public function __construct(
     GrantsProfileService $grantsProfileService,

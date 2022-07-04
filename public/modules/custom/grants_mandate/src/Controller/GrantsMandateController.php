@@ -92,7 +92,12 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
   }
 
   /**
+   * Callback for YPA service in DVV valtuutuspalvelu.
    *
+   * @return \Laminas\Diactoros\Response\RedirectResponse
+   *   REdirect to profile page.
+   *
+   * @throws \GrantsMandateException
    */
   public function mandateCallbackYpa() {
 
@@ -106,10 +111,15 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
     $callbackUrl = str_replace('/sv', '', $callbackUrl);
     $callbackUrl = str_replace('/ru', '', $callbackUrl);
 
-    $this->grantsMandateService->changeCodeToToken($code, '', $callbackUrl);
-    $roles = $this->grantsMandateService->getRoles();
+    if (is_string($code) && $code != '') {
+      $this->grantsMandateService->changeCodeToToken($code, '', $callbackUrl);
+      $roles = $this->grantsMandateService->getRoles();
 
-    $this->grantsProfileService->setSelectedCompany(reset($roles));
+      $this->grantsProfileService->setSelectedCompany(reset($roles));
+    }
+    else {
+      throw new \GrantsMandateException("Code Exchange failed");
+    }
 
     return new RedirectResponse('/grants-profile');
   }

@@ -400,14 +400,29 @@ class GrantsHandler extends WebformHandlerBase {
     // These both are required to be selected.
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $applicantType = $this->grantsProfileService->getApplicantType();
+    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+    // \Drupal::messenger()->addMessage('Message in GrantsHandler::preCreate()');
+    $this->applicantType = $this->grantsProfileService->getApplicantType();
     if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
       ($currentUser->id() != '1')) {
-      if ($applicantType === NULL) {
-        \Drupal::messenger()
-          ->addError(t('You need to select applicant type.'));
 
-        $url = Url::fromRoute('grants_profile.applicant_type', [
+      $redirectApplicantType = FALSE;
+
+      if ($this->applicantType === NULL) {
+        $this->messenger()
+          ->addError(t("You need to select company you're acting behalf of."));
+        $redirectApplicantType = TRUE;
+      }
+
+      if ($selectedCompany == NULL) {
+        $this->messenger()
+          ->addError(t("You need to select company you're acting behalf of."));
+        $redirectApplicantType = TRUE;
+      }
+
+      if ($redirectApplicantType === TRUE) {
+        $url = Url::fromRoute('grants_mandate.mandateform', [
           'destination' => $values["uri"],
         ])
           ->setAbsolute()
@@ -415,14 +430,26 @@ class GrantsHandler extends WebformHandlerBase {
         $response = new RedirectResponse($url);
         $response->send();
       }
-      else {
-        $this->applicantType = $this->grantsProfileService->getApplicantType();
+
+      $redirectToProfile = FALSE;
+
+      if (empty($grantsProfile['officials'])) {
+        $this->messenger()
+          ->addError(t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+        $redirectToProfile = TRUE;
+      }
+      if (empty($grantsProfile['addresses'])) {
+        $this->messenger()
+          ->addError(t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+        $redirectToProfile = TRUE;
+      }
+      if (empty($grantsProfile['bankAccounts'])) {
+        $this->messenger()
+          ->addError(t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+        $redirectToProfile = TRUE;
       }
 
-      if ($selectedCompany == NULL) {
-        \Drupal::messenger()
-          ->addError(t("You need to select company you're acting behalf of."));
-
+      if ($redirectToProfile === TRUE) {
         $url = Url::fromRoute('grants_profile.show', [
           'destination' => $values["uri"],
         ])
@@ -431,6 +458,11 @@ class GrantsHandler extends WebformHandlerBase {
         $response = new RedirectResponse($url);
         $response->send();
       }
+
+    }
+    else {
+      $this->messenger()
+        ->addError(t("No prefill for admin"));
     }
   }
 
@@ -441,6 +473,7 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
 
+    // \Drupal::messenger()->addMessage('Message in GrantsHandler::alterForm()');
     $this->alterFormNavigation($form, $form_state, $webform_submission);
 
     $form['#webform_submission'] = $webform_submission;

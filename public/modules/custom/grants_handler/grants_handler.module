@@ -361,6 +361,7 @@ function _grants_handler_imported_handler(
     return;
   }
 
+
   $array["#value"] = $value;
   $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
   $array['#description'] = FieldFilteredMarkup::create($show_checkmark ? $value .
@@ -495,7 +496,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
       $regDate = new DrupalDateTime($grantsProfile["registrationDate"], 'Europe/Helsinki');
 
       _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["registration_date"], $regDate->format('d.m.Y'));
-      _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["company_number"], $selectedCompany);
+      _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["yhteiso_jolle_haetaan_avustusta"]['grants_profile__items_container']["company_number"], $selectedCompany['identifier']);
 
       _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["perustamisvuosi"]["founding_year"], $grantsProfile["foundingYear"], FALSE);
 
@@ -570,18 +571,6 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     ]
   );
 
-  $urlWebform = Url::fromRoute(
-    'entity.webform.user.submission.edit',
-    [
-      'webform' => $webform->id(),
-      'webform_submission' => $submission->id(),
-    ],
-    [
-      'attributes' => [
-        'data-drupal-selector' => 'application-edit-link',
-      ],
-    ]
-  );
 
   if (isset($data["application_number"])) {
     $variables['applicationNumber'] = $data["application_number"];
@@ -591,7 +580,6 @@ function grants_handler_preprocess_webform_submission(&$variables) {
   }
 
   $variables['editSubmissionUrlCustom'] = $urlCustom;
-  $variables['editSubmissionUrlWebform'] = $urlWebform;
 
   // parse messages
   $variables['messages'] = [
@@ -684,8 +672,10 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
   $history = [];
   if (isset($submissionData["status_updates"]) && is_array($submissionData["status_updates"])) {
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
+      $eventDate = new \DateTime($event['timeCreated']);
+      $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
       $history[] = [
-        'date' => '12.04.2021 14:54:32',
+        'date' => $eventDate->format('d.m.Y H:i'),
         'citizenCaseStatus' => $event['citizenCaseStatus'],
         'eventSource' => $event['eventSource'] ?? '',
       ];
@@ -719,13 +709,15 @@ function grants_handler_preprocess_webform_submission_events(&$variables) {
   $events = [];
   if (isset($submissionData['events']) && is_array($submissionData['events'])) {
     foreach ($submissionData['events'] as $event) {
+      $eventDate = new \DateTime($event['timeCreated']);
+      $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
       $events[] = [
-        'date' => '12.04.2021 14:54:32',
+        'date' => $eventDate->format('d.m.Y H:i'),
         'eventSource' => $event['eventSource'] ?? '',
         'eventDescription' => $event['eventDescription'] ?? '',
       ];
     }
-
+    array_multisort( array_column($events, "date"), SORT_DESC, $events );
   }
 
   $table = [

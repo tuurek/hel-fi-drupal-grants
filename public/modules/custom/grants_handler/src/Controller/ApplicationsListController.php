@@ -150,7 +150,7 @@ class ApplicationsListController extends ControllerBase {
     try {
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
         'service' => 'AvustushakemusIntegraatio',
-        'business_id' => $selectedCompany,
+        'business_id' => $selectedCompany['identifier'],
       ],
         TRUE);
 

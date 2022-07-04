@@ -352,7 +352,7 @@ class AttachmentHandler {
 
     // If we have account number, load details.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany);
+    $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
     $profileContent = $grantsProfileDocument->getContent();
 
     $applicationDocument = FALSE;
@@ -438,7 +438,7 @@ class AttachmentHandler {
           'description' => t('Confirmation for account @accountNumber', ['@accountNumber' => $selectedAccount["bankAccount"]])->render(),
           'fileName' => $selectedAccount["confirmationFile"],
           'isNewAttachment' => TRUE,
-          'fileType' => 101,
+          'fileType' => 6,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
@@ -472,7 +472,7 @@ class AttachmentHandler {
           'description' => t('Confirmation for account @accountNumber', ['@accountNumber' => $selectedAccount["bankAccount"]])->render(),
           'fileName' => $selectedAccount["confirmationFile"],
           'isNewAttachment' => FALSE,
-          'fileType' => 101,
+          'fileType' => 6,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
@@ -524,7 +524,7 @@ class AttachmentHandler {
     else {
       // If other filetype and no attachment already set, we don't add them to
       // retval since we don't want to fill attachments with empty other files.
-      if (($fileType === "0" || $fileType === '101') && empty($field["attachmentName"])) {
+      if (($fileType === "0" || $fileType === '6') && empty($field["attachmentName"])) {
         return [];
       }
       // No upload, process accordingly.
