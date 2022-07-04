@@ -249,10 +249,12 @@ class GrantsMandateService {
     // Adding X-AsiointivaltuudetAuthorization header.
     $checksumHeaderValue = $this->createxAuthorizationHeader($registerPath);
 
+    $regUrl = $this->webApiUrl . $registerPath;
+
     try {
       $response = $this->httpClient->request(
         'GET',
-        $this->webApiUrl . $registerPath,
+        $regUrl,
         [
           'headers' => [
             'X-AsiointivaltuudetAuthorization' => $checksumHeaderValue,
@@ -272,6 +274,10 @@ class GrantsMandateService {
 
     }
     catch (TempStoreException | GuzzleException $e) {
+      $this->logger->error('Error in user mandates. Error: @error. RequestId: @requestId',
+        ['@error' => $e->getMessage(), 'requestId' => $requestId]);
+      $this->logger->error('Error in user mandates. Url: @url. RequestId: @requestId',
+        ['@url' => $regUrl, 'requestId' => $requestId]);
       throw new GrantsMandateException($e->getMessage());
     }
 
