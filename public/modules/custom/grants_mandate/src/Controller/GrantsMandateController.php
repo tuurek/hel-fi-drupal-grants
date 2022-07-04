@@ -112,7 +112,7 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
     $callbackUrl = str_replace('/ru', '', $callbackUrl);
 
     if (is_string($code) && $code != '') {
-      $this->grantsMandateService->changeCodeToToken($code, '', $callbackUrl);
+      $this->grantsMandateService->changeCodeToToken($code, $callbackUrl);
       $roles = $this->grantsMandateService->getRoles();
 
       $this->grantsProfileService->setSelectedCompany(reset($roles));
@@ -125,14 +125,14 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
   }
 
   /**
-   *
+   * Callback for user mandates.
    */
   public function mandateCallbackHpa() {
     $d = 'asdf';
   }
 
   /**
-   *
+   * Callback for hpa listing.
    */
   public function mandateCallbackHpaList() {
     $d = 'asdf';

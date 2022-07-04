@@ -2,12 +2,10 @@
 
 namespace Drupal\grants_attachments;
 
-use Drupal;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\Entity\File;
-use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
@@ -166,7 +164,7 @@ class AttachmentUploader {
         }
         // Get file metadata.
         $fileUri = $file->get('uri')->value;
-        $filePath = Drupal::service('file_system')->realpath($fileUri);
+        $filePath = \Drupal::service('file_system')->realpath($fileUri);
 
         // Get file data.
         $body = Utils::tryFopen($filePath, 'r');
@@ -224,7 +222,7 @@ class AttachmentUploader {
           ]);
         }
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         $this->messenger->addError('Attachment upload failed:' . $file->getFilename());
         if ($this->isDebug()) {
           $this->messenger->addError(printf('Grants attachment upload failed: %s', $e->getMessage()));

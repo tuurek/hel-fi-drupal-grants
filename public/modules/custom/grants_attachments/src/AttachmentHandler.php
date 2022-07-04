@@ -178,6 +178,8 @@ class AttachmentHandler {
    *   Form state object.
    * @param string $fieldTitle
    *   Field title for errors.
+   * @param string $triggeringElement
+   *   Triggering element.
    */
   public static function validateAttachmentField(
     string $fieldName,

@@ -79,6 +79,8 @@ class GrantsMandateService {
   /**
    * Construct the service object.
    *
+   * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helsinkiProfiiliUserData
+   *   Access to profile data.
    * @param \GuzzleHttp\ClientInterface $httpClient
    *   Http client.
    * @param \Drupal\Core\Logger\LoggerChannelFactory $loggerFactory
@@ -105,9 +107,14 @@ class GrantsMandateService {
   }
 
   /**
+   * Generate callback url for user mandates.
+   *
    * @param string $mode
+   *   Mode used, ypa / hpa / hpalist.
    *
    * @return string
+   *   Generated url
+   *
    * @throws \GrantsMandateException
    */
   public function getUserMandateRedirectUrl(string $mode) {
@@ -133,12 +140,15 @@ class GrantsMandateService {
   /**
    * Exchange session tokens to auth token.
    *
-   * @param string $webApiSessionId
    * @param string $code
-   * @param string $issue
+   *   Oauth return code.
    * @param string $callbackUri
+   *   Url for callback.
+   *
+   * @throws \GrantsMandateException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function changeCodeToToken(string $code, string $issue, string $callbackUri) {
+  public function changeCodeToToken(string $code, string $callbackUri) {
 
     $url = $this->webApiUrl . '/oauth/token?code=' . $code . '&grant_type=authorization_code&redirect_uri=' . $callbackUri;
 
@@ -169,7 +179,13 @@ class GrantsMandateService {
   }
 
   /**
+   * Get user roles for given authentication tokens.
    *
+   * @return mixed|void
+   *   User roles if there was some.
+   *
+   * @throws \GrantsMandateException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getRoles() {
     // Get existing session details.
@@ -199,7 +215,7 @@ class GrantsMandateService {
 
     }
     catch (\Exception $exception) {
-      $d = 'asdf';
+      throw new \GrantsMandateException('Role exchange failed');
     }
   }
 
@@ -288,6 +304,7 @@ class GrantsMandateService {
    * Create basic auth string from client details.
    *
    * @return string
+   *   Auth header.
    */
   private function createBasicAuthorizationHeader() {
     $encoded = base64_encode($this->clientId . ':' . $this->apiKey);
@@ -298,8 +315,7 @@ class GrantsMandateService {
    * Save user mandata session data to users' session.
    *
    * @param mixed $data
-   *
-   * @return void
+   *   Save session data for user.
    *
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
@@ -308,10 +324,12 @@ class GrantsMandateService {
   }
 
   /**
+   * Return user session data.
    *
    * @return mixed
+   *   Session data if available.
    */
-  public function getSessionData() {
+  public function getSessionData(): mixed {
     return $this->tempStore->get('user_session_data');
   }
 

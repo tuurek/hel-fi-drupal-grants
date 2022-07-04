@@ -157,27 +157,27 @@ class MessageService {
         return TRUE;
       }
 
-      // If ($res->getStatusCode() == 201) {
-      //        try {
-      //          $eventId = $this->eventsService->logEvent(
-      //            $submissionData["application_number"],
-      //            'MESSAGE_NEW',
-      //            t('New message for @applicationNumber.',
-      //              ['@applicationNumber' => $submissionData["application_number"]]
-      //            ),
-      //            $nextMessageId
-      //          );
-      //
-      //          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent. Event logged: ' . $eventId);
-      //
-      //        }
-      //        catch (EventException $e) {
-      //          // Log event error.
-      //          $this->logger->error($e->getMessage());
-      //        }
-      //
-      //        return TRUE;
-      //      }.
+      if ($res->getStatusCode() == 201) {
+        try {
+          $eventId = $this->eventsService->logEvent(
+            $submissionData["application_number"],
+            'MESSAGE_NEW_APP',
+            t('New message for @applicationNumber.',
+              ['@applicationNumber' => $submissionData["application_number"]]
+            ),
+            $nextMessageId
+          );
+
+          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent. Event logged: ' . $eventId);
+
+        }
+        catch (EventException $e) {
+          // Log event error.
+          $this->logger->error($e->getMessage());
+        }
+
+        return TRUE;
+      }
     }
     return FALSE;
   }

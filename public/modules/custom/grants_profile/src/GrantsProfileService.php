@@ -611,13 +611,15 @@ class GrantsProfileService {
   /**
    * Get "content" array from document in ATV.
    *
-   * @param string $businessId
-   *   What business data is fetched.
+   * @param mixed $business
+   *   Business id OR full business object.
    * @param bool $refetch
    *   If true, data is fetched always.
    *
    * @return array
    *   Content
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getGrantsProfileContent(mixed $business, bool $refetch = FALSE): array {
 
@@ -760,8 +762,11 @@ class GrantsProfileService {
   /**
    * Set selected business id to store.
    *
-   * @param string $businessId
-   *   ID to be saved.
+   * @param array $companyData
+   *   Company details.
+   *
+   * @return bool
+   *   Success.
    */
   public function setSelectedCompany(array $companyData): bool {
     return $this->setToCache('selected_company', $companyData);
