@@ -275,9 +275,9 @@ class GrantsMandateService {
     }
     catch (TempStoreException | GuzzleException $e) {
       $this->logger->error('Error in user mandates. Error: @error. RequestId: @requestId',
-        ['@error' => $e->getMessage(), 'requestId' => $requestId]);
+        ['@error' => $e->getMessage(), '@requestId' => $requestId]);
       $this->logger->error('Error in user mandates. Url: @url. RequestId: @requestId',
-        ['@url' => $regUrl, 'requestId' => $requestId]);
+        ['@url' => $regUrl, '@requestId' => $requestId]);
       throw new GrantsMandateException($e->getMessage());
     }
 
