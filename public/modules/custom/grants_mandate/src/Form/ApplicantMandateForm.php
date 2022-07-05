@@ -79,10 +79,10 @@ class ApplicantMandateForm extends FormBase {
       '#options' => [
         'registered_community' => $this
           ->t('Registered community'),
-        'unregistered_community' => $this
-          ->t('UNregistered community'),
-        'private_person' => $this
-          ->t('Private person'),
+    // 'unregistered_community' => $this
+    //          ->t('UNregistered community'),
+    //        'private_person' => $this
+    //          ->t('Private person'),
       ],
       '#required' => TRUE,
     ];
