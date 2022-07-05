@@ -311,6 +311,13 @@ class GrantsHandlerNavigationHelper {
   }
 
   /**
+   * Clear errors from users' session.
+   */
+  public function clearPageErrors() {
+    $this->store->delete(self::TEMP_STORE_KEY);
+  }
+
+  /**
    * Logs the current submission errors.
    *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission

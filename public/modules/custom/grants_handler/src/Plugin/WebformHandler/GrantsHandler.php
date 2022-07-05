@@ -18,6 +18,7 @@ use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use Drupal\webform\Entity\Webform;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\Plugin\WebformHandlerBase;
 use Drupal\webform\WebformSubmissionInterface;
@@ -342,6 +343,14 @@ class GrantsHandler extends WebformHandlerBase {
    */
   protected function massageFormValuesFromWebform(WebformSubmission $webform_submission): mixed {
     $values = $webform_submission->getData();
+    $this->setFromThirdPartySettings($webform_submission->getWebform());
+
+    if (isset($this->applicationType) && $this->applicationType != '') {
+      $values['application_type'] = $this->applicationType;
+    }
+    if (isset($this->applicationTypeID) && $this->applicationTypeID != '') {
+      $values['application_type_id'] = $this->applicationTypeID;
+    }
 
     if (isset($values['community_address']) && $values['community_address'] !== NULL) {
       $values += $values['community_address'];
@@ -364,8 +373,11 @@ class GrantsHandler extends WebformHandlerBase {
       else {
         // But if we have saved webform earlier, we can get the application
         // number from submission serial.
+        $s = $webform_submission->serial();
         if ($webform_submission->serial()) {
           $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
+          $this->submittedFormData['application_number'] = $this->applicationNumber;
+          $values['application_number'] = $this->applicationNumber;
         }
         // Hopefully we never reach here, but there should be additional checks
         // for application number to exists.
@@ -389,6 +401,10 @@ class GrantsHandler extends WebformHandlerBase {
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+    $webform = Webform::load($values['webform_id']);
+
+    $this->setFromThirdPartySettings($webform);
 
     // \Drupal::messenger()->addMessage
     // ('Message in GrantsHandler::preCreate()');
@@ -469,10 +485,7 @@ class GrantsHandler extends WebformHandlerBase {
     $form['#webform_submission'] = $webform_submission;
     $form['#form_state'] = $form_state;
 
-    $this->applicationType = $webform_submission->getWebform()
-      ->getThirdPartySetting('grants_metadata', 'applicationType');
-    $this->applicationTypeID = $webform_submission->getWebform()
-      ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
+    $this->setFromThirdPartySettings($webform_submission->getWebform());
 
     // If submission has applicant type set, ie we're editing submission
     // use that, if not then get selected from profile.
@@ -705,29 +718,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set form update value based on new & old status + Avus2 logic.
     $this->submittedFormData["form_update"] = $this->getFormUpdate();
 
-    // Make sure we have application type id set.
-    if (!isset($this->applicationTypeID)) {
-      if (isset($this->submittedFormData['application_type_id'])) {
-        $this->applicationTypeID = $this->submittedFormData['application_type_id'];
-      }
-      else {
-        $this->applicationTypeID = $webform_submission->getWebform()
-          ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
-        $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
-      }
-    }
-
-    // Make sure we have our application type set.
-    if (!isset($this->applicationType) || $this->applicationType == '') {
-      if (isset($this->submittedFormData['application_type']) && $this->submittedFormData['application_type'] != '') {
-        $this->applicationTypeID = $this->submittedFormData['application_type'];
-      }
-      else {
-        $this->applicationType = $webform_submission->getWebform()
-          ->getThirdPartySetting('grants_metadata', 'applicationType');
-        $this->submittedFormData['application_type'] = $this->applicationType;
-      }
-    }
+    $this->setFromThirdPartySettings($webform_submission->getWebform());
 
     // Figure out status for this application.
     $this->newStatus = $this->applicationHandler->getNewStatus(
@@ -751,17 +742,13 @@ class GrantsHandler extends WebformHandlerBase {
     }
     $current_errors = $this->logErrors($webform_submission, $form_state);
 
-    if ($triggeringElement == '::next') {
-      // parent::validateForm($form, $form_state, $webform_submission);.
-      $d = 'asdf';
-    }
-
-    if ($triggeringElement == '::gotoPage') {
-      $d = 'asdf';
-    }
-    if ($triggeringElement == '::submitForm') {
-      $d = 'asdf';
-    }
+    // If ($triggeringElement == '::next') {
+    // // parent::validateForm($form, $form_state, $webform_submission);.
+    // }
+    // if ($triggeringElement == '::gotoPage') {
+    // }
+    // if ($triggeringElement == '::submitForm') {
+    // }.
     if ($triggeringElement == '::submit') {
       $d = 'asdf';
       if (self::emptyRecursive($current_errors)) {
@@ -1204,6 +1191,38 @@ class GrantsHandler extends WebformHandlerBase {
       // @todo add logger
     }
     return $current_errors;
+  }
+
+  /**
+   * Parse things from form 3rd party settings to this application.
+   *
+   * @param \Drupal\webform\Entity\Webform $webform
+   *   Webform used.
+   */
+  protected function setFromThirdPartySettings(Webform $webform): void {
+    // Make sure we have application type id set.
+    if (!isset($this->applicationTypeID) || $this->applicationTypeID == '') {
+      if (isset($this->submittedFormData['application_type_id'])) {
+        $this->applicationTypeID = $this->submittedFormData['application_type_id'];
+      }
+      else {
+        $this->applicationTypeID = $webform
+          ->getThirdPartySetting('grants_metadata', 'applicationTypeID');
+        $this->submittedFormData['application_type_id'] = $this->applicationTypeID;
+      }
+    }
+
+    // Make sure we have our application type set.
+    if (!isset($this->applicationType) || $this->applicationType == '') {
+      if (isset($this->submittedFormData['application_type']) && $this->submittedFormData['application_type'] != '') {
+        $this->applicationTypeID = $this->submittedFormData['application_type'];
+      }
+      else {
+        $this->applicationType = $webform
+          ->getThirdPartySetting('grants_metadata', 'applicationType');
+        $this->submittedFormData['application_type'] = $this->applicationType;
+      }
+    }
   }
 
 }
