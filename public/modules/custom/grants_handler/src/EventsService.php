@@ -58,6 +58,7 @@ class EventsService {
   protected static array $eventTypes = [
     'STATUS_UPDATE' => 'STATUS_UPDATE',
     'MESSAGE_NEW' => 'MESSAGE_NEW',
+    'MESSAGE_NEW_APP' => 'MESSAGE_NEW_APP',
     'MESSAGE_READ' => 'MESSAGE_READ',
     'ATTACHMENT_UPLOAD' => 'ATTACHMENT_UPLOAD',
     'DATA_UPDATE_ATV' => 'DATA_UPDATE_ATV',

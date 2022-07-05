@@ -154,10 +154,7 @@ class MessageService {
         if ($this->debug) {
           $this->logger->info('MSG id: ' . $nextMessageId . ', message sent.');
         }
-        return TRUE;
-      }
 
-      if ($res->getStatusCode() == 201) {
         try {
           $eventId = $this->eventsService->logEvent(
             $submissionData["application_number"],
@@ -178,6 +175,7 @@ class MessageService {
 
         return TRUE;
       }
+
     }
     return FALSE;
   }
