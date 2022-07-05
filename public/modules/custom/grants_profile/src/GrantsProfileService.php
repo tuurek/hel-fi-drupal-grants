@@ -15,11 +15,10 @@ use Drupal\file\Entity\File;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
-use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\helfi_yjdh\YjdhClient;
-use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handle all profile functionality.
@@ -566,6 +565,10 @@ class GrantsProfileService {
       // If not, get company details and use them.
       $companyDetails = $this->yjdhClient->getCompany($businessId);
 
+      if ($companyDetails == NULL) {
+        throw new NotFoundHttpException('Company details not found from YTJ');
+      }
+
       $profileContent["companyName"] = $companyDetails["TradeName"]["Name"];
       $profileContent["businessId"] = $companyDetails["BusinessId"];
       $profileContent["companyStatus"] = $companyDetails["CompanyStatus"]["Status"]["PrimaryCode"];
@@ -618,10 +621,11 @@ class GrantsProfileService {
    *
    * @return array
    *   Content
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function getGrantsProfileContent(mixed $business, bool $refetch = FALSE): array {
+  public function getGrantsProfileContent(
+    mixed $business,
+    bool $refetch = FALSE
+  ): array {
 
     if (is_array($business)) {
       $businessId = $business['identifier'];
@@ -637,7 +641,20 @@ class GrantsProfileService {
 
     $profileData = $this->getGrantsProfile($businessId, $refetch);
 
-    return $this->initGrantsProfile($businessId, $profileData->getContent());
+    try {
+      $profile = $this->initGrantsProfile($businessId,
+        $profileData->getContent());
+    }
+    catch (\Exception $e) {
+      $msg = $this->t('No compnay data found for business id @businessid. Cannot continue.', [
+        '@businessid' => $businessId,
+      ]);
+      $this->messenger->addError($msg);
+      $this->logger->error($msg->render());
+      $profile = NULL;
+    }
+
+    return $profile;
 
   }
 
@@ -652,7 +669,10 @@ class GrantsProfileService {
    * @return array
    *   Content
    */
-  public function getGrantsProfileAttachments(string $businessId, bool $refetch = FALSE): array {
+  public function getGrantsProfileAttachments(
+    string $businessId,
+    bool $refetch = FALSE
+  ): array {
 
     if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
@@ -676,10 +696,11 @@ class GrantsProfileService {
    *
    * @return \Drupal\helfi_atv\AtvDocument
    *   Profiledata
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function getGrantsProfile(string $businessId, bool $refetch = FALSE): AtvDocument {
+  public function getGrantsProfile(
+    string $businessId,
+    bool $refetch = FALSE
+  ): AtvDocument {
     if ($refetch === FALSE) {
       if ($this->isCached($businessId)) {
         $document = $this->getFromCache($businessId);
@@ -718,7 +739,6 @@ class GrantsProfileService {
    * @return \Drupal\helfi_atv\AtvDocument|bool
    *   Profile data
    *
-   * @throws \Drupal\Core\TempStore\TempStoreException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
@@ -732,11 +752,8 @@ class GrantsProfileService {
     try {
       $searchDocuments = $this->atvService->searchDocuments($searchParams, $refetch);
     }
-    catch (AtvFailedToConnectException) {
+    catch (\Exception $e) {
       throw new AtvDocumentNotFoundException('Not found');
-    }
-    catch (GuzzleException $e) {
-      throw $e;
     }
 
     if (empty($searchDocuments)) {
