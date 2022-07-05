@@ -43,15 +43,17 @@ class GrantsProfileController extends ControllerBase {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
     $selectedCompanyArray = $grantsProfileService->getSelectedCompany();
-    $selectedCompany = $selectedCompanyArray['identifier'];
 
-    if ($selectedCompany == NULL) {
+    if ($selectedCompanyArray == NULL) {
       $this->messenger()
         ->addError($this->t('No profile data available, select company'), TRUE);
 
       return new RedirectResponse('/asiointirooli-valtuutus');
     }
     else {
+
+      $selectedCompany = $selectedCompanyArray['identifier'];
+
       $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
       $build['#profile'] = $profile;

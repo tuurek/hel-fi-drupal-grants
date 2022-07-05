@@ -4,7 +4,7 @@ grants_mandate.mandateform:
     _title: 'Applicant type / Mandate'
     _form: 'Drupal\grants_mandate\Form\ApplicantMandateForm'
   requirements:
-    _permission: 'access content'
+    _permission: 'get mandates from dvv'
 
 grants_mandate.callback_hpa:
   path: '/asiointirooli-valtuutus/callback/hpa'

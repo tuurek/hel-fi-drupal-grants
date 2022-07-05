@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -18,8 +19,6 @@ use Drupal\grants_mandate\GrantsMandateException;
 
 /**
  * Returns responses for grants_mandate routes.
- *
- * ?code=52ezzTqZYRY3vsG0xxcPO5SZI_T2RWb_SM9eMJspkZsyYosjof_d4OAuppSHzbrI_K1ZQO4og7BemkBFBlegziTGmz3cfriIlqPyhrHaBTrwZpNl-zAFKbG-8ksnhnOk&state=1e132c9b-2407-4f52-b739-cead2a3eb21c.
  */
 class GrantsMandateController extends ControllerBase implements ContainerInjectionInterface {
 
@@ -63,6 +62,13 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
   protected GrantsProfileService $grantsProfileService;
 
   /**
+   * Logger access.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannel
+   */
+  protected LoggerChannel $logger;
+
+  /**
    * CompanyController constructor.
    */
   public function __construct(
@@ -77,6 +83,7 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
     $this->languageManager = $language_manager;
     $this->grantsMandateService = $grantsMandateService;
     $this->grantsProfileService = $grantsProfileService;
+    $this->logger = $this->getLogger('grants_mandate');
   }
 
   /**
@@ -121,7 +128,22 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
       $this->grantsProfileService->setSelectedCompany(reset($roles));
     }
     else {
-      throw new GrantsMandateException("Code Exchange failed");
+
+      $error = $this->requestStack->getMainRequest()->query->get('error');
+      $error_description = $this->requestStack->getMainRequest()->query->get('error_description');
+      $error_uri = $this->requestStack->getMainRequest()->query->get('error_uri');
+
+      $msg = $this->t('Code exchange error. @error: @error_desc. State: @state, Error URI: @error_uri',
+        [
+          '@error' => $error,
+          '@error_description' => $error_description,
+          '@state' => $state,
+          '@error_uri' => $error_uri,
+        ]);
+
+      $this->logger->error($msg->render());
+
+      throw new GrantsMandateException("Code Exchange failed, state: " . $state);
     }
 
     return new RedirectResponse('/grants-profile');

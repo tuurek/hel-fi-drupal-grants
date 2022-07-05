@@ -18,6 +18,8 @@ use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionStorageInterface;
 
+
+
 /**
  * Implements hook_theme().
  *
@@ -1012,30 +1014,37 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
 }
 
+///**
+// * Implements hook_preprocess_HOOK().
+// */
+//function grants_handler_preprocess_application_list(&$variables) {
+//
+//  $d = 'asdf';
+//
+//}
+//
+///**
+// * Implements hook_entity_load().
+// */
+//function grants_handler_entity_load(array $entities, $entity_type_id) {
+//
+//  if ($entity_type_id == 'webform_submission') {
+//    $d = 'asdf';
+//  }
+//}
+//
+///**
+// * Implements hook_entity_storage_load().
+// */
+//function grants_handler_entity_storage_load(array $entities, $entity_type) {
+//  if ($entity_type == 'webform_submission') {
+//    $d = 'asdf';
+//  }
+//}
+
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_user_logout().
  */
-function grants_handler_preprocess_application_list(&$variables) {
+function grants_handler_user_logout(AccountInterface $account) {
 
-  $d = 'asdf';
-
-}
-
-/**
- * Implements hook_entity_load().
- */
-function grants_handler_entity_load(array $entities, $entity_type_id) {
-
-  if ($entity_type_id == 'webform_submission') {
-    $d = 'asdf';
-  }
-}
-
-/**
- * Implements hook_entity_storage_load().
- */
-function grants_handler_entity_storage_load(array $entities, $entity_type) {
-  if ($entity_type == 'webform_submission') {
-    $d = 'asdf';
-  }
 }

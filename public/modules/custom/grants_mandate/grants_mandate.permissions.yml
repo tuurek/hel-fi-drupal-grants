@@ -1,0 +1,4 @@
+get mandates from dvv:
+  title: 'Get mandates from DVV'
+  description: 'Use valtuutuspalvelu'
+  restrict access: true
