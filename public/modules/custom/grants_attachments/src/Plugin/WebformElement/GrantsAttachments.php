@@ -70,7 +70,7 @@ class GrantsAttachments extends WebformCompositeBase {
     42 => 'Seuran toimintatiedot',
     43 => 'Tilinpäätös',
     44 => 'Hakemusliite',
-    101 => 'Pankkitilin vahvistus',
+    101 => 'Pankkitilivahvistus',
   ];
 
   /**

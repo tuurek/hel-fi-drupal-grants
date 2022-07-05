@@ -69,7 +69,8 @@ class AttachmentUploader {
    * @param \Drupal\Core\Database\Connection $connection
    *   Interact with database.
    */
-  public function __construct(ClientInterface $http_client,
+  public function __construct(
+    ClientInterface $http_client,
                               MessengerInterface $messenger,
                               LoggerChannelFactory $loggerFactory,
                               Connection $connection) {

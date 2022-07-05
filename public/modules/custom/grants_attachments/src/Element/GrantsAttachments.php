@@ -133,7 +133,7 @@ class GrantsAttachments extends WebformCompositeBase {
         $element["description"]["#default_value"] = $dataForElement['description'];
       }
 
-      if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '101') {
+      if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '6') {
         if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== ""){
           $element["fileStatus"]["#value"] = 'uploaded';
         }

@@ -15,11 +15,10 @@ use Drupal\file\Entity\File;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
-use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\helfi_yjdh\YjdhClient;
-use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handle all profile functionality.
@@ -129,7 +128,8 @@ class GrantsProfileService {
   public function newProfile(array $data): AtvDocument {
 
     $newProfileData = [];
-    $selectedCompany = $this->getSelectedCompany();
+    $selectedCompanyArray = $this->getSelectedCompany();
+    $selectedCompany = $selectedCompanyArray['identifier'];
     $userProfile = $this->helsinkiProfiili->getUserProfileData();
     $userData = $this->helsinkiProfiili->getUserData();
 
@@ -203,8 +203,8 @@ class GrantsProfileService {
    */
   public function saveGrantsProfile(array|AtvDocument $data) {
     // Get selected company.
-    $selectedCompany = $this->tempStore->get('selected_company');
-    $this->setToCache($selectedCompany['business_id'], $data);
+    $selectedCompanyArray = $this->getSelectedCompany();
+    $this->setToCache($selectedCompanyArray['identifier'], $data);
   }
 
   /**
@@ -219,9 +219,9 @@ class GrantsProfileService {
    */
   public function saveGrantsProfileAtv(): bool|AtvDocument {
     // Get selected company.
-    $selectedCompany = $this->tempStore->get('selected_company');
+    $selectedCompany = $this->getSelectedCompany();
     // Get grants profile.
-    $grantsProfileDocument = $this->getGrantsProfile($selectedCompany['business_id']);
+    $grantsProfileDocument = $this->getGrantsProfile($selectedCompany['identifier']);
 
     $transactionId = $this->newTransactionId(time());
 
@@ -316,7 +316,7 @@ class GrantsProfileService {
    */
   public function saveAddress(string $address_id, array $address): bool {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
     $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
 
     // Reset keys.
@@ -331,7 +331,7 @@ class GrantsProfileService {
 
     $addresses[$nextId] = $address;
     $profileContent['addresses'] = $addresses;
-    return $this->setToCache($selectedCompany, $profileContent);
+    return $this->setToCache($selectedCompany['identifier'], $profileContent);
   }
 
   /**
@@ -342,13 +342,13 @@ class GrantsProfileService {
    */
   public function removeAddress(string $address_id): bool {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
     $addresses = (isset($profileContent['addresses']) && $profileContent['addresses'] !== NULL) ? $profileContent['addresses'] : [];
 
     unset($addresses[$address_id]);
 
     $profileContent['addresses'] = $addresses;
-    return $this->setToCache($selectedCompany, $profileContent);
+    return $this->setToCache($selectedCompany['identifier'], $profileContent);
   }
 
   /**
@@ -384,7 +384,7 @@ class GrantsProfileService {
    */
   public function getAddress(string $address_id, $refetch = FALSE): array {
     $selectedCompany = $this->tempStore->get('selected_company');
-    $profileContent = $this->getGrantsProfileContent($selectedCompany['business_id'], $refetch);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier'], $refetch);
 
     if (isset($profileContent["addresses"][$address_id])) {
       return $profileContent["addresses"][$address_id];
@@ -410,7 +410,7 @@ class GrantsProfileService {
    */
   public function getOfficial(string $official_id): array {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
 
     if (isset($profileContent['officials'][$official_id])) {
       return $profileContent['officials'][$official_id];
@@ -436,7 +436,7 @@ class GrantsProfileService {
    */
   public function getBankAccount(string $bank_account_id): array {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
 
     if (isset($profileContent["bankAccounts"][$bank_account_id])) {
       return $profileContent["bankAccounts"][$bank_account_id];
@@ -458,7 +458,7 @@ class GrantsProfileService {
    */
   public function saveOfficial(string $official_id, array $official) {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
     $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
 
     // Reset keys.
@@ -473,7 +473,7 @@ class GrantsProfileService {
 
     $officials[$nextId] = $official;
     $profileContent['officials'] = $officials;
-    return $this->setToCache($selectedCompany, $profileContent);
+    return $this->setToCache($selectedCompany['identifier'], $profileContent);
   }
 
   /**
@@ -484,13 +484,13 @@ class GrantsProfileService {
    */
   public function removeOfficial(string $official_id) {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
     $officials = (isset($profileContent['officials']) && $profileContent['officials'] !== NULL) ? $profileContent['officials'] : [];
 
     unset($officials[(int) $official_id]);
 
     $profileContent['officials'] = $officials;
-    return $this->setToCache($selectedCompany, $profileContent);
+    return $this->setToCache($selectedCompany['identifier'], $profileContent);
   }
 
   /**
@@ -503,7 +503,7 @@ class GrantsProfileService {
    */
   public function saveBankAccount(string $bank_account_id, array $bank_account) {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
     $bankAccounts = (isset($profileContent['bankAccounts']) && $profileContent['bankAccounts'] !== NULL) ? $profileContent['bankAccounts'] : [];
 
     // Reset keys.
@@ -518,7 +518,7 @@ class GrantsProfileService {
 
     $bankAccounts[$nextId] = $bank_account;
     $profileContent['bankAccounts'] = $bankAccounts;
-    $this->setToCache($selectedCompany, $profileContent);
+    $this->setToCache($selectedCompany['identifier'], $profileContent);
   }
 
   /**
@@ -529,13 +529,13 @@ class GrantsProfileService {
    */
   public function removeBankAccount(string $bank_account_id) {
     $selectedCompany = $this->getSelectedCompany();
-    $profileContent = $this->getGrantsProfileContent($selectedCompany);
+    $profileContent = $this->getGrantsProfileContent($selectedCompany['identifier']);
     $bankAccounts = (isset($profileContent['bankAccounts']) && $profileContent['bankAccounts'] !== NULL) ? $profileContent['bankAccounts'] : [];
 
     unset($bankAccounts[$bank_account_id]);
 
     $profileContent['bankAccounts'] = $bankAccounts;
-    $this->setToCache($selectedCompany, $profileContent);
+    $this->setToCache($selectedCompany['identifier'], $profileContent);
   }
 
   /**
@@ -550,11 +550,9 @@ class GrantsProfileService {
    *   Profile content with required fields.
    */
   public function initGrantsProfile(string $businessId, array $profileContent): array {
-    // @todo see if there's a better way to get readonly parameters from yrtti/ytj than here.
+    // Try to get association details.
     $assosiationDetails = $this->yjdhClient->getAssociationBasicInfo($businessId);
-
-    // $companyDetails = $this->yjdhClient->getCompany($businessId);
-    // $companyDetails == NULL &&
+    // If they're available, use them.
     if (!empty($assosiationDetails)) {
       $profileContent["companyName"] = $assosiationDetails["AssociationNameInfo"][0]["AssociationName"];
       $profileContent["businessId"] = $assosiationDetails["BusinessId"];
@@ -562,6 +560,22 @@ class GrantsProfileService {
       $profileContent["companyStatusSpecial"] = $assosiationDetails["AssociationSpecialCondition"];
       $profileContent["registrationDate"] = $assosiationDetails["RegistryDate"];
       $profileContent["companyHome"] = $assosiationDetails["Address"][0]["City"];
+    }
+    else {
+      // If not, get company details and use them.
+      $companyDetails = $this->yjdhClient->getCompany($businessId);
+
+      if ($companyDetails == NULL) {
+        throw new NotFoundHttpException('Company details not found from YTJ');
+      }
+
+      $profileContent["companyName"] = $companyDetails["TradeName"]["Name"];
+      $profileContent["businessId"] = $companyDetails["BusinessId"];
+      $profileContent["companyStatus"] = $companyDetails["CompanyStatus"]["Status"]["PrimaryCode"];
+      $profileContent["companyStatusSpecial"] = $companyDetails["CompanyStatus"]["Status"]["SecondaryCode"];
+      $profileContent["registrationDate"] = $companyDetails["RegistrationHistory"]["RegistryEntry"][0]["RegistrationDate"];
+      $profileContent["companyHome"] = $companyDetails["PostalAddress"]["DomesticAddress"]["City"];
+
     }
 
     if (!isset($profileContent['foundingYear'])) {
@@ -600,15 +614,25 @@ class GrantsProfileService {
   /**
    * Get "content" array from document in ATV.
    *
-   * @param string $businessId
-   *   What business data is fetched.
+   * @param mixed $business
+   *   Business id OR full business object.
    * @param bool $refetch
    *   If true, data is fetched always.
    *
    * @return array
    *   Content
    */
-  public function getGrantsProfileContent(string $businessId, bool $refetch = FALSE): array {
+  public function getGrantsProfileContent(
+    mixed $business,
+    bool $refetch = FALSE
+  ): array {
+
+    if (is_array($business)) {
+      $businessId = $business['identifier'];
+    }
+    else {
+      $businessId = $business;
+    }
 
     if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
@@ -617,7 +641,20 @@ class GrantsProfileService {
 
     $profileData = $this->getGrantsProfile($businessId, $refetch);
 
-    return $this->initGrantsProfile($businessId, $profileData->getContent());
+    try {
+      $profile = $this->initGrantsProfile($businessId,
+        $profileData->getContent());
+    }
+    catch (\Exception $e) {
+      $msg = $this->t('No compnay data found for business id @businessid. Cannot continue.', [
+        '@businessid' => $businessId,
+      ]);
+      $this->messenger->addError($msg);
+      $this->logger->error($msg->render());
+      $profile = NULL;
+    }
+
+    return $profile;
 
   }
 
@@ -632,7 +669,10 @@ class GrantsProfileService {
    * @return array
    *   Content
    */
-  public function getGrantsProfileAttachments(string $businessId, bool $refetch = FALSE): array {
+  public function getGrantsProfileAttachments(
+    string $businessId,
+    bool $refetch = FALSE
+  ): array {
 
     if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
@@ -656,10 +696,11 @@ class GrantsProfileService {
    *
    * @return \Drupal\helfi_atv\AtvDocument
    *   Profiledata
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function getGrantsProfile(string $businessId, bool $refetch = FALSE): AtvDocument {
+  public function getGrantsProfile(
+    string $businessId,
+    bool $refetch = FALSE
+  ): AtvDocument {
     if ($refetch === FALSE) {
       if ($this->isCached($businessId)) {
         $document = $this->getFromCache($businessId);
@@ -698,7 +739,6 @@ class GrantsProfileService {
    * @return \Drupal\helfi_atv\AtvDocument|bool
    *   Profile data
    *
-   * @throws \Drupal\Core\TempStore\TempStoreException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
@@ -712,11 +752,8 @@ class GrantsProfileService {
     try {
       $searchDocuments = $this->atvService->searchDocuments($searchParams, $refetch);
     }
-    catch (AtvFailedToConnectException) {
+    catch (\Exception $e) {
       throw new AtvDocumentNotFoundException('Not found');
-    }
-    catch (GuzzleException $e) {
-      throw $e;
     }
 
     if (empty($searchDocuments)) {
@@ -732,10 +769,9 @@ class GrantsProfileService {
    * @return string|null
    *   Selected company
    */
-  public function getSelectedCompany(): ?string {
+  public function getSelectedCompany(): ?array {
     if ($this->isCached('selected_company')) {
-      $data = $this->getFromCache('selected_company');
-      return $data['business_id'];
+      return $this->getFromCache('selected_company');
     }
     return NULL;
   }
@@ -743,11 +779,14 @@ class GrantsProfileService {
   /**
    * Set selected business id to store.
    *
-   * @param string $businessId
-   *   ID to be saved.
+   * @param array $companyData
+   *   Company details.
+   *
+   * @return bool
+   *   Success.
    */
-  public function setSelectedCompany(string $businessId): bool {
-    return $this->setToCache('selected_company', ['business_id' => $businessId]);
+  public function setSelectedCompany(array $companyData): bool {
+    return $this->setToCache('selected_company', $companyData);
   }
 
   /**

@@ -144,6 +144,7 @@ class GrantsFormNavigationHelper {
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
     $query->condition('sid', $webform_submission->id());
+    $query->condition('user_uuid', $userData['sub']);
     $query->condition('operation', self::PAGE_VISITED_OPERATION);
     $query->condition('data', $page);
     $query->fields('l', [
@@ -171,8 +172,11 @@ class GrantsFormNavigationHelper {
     if (empty($webform_submission->id())) {
       return [];
     }
+    $userData = $this->helsinkiProfiiliUserData->getUserData();
+
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
+    $query->condition('user_uuid', $userData['sub']);
     $query->condition('sid', $webform_submission->id());
     $query->condition('operation', self::ERROR_OPERATION);
     $query->fields('l', [

@@ -50,6 +50,9 @@
     {% endblock %}
   </div>
   {% if content.loggedin %}
+    <a class="grants-profile--menuitem--logout" href="{{ path('grants_mandate.mandateform', {}, {}) }}">
+      <span class="grants-profile--menuitem--roleswitcher-triggertext">{{ 'Switch role'|t }}</span>
+    </a>
     <a class="grants-profile--menuitem--logout" href="{{ path('user.logout', {}, {'query': {'destination': path('<current>') }}) }}">
       <span aria-hidden="true" class="hds-icon hds-icon--signout hds-icon--size-m"></span>
       <span class="grants-profile--menuitem--logout-triggertext">{{ 'Signout'|t }}</span>

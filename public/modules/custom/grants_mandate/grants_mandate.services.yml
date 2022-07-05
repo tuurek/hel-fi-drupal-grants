@@ -1,0 +1,9 @@
+services:
+  grants_mandate.service:
+    class: Drupal\grants_mandate\GrantsMandateService
+    arguments: [
+        '@helfi_helsinki_profiili.userdata',
+        '@http_client',
+        '@logger.factory',
+        '@tempstore.private'
+    ]

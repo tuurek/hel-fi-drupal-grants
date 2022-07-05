@@ -20,6 +20,7 @@
         "drupal/datatables": "^2.0",
         "drupal/devel": "^4.1",
         "drupal/entity": "^1.0",
+        "drupal/error_page": "^2.0",
         "drupal/externalauth": "^1.4",
         "drupal/filename_transliteration": "^1.0",
         "drupal/hdbt": "^2.0",

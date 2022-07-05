@@ -1,0 +1,34 @@
+grants_mandate.mandateform:
+  path: '/asiointirooli-valtuutus'
+  defaults:
+    _title: 'Applicant type / Mandate'
+    _form: 'Drupal\grants_mandate\Form\ApplicantMandateForm'
+  requirements:
+    _permission: 'get mandates from dvv'
+
+grants_mandate.callback_hpa:
+  path: '/asiointirooli-valtuutus/callback/hpa'
+  defaults:
+    _title: 'Applicant type / Mandate'
+    _controller: 'Drupal\grants_mandate\Controller\GrantsMandateController::mandateCallbackHpa'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _permission: 'access content'
+
+grants_mandate.callback_ypa:
+  path: '/asiointirooli-valtuutus/callback/ypa'
+  defaults:
+    _title: 'Applicant type / Mandate'
+    _controller: 'Drupal\grants_mandate\Controller\GrantsMandateController::mandateCallbackYpa'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _permission: 'access content'
+
+grants_mandate.callback_hpalist:
+  path: '/asiointirooli-valtuutus/callback/hpalist'
+  defaults:
+    _title: 'Applicant type / Mandate'
+    _controller: 'Drupal\grants_mandate\Controller\GrantsMandateController::mandateCallbackHpaList'
+    _disable_route_normalizer: 'TRUE'
+  requirements:
+    _permission: 'access content'

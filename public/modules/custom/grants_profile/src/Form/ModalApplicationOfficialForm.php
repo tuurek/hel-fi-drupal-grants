@@ -35,7 +35,7 @@ class ModalApplicationOfficialForm extends FormBase {
   protected GrantsProfileService $grantsProfileService;
 
   /**
-   * Constructs a new AddressForm object.
+   * Constructs a new Modal Application form object.
    */
   public function __construct(TypedDataManager $typed_data_manager, GrantsProfileService $grantsProfileService) {
     $this->typedDataManager = $typed_data_manager;
@@ -45,7 +45,7 @@ class ModalApplicationOfficialForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): AddressForm|static {
+  public static function create(ContainerInterface $container): ModalApplicationOfficialForm|static {
 
     // Create a new form object and inject its services.
     $form = new static(
@@ -152,7 +152,7 @@ class ModalApplicationOfficialForm extends FormBase {
       '#title' => $this->t('Role'),
       '#required' => TRUE,
       '#default_value' => $selectedOfficial['role'],
-      '#options' => ApplicationOfficialForm::getOfficialRoles(),
+      '#options' => ModalApplicationOfficialForm::getOfficialRoles(),
     ];
 
     $form['email'] = [

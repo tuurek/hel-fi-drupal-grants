@@ -28,6 +28,7 @@ module:
   entity: 0
   entity_reference_revisions: 0
   entity_usage: 0
+  error_page: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -39,6 +40,7 @@ module:
   grant_applications_content: 0
   grants_attachments: 0
   grants_handler: 0
+  grants_mandate: 0
   grants_metadata: 0
   grants_profile: 0
   hal: 0

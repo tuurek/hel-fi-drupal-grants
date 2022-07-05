@@ -6,22 +6,6 @@ grants_profile.show:
   requirements:
     _permission: 'view own grants_profile'
 
-grants_profile.select_company:
-  path: '/select-company'
-  defaults:
-    _title: 'Select company'
-    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::selectCompany'
-  requirements:
-    _permission: 'view own grants_profile'
-
-#grants_profile.view_application:
-#  path: '/grants-profile/applications/{document_uuid}'
-#  defaults:
-#    _title: 'Single application'
-#    _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::viewApplication'
-#  requirements:
-#    _permission: 'administer own grants_profile'
-
 grants_profile.company_addresses:
   path: '/grants-profile/address'
   defaults:
@@ -38,14 +22,6 @@ grants_profile.company_addresses.remove:
   requirements:
     _permission: 'administer own grants_profile'
 
-grants_profile.company_address_form:
-  path: '/grants-profile/address/{address_id}'
-  defaults:
-    _title: 'Add / edit address'
-    _form: '\Drupal\grants_profile\Form\AddressForm'
-  requirements:
-    _permission: 'administer own grants_profile'
-
 grants_profile.company_address_modal_form:
   path: '/grants-profile/address-modal/{address_id}/{nojs}'
   defaults:
@@ -59,14 +35,6 @@ grants_profile.application_official:
   defaults:
     _title: 'Address'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::applicationOfficials'
-  requirements:
-    _permission: 'administer own grants_profile'
-
-grants_profile.application_official_form:
-  path: '/grants-profile/application-officials/{official_id}'
-  defaults:
-    _title: 'Application official'
-    _form: 'Drupal\grants_profile\Form\ApplicationOfficialForm'
   requirements:
     _permission: 'administer own grants_profile'
 
@@ -94,14 +62,6 @@ grants_profile.bank_account:
   requirements:
     _permission: 'administer own grants_profile'
 
-grants_profile.bank_account_form:
-  path: '/grants-profile/bank-accounts/{bank_account_id}'
-  defaults:
-    _title: 'Bank account'
-    _form: 'Drupal\grants_profile\Form\BankAccountForm'
-  requirements:
-    _permission: 'administer own grants_profile'
-
 grants_profile.bank_account_form_modal_form:
   path: '/grants-profile/bank-accounts-modal/{bank_account_id}/{nojs}'
   defaults:
@@ -126,10 +86,3 @@ grants_profile.bank_account_delete_attachment:
   requirements:
     _permission: 'administer own grants_profile'
 
-grants_profile.applicant_type:
-  path: '/grants-profile/applicant-type'
-  defaults:
-    _title: 'Applicant type'
-    _form: 'Drupal\grants_profile\Form\ApplicantTypeForm'
-  requirements:
-    _permission: 'access content'

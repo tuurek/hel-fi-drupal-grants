@@ -2,7 +2,7 @@
 
 namespace Drupal\grants_handler\Plugin\WebformElement;
 
-use Drupal\grants_profile\Form\ApplicationOfficialForm;
+use Drupal\grants_profile\Form\ModalApplicationOfficialForm;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -38,7 +38,7 @@ class CommunityOfficialsComposite extends WebformCompositeBase {
    * {@inheritdoc}
    */
   protected function formatTextItemValue(array $element, WebformSubmissionInterface $webform_submission, array $options = []): array {
-    $roles = ApplicationOfficialForm::getOfficialRoles();
+    $roles = ModalApplicationOfficialForm::getOfficialRoles();
     $value = $this->getValue($element, $webform_submission, $options);
 
     /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $role */

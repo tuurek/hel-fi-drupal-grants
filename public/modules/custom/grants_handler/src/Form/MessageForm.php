@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\file\Entity\File;
 use Drupal\grants_handler\MessageService;
-use Drupal\grants_profile\Form\AddressForm;
 use Drupal\webform\Entity\WebformSubmission;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,13 +64,12 @@ class MessageForm extends FormBase {
     else {
       $this->debug = FALSE;
     }
-    $d = 'asdf';
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container): AddressForm|static {
+  public static function create(ContainerInterface $container): MessageForm|static {
     return new static(
       $container->get('typed_data_manager'),
       $container->get('grants_handler.message_service'),
@@ -124,12 +122,6 @@ class MessageForm extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Send'),
-      // '#ajax' => array(
-      // 'callback' => '::ajaxCallback',
-      // 'wrapper' => 'message-form-wrapper',
-      // 'method' => 'replace',
-      // 'effect' => 'fade',
-      // ),
     ];
 
     return $form;

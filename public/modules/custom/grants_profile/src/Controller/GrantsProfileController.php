@@ -42,14 +42,18 @@ class GrantsProfileController extends ControllerBase {
   public function ownProfile(): array|RedirectResponse {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-    $selectedCompany = $grantsProfileService->getSelectedCompany();
+    $selectedCompanyArray = $grantsProfileService->getSelectedCompany();
 
-    if ($selectedCompany == NULL) {
+    if ($selectedCompanyArray == NULL) {
       $this->messenger()
         ->addError($this->t('No profile data available, select company'), TRUE);
-      return new RedirectResponse('/select-company');
+
+      return new RedirectResponse('/asiointirooli-valtuutus');
     }
     else {
+
+      $selectedCompany = $selectedCompanyArray['identifier'];
+
       $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
       $build['#profile'] = $profile;
@@ -64,9 +68,9 @@ class GrantsProfileController extends ControllerBase {
       '#type' => 'item',
       '#markup' => $this->t('It works!'),
     ];
-    $build['#title'] = $profile['companyName'];
+    $build['#title'] = $profile['companyName'] ?? '';
     $initials = NULL;
-    $name = $profile['companyName'];
+    $name = $profile['companyName'] ?? '';
     $words = explode(' ', $name);
     if (count($words) >= 2) {
       $initials = strtoupper(substr($words[0], 0, 1) . substr(end($words), 0, 1));
