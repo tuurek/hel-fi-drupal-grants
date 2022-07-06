@@ -122,6 +122,11 @@ class GrantsMandateService {
     $userData = $this->helsinkiProfiiliUserData->getUserData();
     $userProfile = $this->helsinkiProfiiliUserData->getUserProfileData();
     $personId = $userProfile["myProfile"]["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+
+    if ($personId == NULL) {
+      throw new GrantsMandateException('No person details found.');
+    }
+
     $requestId = $this->getRequestId();
 
     $sessionData = $this->register($mode, $personId, $requestId);
