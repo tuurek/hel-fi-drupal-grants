@@ -55,14 +55,14 @@ class EventsService {
    *
    * @var array|string[]
    */
-  protected static array $eventTypes = [
+  public static array $eventTypes = [
     'STATUS_UPDATE' => 'STATUS_UPDATE',
-    'MESSAGE_NEW' => 'MESSAGE_NEW',
-    'MESSAGE_NEW_APP' => 'MESSAGE_NEW_APP',
+    'MESSAGE_AVUS2' => 'MESSAGE_AVUS2',
+    'MESSAGE_APP' => 'MESSAGE_APP',
     'MESSAGE_READ' => 'MESSAGE_READ',
-    'ATTACHMENT_UPLOAD' => 'ATTACHMENT_UPLOAD',
-    'DATA_UPDATE_ATV' => 'DATA_UPDATE_ATV',
-    'DATA_UPDATE_AVUS2' => 'DATA_UPDATE_AVUS2',
+    'INTEGRATION_INFO_ATT_OK' => 'INTEGRATION_INFO_ATT_OK',
+    'INTEGRATION_INFO_APP_OK' => 'INTEGRATION_INFO_APP_OK',
+    'EVENT_INFO' => 'EVENT_INFO',
   ];
 
   /**
@@ -150,18 +150,6 @@ class EventsService {
     }
 
     return NULL;
-  }
-
-  /**
-   * Figure out from events which messages are unread.
-   *
-   * @param array $events
-   *   Events from document.
-   * @param array $messages
-   *   Messages from document.
-   */
-  public static function unreadMessages(array $events, array $messages) {
-
   }
 
 }

@@ -651,7 +651,7 @@ class GrantsProfileService {
       ]);
       $this->messenger->addError($msg);
       $this->logger->error($msg->render());
-      $profile = NULL;
+      $profile = [];
     }
 
     return $profile;

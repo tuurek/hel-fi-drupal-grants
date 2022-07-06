@@ -17,6 +17,7 @@ use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\Plugin\WebformHandler\GrantsHandler;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionStorageInterface;
+use Drupal\grants_handler\EventsService;
 
 
 
@@ -55,6 +56,11 @@ function grants_handler_theme(): array {
       ],
     ],
     'webform_submission_events' => [
+      'variables' => [
+        'submission' => NULL,
+      ],
+    ],
+    'webform_submission_handler_details' => [
       'variables' => [
         'submission' => NULL,
       ],
@@ -581,6 +587,14 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     $variables["elements"]["data"]["3_yhteison_tiedot"]["#element"]["business_info"]["community_purpose"] = $data["business_purpose"];
   }
 
+  if (isset($data['events'])) {
+    // parse handler event
+    $variables['applicationHandlerEvent'] = [
+      '#theme' => 'webform_submission_handler_details',
+      '#submission' => $submission,
+    ];
+  }
+
   $variables['editSubmissionUrlCustom'] = $urlCustom;
 
   // parse messages
@@ -589,11 +603,11 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     '#submission' => $submission,
   ];
 
-  // parse events
-  $variables['events'] = [
-    '#theme' => 'webform_submission_events',
-    '#submission' => $submission,
-  ];
+//  // parse events
+//  $variables['events'] = [
+//    '#theme' => 'webform_submission_events',
+//    '#submission' => $submission,
+//  ];
 
   // parse history
   $variables['history'] = [
@@ -611,6 +625,13 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
 
   $submission = $variables['submission'];
   $submissionData = $submission->getData();
+
+  $currentUri = \Drupal::request()->getUri();
+  $currentHost = \Drupal::request()->getSchemeAndHttpHost();
+  $currentDestination = str_replace($currentHost, '', $currentUri);
+
+  /** @var ApplicationHandler $applicationHandler */
+  $applicationHandler = \Drupal::service('grants_handler.application_handler');
 
   // if submission is ok for messaging
   if (ApplicationHandler::isSubmissionMessageable($submission, NULL)) {
@@ -630,12 +651,32 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
         '#attachments' => $message['attachments'] ?? [],
       ];
 
+      if ($message['messageStatus'] == 'UNREAD') {
+        $markReadUrl = Url::fromRoute('grants_handler.message_read', [
+          'message_id' => $message['messageId'],
+          'application_number' => $submissionData['application_number'],
+        ],
+        [
+          'query' => [
+            'destination' => $currentDestination
+          ]
+        ]);
+        $markReadLink = Link::fromTextAndUrl(t('Mark read'), $markReadUrl);
+      }
+      else {
+        $markReadLink = '';
+      }
+
       $messages[] = [
-        'date' => $dt->format('d.m.Y h:i:s'),
-        'sender' => $message['sentBy'],
-        'body' => $message['body'] ?? '',
-        'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')
-          ->render($build) : '',
+        'class' => $message['messageStatus'],
+        'data' => [
+          'date' => $dt->format('d.m.Y H:i:s'),
+          'sender' => $message['sentBy'],
+          'body' => $message['body'] ?? '',
+          'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')
+            ->render($build) : '',
+          'read' => $markReadLink
+        ]
       ];
     }
   }
@@ -647,8 +688,9 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
       'sender' => t('Application #'),
       'body' => t('Message'),
       'attachments' => t('Attachments'),
+      'read' => t('Attachments'),
     ],
-    '#rows' => $messages,
+    '#rows' => array_reverse($messages),
     '#empty' => t('No messages has been found.'),
     '#attributes' => [
       'class' => ['message-table'],
@@ -949,9 +991,23 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
 /**
  * Implements hook_preprocess_HOOK().
  */
-function grants_handler_preprocess_webform(&$variables) {
+function grants_handler_preprocess_webform_submission_handler_details(&$variables) {
 
-  $d = 'asdf';
+  /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+  $submission = $variables['submission'];
+  $submissionData = $submission->getData();
+
+  $handlerEvents = array_filter($submissionData['events'], function ($event) {
+    if ($event['eventType'] == EventsService::$eventTypes['EVENT_INFO']) {
+      return TRUE;
+    }
+    return FALSE;
+  });
+
+  foreach($handlerEvents as $handlerEvent){
+    $variables['handler_strings'][] = $handlerEvent['eventDescription'];
+  }
+  $variables['handlers'] = $handlerEvents;
 
 }
 
