@@ -349,7 +349,7 @@ class AtvSchema {
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
 
-      $value = self::sanitizeInput(property->getValue());
+      $value = self::sanitizeInput($property->getValue());
 
       if ($jsonPath == NULL &&
         ($propertyName !== 'form_update' &&
