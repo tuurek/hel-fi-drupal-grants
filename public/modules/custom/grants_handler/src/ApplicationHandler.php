@@ -454,6 +454,8 @@ class ApplicationHandler {
    *   String to try and parse submission id from. Ie GRANTS-DEV-00000098.
    * @param \Drupal\helfi_atv\AtvDocument|null $document
    *   Document to extract values from.
+   * @param bool $refetch
+   *   Force refetch from ATV.
    *
    * @return \Drupal\webform\Entity\WebformSubmission|null
    *   Webform submission.
@@ -805,7 +807,9 @@ class ApplicationHandler {
   }
 
   /**
+   * Fake messages.
    *
+   * @return mixed
    */
   public static function getFakeMessages() {
 
@@ -837,7 +841,9 @@ class ApplicationHandler {
   }
 
   /**
+   * Fake events.
    *
+   * @return mixed
    */
   public static function getFakeEvents() {
     return Json::decode('

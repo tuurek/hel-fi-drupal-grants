@@ -1054,8 +1054,6 @@ class GrantsHandler extends WebformHandlerBase {
           ]
         );
 
-        $d = 'asdf';
-
         // $redirectUrl = Url::fromRoute(
         // 'grants_handler.completion',
         // ['submissionId' => $this->applicationNumber],

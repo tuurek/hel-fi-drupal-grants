@@ -152,4 +152,30 @@ class EventsService {
     return NULL;
   }
 
+  /**
+   * Filter events by given key.
+   *
+   * @param array $events
+   *   Events to be filtered.
+   * @param string $typeKey
+   *   Event type wanted.
+   *
+   * @return array
+   *   Filtered events.
+   */
+  public static function filterEvents(array $events, string $typeKey) {
+    $messageEvents = array_filter($events, function ($event) use ($typeKey) {
+      if ($event['eventType'] == self::$eventTypes[$typeKey]) {
+        return TRUE;
+      }
+      return FALSE;
+    });
+
+    return [
+      'events' => $messageEvents,
+      'event_targets' => array_column($messageEvents, 'eventTarget'),
+      'event_ids' => array_column($messageEvents, 'eventID'),
+    ];
+  }
+
 }

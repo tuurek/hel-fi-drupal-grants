@@ -305,12 +305,12 @@ class AtvSchema {
     if (is_array($value)) {
       array_walk_recursive($value, function (&$item) {
         if (is_string($item)) {
-          $item = filter_var($item, FILTER_SANITIZE_STRING);
+          $item = filter_var($item, FILTER_UNSAFE_RAW);
         }
       });
     }
     else {
-      $value = filter_var($value, FILTER_SANITIZE_STRING);
+      $value = filter_var($value, FILTER_UNSAFE_RAW);
     }
 
     return $value;
@@ -349,7 +349,7 @@ class AtvSchema {
       $elementName = array_pop($jsonPath);
       $baseIndex = count($jsonPath);
 
-      $value = self::sanitizeInput($property->getValue());
+      $value = self::sanitizeInput(property->getValue());
 
       if ($jsonPath == NULL &&
         ($propertyName !== 'form_update' &&
@@ -359,10 +359,6 @@ class AtvSchema {
         )
       ) {
         continue;
-      }
-
-      if ($propertyName === 'community_officials') {
-        $d = 'asdf';
       }
 
       $types = $this->getJsonTypeForDataType($definition);
@@ -556,6 +552,16 @@ class AtvSchema {
     // Get new key to me evalued.
     $newKey = array_shift($pathArray);
 
+    if ($newKey == 'generalInfoArray') {
+      $d = 'asfd';
+    }
+    if ($elementName == 'attachmentsInfo') {
+      $d = 'asfd';
+    }
+    if ($elementName == 'attachmentsArray') {
+      $d = 'asfd';
+    }
+
     // If key exist in content array.
     if (array_key_exists($newKey, $content)) {
       // Get content for key.
@@ -567,6 +573,7 @@ class AtvSchema {
     // If we are at the root of content, and the given element exists.
     elseif (array_key_exists($elementName, $content)) {
       $thisElement = $content[$elementName];
+
       // If element is array.
       if (is_array($thisElement)) {
         $retval = [];
@@ -605,7 +612,12 @@ class AtvSchema {
         }
         // If value is an array, then we need to return desired element value.
         if ($value['ID'] == $elementName) {
-          $retval = $value['value'];
+          $retval = htmlspecialchars_decode($value['value']);
+
+          if ($elementName == 'businessPurpose') {
+            $d = 'asdf';
+          }
+
           return $retval;
         }
       }
