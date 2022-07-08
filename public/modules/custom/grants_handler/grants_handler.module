@@ -432,6 +432,10 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   $grantsProfileService = \Drupal::service('grants_profile.service');
   $selectedCompany = $grantsProfileService->getSelectedCompany();
 
+  /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
+  $webform_submission = $form_state->getFormObject()->getEntity();
+  $formData = $webform_submission->getData();
+
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
 
   //  $form["actions"]["draft"]['#disabled'] = TRUE;
@@ -449,6 +453,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     // pass variable to Drupal.Settings
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
+    $form['#attached']['drupalSettings']['grants_handler']['selectedCompany'] = $selectedCompany;
+    $form['#attached']['drupalSettings']['grants_handler']['formData'] = $formData;
+    $form['#attached']['drupalSettings']['grants_handler']['submissionId'] = $webform_submission->id();
 
     if ($grantsProfile["businessPurpose"]) {
       _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"], $grantsProfile["businessPurpose"], FALSE);
@@ -720,7 +727,7 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
       $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
       $history[] = [
         'date' => $eventDate->format('d.m.Y H:i'),
-        'citizenCaseStatus' => $event['citizenCaseStatus'],
+        'citizenCaseStatus' => t(ucfirst(strtolower($event['citizenCaseStatus']))),
         'eventSource' => $event['eventSource'] ?? '',
       ];
     }

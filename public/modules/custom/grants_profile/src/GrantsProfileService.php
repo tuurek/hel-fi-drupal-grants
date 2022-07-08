@@ -634,6 +634,10 @@ class GrantsProfileService {
       $businessId = $business;
     }
 
+    if ($businessId == NULL) {
+      return [];
+    }
+
     if ($refetch === FALSE && $this->isCached($businessId)) {
       $profileData = $this->getFromCache($businessId);
       return $profileData->getContent();
@@ -800,7 +804,7 @@ class GrantsProfileService {
       $data = $this->getFromCache('applicant_type');
       return $data['selected_type'];
     }
-    return NULL;
+    return '';
   }
 
   /**
@@ -816,13 +820,13 @@ class GrantsProfileService {
   /**
    * Whether or not we have made this query?
    *
-   * @param string $key
+   * @param string|null $key
    *   Used key for caching.
    *
    * @return bool
    *   Is this cached?
    */
-  private function isCached(string $key): bool {
+  private function isCached(?string $key): bool {
     $cacheData = $this->tempStore->get($key);
     return !is_null($cacheData);
   }
