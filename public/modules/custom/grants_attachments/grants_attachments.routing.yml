@@ -1,0 +1,7 @@
+grants_attachments.delete_attachment:
+  path: '/delete-grants-attachments/{submission_id}/{integration_id}'
+  defaults:
+    _title: 'Delete attachment'
+    _controller: '\Drupal\grants_attachments\Controller\GrantsAttachmentsController::deleteAttachment'
+  requirements:
+    _permission: 'edit own webform submission'

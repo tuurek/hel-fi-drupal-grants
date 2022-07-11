@@ -38,6 +38,34 @@ function grants_attachments_theme(): array {
  */
 function template_preprocess_grants_attachments(array &$variables) {
 
+  if (isset($variables["children"]["#default_value"]["integrationID"])) {
+
+    $currentUri = \Drupal::request()->getUri();
+    $currentHost = \Drupal::request()->getSchemeAndHttpHost();
+    $currentDestination = str_replace($currentHost, '', $currentUri);
+
+    $submission = \Drupal\webform\Entity\WebformSubmission::load($variables["children"]["#webform_submission"]);
+    $submissionData = $submission->getData();
+
+    // allow only DRAFTs to be deleted.
+    if ($submissionData['status'] == 'DRAFT') {
+      $integrationId = str_replace('/', '_', $variables["children"]["#default_value"]["integrationID"]);
+
+      $deleteUrl = \Drupal\Core\Url::fromRoute(
+        'grants_attachments.delete_attachment',
+        [
+          'submission_id' => $submissionData['application_number'] ?? 'not-saved',
+          'integration_id' => $integrationId
+        ],
+        [
+          'query' => [
+            'destination' => $currentDestination,
+          ]
+        ]
+      );
+      $variables['attachmentDeleteLink'] = \Drupal\Core\Link::fromTextAndUrl(t('Delete attachment'), $deleteUrl);
+    }
+  }
 }
 
 /**
