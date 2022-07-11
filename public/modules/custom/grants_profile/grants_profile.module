@@ -11,42 +11,6 @@
 
 use Drupal\user\UserInterface;
 
-/**
- * OpenID Connect post authorize hook.
- *
- * This hook runs after a user has been authorized and claims have been mapped
- * to the user's account.
- *
- * A popular use case for this hook is to saving token and additional identity
- * provider related information to the user's Drupal session (private temp
- * store).
- *
- * @param \Drupal\user\UserInterface $account
- *   User account object of the authorized user.
- * @param array $context
- *   An associative array with context information:
- *   - tokens:         An array of tokens.
- *   - user_data:      An array of user and session data.*
- *   - plugin_id:      The plugin identifier.
- *   - sub:            The remote user identifier.
- *
- * @ingroup openid_connect_api
- * @throws \Drupal\Core\Entity\EntityStorageException
- */
-function grants_profile_openid_connect_post_authorize(UserInterface $account, array $context) {
-
-  // if no adgroups, then add user to HelsinkiProfiili Role
-  //  if (!isset($context['user_data']['ad_groups']) || empty($context['user_data']['ad_groups'])) {
-  //    \Drupal::logger('helsinki_profiili')
-  //      ->info(t('User %s added & assign them a HelsinkiProfiili Role',
-  //        ['%s' => $account->getAccountName()]));
-  //    $account->addRole('helsinkiprofiili');
-  //    $account->save();
-  //  }
-
-}
-
-
 function grants_profile_theme(): array {
   $theme['view_application'] = [
     'render element' => 'build',
@@ -111,6 +75,10 @@ function grants_profile_theme(): array {
  */
 function grants_profile_cron() {
 
+  /**
+   * Make sure no dangling files are left over from bank account confirmations.
+   */
+
   /** @var \Drupal\Core\File\FileSystem $fileSystem */
   $fileSystem = \Drupal::service('file_system');
 
@@ -130,5 +98,38 @@ function grants_profile_cron() {
     } else {
       unlink($uri);
     }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function grants_profile_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+  /**
+   * Hide fields from login forms without proper query strings.
+   */
+
+  // If we're at user login
+  if ($form_id == 'user_login_form') {
+    $qParams = \Drupal::request()->query->all();
+    // we want to hide all normal login elements
+    // to only allow login via Tunnistamo.
+    if (!isset($qParams['login']) || $qParams['login'] != 'admin') {
+      unset($form['name']);
+      unset($form['pass']);
+      unset($form['actions']);
+    }
+  }
+  // And from Tunnistamo, we want to allow only user logins without loginparameter.
+  if ($form_id == 'openid_connect_login_form') {
+    $qParams = \Drupal::request()->query->all();
+
+    if (!isset($qParams['login']) || $qParams['login'] != 'admin') {
+      unset($form["openid_connect_client_tunnistamoadmin_login"]);
+
+    }
+
+
   }
 }
