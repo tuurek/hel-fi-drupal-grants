@@ -66,6 +66,13 @@ class EventsService {
   ];
 
   /**
+   * Debug on?
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+  /**
    * Constructs a MessageService object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -83,6 +90,15 @@ class EventsService {
     $this->endpoint = getenv('AVUSTUS2_EVENT_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
     $this->password = getenv('AVUSTUS2_PASSWORD');
+
+    $debug = getenv('debug');
+
+    if ($debug == 'true') {
+      $this->debug = TRUE;
+    }
+    else {
+      $this->debug = FALSE;
+    }
 
   }
 
@@ -133,10 +149,17 @@ class EventsService {
 
     $eventData['timeCreated'] = $eventData['timeUpdated'] = $dt->format('Y-m-d\TH:i:s');
 
+    $eventDataJson = Json::encode($eventData);
+
+    if ($this->debug == TRUE) {
+      $this->logger->debug('Event ID: ' . $eventData['eventID'] . ', JSON:  ' . $eventDataJson);
+    }
+
     try {
+
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [$this->username, $this->password, "Basic"],
-        'body' => Json::encode($eventData),
+        'body' => $eventDataJson,
       ]);
 
       if ($res->getStatusCode() == 201) {

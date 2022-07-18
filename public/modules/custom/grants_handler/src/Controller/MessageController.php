@@ -43,6 +43,13 @@ class MessageController extends ControllerBase {
   protected RequestStack $request;
 
   /**
+   * Debug on?
+   *
+   * @var bool
+   */
+  protected bool $debug;
+
+  /**
    * The controller constructor.
    *
    * @param \Drupal\grants_handler\EventsService $grants_handler_events_service
@@ -60,6 +67,16 @@ class MessageController extends ControllerBase {
     $this->eventsService = $grants_handler_events_service;
     $this->messageService = $grants_handler_message_service;
     $this->request = $requestStack;
+
+    $debug = getenv('debug');
+
+    if ($debug == 'true') {
+      $this->debug = TRUE;
+    }
+    else {
+      $this->debug = FALSE;
+    }
+
   }
 
   /**
@@ -83,7 +100,7 @@ class MessageController extends ControllerBase {
     $submission = ApplicationHandler::submissionObjectFromApplicationNumber($application_number, NULL, FALSE);
     $submissionData = $submission->getData();
     $thisEvent = array_filter($submissionData['events'], function ($event) use ($message_id) {
-      if ($event['eventTarget'] == $message_id && $event['eventType'] == EventsService::$eventTypes['MESSAGE_READ']) {
+      if (isset($event['eventTarget']) && $event['eventTarget'] == $message_id && $event['eventType'] == EventsService::$eventTypes['MESSAGE_READ']) {
         return TRUE;
       }
       return FALSE;

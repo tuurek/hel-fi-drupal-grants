@@ -145,16 +145,18 @@ class MessageService {
       $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
       $messageData['sendDateTime'] = $dt->format('Y-m-d\TH:i:s');
 
+      $messageDataJson = Json::encode($messageData);
+
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [$this->username, $this->password, "Basic"],
-        'body' => Json::encode($messageData),
+        'body' => $messageDataJson,
       ]);
 
-      if ($res->getStatusCode() == 201) {
-        if ($this->debug) {
-          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent.');
-        }
+      if ($this->debug == TRUE) {
+        $this->logger->debug('MSG id: ' . $nextMessageId . ', JSON: ' . $messageDataJson);
+      }
 
+      if ($res->getStatusCode() == 201) {
         try {
           $eventId = $this->eventsService->logEvent(
             $submissionData["application_number"],

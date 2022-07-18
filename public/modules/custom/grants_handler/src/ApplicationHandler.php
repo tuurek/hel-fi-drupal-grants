@@ -263,13 +263,13 @@ class ApplicationHandler {
    *
    * @param \Drupal\webform\Entity\WebformSubmission|null $submission
    *   Submission in question.
-   * @param string|null $status
+   * @param string $status
    *   If no object is available, do text comparison.
    *
    * @return bool
    *   Is submission editable?
    */
-  public static function isSubmissionEditable(?WebformSubmission $submission, ?string $status): bool {
+  public static function isSubmissionEditable(?WebformSubmission $submission, string $status = ''): bool {
     if (NULL === $submission) {
       $submissionStatus = $status;
     }

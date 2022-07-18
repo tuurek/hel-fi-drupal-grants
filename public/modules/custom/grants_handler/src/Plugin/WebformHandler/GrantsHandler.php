@@ -398,7 +398,8 @@ class GrantsHandler extends WebformHandlerBase {
           ->setAbsolute()
           ->toString();
         $response = new RedirectResponse($url);
-        $response->send();
+        return $response;
+        // $response->send();
       }
 
       $redirectToProfile = FALSE;
@@ -426,7 +427,8 @@ class GrantsHandler extends WebformHandlerBase {
           ->setAbsolute()
           ->toString();
         $response = new RedirectResponse($url);
-        $response->send();
+        return $response;
+        // $response->send();
       }
 
     }
@@ -922,13 +924,10 @@ class GrantsHandler extends WebformHandlerBase {
         $redirectUrl = Url::fromRoute('grants_handler.view_application', [
           'submission_id' => $this->applicationNumber,
         ]);
-
-        $redirectResponse = new RedirectResponse($redirectUrl->toString());
-        $redirectResponse->send();
       }
       else {
-        $url = Url::fromRoute(
-          'front',
+        $redirectUrl = Url::fromRoute(
+          '<front>',
           [
             'attributes' => [
               'data-drupal-selector' => 'application-saving-failed-link',
@@ -942,11 +941,13 @@ class GrantsHandler extends WebformHandlerBase {
               'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
               [
                 '@number' => $this->applicationNumber,
-                '@link' => Link::fromTextAndUrl('here', $url)->toString(),
+                '@link' => '<a href="/" >here</a>',
               ]
             )
           );
       }
+      $redirectResponse = new RedirectResponse($redirectUrl->toString());
+      return $redirectResponse;
     }
     if ($this->triggeringElement == '::submit') {
       // Submit is trigger when exiting from confirmation page.
@@ -1016,7 +1017,16 @@ class GrantsHandler extends WebformHandlerBase {
             )
           );
 
-        $form_state->setRedirect(
+        // $form_state->setRedirect(
+        //          'grants_handler.completion',
+        //          ['submission_id' => $this->applicationNumber],
+        //          [
+        //            'attributes' => [
+        //              'data-drupal-selector' => 'application-saved-successfully-link',
+        //            ],
+        //          ]
+        //        );
+        $redirectUrl = Url::fromRoute(
           'grants_handler.completion',
           ['submission_id' => $this->applicationNumber],
           [
@@ -1024,26 +1034,17 @@ class GrantsHandler extends WebformHandlerBase {
               'data-drupal-selector' => 'application-saved-successfully-link',
             ],
           ]
-        );
+         );
 
-        // $redirectUrl = Url::fromRoute(
-        // 'grants_handler.completion',
-        // ['submissionId' => $this->applicationNumber],
-        // [
-        // 'attributes' => [
-        // 'data-drupal-selector' => 'application-saved-successfully-link',
-        // ],
-        // ]
-        // );
-        // $redirectResponse = new RedirectResponse($redirectUrl->toString());
         // $redirectResponse->send();
       }
       else {
-        $url = Url::fromRoute(
-          'front',
+        $redirectUrl = Url::fromRoute(
+          'grants_handler.completion',
+          ['submission_id' => $this->applicationNumber],
           [
             'attributes' => [
-              'data-drupal-selector' => 'application-saving-failed-link',
+              'data-drupal-selector' => 'application-saved-successfully-link',
             ],
           ]
         );
@@ -1059,6 +1060,8 @@ class GrantsHandler extends WebformHandlerBase {
             )
           );
       }
+      $redirectResponse = new RedirectResponse($redirectUrl->toString());
+      return $redirectResponse;
     }
     catch (\Exception $e) {
       // @todo log errors properly

@@ -28,15 +28,18 @@ class WebformNavigationController extends ControllerBase {
 
     $submission = WebformSubmission::load($submission_id);
     $submissionData = $submission->getData();
+    $webForm = $submission->getWebform();
 
-    if ($submissionData['status'] !== 'DRAFT') {
+    if (empty($submissionData)) {
+      $submissionDeleteResult = $submission->delete();
+    }
+    elseif ($submissionData['status'] !== 'DRAFT') {
       \Drupal::messenger()
         ->addError($this->t('Only DRAFT status submissions are deletable'));
       // Throw new AccessException('Only DRAFT status submissions
       // are deletable');.
     }
     else {
-      $webForm = $submission->getWebform();
 
       /** @var \Drupal\webformnavigation\WebformNavigationHelper $wfNaviHelper */
       $wfNaviHelper = \Drupal::service('grants_handler.navigation_helper');

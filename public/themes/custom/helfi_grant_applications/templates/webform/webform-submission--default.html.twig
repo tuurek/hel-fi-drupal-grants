@@ -26,10 +26,13 @@
 
   <h3 id="submission-application-number">{{ applicationNumber }}</h3>
 
+  {% if editSubmissionUrlCustom %}
   <a class="hds-button hds-button--secondary" href="{{ editSubmissionUrlCustom.toString() }}">
     <span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>
     <span class="hds-button__label">{{ 'Edit submission'|t }}</span>
   </a>
+  {% endif %}
+
 
   <div id="app-handler-details">
     {{ applicationHandlerEvent }}

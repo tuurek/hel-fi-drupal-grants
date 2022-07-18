@@ -240,7 +240,6 @@ class ApplicationController extends ControllerBase {
         $this->renderer->addCacheableDependency($build, $webform);
         $this->renderer->addCacheableDependency($build, $webform_submission);
         return $build;
-
       }
       else {
         throw new NotFoundHttpException($this->t('Application @number not found.', [

@@ -573,20 +573,6 @@ function grants_handler_preprocess_webform_submission(&$variables) {
   $webform = $submission->getWebform();
   $data = $submission->getData();
 
-  $urlCustom = Url::fromRoute(
-    'grants_handler.edit_application',
-    [
-      'webform' => $webform->id(),
-      'webform_submission' => $submission->id(),
-    ],
-    [
-      'attributes' => [
-        'data-drupal-selector' => 'application-edit-link',
-      ],
-    ]
-  );
-
-
   if (isset($data["application_number"])) {
     $variables['applicationNumber'] = $data["application_number"];
   }
@@ -601,8 +587,6 @@ function grants_handler_preprocess_webform_submission(&$variables) {
       '#submission' => $submission,
     ];
   }
-
-  $variables['editSubmissionUrlCustom'] = $urlCustom;
 
   // parse messages
   $variables['messages'] = [
@@ -621,6 +605,22 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     '#theme' => 'webform_submission_status_history',
     '#submission' => $submission,
   ];
+  if (ApplicationHandler::isSubmissionEditable($submission)) {
+    $urlCustom = Url::fromRoute(
+      'grants_handler.edit_application',
+      [
+        'webform' => $webform->id(),
+        'webform_submission' => $submission->id(),
+      ],
+      [
+        'attributes' => [
+          'data-drupal-selector' => 'application-edit-link',
+        ],
+      ]
+    );
+    $variables['editSubmissionUrlCustom'] = $urlCustom;
+  }
+
 }
 
 /**
