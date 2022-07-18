@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\grants_handler;
+
 /**
  * General error in applicatoin process.
  */

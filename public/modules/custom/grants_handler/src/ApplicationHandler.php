@@ -825,7 +825,7 @@ class ApplicationHandler {
 
     // If no userprofile data, we need to hardcode these values.
     if ($userProfileData == NULL || $userData == NULL) {
-      throw new \ApplicationException('No profile data found for user.');
+      throw new ApplicationException('No profile data found for user.');
     }
     else {
       $senderDetails['sender_firstname'] = $data["verifiedPersonalInformation"]["firstName"];
