@@ -807,258 +807,35 @@ class ApplicationHandler {
   }
 
   /**
-   * Fake messages.
-   *
-   * @return mixed
+   * Set up sender details from helsinkiprofiili data.
    */
-  public static function getFakeMessages() {
+  public function parseSenderDetails() {
+    // Set sender information after save so no accidental saving of data.
+    $userProfileData = $this->helfiHelsinkiProfiiliUserdata->getUserProfileData();
+    $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
 
-    $d = Json::decode('[
-                        {
-                        "caseId": "GRANTS-TEST-YLEIS-00000411",
-                        "messageId": "2d78f97b-75ff-48f8-b5a9-16cbca7f7ba1",
-                        "body": "Where does Santa go on holiday? Why is grandma old? Can I eat a half chewed mini cheddar that my brother gave me? Where does the tallest man live? Can I eat the food on your plate? Why do cats miaow? Can I eat the last biscuit? Are we going to the park? Can I eat this pizza?",
-                        "sentBy": "Mika Hietanen",
-                        "sendDateTime": "2022-06-15T14:54:59"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000411",
-                        "messageId": "8a52a0e9-a90e-429f-a12c-b2925b05ab6b",
-                        "body": "Stella! Hey, Stella! I am big! It&#39;s the pictures that got small. Here&#39;s Johnny! Why so serious? I&#39;m just one stomach flu away from my goal weight. When you realize you want to spend the rest of your life with somebody, you want the rest of your life to start as soon as possible. Gentlemen, you can&#39;t fight in here! This is the war room!",
-                        "sentBy": "Mika Hietanen",
-                        "sendDateTime": "2022-06-15T14:56:39"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000411",
-                        "messageId": "8a52a0e9-a90e-429f-a12c-52334523452345",
-                        "body": "fasdfa aösdfha södföjahs föashf öasjdfh ",
-                        "sentBy": "AVustus tms asdf",
-                        "sendDateTime": "2022-06-15T14:56:39"
-                    }
-    ]');
+    $senderDetails = [];
 
-    return $d;
-  }
+    if (isset($userProfileData["myProfile"])) {
+      $data = $userProfileData["myProfile"];
+    }
+    else {
+      $data = $userProfileData;
+    }
 
-  /**
-   * Fake events.
-   *
-   * @return mixed
-   */
-  public static function getFakeEvents() {
-    return Json::decode('
-    [
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T06:46:29Z",
-                        "timeCreated": "2022-07-01T06:46:29Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "a84a7d37-5156-47fb-a9f7-97c24453cb19",
-                        "eventTarget": "2022-07-01T09-46-20vahvistettu_tuloslaskelma_sub.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T06:46:33Z",
-                        "timeCreated": "2022-07-01T06:46:33Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "dea20252-4405-4f97-8bb6-19ba77e8f985",
-                        "eventTarget": "2022-07-01T09-46-20toimintakertomus_copy.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T06:46:37Z",
-                        "timeCreated": "2022-07-01T06:46:37Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "20b6e35c-b604-45c0-abd2-b8f3bdd8d4c9",
-                        "eventTarget": "2022-07-01T09-46-20arviosuunnitelma_0.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_APP_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T06:47:17Z",
-                        "timeCreated": "2022-07-01T06:47:17Z",
-                        "eventDescription": "Application sent Avustus2",
-                        "eventID": "498e2464-0a69-4457-ba05-bd1d2e3daa91",
-                        "eventTarget": "GRANTS-TEST-YLEIS-00000443"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "STATUS_UPDATE",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T06:47:21Z",
-                        "timeCreated": "2022-07-01T06:47:21Z",
-                        "eventDescription": "RECEIVED",
-                        "eventID": "e167243e-1e52-4e4e-a8f0-e384b56ef4e1"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "MESSAGE_AVUS2",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T06:51:12Z",
-                        "timeCreated": "2022-07-01T06:51:12Z",
-                        "eventID": "26256604-aa6a-4194-9c29-c52119b8e52c",
-                        "eventTarget": "8a52a0e9-a90e-429f-a12c-b2925b05ab6b"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "MESSAGE_AVUS2",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T06:51:12Z",
-                        "timeCreated": "2022-07-01T06:51:12Z",
-                        "eventID": "26256604-aa6a-4194-9c29-c52119b8e52c",
-                        "eventTarget": "8a52a0e9-a90e-429f-a12c-52334523452345"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:03:25Z",
-                        "timeCreated": "2022-07-01T07:03:25Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "ab7e569c-3835-444b-a23d-cbbb62408151",
-                        "eventTarget": "2022-07-01T10-03-03toimintakertomus_copy.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:03:29Z",
-                        "timeCreated": "2022-07-01T07:03:29Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "ee758abe-fbd8-4bdc-a2fa-b2e4b5c3d13e",
-                        "eventTarget": "2022-07-01T10-03-03vuosikokouksen_poytakirja.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:03:33Z",
-                        "timeCreated": "2022-07-01T07:03:33Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "ab307db3-de01-4388-949a-259bcf2491b7",
-                        "eventTarget": "2022-07-01T10-03-03toimintasuunnitelma_draft.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:03:37Z",
-                        "timeCreated": "2022-07-01T07:03:37Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "3979b7e8-f788-46d0-8dc7-47bd10a9e888",
-                        "eventTarget": "2022-07-01T10-03-03talousarvio_submitted.docx"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:03:41Z",
-                        "timeCreated": "2022-07-01T07:03:41Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "9bbd21f3-0e33-4640-a122-8182a4e5ea75",
-                        "eventTarget": "2022-07-01T10-03-03kopio_la_leiriavustusselvitys_liite_tiedot_toteutuneista_leireista.xls"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_ATT_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:03:45Z",
-                        "timeCreated": "2022-07-01T07:03:45Z",
-                        "eventDescription": "File added successfully",
-                        "eventID": "dc28a59c-69ef-4602-9270-526c1baf426e",
-                        "eventTarget": "2022-07-01T10-03-03juhlavuosibn300_0.doc"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "INTEGRATION_INFO_APP_OK",
-                        "eventCode": 0,
-                        "eventSource": "Avustus integration",
-                        "timeUpdated": "2022-07-01T07:04:31Z",
-                        "timeCreated": "2022-07-01T07:04:31Z",
-                        "eventDescription": "Application sent Avustus2",
-                        "eventID": "a4db6dcd-1131-42ff-bd7a-76e06dc09a8f",
-                        "eventTarget": "GRANTS-TEST-YLEIS-00000443"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "STATUS_UPDATE",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T07:04:34Z",
-                        "timeCreated": "2022-07-01T07:04:34Z",
-                        "eventDescription": "RECEIVED",
-                        "eventID": "8b75cd44-927b-426f-9ed2-bb4602aa84ff"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "EVENT_INFO",
-                        "eventCode": 0,
-                        "eventSource": "Avustusten kasittelyjarjestelma",
-                        "timeCreated": "2022-07-01T10:13:15",
-                        "eventDescription": "Hakemustanne käsittelee Nimi - Puhakka Tero, Puhelinnumero - 09 310 36070 Sähköpostiosoite - tero.puhakka@hel.fi"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "STATUS_UPDATE",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T07:13:23Z",
-                        "timeCreated": "2022-07-01T07:13:23Z",
-                        "eventDescription": "RECEIVED",
-                        "eventID": "f80d2acb-c62c-41be-b94c-c0e15cc53fc5"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "STATUS_UPDATE",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T07:14:17Z",
-                        "timeCreated": "2022-07-01T07:14:17Z",
-                        "eventDescription": "PROCESSING",
-                        "eventID": "b77191b2-da07-4303-a2b2-8de59af6896c"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "STATUS_UPDATE",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T07:27:50Z",
-                        "timeCreated": "2022-07-01T07:27:50Z",
-                        "eventDescription": "CLOSED",
-                        "eventID": "a68aea2d-bba9-48fc-9af1-c7d09fff8b86"
-                    },
-                    {
-                        "caseId": "GRANTS-TEST-YLEIS-00000443",
-                        "eventType": "STATUS_UPDATE",
-                        "eventCode": 0,
-                        "eventSource": "Avustustenkasittelyjarjestelma",
-                        "timeUpdated": "2022-07-01T07:40:23Z",
-                        "timeCreated": "2022-07-01T07:40:23Z",
-                        "eventDescription": "CLOSED",
-                        "eventID": "0d467981-377a-4061-a8ec-acb0087b014e"
-                    }
-                ]
-    ');
+    // If no userprofile data, we need to hardcode these values.
+    if ($userProfileData == NULL || $userData == NULL) {
+      throw new \ApplicationException('No profile data found for user.');
+    }
+    else {
+      $senderDetails['sender_firstname'] = $data["verifiedPersonalInformation"]["firstName"];
+      $senderDetails['sender_lastname'] = $data["verifiedPersonalInformation"]["lastName"];
+      $senderDetails['sender_person_id'] = $data["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+      $senderDetails['sender_user_id'] = $userData["sub"];
+      $senderDetails['sender_email'] = $data["primaryEmail"]["email"];
+    }
+
+    return $senderDetails;
   }
 
 }

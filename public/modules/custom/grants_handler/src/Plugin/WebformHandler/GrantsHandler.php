@@ -282,41 +282,6 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * Set up sender details from helsinkiprofiili data.
-   */
-  private function parseSenderDetails() {
-    // Set sender information after save so no accidental saving of data.
-    // @todo Think about how sender info should be parsed, maybe in own.
-    $userProfileData = $this->userExternalData->getUserProfileData();
-    $userData = $this->userExternalData->getUserData();
-
-    if (isset($userProfileData["myProfile"])) {
-      $data = $userProfileData["myProfile"];
-    }
-    else {
-      $data = $userProfileData;
-    }
-
-    // If no userprofile data, we need to hardcode these values.
-    // @todo Remove hardcoded values when tunnistamo works.
-    if ($userProfileData == NULL || $userData == NULL) {
-      $this->submittedFormData['sender_firstname'] = 'NoTunnistamo';
-      $this->submittedFormData['sender_lastname'] = 'NoTunnistamo';
-      $this->submittedFormData['sender_person_id'] = 'NoTunnistamo';
-      $this->submittedFormData['sender_user_id'] = '280f75c5-6a20-4091-b22d-dfcdce7fef60';
-      $this->submittedFormData['sender_email'] = 'NoTunnistamo';
-    }
-    else {
-      $userData = $this->userExternalData->getUserData();
-      $this->submittedFormData['sender_firstname'] = $data["verifiedPersonalInformation"]["firstName"];
-      $this->submittedFormData['sender_lastname'] = $data["verifiedPersonalInformation"]["lastName"];
-      $this->submittedFormData['sender_person_id'] = $data["verifiedPersonalInformation"]["nationalIdentificationNumber"];
-      $this->submittedFormData['sender_user_id'] = $userData["sub"];
-      $this->submittedFormData['sender_email'] = $data["primaryEmail"]["email"];
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function access(WebformSubmissionInterface $webform_submission, $operation, AccountInterface $account = NULL) {
@@ -689,16 +654,23 @@ class GrantsHandler extends WebformHandlerBase {
     $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
 
     $this->setTotals();
-    $this->parseSenderDetails();
 
-    $this->submittedFormData['applicant_type'] = $form_state->getValue('applicant_type');
+    // Merge form sender data from handler.
+    $this->submittedFormData = array_merge(
+      $this->submittedFormData,
+      $this->applicationHandler->parseSenderDetails());
+
+    $this->submittedFormData['applicant_type'] = $form_state
+      ->getValue('applicant_type');
 
     foreach ($this->submittedFormData["myonnetty_avustus"] as $key => $value) {
-      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] = $value['issuer_name'];
+      $this->submittedFormData["myonnetty_avustus"][$key]['issuerName'] =
+        $value['issuer_name'];
       unset($this->submittedFormData["myonnetty_avustus"][$key]['issuer_name']);
     }
     foreach ($this->submittedFormData["haettu_avustus_tieto"] as $key => $value) {
-      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] = $value['issuer_name'];
+      $this->submittedFormData["haettu_avustus_tieto"][$key]['issuerName'] =
+        $value['issuer_name'];
       unset($this->submittedFormData["haettu_avustus_tieto"][$key]['issuer_name']);
     }
 
