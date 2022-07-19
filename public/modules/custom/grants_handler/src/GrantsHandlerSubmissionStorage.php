@@ -115,7 +115,7 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
         $applicationNumber = '';
         try {
           $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
-          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber], TRUE);
+          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
           /** @var \Drupal\helfi_atv\AtvDocument $document */
           $document = reset($results);
           $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);

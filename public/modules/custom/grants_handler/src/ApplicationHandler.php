@@ -467,7 +467,7 @@ class ApplicationHandler {
   public static function submissionObjectFromApplicationNumber(
     string $applicationNumber,
     AtvDocument $document = NULL,
-    bool $refetch = TRUE
+    bool $refetch = FALSE
   ): ?WebformSubmission {
 
     $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
@@ -738,6 +738,7 @@ class ApplicationHandler {
       }
 
       if ($status === 201) {
+        $this->atvService->clearCache($applicationNumber);
         return TRUE;
       }
       else {

@@ -38,7 +38,8 @@ function grants_attachments_theme(): array {
  */
 function template_preprocess_grants_attachments(array &$variables) {
 
-  if (isset($variables["children"]["#default_value"]["integrationID"])) {
+  if (isset($variables["children"]["#default_value"]["integrationID"]) &&
+    $variables["children"]["#default_value"]["fileType"] =! '6') {
 
     $currentUri = \Drupal::request()->getUri();
     $currentHost = \Drupal::request()->getSchemeAndHttpHost();
@@ -48,7 +49,7 @@ function template_preprocess_grants_attachments(array &$variables) {
     $submissionData = $submission->getData();
 
     // allow only DRAFTs to be deleted.
-    if ($submissionData['status'] == 'DRAFT') {
+    if (isset($submissionData['status']) && $submissionData['status'] == 'DRAFT') {
       $integrationId = str_replace('/', '_', $variables["children"]["#default_value"]["integrationID"]);
 
       $deleteUrl = \Drupal\Core\Url::fromRoute(

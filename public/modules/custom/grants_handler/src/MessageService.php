@@ -7,6 +7,7 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\grants_metadata\AtvSchema;
+use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use GuzzleHttp\ClientInterface;
@@ -73,6 +74,13 @@ class MessageService {
   protected bool $debug;
 
   /**
+   * Atv access.
+   *
+   * @var \Drupal\helfi_atv\AtvService
+   */
+  protected AtvService $atvService;
+
+  /**
    * Constructs a MessageService object.
    *
    * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata
@@ -83,17 +91,21 @@ class MessageService {
    *   Log things.
    * @param \Drupal\grants_handler\EventsService $eventsService
    *   Log events to atv document.
+   * @param \Drupal\helfi_atv\AtvService $atvService
+   *   Access to ATV.
    */
   public function __construct(
     HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata,
     ClientInterface $http_client,
     LoggerChannelFactory $loggerFactory,
-    EventsService $eventsService
+    EventsService $eventsService,
+    AtvService $atvService
   ) {
     $this->helfiHelsinkiProfiiliUserdata = $helfi_helsinki_profiili_userdata;
     $this->httpClient = $http_client;
     $this->logger = $loggerFactory->get('grants_handler_message_service');
     $this->eventsService = $eventsService;
+    $this->atvService = $atvService;
 
     $this->endpoint = getenv('AVUSTUS2_MESSAGE_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
@@ -135,7 +147,7 @@ class MessageService {
       $messageData['caseId'] = $submissionData["application_number"];
 
       if ($userData === NULL) {
-        $messageData['sentBy'] = 'Testi Käyttäjä';
+        $messageData['sentBy'] = 'KORJAA PROFIILIYHTEYS';
       }
       else {
         $messageData['sentBy'] = $userData['name'];
@@ -158,9 +170,10 @@ class MessageService {
 
       if ($res->getStatusCode() == 201) {
         try {
+          $this->atvService->clearCache($messageData['caseId']);
           $eventId = $this->eventsService->logEvent(
             $submissionData["application_number"],
-            'MESSAGE_NEW_APP',
+            'MESSAGE_APP',
             t('New message for @applicationNumber.',
               ['@applicationNumber' => $submissionData["application_number"]]
             ),

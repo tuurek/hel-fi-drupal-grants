@@ -10,6 +10,7 @@ use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\EventException;
 use Drupal\grants_handler\EventsService;
 use Drupal\grants_handler\MessageService;
+use Drupal\helfi_atv\AtvService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -50,6 +51,13 @@ class MessageController extends ControllerBase {
   protected bool $debug;
 
   /**
+   * Atv access.
+   *
+   * @var \Drupal\helfi_atv\AtvService
+   */
+  protected AtvService $atvService;
+
+  /**
    * The controller constructor.
    *
    * @param \Drupal\grants_handler\EventsService $grants_handler_events_service
@@ -62,11 +70,13 @@ class MessageController extends ControllerBase {
   public function __construct(
     EventsService $grants_handler_events_service,
     MessageService $grants_handler_message_service,
-    RequestStack $requestStack
+    RequestStack $requestStack,
+    AtvService $atvService
   ) {
     $this->eventsService = $grants_handler_events_service;
     $this->messageService = $grants_handler_message_service;
     $this->request = $requestStack;
+    $this->atvService = $atvService;
 
     $debug = getenv('debug');
 
@@ -86,7 +96,8 @@ class MessageController extends ControllerBase {
     return new static(
       $container->get('grants_handler.events_service'),
       $container->get('grants_handler.message_service'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('helfi_atv.atv_service')
     );
   }
 
@@ -115,6 +126,7 @@ class MessageController extends ControllerBase {
           $message_id
         );
         $this->messenger()->addStatus($this->t('Message marked as read'));
+        $this->atvService->clearCache($application_number);
       }
       catch (EventException $ee) {
         $this->getLogger('message_controller')->error($ee->getMessage());

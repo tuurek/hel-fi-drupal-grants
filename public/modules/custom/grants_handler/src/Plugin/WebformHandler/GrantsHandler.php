@@ -1062,6 +1062,16 @@ class GrantsHandler extends WebformHandlerBase {
       }
       $redirectResponse = new RedirectResponse($redirectUrl->toString());
       return $redirectResponse;
+
+      // $form_state->setRedirect(
+      //          'grants_handler.completion',
+      //          ['submission_id' => $this->applicationNumber],
+      //          [
+      //            'attributes' => [
+      //              'data-drupal-selector' => 'application-saved-successfully-link',
+      //            ],
+      //          ]
+      //        );
     }
     catch (\Exception $e) {
       // @todo log errors properly
