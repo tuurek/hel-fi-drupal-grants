@@ -30,7 +30,18 @@ class ValidIbanValidator extends ConstraintValidator {
    */
   private function isValidIban(string $value): bool {
     $myIban = new IBAN($value);
-    return $myIban->Verify();
+
+    if ($myIban->Verify()) {
+      // Get the country part from an IBAN.
+      $iban_country = $myIban->Country();
+      // Only allow Finnish IBAN account numbers..
+      if ($iban_country == 'FI') {
+        // If so, return true.
+        return TRUE;
+      }
+    }
+    // All other scenarios return false.
+    return FALSE;
   }
 
 }

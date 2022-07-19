@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * @Constraint(
  *   id = "ValidIban",
- *   label = @Translation("Valid IBAN account number", context = "Validation"),
+ *   label = @Translation("Valid Finnish IBAN number", context = "Validation"),
  *   type = "string"
  * )
  */
@@ -20,6 +20,6 @@ class ValidIban extends Constraint {
    *
    * @var string
    */
-  public string $notValidIban = '%value is not valid IBAN';
+  public string $notValidIban = '%value is not valid Finnish IBAN';
 
 }
