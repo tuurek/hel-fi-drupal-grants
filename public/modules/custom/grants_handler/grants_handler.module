@@ -989,10 +989,6 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
   $form_state = $variables["form"]["#form_state"];
 
   $variables['errors'] = $navigationHelper->getPagedErrors($form_state, $webform_submission);
-
-
-  $d = 'asdf';
-
 }
 
 /**

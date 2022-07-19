@@ -398,8 +398,7 @@ class GrantsHandler extends WebformHandlerBase {
           ->setAbsolute()
           ->toString();
         $response = new RedirectResponse($url);
-        return $response;
-        // $response->send();
+        $response->send();
       }
 
       $redirectToProfile = FALSE;
@@ -427,8 +426,7 @@ class GrantsHandler extends WebformHandlerBase {
           ->setAbsolute()
           ->toString();
         $response = new RedirectResponse($url);
-        return $response;
-        // $response->send();
+        $response->send();
       }
 
     }
