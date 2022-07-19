@@ -604,6 +604,13 @@ elements: |-
     '#wizard_next__label': 'Seuraava >'
     '#preview_prev__label': '< Edellinen'
     '#preview_next__label': 'Esikatseluun >'
+    '#delete_hide': false
+    '#delete__label': 'Poista keskeneräinen'
+    '#delete__attributes':
+      class:
+        - hds-button
+        - hds-button--primary
+    '#delete__dialog': true
 css: ''
 javascript: ''
 settings:
@@ -612,7 +619,7 @@ settings:
   ajax_progress_type: ''
   ajax_effect: ''
   ajax_speed: null
-  page: true
+  page: false
   page_submit_path: ''
   page_confirm_path: ''
   page_theme_name: ''
@@ -621,10 +628,10 @@ settings:
   form_open_message: ''
   form_close_message: ''
   form_exception_message: ''
-  form_previous_submissions: true
+  form_previous_submissions: false
   form_confidential: false
   form_confidential_message: ''
-  form_disable_remote_addr: false
+  form_disable_remote_addr: true
   form_convert_anonymous: false
   form_prepopulate: false
   form_prepopulate_source_entity: false
@@ -656,7 +663,7 @@ settings:
   submission_label: ''
   submission_exception_message: ''
   submission_locked_message: ''
-  submission_log: false
+  submission_log: true
   submission_excluded_elements: {  }
   submission_exclude_empty: false
   submission_exclude_empty_checkbox: false
@@ -706,7 +713,7 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: inline
+  confirmation_type: none
   confirmation_url: 'https://hel-fi-form-tool.docker.so/fi/kiitos-lomakkeen-tayttamisesta'
   confirmation_title: ''
   confirmation_message: ''

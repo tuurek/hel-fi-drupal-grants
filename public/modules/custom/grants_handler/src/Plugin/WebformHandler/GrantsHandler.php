@@ -941,11 +941,15 @@ class GrantsHandler extends WebformHandlerBase {
                 '@number' => $this->applicationNumber,
                 '@link' => '<a href="/" >here</a>',
               ]
-            )
+            ),
+            TRUE
           );
       }
       $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      return $redirectResponse;
+      $this->applicationHandler->clearCache($this->applicationNumber);
+      $redirectResponse->send();
+
+      // Return $redirectResponse;.
     }
     if ($this->triggeringElement == '::submit') {
       // Submit is trigger when exiting from confirmation page.
@@ -1015,25 +1019,24 @@ class GrantsHandler extends WebformHandlerBase {
             )
           );
 
-        // $form_state->setRedirect(
-        //          'grants_handler.completion',
-        //          ['submission_id' => $this->applicationNumber],
-        //          [
-        //            'attributes' => [
-        //              'data-drupal-selector' => 'application-saved-successfully-link',
-        //            ],
-        //          ]
-        //        );
+        $form_state->setRedirect(
+                  'grants_handler.completion',
+                  ['submission_id' => $this->applicationNumber],
+                  [
+                    'attributes' => [
+                      'data-drupal-selector' => 'application-saved-successfully-link',
+                    ],
+                  ]
+                );
         $redirectUrl = Url::fromRoute(
-          'grants_handler.completion',
-          ['submission_id' => $this->applicationNumber],
-          [
-            'attributes' => [
-              'data-drupal-selector' => 'application-saved-successfully-link',
-            ],
-          ]
-         );
-
+                  'grants_handler.completion',
+                  ['submission_id' => $this->applicationNumber],
+                  [
+                    'attributes' => [
+                      'data-drupal-selector' => 'application-saved-successfully-link',
+                    ],
+                  ]
+                 );
         // $redirectResponse->send();
       }
       else {
@@ -1058,18 +1061,17 @@ class GrantsHandler extends WebformHandlerBase {
             )
           );
       }
-      $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      return $redirectResponse;
-
-      // $form_state->setRedirect(
-      //          'grants_handler.completion',
-      //          ['submission_id' => $this->applicationNumber],
-      //          [
-      //            'attributes' => [
-      //              'data-drupal-selector' => 'application-saved-successfully-link',
-      //            ],
-      //          ]
-      //        );
+      // $redirectResponse = new RedirectResponse($redirectUrl->toString());
+      //      return $redirectResponse;
+      $form_state->setRedirect(
+                'grants_handler.completion',
+                ['submission_id' => $this->applicationNumber],
+                [
+                  'attributes' => [
+                    'data-drupal-selector' => 'application-saved-successfully-link',
+                  ],
+                ]
+              );
     }
     catch (\Exception $e) {
       // @todo log errors properly
