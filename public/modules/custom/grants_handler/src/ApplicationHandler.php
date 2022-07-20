@@ -842,10 +842,10 @@ class ApplicationHandler {
   /**
    * Access method to clear cache in atv service.
    *
-   * @param $applicationNumber
-   *   Application number
+   * @param string $applicationNumber
+   *   Application number.
    */
-  public function clearCache($applicationNumber) {
+  public function clearCache(string $applicationNumber) {
     $this->atvService->clearCache($applicationNumber);
   }
 

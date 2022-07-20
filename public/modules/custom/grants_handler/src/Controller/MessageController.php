@@ -66,6 +66,8 @@ class MessageController extends ControllerBase {
    *   The grants_handler.message_service service.
    * @param \Drupal\Core\Http\RequestStack $requestStack
    *   Request stuff.
+   * @param \Drupal\helfi_atv\AtvService $atvService
+   *   Access to ATV backend.
    */
   public function __construct(
     EventsService $grants_handler_events_service,
