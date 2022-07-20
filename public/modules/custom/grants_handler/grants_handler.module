@@ -32,15 +32,21 @@ function grants_handler_theme(): array {
       'variables' => ['settings' => NULL, 'handler' => []],
     ],
     // TODO: composite elements' custom themes.
-    'community_officials_composite' => [
-      'variables' => [],
-    ],
-    'bank_account_composite' => [
-      'variables' => [],
-    ],
-    'community_address_composite' => [
-      'variables' => [],
-    ],
+//    'community_officials_composite' => [
+//      'variables' => [],
+//      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
+//      'template' => 'select'
+//    ],
+//    'bank_account_composite' => [
+//      'variables' => [],
+//      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
+//      'template' => 'select'
+//    ],
+//    'community_address_composite' => [
+//      'variables' => [],
+//      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
+//      'template' => 'select'
+//    ],
     'webform_submission_messages' => [
       'variables' => [
         'messages' => NULL,
