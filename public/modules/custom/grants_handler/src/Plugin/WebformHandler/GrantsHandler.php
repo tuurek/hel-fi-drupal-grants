@@ -917,7 +917,7 @@ class GrantsHandler extends WebformHandlerBase {
 
         // Try to give integration time to do it's
         // thing before we try to go there.
-        sleep(2);
+        sleep(4);
 
         $redirectUrl = Url::fromRoute('grants_handler.view_application', [
           'submission_id' => $this->applicationNumber,
