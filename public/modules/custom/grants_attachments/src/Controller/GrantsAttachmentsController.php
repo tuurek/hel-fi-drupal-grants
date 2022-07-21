@@ -8,6 +8,7 @@ use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\grants_handler\ApplicationHandler;
+use Drupal\grants_handler\EventsService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,6 +37,13 @@ class GrantsAttachmentsController extends ControllerBase {
   protected ApplicationHandler $applicationHandler;
 
   /**
+   * Create events.
+   *
+   * @var \Drupal\grants_handler\EventsService
+   */
+  protected EventsService $eventsService;
+
+  /**
    * The controller constructor.
    *
    * @param \Drupal\helfi_atv\AtvService $helfi_atv
@@ -48,12 +56,14 @@ class GrantsAttachmentsController extends ControllerBase {
   public function __construct(
     AtvService $helfi_atv,
     ApplicationHandler $applicationHandler,
-    RequestStack $requestStack
+    RequestStack $requestStack,
+    EventsService $eventsService
   ) {
     $this->helfiAtv = $helfi_atv;
     $this->applicationHandler = $applicationHandler;
 
     $this->request = $requestStack;
+    $this->eventsService = $eventsService;
 
   }
 
@@ -64,7 +74,8 @@ class GrantsAttachmentsController extends ControllerBase {
     return new static(
       $container->get('helfi_atv.atv_service'),
       $container->get('grants_handler.application_handler'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('grants_handler.events_service'),
     );
   }
 
@@ -118,10 +129,7 @@ class GrantsAttachmentsController extends ControllerBase {
       // Remove given attachment from application.
       $updatedAttachments = [];
       foreach ($submissionData['attachments'] as $key => $attachment) {
-        if ($attachment["integrationID"] == $integrationId) {
-          unset($submissionData['attachments'][$key]);
-        }
-        else {
+        if ($attachment["integrationID"] != $integrationId) {
           $updatedAttachments[] = $attachment;
         }
       }
@@ -141,7 +149,15 @@ class GrantsAttachmentsController extends ControllerBase {
       );
 
       if ($applicationUploadStatus) {
-        $this->messenger()->addStatus($this->t('Appilcation updated.'));
+        $this->messenger()->addStatus($this->t('Application updated.'));
+
+        $eventId = $this->eventsService->logEvent(
+          $submission_id,
+          'APP_INFO_ATT_DELETED',
+          t('Attachment deleted.'),
+          $integrationId
+        );
+
       }
 
     }
