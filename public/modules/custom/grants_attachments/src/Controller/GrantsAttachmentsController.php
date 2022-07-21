@@ -129,11 +129,10 @@ class GrantsAttachmentsController extends ControllerBase {
       // Remove given attachment from application.
       $updatedAttachments = [];
       foreach ($submissionData['attachments'] as $key => $attachment) {
-        if ($attachment["integrationID"] != $integrationId) {
-          $updatedAttachments[] = $attachment;
+        if ($attachment["integrationID"] == $integrationId) {
+          unset($submissionData['attachments'][$key]);
         }
       }
-      $submissionData['attachments'] = $updatedAttachments;
 
       // Build data -> should validate ok, since we're only deleting attachments.
       $applicationData = $this->applicationHandler->webformToTypedData(
@@ -157,9 +156,7 @@ class GrantsAttachmentsController extends ControllerBase {
           t('Attachment deleted.'),
           $integrationId
         );
-
       }
-
     }
     catch (\Exception $e) {
       $this->getLogger('grants_attachments')->error($e->getMessage());

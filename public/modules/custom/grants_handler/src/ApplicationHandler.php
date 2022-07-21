@@ -683,6 +683,7 @@ class ApplicationHandler {
 
     /** @var \Drupal\Core\TypedData\DataDefinitionInterface $applicationData */
     $appDocument = $this->atvSchema->typedDataToDocumentContent($applicationData);
+    $myJSON = Json::encode($appDocument);
 
     if ($this->isDebug()) {
       $t_args = [
@@ -690,12 +691,7 @@ class ApplicationHandler {
       ];
       $this->logger
         ->debug(t('DEBUG: Endpoint: @endpoint', $t_args));
-    }
 
-    $myJSON = Json::encode($appDocument);
-
-    // If debug, print out json.
-    if ($this->isDebug()) {
       $t_args = [
         '@myJSON' => $myJSON,
       ];
