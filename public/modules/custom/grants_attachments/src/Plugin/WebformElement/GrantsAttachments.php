@@ -4,6 +4,7 @@ namespace Drupal\grants_attachments\Plugin\WebformElement;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_attachments\AttachmentHandler;
+use Drupal\grants_handler\EventsService;
 use Drupal\webform\Plugin\WebformElement\WebformCompositeBase;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -182,6 +183,9 @@ class GrantsAttachments extends WebformCompositeBase {
     $value = $this->getValue($element, $webform_submission, $options);
     $lines = [];
 
+    $submissionData = $webform_submission->getData();
+    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_ATT_OK');
+
     if (!is_array($value)) {
       return [];
     }
@@ -208,6 +212,15 @@ class GrantsAttachments extends WebformCompositeBase {
     }
     if (isset($value["description"]) && (isset($element["#description"]) && $element["#description"] == 'muu_liite')) {
       $lines[] = $value["description"];
+    }
+
+    if (isset($value["fileName"])) {
+      if (in_array($value["fileName"], $attachmentEvents["event_targets"])) {
+        $lines[] = '<span class="ikoniluokka">Upload OK</span>';
+      }
+      else {
+        $lines[] = 'File missing.';
+      }
     }
 
     return $lines;

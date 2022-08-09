@@ -55,3 +55,11 @@ grants_handler.applications_list:
     _controller: '\Drupal\grants_handler\Controller\ApplicationsListController::build'
   requirements:
     _permission: 'view own webform submission'
+
+grants_handler.message_read:
+  path: '/hakemus/{application_number}/messageRead/{message_id}'
+  defaults:
+    _title: 'Mark message read'
+    _controller: '\Drupal\grants_handler\Controller\MessageController::markMessageRead'
+  requirements:
+    _permission: 'edit own webform submission'

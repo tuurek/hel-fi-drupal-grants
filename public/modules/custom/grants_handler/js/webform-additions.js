@@ -1,6 +1,15 @@
 (function ($, Drupal, drupalSettings) {
     Drupal.behaviors.GrantsHandlerBehavior = {
         attach: function (context, settings) {
+
+            const formData = drupalSettings.grants_handler.formData
+            const selectedCompany = drupalSettings.grants_handler.selectedCompany
+            const submissionId = drupalSettings.grants_handler.submissionId
+
+            if (formData['status'] === 'DRAFT') {
+                $('#edit-actions').append($('<a href="/grants-handler/clearnavigation/' + submissionId + '">' + Drupal.t('Delete draft') + '</a>'));
+            }
+
             $("#edit-bank-account-account-number-select").change(function () {
                 $("[data-drupal-selector='edit-bank-account-account-number']").val($(this).val())
             });

@@ -55,15 +55,23 @@ class EventsService {
    *
    * @var array|string[]
    */
-  protected static array $eventTypes = [
+  public static array $eventTypes = [
     'STATUS_UPDATE' => 'STATUS_UPDATE',
-    'MESSAGE_NEW' => 'MESSAGE_NEW',
-    'MESSAGE_NEW_APP' => 'MESSAGE_NEW_APP',
+    'MESSAGE_AVUS2' => 'MESSAGE_AVUS2',
+    'MESSAGE_APP' => 'MESSAGE_APP',
     'MESSAGE_READ' => 'MESSAGE_READ',
-    'ATTACHMENT_UPLOAD' => 'ATTACHMENT_UPLOAD',
-    'DATA_UPDATE_ATV' => 'DATA_UPDATE_ATV',
-    'DATA_UPDATE_AVUS2' => 'DATA_UPDATE_AVUS2',
+    'INTEGRATION_INFO_ATT_OK' => 'INTEGRATION_INFO_ATT_OK',
+    'INTEGRATION_INFO_APP_OK' => 'INTEGRATION_INFO_APP_OK',
+    'EVENT_INFO' => 'EVENT_INFO',
+    'APP_INFO_ATT_DELETED' => 'APP_INFO_ATT_DELETED',
   ];
+
+  /**
+   * Debug on?
+   *
+   * @var bool
+   */
+  protected bool $debug;
 
   /**
    * Constructs a MessageService object.
@@ -83,6 +91,15 @@ class EventsService {
     $this->endpoint = getenv('AVUSTUS2_EVENT_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
     $this->password = getenv('AVUSTUS2_PASSWORD');
+
+    $debug = getenv('debug');
+
+    if ($debug == 'true') {
+      $this->debug = TRUE;
+    }
+    else {
+      $this->debug = FALSE;
+    }
 
   }
 
@@ -133,10 +150,17 @@ class EventsService {
 
     $eventData['timeCreated'] = $eventData['timeUpdated'] = $dt->format('Y-m-d\TH:i:s');
 
+    $eventDataJson = Json::encode($eventData);
+
+    if ($this->debug == TRUE) {
+      $this->logger->debug('Event ID: ' . $eventData['eventID'] . ', JSON:  ' . $eventDataJson);
+    }
+
     try {
+
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [$this->username, $this->password, "Basic"],
-        'body' => Json::encode($eventData),
+        'body' => $eventDataJson,
       ]);
 
       if ($res->getStatusCode() == 201) {
@@ -153,15 +177,29 @@ class EventsService {
   }
 
   /**
-   * Figure out from events which messages are unread.
+   * Filter events by given key.
    *
    * @param array $events
-   *   Events from document.
-   * @param array $messages
-   *   Messages from document.
+   *   Events to be filtered.
+   * @param string $typeKey
+   *   Event type wanted.
+   *
+   * @return array
+   *   Filtered events.
    */
-  public static function unreadMessages(array $events, array $messages) {
+  public static function filterEvents(array $events, string $typeKey) {
+    $messageEvents = array_filter($events, function ($event) use ($typeKey) {
+      if ($event['eventType'] == self::$eventTypes[$typeKey]) {
+        return TRUE;
+      }
+      return FALSE;
+    });
 
+    return [
+      'events' => $messageEvents,
+      'event_targets' => array_column($messageEvents, 'eventTarget'),
+      'event_ids' => array_column($messageEvents, 'eventID'),
+    ];
   }
 
 }

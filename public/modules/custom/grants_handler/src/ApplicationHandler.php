@@ -87,6 +87,13 @@ class ApplicationHandler {
   protected MessengerInterface $messenger;
 
   /**
+   * Handle events with applications.
+   *
+   * @var \Drupal\grants_handler\EventsService
+   */
+  protected EventsService $eventsService;
+
+  /**
    * Holds application statuses in.
    *
    * @var string[]
@@ -182,6 +189,8 @@ class ApplicationHandler {
    *   Logger.
    * @param \Drupal\Core\Messenger\Messenger $messenger
    *   Messenger.
+   * @param \Drupal\grants_handler\EventsService $eventsService
+   *   Access to events.
    */
   public function __construct(
     ClientInterface $http_client,
@@ -190,7 +199,8 @@ class ApplicationHandler {
     AtvSchema $atvSchema,
     GrantsProfileService $grantsProfileService,
     LoggerChannelFactory $loggerChannelFactory,
-    Messenger $messenger
+    Messenger $messenger,
+    EventsService $eventsService
   ) {
 
     $this->httpClient = $http_client;
@@ -203,6 +213,7 @@ class ApplicationHandler {
 
     $this->messenger = $messenger;
     $this->logger = $loggerChannelFactory->get('grants_application_handler');
+    $this->eventsService = $eventsService;
 
     $this->endpoint = getenv('AVUSTUS2_ENDPOINT');
     $this->username = getenv('AVUSTUS2_USERNAME');
@@ -252,13 +263,13 @@ class ApplicationHandler {
    *
    * @param \Drupal\webform\Entity\WebformSubmission|null $submission
    *   Submission in question.
-   * @param string|null $status
+   * @param string $status
    *   If no object is available, do text comparison.
    *
    * @return bool
    *   Is submission editable?
    */
-  public static function isSubmissionEditable(?WebformSubmission $submission, ?string $status): bool {
+  public static function isSubmissionEditable(?WebformSubmission $submission, string $status = ''): bool {
     if (NULL === $submission) {
       $submissionStatus = $status;
     }
@@ -443,6 +454,8 @@ class ApplicationHandler {
    *   String to try and parse submission id from. Ie GRANTS-DEV-00000098.
    * @param \Drupal\helfi_atv\AtvDocument|null $document
    *   Document to extract values from.
+   * @param bool $refetch
+   *   Force refetch from ATV.
    *
    * @return \Drupal\webform\Entity\WebformSubmission|null
    *   Webform submission.
@@ -453,7 +466,8 @@ class ApplicationHandler {
    */
   public static function submissionObjectFromApplicationNumber(
     string $applicationNumber,
-    AtvDocument $document = NULL
+    AtvDocument $document = NULL,
+    bool $refetch = FALSE
   ): ?WebformSubmission {
 
     $submissionSerial = self::getSerialFromApplicationNumber($applicationNumber);
@@ -476,10 +490,11 @@ class ApplicationHandler {
           [
             'transaction_id' => $applicationNumber,
           ],
-          TRUE
+          $refetch
         );
         /** @var \Drupal\helfi_atv\AtvDocument $document */
         $document = reset($document);
+
       }
       catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         return NULL;
@@ -490,16 +505,19 @@ class ApplicationHandler {
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
       throw new AtvDocumentNotFoundException('Submission not found.');
-
     }
     else {
       $submissionObject = reset($result);
 
-      // Set submission data from parsed mapper.
-      $submissionObject->setData($atvSchema->documentContentToTypedData(
+      $sData = $atvSchema->documentContentToTypedData(
         $document->getContent(),
         YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')
-      ));
+      );
+
+      $sData['messages'] = self::parseMessages($sData);
+
+      // Set submission data from parsed mapper.
+      $submissionObject->setData($sData);
 
       return $submissionObject;
     }
@@ -665,6 +683,7 @@ class ApplicationHandler {
 
     /** @var \Drupal\Core\TypedData\DataDefinitionInterface $applicationData */
     $appDocument = $this->atvSchema->typedDataToDocumentContent($applicationData);
+    $myJSON = Json::encode($appDocument);
 
     if ($this->isDebug()) {
       $t_args = [
@@ -672,12 +691,7 @@ class ApplicationHandler {
       ];
       $this->logger
         ->debug(t('DEBUG: Endpoint: @endpoint', $t_args));
-    }
 
-    $myJSON = Json::encode($appDocument);
-
-    // If debug, print out json.
-    if ($this->isDebug()) {
       $t_args = [
         '@myJSON' => $myJSON,
       ];
@@ -720,6 +734,7 @@ class ApplicationHandler {
       }
 
       if ($status === 201) {
+        $this->atvService->clearCache($applicationNumber);
         return TRUE;
       }
       else {
@@ -752,6 +767,82 @@ class ApplicationHandler {
    */
   public function setDebug(bool $debug): void {
     $this->debug = $debug;
+  }
+
+  /**
+   * Figure out from events which messages are unread.
+   *
+   * @param array $data
+   *   Submission data.
+   *
+   * @return array
+   *   Parsed messages with read information
+   */
+  public static function parseMessages(array $data) {
+
+    $messageEvents = array_filter($data['events'], function ($event) {
+      if ($event['eventType'] == EventsService::$eventTypes['MESSAGE_READ']) {
+        return TRUE;
+      }
+      return FALSE;
+    });
+
+    $eventIds = array_column($messageEvents, 'eventTarget');
+
+    $messages = [];
+
+    foreach ($data['messages'] as $key => $message) {
+      if (in_array($message['messageId'], $eventIds)) {
+        $message['messageStatus'] = 'READ';
+      }
+      else {
+        $message['messageStatus'] = 'UNREAD';
+      }
+      $messages[] = $message;
+    }
+    return $messages;
+  }
+
+  /**
+   * Set up sender details from helsinkiprofiili data.
+   */
+  public function parseSenderDetails() {
+    // Set sender information after save so no accidental saving of data.
+    $userProfileData = $this->helfiHelsinkiProfiiliUserdata->getUserProfileData();
+    $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
+
+    $senderDetails = [];
+
+    if (isset($userProfileData["myProfile"])) {
+      $data = $userProfileData["myProfile"];
+    }
+    else {
+      $data = $userProfileData;
+    }
+
+    // If no userprofile data, we need to hardcode these values.
+    if ($userProfileData == NULL || $userData == NULL) {
+      throw new ApplicationException('No profile data found for user.');
+    }
+    else {
+      $senderDetails['sender_firstname'] = $data["verifiedPersonalInformation"]["firstName"];
+      $senderDetails['sender_lastname'] = $data["verifiedPersonalInformation"]["lastName"];
+      $senderDetails['sender_person_id'] = $data["verifiedPersonalInformation"]["nationalIdentificationNumber"];
+      $senderDetails['sender_user_id'] = $userData["sub"];
+      $senderDetails['sender_email'] = $data["primaryEmail"]["email"];
+    }
+
+    return $senderDetails;
+  }
+
+  /**
+   * Access method to clear cache in atv service.
+   *
+   * @param string $applicationNumber
+   *   Application number.
+   */
+  public function clearCache(string $applicationNumber) {
+    $this->atvService->clearCache($applicationNumber);
   }
 
 }

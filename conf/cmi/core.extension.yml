@@ -33,6 +33,7 @@ module:
   field_group: 0
   field_ui: 0
   file: 0
+  filelog: 0
   filename_transliteration: 0
   filter: 0
   focal_point: 0
@@ -81,6 +82,7 @@ module:
   metatag_twitter_cards: 0
   metatag_views: 0
   migrate: 0
+  mysql: 0
   node: 0
   oembed_providers: 0
   openid_connect: 0

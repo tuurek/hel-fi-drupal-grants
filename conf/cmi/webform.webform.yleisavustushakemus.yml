@@ -160,15 +160,15 @@ elements: |-
       community_officials:
         '#type': community_officials_composite
         '#title': 'Yhteisön vastaavat henkilöt'
-        '#multiple__header': false
+        '#multiple': true
         '#multiple__item_label': henkilö
         '#multiple__no_items_message': 'Ei toiminnasta vastaavia henkil&ouml;it&auml;. Lis&auml;&auml; uusi henkil&ouml; alta.'
-        '#multiple__min_items': 1
+        '#multiple__min_items': 0
+        '#multiple__empty_items': 0
         '#multiple__sorting': false
         '#multiple__add': false
         '#multiple__add_more_input': false
         '#multiple__add_more_button_label': 'Lisää henkilö'
-        '#multiple': true
         '#attributes':
           class:
             - webform--large
@@ -250,6 +250,7 @@ elements: |-
         '#multiple__header': false
         '#multiple__item_label': 'myönnetty avustus'
         '#multiple__no_items_message': 'Ei sy&ouml;tettyj&auml; arvoja. Lis&auml;&auml; uusi my&ouml;nnetty avustus alta.'
+        '#multiple__min_items': 0
         '#multiple__empty_items': 0
         '#multiple__sorting': false
         '#multiple__add': false
@@ -310,6 +311,7 @@ elements: |-
         '#multiple__header': false
         '#multiple__item_label': 'haettu avustus'
         '#multiple__no_items_message': 'Ei sy&ouml;tettyj&auml; arvoja. Lis&auml;&auml; uusi haettu avustus alta.'
+        '#multiple__min_items': 0
         '#multiple__empty_items': 0
         '#multiple__sorting': false
         '#multiple__add': false
@@ -604,6 +606,13 @@ elements: |-
     '#wizard_next__label': 'Seuraava >'
     '#preview_prev__label': '< Edellinen'
     '#preview_next__label': 'Esikatseluun >'
+    '#delete_hide': false
+    '#delete__label': 'Poista keskeneräinen'
+    '#delete__attributes':
+      class:
+        - hds-button
+        - hds-button--primary
+    '#delete__dialog': true
 css: ''
 javascript: ''
 settings:
@@ -612,7 +621,7 @@ settings:
   ajax_progress_type: ''
   ajax_effect: ''
   ajax_speed: null
-  page: true
+  page: false
   page_submit_path: ''
   page_confirm_path: ''
   page_theme_name: ''
@@ -621,10 +630,10 @@ settings:
   form_open_message: ''
   form_close_message: ''
   form_exception_message: ''
-  form_previous_submissions: true
+  form_previous_submissions: false
   form_confidential: false
   form_confidential_message: ''
-  form_disable_remote_addr: false
+  form_disable_remote_addr: true
   form_convert_anonymous: false
   form_prepopulate: false
   form_prepopulate_source_entity: false
@@ -656,7 +665,7 @@ settings:
   submission_label: ''
   submission_exception_message: ''
   submission_locked_message: ''
-  submission_log: false
+  submission_log: true
   submission_excluded_elements: {  }
   submission_exclude_empty: false
   submission_exclude_empty_checkbox: false
@@ -706,7 +715,7 @@ settings:
   draft_loaded_message: ''
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
-  confirmation_type: inline
+  confirmation_type: none
   confirmation_url: 'https://hel-fi-form-tool.docker.so/fi/kiitos-lomakkeen-tayttamisesta'
   confirmation_title: ''
   confirmation_message: ''

@@ -3,6 +3,7 @@
 namespace Drupal\grants_attachments\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\grants_handler\EventsService;
 use Drupal\webform\Element\WebformCompositeBase;
 
 /**
@@ -46,6 +47,8 @@ class GrantsAttachments extends WebformCompositeBase {
 
     $submission = $form_state->getFormObject()->getEntity();
     $submissionData = $submission->getData();
+
+    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_ATT_OK');
 
     if (isset($submissionData[$element['#webform_key']]) && is_array($submissionData[$element['#webform_key']])) {
 

@@ -44,6 +44,7 @@
     <span{{ legend_span.attributes.addClass(legend_span_classes) }}>{{ legend.title }}</span>
   </legend>
   <div class="fieldset-wrapper">
+    {{ attachmentDeleteLink }}
     {% if errors %}
       <div>
         {{ errors }}

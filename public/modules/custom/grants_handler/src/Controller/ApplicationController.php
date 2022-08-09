@@ -154,7 +154,14 @@ class ApplicationController extends ControllerBase {
     }
 
     // Parameters from the route and/or request as needed.
-    return AccessResult::allowedIf($account->hasPermission('view own webform submission') && $this->singleSubmissionAccess($account, $operation, $webform, $webform_submission));
+    return AccessResult::allowedIf(
+      $account->hasPermission('view own webform submission') &&
+      $this->singleSubmissionAccess(
+        $account,
+        $operation,
+        $webform,
+        $webform_submission
+      ));
   }
 
   /**
@@ -240,7 +247,6 @@ class ApplicationController extends ControllerBase {
         $this->renderer->addCacheableDependency($build, $webform);
         $this->renderer->addCacheableDependency($build, $webform_submission);
         return $build;
-
       }
       else {
         throw new NotFoundHttpException($this->t('Application @number not found.', [

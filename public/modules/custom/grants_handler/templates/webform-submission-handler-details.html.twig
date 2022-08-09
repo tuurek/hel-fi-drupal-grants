@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default theme implementation for webform submission data.
+ *
+ * Available variables:
+ * - webform_submission: The webform submission.
+ * - webform: The webform.
+ *
+ * @see template_preprocess_webform_submission_data()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+    set classes = [
+    'webform-submission-data',
+    'webform-submission-data--webform-' ~ webform.id()|clean_class,
+    view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
+]
+%}
+
+<h3>Handler</h3>
+<div{{ attributes.addClass(classes) }}>
+    {% for string in handler_strings%}
+        <div>
+        {{ string }}
+        </div>
+    {% endfor %}
+</div>
+<small>Miten nää käsittelijätiedot pitäs muotoilla? Kun tulevat siis tollasena stringinä Avus2sta. Entä pitäskö noi monet käsittelijät näyttää? Ehkä päivämäärien kanssa?</small>
