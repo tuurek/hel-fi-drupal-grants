@@ -1119,13 +1119,6 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function preprocessConfirmation(array &$variables) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
    * Cleans up non-array values from array structure.
    *
    * This is due to some configuration error with messages/statuses/events
