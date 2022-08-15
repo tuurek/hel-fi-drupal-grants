@@ -99,18 +99,12 @@ elements: |-
         '#type': textfield
         '#title': www-sivut
         '#title_display': invisible
-    contact_person_section:
+    contact_email_section:
       '#type': webform_section
-      '#title': 'Hakemuksen yhteyshenkilö'
+      '#title': 'Sähköposti'
       contact_markup:
         '#type': webform_markup
-        '#markup': 'Yhteyshenki&ouml;lle l&auml;hetet&auml;&auml;n hakemukseen liittyvi&auml; yhteydenottoja kuten t&auml;ydennys- ja lis&auml;selvityspyynt&ouml;j&auml;. Ilmoita tässä sellainen sähköpostiosoite, jota luetaan aktiivisesti.'
-      contact_person:
-        '#type': textfield
-        '#title': Yhteyshenkilö
-        '#autocomplete': 'off'
-        '#required': true
-        '#size': 63
+        '#markup': 'Ilmoita tässä sellainen yhteisön sähköpostiosoite, jota luetaan aktiivisesti. Sähköpostiin lähetetään avustushakemukseen liittyviä yhteydenottoja esim. lisäselvitys- ja täydennyspyyntöjä.'
       email:
         '#type': email
         '#title': Sähköpostiosoite
@@ -118,6 +112,15 @@ elements: |-
         '#autocomplete': 'off'
         '#size': 63
         '#help': 'Ilmoita s&auml;hk&ouml;postiosoite, johon t&auml;h&auml;n hakemukseen liittyvät viestit sek&auml; her&auml;tteet osoitetaan ja jota luetaan aktiivisesti'
+    contact_person_section:
+      '#type': webform_section
+      '#title': 'Hakemuksen yhteyshenkilö'
+      contact_person:
+        '#type': textfield
+        '#title': Yhteyshenkilö
+        '#autocomplete': 'off'
+        '#required': true
+        '#size': 63
       contact_person_phone_number:
         '#type': textfield
         '#title': Puhelinnumero

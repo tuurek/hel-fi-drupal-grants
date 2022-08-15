@@ -1,0 +1,21 @@
+uuid: f6fd7eec-332c-4dde-9bfe-78eb86596c83
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_category
+    - node.type.faq
+id: node.faq.field_category
+field_name: field_category
+entity_type: node
+bundle: faq
+label: category
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference
