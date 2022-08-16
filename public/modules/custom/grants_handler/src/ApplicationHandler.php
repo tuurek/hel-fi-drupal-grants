@@ -3,6 +3,7 @@
 namespace Drupal\grants_handler;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Access\AccessException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -24,6 +25,8 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * ApplicationUploader service.
@@ -362,7 +365,7 @@ class ApplicationHandler {
     }
 
     if (in_array($submissionStatus, [
-      self::$applicationStatuses['DRAFT'],
+    // self::$applicationStatuses['DRAFT'],.
       self::$applicationStatuses['SUBMITTED'],
       self::$applicationStatuses['SENT'],
       self::$applicationStatuses['RECEIVED'],
@@ -484,6 +487,23 @@ class ApplicationHandler {
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
     $atvSchema = \Drupal::service('grants_metadata.atv_schema');
 
+    /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
+    $grantsProfileService = \Drupal::service('grants_profile.service');
+
+    $destination = \Drupal::request()->getRequestUri();
+
+    $selectedCompany = $grantsProfileService->getSelectedCompany();
+
+    if ($selectedCompany == NULL) {
+      /** @var \Drupal\Core\Url $rrUrl */
+      $rrUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
+
+      /** @var \Symfony\Component\HttpFoundation\RedirectResponse $rr */
+      $rr = new RedirectResponse($rrUrl->toString());
+
+      $rr->send();
+    }
+
     if ($document == NULL) {
       try {
         $document = $atvService->searchDocuments(
@@ -513,6 +533,10 @@ class ApplicationHandler {
         $document->getContent(),
         YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')
       );
+
+      if ($selectedCompany['identifier'] !== $sData['company_number']) {
+        throw new AccessException('Selected company ID does not match with one from document');
+      }
 
       $sData['messages'] = self::parseMessages($sData);
 
