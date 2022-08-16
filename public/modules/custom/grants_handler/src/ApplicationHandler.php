@@ -362,7 +362,7 @@ class ApplicationHandler {
     }
 
     if (in_array($submissionStatus, [
-      self::$applicationStatuses['DRAFT'],
+    // self::$applicationStatuses['DRAFT'],.
       self::$applicationStatuses['SUBMITTED'],
       self::$applicationStatuses['SENT'],
       self::$applicationStatuses['RECEIVED'],
