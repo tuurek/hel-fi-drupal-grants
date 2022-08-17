@@ -10,6 +10,7 @@
  */
 
 use Drupal\user\UserInterface;
+use Drupal\Core\Session\AccountInterface;
 
 function grants_profile_theme(): array {
   $theme['view_application'] = [
@@ -130,6 +131,15 @@ function grants_profile_form_alter(&$form, \Drupal\Core\Form\FormStateInterface 
 
     }
 
-
   }
 }
+
+/**
+ * Implements hook_user_logout().
+ */
+function grants_profile_user_logout(AccountInterface $account) {
+  /** @var \Drupal\grants_profile\GrantsProfileService $profileService */
+  $profileService = \Drupal::service('grants_profile.service');
+  $profileService->clearCache('selected_company');
+}
+

@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\grants_handler\ApplicationHandler;
+use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\webform\Entity\Webform;
 use Drupal\webform\Entity\WebformSubmission;
@@ -72,6 +73,13 @@ class ApplicationController extends ControllerBase {
   protected RequestStack $request;
 
   /**
+   * Access to grants profile.
+   *
+   * @var \Drupal\grants_profile\GrantsProfileService
+   */
+  protected GrantsProfileService $grantsProfileService;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): ApplicationController {
@@ -83,6 +91,7 @@ class ApplicationController extends ControllerBase {
     $instance->entityTypeManager = $container->get('entity_type.manager');
     $instance->renderer = $container->get('renderer');
     $instance->request = $container->get('request_stack');
+    $instance->grantsProfileService = $container->get('grants_profile.service');
     return $instance;
   }
 

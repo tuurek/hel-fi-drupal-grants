@@ -291,7 +291,8 @@ class GrantsProfileController extends ControllerBase {
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-    $selectedCompany = $grantsProfileService->getSelectedCompany();
+    $selectedCompanyData = $grantsProfileService->getSelectedCompany();
+    $selectedCompany = $selectedCompanyData['identifier'];
     $grantsProfile = $grantsProfileService->getGrantsProfile($selectedCompany);
 
     $bankAccount = $grantsProfileService->getBankAccount($bank_account_id);

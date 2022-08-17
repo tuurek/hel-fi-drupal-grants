@@ -820,6 +820,25 @@ class GrantsProfileService {
   /**
    * Whether or not we have made this query?
    *
+   * @param string $key
+   *   Used key for caching.
+   *
+   * @return bool
+   *   Is this cached?
+   */
+  public function clearCache(string $key): bool {
+
+    try {
+      return $this->tempStore->delete($key);
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Whether or not we have made this query?
+   *
    * @param string|null $key
    *   Used key for caching.
    *

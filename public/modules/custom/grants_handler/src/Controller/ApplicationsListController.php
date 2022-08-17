@@ -149,7 +149,7 @@ class ApplicationsListController extends ControllerBase {
 
     try {
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
-        'service' => 'AvustushakemusIntegraatio',
+      // 'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany['identifier'],
       ],
         TRUE);
@@ -174,13 +174,18 @@ class ApplicationsListController extends ControllerBase {
           array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
         ) {
 
-          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
+          try {
+            $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
 
-          $items[] = [
-            '#theme' => 'application_list_item',
-            '#document' => $document,
-            '#submission' => $submission,
-          ];
+            $items[] = [
+              '#theme' => 'application_list_item',
+              '#document' => $document,
+              '#submission' => $submission,
+            ];
+
+          }
+          catch (AtvDocumentNotFoundException $e) {
+          }
         }
       }
     }
