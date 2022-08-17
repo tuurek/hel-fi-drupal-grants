@@ -489,19 +489,14 @@ class ApplicationHandler {
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-
     $destination = \Drupal::request()->getRequestUri();
-
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
+    // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      /** @var \Drupal\Core\Url $rrUrl */
-      $rrUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
-
-      /** @var \Symfony\Component\HttpFoundation\RedirectResponse $rr */
-      $rr = new RedirectResponse($rrUrl->toString());
-
-      $rr->send();
+      $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
+      $redirectResponse = new RedirectResponse($redirectUrl->toString());
+      $redirectResponse->send();
     }
 
     if ($document == NULL) {
@@ -524,11 +519,17 @@ class ApplicationHandler {
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-      throw new AtvDocumentNotFoundException('Submission not found.');
+
+      $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
+      $submissionObject->set('serial', $submissionSerial);
+      $submissionObject->save();
+
+      // Throw new AtvDocumentNotFoundException('Submission not found.');.
     }
     else {
       $submissionObject = reset($result);
-
+    }
+    if ($submissionObject) {
       $sData = $atvSchema->documentContentToTypedData(
         $document->getContent(),
         YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')
@@ -545,6 +546,7 @@ class ApplicationHandler {
 
       return $submissionObject;
     }
+    return NULL;
   }
 
   /**
