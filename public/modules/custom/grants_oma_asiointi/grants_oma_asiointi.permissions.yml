@@ -1,0 +1,4 @@
+administer grants_oma_asiointi configuration:
+  title: 'Administer grants_oma_asiointi configuration'
+  description: 'Optional description.'
+  restrict access: true

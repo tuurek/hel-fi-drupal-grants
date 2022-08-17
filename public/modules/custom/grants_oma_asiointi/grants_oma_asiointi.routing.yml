@@ -1,0 +1,7 @@
+grants_oma_asiointi.example:
+  path: '/grants-oma-asiointi/example'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\grants_oma_asiointi\Controller\GrantsOmaAsiointiController::build'
+  requirements:
+    _permission: 'access content'
