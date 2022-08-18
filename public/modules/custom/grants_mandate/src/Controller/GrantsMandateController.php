@@ -146,7 +146,9 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
       throw new GrantsMandateException("Code Exchange failed, state: " . $state);
     }
 
-    return new RedirectResponse('/grants-profile');
+    // Redirect user to grants profile page.
+    $redirectUrl = Url::fromRoute('grants_profile.show');
+    return new RedirectResponse($redirectUrl->toString());
   }
 
   /**
