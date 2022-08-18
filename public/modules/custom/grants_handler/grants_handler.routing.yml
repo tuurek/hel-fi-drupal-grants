@@ -49,7 +49,7 @@ grants_handler.edit_application:
 #    _entity_access: 'webform_submission.update'
 
 grants_handler.applications_list:
-  path: '/hakemukset'
+  path: '/oma-asiointi/hakemukset'
   defaults:
     _title: 'Hakemukset'
     _controller: '\Drupal\grants_handler\Controller\ApplicationsListController::build'
