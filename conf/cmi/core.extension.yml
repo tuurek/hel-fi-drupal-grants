@@ -43,6 +43,7 @@ module:
   grants_handler: 0
   grants_mandate: 0
   grants_metadata: 0
+  grants_oma_asiointi: 0
   grants_profile: 0
   hal: 0
   hdbt_admin_editorial: 0
