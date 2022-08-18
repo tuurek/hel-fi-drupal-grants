@@ -12,7 +12,6 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\grants_metadata\AtvSchema;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -133,6 +132,10 @@ class ApplicationHandler {
   public static array $applicationTypes = [
     'ECONOMICGRANTAPPLICATION' => [
       'code' => 'YLEIS',
+      'dataDefinition' => [
+        'definitionClass' => 'Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
+        'definitionId' => 'grants_metadata_yleisavustushakemus',
+      ],
       'fi' => 'Yleisavustushakemus',
       'en' => 'EN Yleisavustushakemus',
       'sv' => 'SV Yleisavustushakemus',
@@ -530,9 +533,12 @@ class ApplicationHandler {
       $submissionObject = reset($result);
     }
     if ($submissionObject) {
+
+      $dataDefinition = self::getDataDefinition($document->getType());
+
       $sData = $atvSchema->documentContentToTypedData(
         $document->getContent(),
-        YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')
+        $dataDefinition
       );
 
       if ($selectedCompany['identifier'] !== $sData['company_number']) {
@@ -881,6 +887,19 @@ class ApplicationHandler {
    */
   public function clearCache(string $applicationNumber) {
     $this->atvService->clearCache($applicationNumber);
+  }
+
+  /**
+   * Get data definition class from application type.
+   *
+   * @param string $type
+   *   Type of the application.
+   */
+  public static function getDataDefinition(string $type) {
+    $defClass = self::$applicationTypes[$type]['dataDefinition']['definitionClass'];
+    $defId = self::$applicationTypes[$type]['dataDefinition']['definitionId'];
+    return $defClass::create($defId);
+
   }
 
 }

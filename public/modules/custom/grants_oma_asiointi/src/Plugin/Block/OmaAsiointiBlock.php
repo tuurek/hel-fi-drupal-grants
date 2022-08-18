@@ -3,7 +3,6 @@
 namespace Drupal\grants_oma_asiointi\Plugin\Block;
 
 use Drupal\Core\Url;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -62,8 +61,8 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   Plugin.
    * @param mixed $plugin_definition
    *   Plugin def.
-   * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helfi_helsinki_profiili_userdata
-   *   The helfi_helsinki_profiili.userdata service.
+   * @param \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData $helsinkiProfiiliUserData
+   *   Helsinki profile user data.
    * @param \Drupal\grants_profile\GrantsProfileService $grants_profile_service
    *   The grants_profile.service service.
    * @param \Drupal\grants_handler\ApplicationHandler $grants_handler_application_handler
@@ -134,20 +133,19 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
     }
 
     $helsinkiProfileData = $this->helfiHelsinkiProfiiliUserdata->getUserProfileData();
+    $appEnv = ApplicationHandler::getAppEnv();
+
+    $messages = [];
+    $submissions = [];
 
     try {
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
         'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany['identifier'],
-      // 'lookfor' => 'LOCAL',
+        'lookfor' => 'appenv:' . $appEnv,
       ]);
 
-      $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
-
       $appEnv = ApplicationHandler::getAppEnv();
-
-      $messages = [];
-      $submissions = [];
 
       /**
        * Create rows for table.
@@ -156,8 +154,6 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
        * @var  \Drupal\helfi_atv\AtvDocument $document
        */
       foreach ($applicationDocuments as $key => $document) {
-        // @todo when ATV/integration supports search via meta fields,
-        // we can search per environment.
         if (
           str_contains($document->getTransactionId(), $appEnv) &&
           array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
@@ -183,8 +179,8 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
     }
 
     $lang = \Drupal::languageManager()->getCurrentLanguage();
-
-    $build['content'] = [
+    ksort($submissions);
+    $build = [
       '#theme' => 'grants_oma_asiointi_block',
       '#messages' => $messages,
       '#submissions' => $submissions,
