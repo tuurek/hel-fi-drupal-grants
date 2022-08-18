@@ -1,0 +1,27 @@
+
+<div class="oma-asiointi-block">
+    <div class="header">
+        <span class="user">{{ userProfileData['firstName'] }} {{ userProfileData['lastName'] }}</span>
+        <span class="link"><a href="/oma-asiointi">Siirry omaan asiointiin</a></span>
+    </div>
+    <div class="messages">
+        <h4>Viestit</h4>
+        {% for message in messages %}
+            <div class="message">
+                Hakemusnumero: {{ message['caseId'] }} <br />
+                Viesti: {{ message['body'] }} <br />
+                Link: <a href="{{ path('grants_handler.view_application', {'submission_id': message['caseId']}) }}">{{ message['caseId'] }}</a>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="submissions">
+        <h4>Viimeiset hakemukset</h4>
+        {% for submission in submissions %}
+            <div class="submission">
+                Type: {{ applicationTypes[submission['application_type']][lang] }} <br />
+                Viimeisin tallennus: {{ submission['form_timestamp'] }} <br />
+                Link: <a href="{{ path('grants_handler.view_application', {'submission_id': submission['application_number']}) }}">{{ submission['application_number'] }}</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

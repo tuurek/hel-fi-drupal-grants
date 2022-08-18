@@ -1,5 +1,5 @@
 grants_profile.show:
-  path: '/grants-profile'
+  path: '/oma-asiointi/hakuprofiili'
   defaults:
     _title: 'Show Grants profile'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::ownProfile'
@@ -7,7 +7,7 @@ grants_profile.show:
     _permission: 'view own grants_profile'
 
 grants_profile.company_addresses:
-  path: '/grants-profile/address'
+  path: '/oma-asiointi/hakuprofiili/address'
   defaults:
     _title: 'Saved addresses'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::ownAddresses'
@@ -15,7 +15,7 @@ grants_profile.company_addresses:
     _permission: 'administer own grants_profile'
 
 grants_profile.company_addresses.remove:
-  path: '/grants-profile/address/{address_id}/delete'
+  path: '/oma-asiointi/hakuprofiili/address/{address_id}/delete'
   defaults:
     _title: 'Delete addresses'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteAddress'
@@ -23,7 +23,7 @@ grants_profile.company_addresses.remove:
     _permission: 'administer own grants_profile'
 
 grants_profile.company_address_modal_form:
-  path: '/grants-profile/address-modal/{address_id}/{nojs}'
+  path: '/oma-asiointi/hakuprofiili/address-modal/{address_id}/{nojs}'
   defaults:
     _form: '\Drupal\grants_profile\Form\ModalAddressForm'
     _title: 'Edit address'
@@ -31,7 +31,7 @@ grants_profile.company_address_modal_form:
     _permission: 'administer own grants_profile'
 
 grants_profile.application_official:
-  path: '/grants-profile/application-officials'
+  path: '/oma-asiointi/hakuprofiili/application-officials'
   defaults:
     _title: 'Address'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::applicationOfficials'
@@ -39,7 +39,7 @@ grants_profile.application_official:
     _permission: 'administer own grants_profile'
 
 grants_profile.application_official_modal_form:
-  path: '/grants-profile/application-official-modal/{official_id}/{nojs}'
+  path: '/oma-asiointi/hakuprofiili/application-official-modal/{official_id}/{nojs}'
   defaults:
     _form: '\Drupal\grants_profile\Form\ModalApplicationOfficialForm'
     _title: 'Edit official'
@@ -47,7 +47,7 @@ grants_profile.application_official_modal_form:
     _permission: 'administer own grants_profile'
 
 grants_profile.application_official.remove:
-  path: '/grants-profile/application-officials/{official_id}/delete'
+  path: '/oma-asiointi/hakuprofiili/application-officials/{official_id}/delete'
   defaults:
     _title: 'Delete official'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteOfficial'
@@ -55,7 +55,7 @@ grants_profile.application_official.remove:
     _permission: 'administer own grants_profile'
 
 grants_profile.bank_account:
-  path: '/grants-profile/bank-accounts'
+  path: '/oma-asiointi/hakuprofiili/bank-accounts'
   defaults:
     _title: 'Bank account'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::bankAccounts'
@@ -63,7 +63,7 @@ grants_profile.bank_account:
     _permission: 'administer own grants_profile'
 
 grants_profile.bank_account_form_modal_form:
-  path: '/grants-profile/bank-accounts-modal/{bank_account_id}/{nojs}'
+  path: '/oma-asiointi/hakuprofiili/bank-accounts-modal/{bank_account_id}/{nojs}'
   defaults:
     _form: '\Drupal\grants_profile\Form\ModalBankAccountForm'
     _title: 'Edit bank account'
@@ -71,7 +71,7 @@ grants_profile.bank_account_form_modal_form:
     _permission: 'administer own grants_profile'
 
 grants_profile.bank_account.remove:
-  path: '/grants-profile/bank-accounts/{bank_account_id}/delete'
+  path: '/oma-asiointi/hakuprofiili/bank-accounts/{bank_account_id}/delete'
   defaults:
     _title: 'Delete bank account'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteBankAccount'
@@ -79,7 +79,7 @@ grants_profile.bank_account.remove:
     _permission: 'administer own grants_profile'
 
 grants_profile.bank_account_delete_attachment:
-  path: '/grants-profile/bank-accounts/{bank_account_id}/delete-confirmation'
+  path: '/oma-asiointi/hakuprofiili/bank-accounts/{bank_account_id}/delete-confirmation'
   defaults:
     _title: 'Delete confirmation'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteBankAccountAttachment'

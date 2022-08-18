@@ -7,7 +7,7 @@ grants_handler.clear-navigations:
     _permission: 'access content'
 
 grants_handler.completion:
-  path: 'hakemus/{submission_id}/completion'
+  path: '/hakemus/{submission_id}/completion'
   defaults:
     _title_callback: '\Drupal\grants_handler\Controller\CompletionController::getTitle'
     _controller: '\Drupal\grants_handler\Controller\CompletionController::build'
@@ -15,7 +15,7 @@ grants_handler.completion:
     _permission: 'access content'
 
 grants_handler.view_application:
-  path: 'hakemus/{submission_id}/view'
+  path: '/hakemus/{submission_id}/view'
   defaults:
     _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getTitle'
     _controller: '\Drupal\grants_handler\Controller\ApplicationController::view'

@@ -804,7 +804,7 @@ class ApplicationHandler {
    * @return array
    *   Parsed messages with read information
    */
-  public static function parseMessages(array $data) {
+  public static function parseMessages(array $data, $onlyUnread = FALSE) {
 
     $messageEvents = array_filter($data['events'], function ($event) {
       if ($event['eventType'] == EventsService::$eventTypes['MESSAGE_READ']) {
@@ -816,15 +816,27 @@ class ApplicationHandler {
     $eventIds = array_column($messageEvents, 'eventTarget');
 
     $messages = [];
+    $unread = [];
 
     foreach ($data['messages'] as $key => $message) {
+      $msgUnread = NULL;
+      $ts = strtotime($message["sendDateTime"]);
       if (in_array($message['messageId'], $eventIds)) {
         $message['messageStatus'] = 'READ';
+        $msgUnread = FALSE;
       }
       else {
         $message['messageStatus'] = 'UNREAD';
+        $msgUnread = TRUE;
       }
-      $messages[] = $message;
+
+      if ($onlyUnread == TRUE && $msgUnread == TRUE) {
+        $unread[$ts] = $message;
+      }
+      $messages[$ts] = $message;
+    }
+    if ($onlyUnread == TRUE) {
+      return $unread;
     }
     return $messages;
   }
