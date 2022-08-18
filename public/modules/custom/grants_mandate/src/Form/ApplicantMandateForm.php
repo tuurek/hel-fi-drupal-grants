@@ -72,21 +72,20 @@ class ApplicantMandateForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
 
-    $form['applicant_type'] = [
-      '#type' => 'radios',
-      '#title' => $this
-        ->t('Select applicant type'),
-      '#options' => [
-        'registered_community' => $this
-          ->t('Registered community'),
-    // 'unregistered_community' => $this
-    // ->t('UNregistered community'),
-    // 'private_person' => $this
-    // ->t('Private person'),
-      ],
-      '#required' => TRUE,
-    ];
-
+    // $form['applicant_type'] = [
+    //      '#type' => 'radios',
+    //      '#title' => $this
+    //        ->t('Select applicant type'),
+    //      '#options' => [
+    //        'registered_community' => $this
+    //          ->t('Registered community'),
+    //    // 'unregistered_community' => $this
+    //    // ->t('UNregistered community'),
+    //    // 'private_person' => $this
+    //    // ->t('Private person'),
+    //      ],
+    //      '#required' => TRUE,
+    //    ];
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -110,7 +109,9 @@ class ApplicantMandateForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $selectedType = $form_state->getValue('applicant_type');
+    // $selectedType = $form_state->getValue('applicant_type');
+    $selectedType = 'registered_community';
+
     $this->grantsProfileService->setApplicantType($selectedType);
 
     if ($selectedType == 'registered_community' || $selectedType == 'private_person') {
