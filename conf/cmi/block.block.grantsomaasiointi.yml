@@ -5,6 +5,7 @@ dependencies:
   module:
     - grants_oma_asiointi
     - system
+    - user
   theme:
     - helfi_grant_applications
 id: grantsomaasiointi
@@ -23,3 +24,10 @@ visibility:
     id: request_path
     negate: false
     pages: '<front>'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      helsinkiprofiili: helsinkiprofiili
