@@ -52,6 +52,8 @@ class GrantsAttachmentsController extends ControllerBase {
    *   Application handler.
    * @param \Drupal\Core\Http\RequestStack $requestStack
    *   Drupal requests.
+   * @param \Drupal\grants_handler\EventsService $eventsService
+   *   Use submission events productively.
    */
   public function __construct(
     AtvService $helfi_atv,
@@ -134,7 +136,8 @@ class GrantsAttachmentsController extends ControllerBase {
         }
       }
 
-      // Build data -> should validate ok, since we're only deleting attachments.
+      // Build data -> should validate ok, since we're
+      // only deleting attachments.
       $applicationData = $this->applicationHandler->webformToTypedData(
         $submissionData,
         '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',

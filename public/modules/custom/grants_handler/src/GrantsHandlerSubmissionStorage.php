@@ -118,7 +118,11 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
           $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
           /** @var \Drupal\helfi_atv\AtvDocument $document */
           $document = reset($results);
-          $appData = $this->atvSchema->documentContentToTypedData($document->getContent(), $dataDefinition);
+          $appData = $this->atvSchema->documentContentToTypedData(
+            $document->getContent(),
+            $dataDefinition,
+            $document->getMetadata()
+          );
           $submission->setData($appData);
 
           // Try to invalidate caches for this submission so that updated data

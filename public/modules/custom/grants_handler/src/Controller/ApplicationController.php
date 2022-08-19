@@ -79,6 +79,13 @@ class ApplicationController extends ControllerBase {
   protected GrantsProfileService $grantsProfileService;
 
   /**
+   * Application handler.
+   *
+   * @var \Drupal\grants_handler\ApplicationHandler
+   */
+  protected ApplicationHandler $applicationHandler;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): ApplicationController {
@@ -91,6 +98,7 @@ class ApplicationController extends ControllerBase {
     $instance->renderer = $container->get('renderer');
     $instance->request = $container->get('request_stack');
     $instance->grantsProfileService = $container->get('grants_profile.service');
+    $instance->applicationHandler = $container->get('grants_handler.application_handler');
     return $instance;
   }
 
@@ -217,6 +225,14 @@ class ApplicationController extends ControllerBase {
 
       if ($webform_submission != NULL) {
         $webform = $webform_submission->getWebform();
+        $submissionData = $webform_submission->getData();
+        $saveIdValidates = $this->applicationHandler->validateDataIntegrity(
+          $webform_submission,
+          NULL,
+          $submissionData['application_number'],
+          $submissionData['metadata']['saveid'] ?? '');
+
+        $d = 'asdf';
 
         // Set webform submission template.
         $build = [

@@ -26,7 +26,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['fileName'] = DataDefinition::create('string')
-        // ->setRequired(TRUE)
+        ->setRequired(FALSE)
         ->setLabel('File name.')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
@@ -35,7 +35,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['fileType'] = DataDefinition::create('integer')
-        // ->setRequired(TRUE)
+        ->setRequired(TRUE)
         ->setLabel('File type.')
         ->setSetting('typeOverride', [
           'dataType' => 'string',
@@ -48,7 +48,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['integrationID'] = DataDefinition::create('string')
-        // ->setRequired(FALSE)
+        ->setRequired(FALSE)
         ->setLabel('Integration ID')
         ->setSetting('jsonPath', [
           'attachmentsInfo',
@@ -57,7 +57,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['isDeliveredLater'] = DataDefinition::create('string')
-        // ->setRequired(TRUE)
+        ->setRequired(TRUE)
         ->setLabel('Is delivered later')
         ->setSetting('typeOverride', [
           'dataType' => 'string',
@@ -70,7 +70,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['isIncludedInOtherFile'] = DataDefinition::create('string')
-        // ->setRequired(TRUE)
+        ->setRequired(TRUE)
         ->setLabel('In in other attachment')
         ->setSetting('typeOverride', [
           'dataType' => 'string',
@@ -83,7 +83,7 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
         ]);
 
       $info['isNewAttachment'] = DataDefinition::create('string')
-        // ->setRequired(TRUE)
+        ->setRequired(FALSE)
         ->setLabel('Attachment is new')
         ->setSetting('typeOverride', [
           'dataType' => 'string',

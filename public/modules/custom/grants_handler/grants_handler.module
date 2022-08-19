@@ -1002,6 +1002,8 @@ function grants_handler_preprocess_webform_submission_attachment_list(&$variable
 }
 
 
+
+
 /**
  * Implements hook_preprocess_HOOK().
  */
@@ -1127,7 +1129,6 @@ function grants_handler_preprocess_webform_submission_information(&$variables){
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'target' => '_blank',
         'class' => ['hds-button','hod-button--secondary']
       ],
     ]

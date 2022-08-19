@@ -491,6 +491,19 @@ class GrantsHandler extends WebformHandlerBase {
       $thisYearPlus1 => $thisYearPlus1,
       $thisYearPlus2 => $thisYearPlus2,
     ];
+
+    if ($this->applicationNumber) {
+      $dataIntegrityStatus = $this->applicationHandler->validateDataIntegrity(
+      NULL,
+      $submissionData,
+      $this->applicationNumber,
+      $submissionData['metadata']['saveid'] ?? '');
+
+      if ($dataIntegrityStatus != 'OK') {
+        $form['#disabled'] = TRUE;
+        $this->messenger()->addWarning($this->t('Data integrity mismatch. Please refresh form in a moment'));
+      }
+    }
   }
 
   /**
@@ -1040,29 +1053,19 @@ class GrantsHandler extends WebformHandlerBase {
         // $redirectResponse->send();
       }
       else {
-        $redirectUrl = Url::fromRoute(
-          'grants_handler.completion',
-          ['submission_id' => $this->applicationNumber],
-          [
-            'attributes' => [
-              'data-drupal-selector' => 'application-saved-successfully-link',
-            ],
-          ]
-        );
-
         $this->messenger()
           ->addStatus(
             t(
               'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
               [
                 '@number' => $this->applicationNumber,
-                '@link' => Link::fromTextAndUrl('here', $url)->toString(),
+                '@link' => 'Support link',
               ]
             )
           );
       }
       // $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      //      return $redirectResponse;
+      //  return $redirectResponse;
       $form_state->setRedirect(
                 'grants_handler.completion',
                 ['submission_id' => $this->applicationNumber],

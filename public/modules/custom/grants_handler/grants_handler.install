@@ -7,6 +7,73 @@
 function grants_handler_schema(): array {
   $schema = [];
 
+  $schema['grants_handler_saveids'] = [
+    'description' => 'Table that contains saveids for submitted applications, for data integrity checks.',
+    'fields' => [
+      'lid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique log event ID.',
+      ],
+      'webform_id' => [
+        'description' => 'The webform id.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'sid' => [
+        'description' => 'The webform submission id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'application_number' => [
+        'description' => 'Application number.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+      ],
+      'handler_id' => [
+        'description' => 'The webform handler id.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+      ],
+      'uid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid of the user who triggered the event.',
+      ],
+      'user_uuid' => [
+        'description' => 'User helsinkiprofiili id',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'saveid' => [
+        'description' => 'Saveid used',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'timestamp' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Unix timestamp of when event occurred.',
+      ],
+    ],
+    'primary key' => ['lid'],
+    'indexes' => [
+      'webform_sid_saveid' => ['webform_id', 'sid', 'saveid'],
+      'webform_appno_saveid' => ['webform_id', 'application_number', 'saveid'],
+    ],
+  ];
+
   $schema['grants_handler_log'] = [
     'description' => 'Table that contains logs of all webform navigation events.',
     'fields' => [
@@ -84,3 +151,14 @@ function grants_handler_update_9000(&$sandbox) {
     ->schema()
     ->createTable('grants_handler_log', $schema['grants_handler_log']);
 }
+
+/**
+ * Create DB table for grants handler.
+ */
+function grants_handler_update_9001(&$sandbox) {
+  $schema = grants_handler_schema();
+  \Drupal::database()
+    ->schema()
+    ->createTable('grants_handler_saveids', $schema['grants_handler_saveids']);
+}
+

@@ -73,19 +73,19 @@ class ApplicantMandateForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
 
     // $form['applicant_type'] = [
-    //      '#type' => 'radios',
-    //      '#title' => $this
-    //        ->t('Select applicant type'),
-    //      '#options' => [
-    //        'registered_community' => $this
-    //          ->t('Registered community'),
-    //    // 'unregistered_community' => $this
-    //    // ->t('UNregistered community'),
-    //    // 'private_person' => $this
-    //    // ->t('Private person'),
-    //      ],
-    //      '#required' => TRUE,
-    //    ];
+    // '#type' => 'radios',
+    // '#title' => $this
+    // ->t('Select applicant type'),
+    // '#options' => [
+    // 'registered_community' => $this
+    // ->t('Registered community'),
+    // 'unregistered_community' => $this
+    // ->t('UNregistered community'),
+    // 'private_person' => $this
+    // ->t('Private person'),
+    // ],
+    // '#required' => TRUE,
+    // ];
     $form['actions'] = [
       '#type' => 'actions',
     ];
