@@ -296,6 +296,39 @@ class ApplicationHandler {
   }
 
   /**
+   * Check if given submission is allowed to be edited.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission|null $submission
+   *   Submission in question.
+   * @param string $status
+   *   If no object is available, do text comparison.
+   *
+   * @return bool
+   *   Is submission editable?
+   */
+  public static function isSubmissionFinished(?WebformSubmission $submission, string $status = ''): bool {
+    if (NULL === $submission) {
+      $submissionStatus = $status;
+    }
+    else {
+      $data = $submission->getData();
+      $submissionStatus = $data['status'];
+    }
+
+    if (in_array($submissionStatus, [
+      self::$applicationStatuses['READY'],
+      self::$applicationStatuses['DONE'],
+      self::$applicationStatuses['DELETED'],
+      self::$applicationStatuses['CANCELED'],
+      self::$applicationStatuses['CANCELLED'],
+      self::$applicationStatuses['CLOSED'],
+    ])) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
    * Figure out status for new or updated application submission.
    *
    * @param string $triggeringElement
@@ -899,6 +932,108 @@ class ApplicationHandler {
     $defClass = self::$applicationTypes[$type]['dataDefinition']['definitionClass'];
     $defId = self::$applicationTypes[$type]['dataDefinition']['definitionId'];
     return $defClass::create($defId);
+
+  }
+
+  /**
+   * Get company applications, either sorted by finished or all in one array.
+   *
+   * @param array $selectedCompany
+   *   Company data.
+   * @param string $appEnv
+   *   Environment.
+   * @param bool $sortByFinished
+   *   When true, results will be sorted by finished status.
+   *
+   * @return array
+   *   Submissions in array.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public static function getCompanyApplications(
+    array $selectedCompany,
+    string $appEnv,
+    bool $sortByFinished = FALSE,
+    bool $sortByStatus = FALSE,
+  string $themeHook = '') {
+
+    /** @var \Drupal\helfi_atv\AtvService $atvService */
+    $atvService = \Drupal::service('helfi_atv.atv_service');
+
+    $applications = [];
+    $finished = [];
+    $unfinished = [];
+
+    try {
+      $applicationDocuments = $atvService->searchDocuments([
+        'service' => 'AvustushakemusIntegraatio',
+        'business_id' => $selectedCompany['identifier'],
+        'lookfor' => 'appenv:' . $appEnv,
+      ]);
+
+      /**
+       * Create rows for table.
+       *
+       * @var integer $key
+       * @var  \Drupal\helfi_atv\AtvDocument $document
+       */
+      foreach ($applicationDocuments as $key => $document) {
+        // Make sure we only use submissions from this env and the type is
+        // acceptable one.
+        if (
+          str_contains($document->getTransactionId(), $appEnv) &&
+          array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
+        ) {
+
+          try {
+            $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
+            $submissionData = $submissionObject->getData();
+            $ts = strtotime($submissionData['form_timestamp']);
+            if ($themeHook !== '') {
+              $submission = [
+                '#theme' => $themeHook,
+                '#submission' => $submissionObject,
+                '#document' => $document,
+              ];
+            }
+            else {
+              $submission = $submissionObject;
+            }
+            if ($sortByFinished == TRUE) {
+              if (self::isSubmissionFinished($submission)) {
+                $finished[$ts] = $submission;
+              }
+              else {
+                $unfinished[$ts] = $submission;
+              }
+            }
+            elseif ($sortByStatus == TRUE) {
+              $applications[$submissionData['status']][] = $submission;
+            }
+            else {
+              $applications[$ts] = $submission;
+            }
+          }
+          catch (AtvDocumentNotFoundException $e) {
+          }
+        }
+      }
+    }
+    catch (\Exception $e) {
+    }
+
+    if ($sortByFinished == TRUE) {
+      ksort($finished);
+      ksort($unfinished);
+      return [
+        'finished' => $finished,
+        'unifinished' => $unfinished,
+      ];
+    }
+    else {
+      ksort($applications);
+      return $applications;
+    }
 
   }
 

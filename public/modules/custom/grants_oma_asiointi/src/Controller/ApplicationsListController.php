@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\grants_handler\Controller;
+namespace Drupal\grants_oma_asiointi\Controller;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

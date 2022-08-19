@@ -70,6 +70,11 @@ function grants_handler_theme(): array {
         'submission' => NULL,
       ],
     ],
+    'webform_submission_attachment_list' => [
+      'variables' => [
+        'submission' => NULL,
+      ],
+    ],
     'webform_submission_status_history' => [
       'variables' => [
         'submission' => NULL,
@@ -125,6 +130,16 @@ function grants_handler_theme(): array {
       'variables' => [
         'submission' => NULL,
         'document' => NULL,
+      ],
+    ],
+    'message_list' => [
+      'variables' => [
+        'items' => NULL,
+      ],
+    ],
+    'message_list_item' => [
+      'variables' => [
+        'message' => NULL,
       ],
     ],
   ];
@@ -586,14 +601,6 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     $variables["elements"]["data"]["3_yhteison_tiedot"]["#element"]["business_info"]["community_purpose"] = $data["business_purpose"];
   }
 
-  if (isset($data['events'])) {
-    // parse handler event
-    $variables['applicationHandlerEvent'] = [
-      '#theme' => 'webform_submission_handler_details',
-      '#submission' => $submission,
-    ];
-  }
-
   // parse messages
   $variables['messages'] = [
     '#theme' => 'webform_submission_messages',
@@ -646,73 +653,28 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   /** @var ApplicationHandler $applicationHandler */
   $applicationHandler = \Drupal::service('grants_handler.application_handler');
 
+
+
+  $messages = [];
+  if (isset($submissionData['messages']) && is_array($submissionData['messages'])) {
+    foreach ($submissionData['messages'] as $message) {
+      $messages[] = [
+        '#theme' => 'message_list_item',
+        '#message' => $message
+      ];
+    }
+  }
+  $variables['messages'] = [
+    '#theme' => 'message_list',
+    '#items' => $messages
+  ];
+
   // if submission is ok for messaging
   if (ApplicationHandler::isSubmissionMessageable($submission, NULL)) {
     // add message form
     $variables['message_form'] = \Drupal::formBuilder()
       ->getForm('Drupal\grants_handler\Form\MessageForm', $submission);
   }
-
-  $messages = [];
-  if (isset($submissionData['messages']) && is_array($submissionData['messages'])) {
-    foreach ($submissionData['messages'] as $message) {
-      $dt = new DateTime($message['sendDateTime']);
-      $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
-
-      $build = [
-        '#theme' => 'webform_submission_message_attachments',
-        '#attachments' => $message['attachments'] ?? [],
-      ];
-
-      if ($message['messageStatus'] == 'UNREAD') {
-        $markReadUrl = Url::fromRoute('grants_handler.message_read', [
-          'message_id' => $message['messageId'],
-          'application_number' => $submissionData['application_number'],
-        ],
-        [
-          'query' => [
-            'destination' => $currentDestination
-          ]
-        ]);
-        $markReadLink = Link::fromTextAndUrl(t('Mark read'), $markReadUrl);
-      }
-      else {
-        $markReadLink = '';
-      }
-
-      $messages[] = [
-        'class' => $message['messageStatus'],
-        'data' => [
-          'date' => $dt->format('d.m.Y H:i:s'),
-          'sender' => $message['sentBy'],
-          'body' => $message['body'] ?? '',
-          'attachments' => isset($message['attachments']) ? \Drupal::service('renderer')
-            ->render($build) : '',
-          'read' => $markReadLink
-        ]
-      ];
-    }
-  }
-
-  $table = [
-    '#type' => 'table',
-    '#header' => [
-      'date' => t('Date'),
-      'sender' => t('Application #'),
-      'body' => t('Message'),
-      'attachments' => t('Attachments'),
-      'read' => t('Attachments'),
-    ],
-    '#rows' => array_reverse($messages),
-    '#empty' => t('No messages has been found.'),
-    '#attributes' => [
-      'class' => ['message-table'],
-    ],
-  ];
-
-  $variables['messages'] = $table;
-
-
 }
 
 
@@ -731,26 +693,18 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
       $eventDate = new \DateTime($event['timeCreated']);
       $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $history[] = [
-        'date' => $eventDate->format('d.m.Y H:i'),
-        'citizenCaseStatus' => t(ucfirst(strtolower($event['citizenCaseStatus']))),
-        'eventSource' => $event['eventSource'] ?? '',
-      ];
+      $history[] = t(ucfirst(strtolower($event['citizenCaseStatus']))) . ': ' . $eventDate->format('d.m.Y H:i');
     }
   }
 
-  $table = [
-    '#type' => 'table',
-    '#header' => [
-      'date' => t('Date'),
-      'citizenCaseStatus' => t('Status'),
-      'eventSource' => t('Source'),
-    ],
-    '#rows' => $history,
-    '#empty' => t('No status updates has been found.'),
+  $variables['history'] = [
+    '#theme' => 'item_list',
+    '#list_type' => 'ul',
+    '#title' => t('Hakemuksen tila'),
+    '#items' => $history,
+    '#attributes' => ['class' => 'application-status-history'],
+//    '#wrapper_attributes' => ['class' => 'container'],
   ];
-
-  $variables['history'] = $table;
 }
 
 /**
@@ -1020,6 +974,33 @@ function grants_handler_preprocess_webform_submission_handler_details(&$variable
 
 }
 
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_webform_submission_attachment_list(&$variables) {
+
+  /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+  $submission = $variables['submission'];
+  $submissionData = $submission->getData();
+
+  $attachments = [];
+
+  foreach ($submissionData['attachments'] as $att) {
+    if (isset($att['fileName'])) {
+      $attachments[] = $att['fileName'];
+    }
+  }
+
+  $variables['attachments'] = [
+    '#theme' => 'item_list',
+    '#list_type' => 'ul',
+    '#title' => t('Application attachments'),
+    '#items' => $attachments,
+    '#attributes' => ['class' => 'application-attachment-list'],
+  ];
+
+}
+
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -1087,3 +1068,100 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
 
 }
+
+/**
+ * Implements hook_preprocess().
+ */
+function grants_handler_preprocess_message_list_item(&$variables) {
+  $currentUri = \Drupal::request()->getUri();
+  $currentHost = \Drupal::request()->getSchemeAndHttpHost();
+  $currentDestination = str_replace($currentHost, '', $currentUri);
+
+  $message = $variables['message'];
+
+  if ($message['messageStatus'] == 'UNREAD') {
+    $markReadUrl = Url::fromRoute('grants_handler.message_read', [
+      'message_id' => $message['messageId'],
+      'application_number' => $message['caseId'],
+    ],
+    [
+      'query' => [
+        'destination' => $currentDestination
+      ]
+    ]);
+    $markReadLink = Link::fromTextAndUrl(t('Mark read'), $markReadUrl);
+  }
+  else {
+    $markReadLink = '';
+  }
+
+  $variables['markReadLink'] = $markReadLink;
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+function grants_handler_preprocess_message_list(&$variables) {
+
+}
+
+/**
+ * @param $variables
+ *
+ * @return void
+ */
+function grants_handler_preprocess_webform_submission_information(&$variables){
+
+  /** @var \Drupal\webform\Entity\WebformSubmission $submission */
+  $submission = $variables["webform_submission"];
+  $submissionData = $submission->getData();
+
+  $webform = $submission->getWebForm();
+
+  $editApplicationUrl = Url::fromRoute(
+    'grants_handler.edit_application',
+    [
+      'webform' => $webform->id(),
+      'webform_submission' => $submission->id(),
+    ],
+    [
+      'attributes' => [
+        'data-drupal-selector' => 'application-edit-link',
+        'target' => '_blank',
+        'class' => ['hds-button','hod-button--secondary']
+      ],
+    ]
+  );
+
+  $editApplicationLink = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
+
+  $variables['editApplicationLink'] = $editApplicationLink;
+
+  $variables['formTitle'] = $webform->label();
+
+  $variables['printLink'] = '';
+
+  $variables['copyLink'] = '';
+
+  $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
+  $variables['applicationSent'] = $submissionData['form_timestamp'];
+  $variables['history'] = [
+    '#theme' => 'webform_submission_status_history',
+    '#submission' => $submission
+  ];
+
+  $variables['handler'] = [
+    '#theme' => 'webform_submission_handler_details',
+    '#submission' => $submission
+  ];
+
+
+  $variables['attachments'] = [
+    '#theme' => 'webform_submission_attachment_list',
+    '#submission' => $submission
+  ];
+
+
+
+}
+

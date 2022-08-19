@@ -1,0 +1,12 @@
+
+<div class="oma-asiointi">
+    {% if unread %}
+        <ul class="unreadlist">
+        {% for msg in unread %}
+            <li>{{ msg }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="drafts">{{ drafts }}</div>
+    <div class="others">{{ others }}</div>
+</div>

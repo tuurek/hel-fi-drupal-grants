@@ -9,7 +9,7 @@ _core:
 id: helfi_grant_applications_local_tasks
 theme: helfi_grant_applications
 region: tools
-weight: -4
+weight: -9
 provider: null
 plugin: local_tasks_block
 settings:

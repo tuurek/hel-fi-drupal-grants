@@ -145,8 +145,6 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
         'lookfor' => 'appenv:' . $appEnv,
       ]);
 
-      $appEnv = ApplicationHandler::getAppEnv();
-
       /**
        * Create rows for table.
        *

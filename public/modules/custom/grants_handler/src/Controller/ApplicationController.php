@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -236,7 +235,7 @@ class ApplicationController extends ControllerBase {
 
         // Information.
         $build['information'] = [
-          '#type' => 'webform_submission_information',
+          '#theme' => 'webform_submission_information',
           '#webform_submission' => $webform_submission,
           '#source_entity' => $webform_submission,
         ];
@@ -343,16 +342,16 @@ class ApplicationController extends ControllerBase {
   /**
    * Returns a page title.
    */
-  public function getEditTitle($webform_submission): TranslatableMarkup {
+  public function getEditTitle($webform_submission): string {
     $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-    return $this->t('Edit application: @submissionId', ['@submissionId' => $applicationNumber]);
+    return $applicationNumber;
   }
 
   /**
    * Returns a page title.
    */
-  public function getTitle($submission_id): TranslatableMarkup {
-    return $this->t('View application: @submissionId', ['@submissionId' => $submission_id]);
+  public function getTitle($submission_id): string {
+    return $submission_id;
   }
 
 }
