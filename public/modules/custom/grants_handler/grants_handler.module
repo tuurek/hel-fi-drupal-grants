@@ -99,6 +99,11 @@ function grants_handler_theme(): array {
         'editForm' => NULL,
       ],
     ],
+//    'grants_handler_copy_application' => [
+//      'variables' => [
+//        'submission' => NULL,
+//      ],
+//    ],
     // Override the webform progress bar so we can add our page classes.
     'webform_progress_bar' => [
       'variables' => [
@@ -1120,6 +1125,21 @@ function grants_handler_preprocess_webform_submission_information(&$variables){
 
   $webform = $submission->getWebForm();
 
+  $printApplicationUrl = Url::fromRoute(
+    'grants_webform_print.submission_print',
+    [
+      'submission_id' => $submissionData['application_number'],
+    ],
+    [
+      'attributes' => [
+        'data-drupal-selector' => 'application-edit-link',
+        'class' => ['hds-button','hod-button--secondary']
+      ],
+    ]
+  );
+
+  $printApplicationLink = Link::fromTextAndUrl(t('Print application'), $printApplicationUrl);
+
   $editApplicationUrl = Url::fromRoute(
     'grants_handler.edit_application',
     [
@@ -1136,7 +1156,24 @@ function grants_handler_preprocess_webform_submission_information(&$variables){
 
   $editApplicationLink = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
 
+  $copyApplicationUrl = Url::fromRoute(
+    'grants_handler.copy_application',
+    [
+      'submission_id' => $submissionData['application_number'],
+    ],
+    [
+      'attributes' => [
+        'data-drupal-selector' => 'application-copy-link',
+        'class' => ['hds-button','hod-button--secondary']
+      ],
+    ]
+  );
+
+  $copyApplicationLink = Link::fromTextAndUrl(t('Copy application'), $copyApplicationUrl);
+
+  $variables['printApplicationLink'] = $printApplicationLink;
   $variables['editApplicationLink'] = $editApplicationLink;
+  $variables['copyApplicationLink'] = $copyApplicationLink;
 
   $variables['formTitle'] = $webform->label();
 
@@ -1162,7 +1199,12 @@ function grants_handler_preprocess_webform_submission_information(&$variables){
     '#submission' => $submission
   ];
 
-
-
 }
 
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_grants_handler_copy_application(&$variables) {
+
+  $d = 'asdf';
+}

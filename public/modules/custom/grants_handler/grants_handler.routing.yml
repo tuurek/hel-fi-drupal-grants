@@ -1,5 +1,5 @@
 grants_handler.clear-navigations:
-  path: '/grants-handler/clearnavigation/{submission_id}'
+  path: '/hakemus/{submission_id}/clear'
   defaults:
     _title: 'Clear navigations'
     _controller: '\Drupal\grants_handler\Controller\WebformNavigationController::clearDraftData'
@@ -15,7 +15,7 @@ grants_handler.completion:
     _permission: 'access content'
 
 grants_handler.view_application:
-  path: '/hakemus/{submission_id}/view'
+  path: '/hakemus/{submission_id}/katso'
   defaults:
     _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getTitle'
     _controller: '\Drupal\grants_handler\Controller\ApplicationController::view'
@@ -23,7 +23,7 @@ grants_handler.view_application:
     _custom_access: '\Drupal\grants_handler\Controller\ApplicationController::accessByApplicationNumber'
 
 grants_handler.edit_application:
-  path: '/hakemus/{webform}/{webform_submission}/edit'
+  path: '/hakemus/{webform}/{webform_submission}/muokkaa'
   defaults:
     _title_callback: '\Drupal\grants_handler\Controller\ApplicationController::getEditTitle'
     _entity_form: 'webform_submission.edit'
@@ -31,9 +31,17 @@ grants_handler.edit_application:
     _custom_access: '\Drupal\grants_handler\Controller\ApplicationController::access'
 
 grants_handler.message_read:
-  path: '/hakemus/{application_number}/messageRead/{message_id}'
+  path: '/hakemus/{application_number}/viesti/{message_id}/luettu'
   defaults:
     _title: 'Mark message read'
     _controller: '\Drupal\grants_handler\Controller\MessageController::markMessageRead'
   requirements:
     _permission: 'edit own webform submission'
+
+grants_handler.copy_application:
+  path: '/hakemus/{submission_id}/kopioi'
+  defaults:
+    _title: 'Copy application'
+    _form: 'Drupal\grants_handler\Form\CopyApplicationForm'
+  requirements:
+    _custom_access: '\Drupal\grants_handler\Controller\ApplicationController::accessByApplicationNumber'

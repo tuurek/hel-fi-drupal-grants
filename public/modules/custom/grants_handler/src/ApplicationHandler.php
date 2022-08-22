@@ -656,11 +656,13 @@ class ApplicationHandler {
    */
   public function webformToTypedData(
     array $submittedFormData,
-    string $definitionClass,
-    string $definitionKey
+    string $definitionClass = '',
+    string $definitionKey = ''
   ): TypedDataInterface {
 
-    $dataDefinition = $definitionClass::create($definitionKey);
+    $dataDefinitionKeys = self::getDataDefinitionClass($submittedFormData['application_type']);
+
+    $dataDefinition = $dataDefinitionKeys['definitionClass']::create($dataDefinitionKeys['definitionId']);
 
     $typeManager = $dataDefinition->getTypedDataManager();
     $applicationData = $typeManager->create($dataDefinition);
@@ -963,7 +965,16 @@ class ApplicationHandler {
     $defClass = self::$applicationTypes[$type]['dataDefinition']['definitionClass'];
     $defId = self::$applicationTypes[$type]['dataDefinition']['definitionId'];
     return $defClass::create($defId);
+  }
 
+  /**
+   * Get data definition class from application type.
+   *
+   * @param string $type
+   *   Type of the application.
+   */
+  public static function getDataDefinitionClass(string $type) {
+    return self::$applicationTypes[$type]['dataDefinition'];
   }
 
   /**
@@ -1127,6 +1138,7 @@ class ApplicationHandler {
    *   Save uuid to validate data integrity against.
    *
    * @return string
+   *   Data integrity status.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -1136,7 +1148,7 @@ class ApplicationHandler {
     ?WebformSubmissionInterface $webform_submission,
     ?array $submissionData,
     string $applicationNumber,
-    string $saveIdToValidate) {
+    string $saveIdToValidate): string {
 
     if ($submissionData == NULL || empty($submissionData)) {
       if ($webform_submission == NULL) {
@@ -1179,7 +1191,10 @@ class ApplicationHandler {
 
     $nonUploaded = 0;
     foreach ($fileFieldNames as $fieldName) {
-      $fileField = $submissionData[$fieldName];
+      $fileField = $submissionData[$fieldName] ?? NULL;
+      if ($fileField == NULL) {
+        continue;
+      }
       if (self::isMulti($fileField)) {
         foreach ($fileField as $muu_liite) {
           if (isset($muu_liite['fileName'])) {
@@ -1223,6 +1238,38 @@ class ApplicationHandler {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Clear application data for noncopyable elements.
+   *
+   * @param $data
+   *   Data to copy from
+   *
+   * @return array
+   *   Cleaned values.
+   */
+  public static function clearDataForCopying($data) {
+    unset($data["application_number"]);
+    unset($data["sender_firstname"]);
+    unset($data["sender_lastname"]);
+    unset($data["sender_person_id"]);
+    unset($data["sender_user_id"]);
+    unset($data["sender_email"]);
+    unset($data["metadata"]);
+    unset($data["attachments"]);
+
+    $data['events'] = [];
+    $data['messages'] = [];
+    $data['status_updates'] = [];
+
+    // Clear uploaded files..
+    foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
+      unset($data[$fieldName]);
+    }
+
+    return $data;
+
   }
 
 }

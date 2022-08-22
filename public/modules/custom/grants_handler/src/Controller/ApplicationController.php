@@ -232,8 +232,6 @@ class ApplicationController extends ControllerBase {
           $submissionData['application_number'],
           $submissionData['metadata']['saveid'] ?? '');
 
-        $d = 'asdf';
-
         // Set webform submission template.
         $build = [
           '#theme' => 'webform_submission',
@@ -301,59 +299,59 @@ class ApplicationController extends ControllerBase {
    * @return array
    *   Build for the page.
    */
-  public function edit(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
-    try {
-      $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
-      if ($webform_submission == NULL) {
-        throw new NotFoundHttpException($this->t('Application @number not found.', [
-          '@number' => $submission_id,
-        ]));
-      }
-
-      $my_form = \Drupal::entityTypeManager()
-        ->getStorage('webform')
-        ->load($webform_submission->getWebform()->id());
-
-      $my_form->setOriginalId($webform_submission->id());
-
-      $form = $my_form->getSubmissionForm(['data' => $webform_submission->getData()]);
-
-      // $webform = $webform_submission->getWebform();
-      // $webform->entity = $webform_submission;
-      //
-      // $form = \Drupal::entityTypeManager()
-      // ->getViewBuilder('webform')
-      // ->view($rr);
-      return [
-        '#theme' => 'grants_handler_edit_application',
-        '#view_mode' => $view_mode,
-        '#submissionObject' => $webform_submission,
-        '#submissionId' => $submission_id,
-        '#editForm' => $form,
-        // '#editForm' => [
-        // '#type' => 'webform',
-        // '#webform' => $webform_submission->getWebform()->id(),
-        // '#default_data' =>
-        // ],
-      ];
-
-    }
-    catch (InvalidPluginDefinitionException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (PluginNotFoundException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (AtvDocumentNotFoundException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (GuzzleException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (\Exception $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-  }
+  // Public function edit(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
+  //    try {
+  //      $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
+  //      if ($webform_submission == NULL) {
+  //        throw new NotFoundHttpException($this->t('Application @number not found.', [
+  //          '@number' => $submission_id,
+  //        ]));
+  //      }
+  //
+  //      $my_form = \Drupal::entityTypeManager()
+  //        ->getStorage('webform')
+  //        ->load($webform_submission->getWebform()->id());
+  //
+  //      $my_form->setOriginalId($webform_submission->id());
+  //
+  //      $form = $my_form->getSubmissionForm(['data' => $webform_submission->getData()]);
+  //
+  //      // $webform = $webform_submission->getWebform();
+  //      // $webform->entity = $webform_submission;
+  //      //
+  //      // $form = \Drupal::entityTypeManager()
+  //      // ->getViewBuilder('webform')
+  //      // ->view($rr);
+  //      return [
+  //        '#theme' => 'grants_handler_edit_application',
+  //        '#view_mode' => $view_mode,
+  //        '#submissionObject' => $webform_submission,
+  //        '#submissionId' => $submission_id,
+  //        '#editForm' => $form,
+  //        // '#editForm' => [
+  //        // '#type' => 'webform',
+  //        // '#webform' => $webform_submission->getWebform()->id(),
+  //        // '#default_data' =>
+  //        // ],
+  //      ];
+  //
+  //    }
+  //    catch (InvalidPluginDefinitionException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (PluginNotFoundException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (AtvDocumentNotFoundException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (GuzzleException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (\Exception $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //  }.
 
   /**
    * Returns a page title.

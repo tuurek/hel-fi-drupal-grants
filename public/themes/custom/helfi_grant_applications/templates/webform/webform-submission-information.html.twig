@@ -33,14 +33,9 @@
 <div class="container">
 <h3>{{ 'Application info'|t }}</h3>
 <p>{{ 'Summary about your application and processing details.'|t }}</p>
-    <button class="hds-button hds-button--primary" onClick="alert('No print functionality yet');return;">
-        <span aria-hidden="true" class="hds-icon hds-icon--printer"></span>
-        <span class="hds-button__label">{{ "Print application"|t }}</span>
-    </button>
-    <button class="hds-button hds-button--primary" onClick="alert('No copy functionality yet');return;">
-        <span aria-hidden="true" class="hds-icon hds-icon--printer"></span>
-        <span class="hds-button__label">{{ "Copy application"|t }}</span>
-    </button>
+
+    {{ printApplicationLink }}
+    {{ copyApplicationLink }}
 
     <div>Hakemuksen Numero: {{ applicationNumber }}</div>
 
