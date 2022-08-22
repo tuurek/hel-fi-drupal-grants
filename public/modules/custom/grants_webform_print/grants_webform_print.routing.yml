@@ -10,4 +10,12 @@ entity.webform.print_page:
       webform:
         type: 'entity:webform'
   requirements:
-    _entity_access: 'webform.submission_create'
+    _entity_access: 'edit own webform submission'
+
+grants_webform_print.submission_print:
+  path: '/hakemus/{submission_id}/tulosta'
+  defaults:
+    _title: 'Print Application'
+    _controller: '\Drupal\grants_webform_print\Controller\GrantsWebformSubmissionPrintController::build'
+  requirements:
+    _permission: 'edit own webform submission'
