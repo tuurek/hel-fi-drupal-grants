@@ -116,7 +116,7 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
       TRUE,
       'application_list_item'
     );
-    $drafts = $applications['DRAFT'];
+    $drafts = $applications['DRAFT'] ?? [];
     unset($applications['DRAFT']);
 
     $other = [];
