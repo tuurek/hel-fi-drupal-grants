@@ -6,8 +6,10 @@
             const selectedCompany = drupalSettings.grants_handler.selectedCompany
             const submissionId = drupalSettings.grants_handler.submissionId
 
-            if (formData['status'] === 'DRAFT') {
-                $('#edit-actions').append($('<a href="/grants-handler/clearnavigation/' + submissionId + '">' + Drupal.t('Delete draft') + '</a>'));
+            if (formData['status'] === 'DRAFT' && !$("#webform-button--delete-draft").length) {
+                $('#edit-actions').append($('<a id="webform-button--delete-draft" class="webform-button--delete-draft hds-button hds-button--secondary" href="/grants-handler/clearnavigation/' + submissionId + '">' +
+                  '  <span class="hds-button__label">' + Drupal.t('Delete draft') + '</span>' +
+                  '</a>'));
             }
 
             $("#edit-bank-account-account-number-select").change(function () {
