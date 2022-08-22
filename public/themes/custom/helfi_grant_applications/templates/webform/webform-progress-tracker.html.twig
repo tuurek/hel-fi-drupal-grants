@@ -23,14 +23,19 @@
   <ul class="grants-stepper__inner" data-webform-progress-steps>
     <li class="grants-stepper__lines" aria-hidden="true" style="width: max( calc(100% - var(--grants-step-width)), calc({{ progress|length }} * var(--grants-step-width) - var(--grants-step-width) ));">
       {% for index, page in progress %}
+        {% set is_disabled = false %}
+        {# TODO: Mistä saadaan tietää onko joku sivu disabloitu? #}
         {% if index != 1 %}
-          <div class="grants-stepper__line" style="width: calc({{ 100 / (progress|length - 1) }}%);"></div>
+          <div class="grants-stepper__line{% if is_disabled %} grants-stepper__line__disabled{% endif %}" style="width: calc({{ 100 / (progress|length - 1) }}%);"></div>
         {% endif %}
       {% endfor %}
     </li>
     {% for index, page in progress %}
       {% set is_visited = index < current_index %}
+      {# TODO: oikeasti käydyt sivut saavat tämän #}
       {% set is_active = index == current_index %}
+      {% set is_disabled = false %}
+      {# TODO: Mistä saadaan tietää onko joku sivu disabloitu? #}
       {% set classes = [
         'grants-stepper__steps',
         is_active ? 'is-active',
@@ -43,7 +48,7 @@
         .addClass(page_classes[page.name])
       %}
       <li{{ attributes }}>
-        <div class="grants-stepper__step progress-marker"
+        <div class="grants-stepper__step progress-marker{% if is_disabled %} grants-stepper__step__disabled{% endif %}"
              {% if is_active %}aria-current="true"{% else %}aria-current="false"{% endif %}
              data-webform-progress-step>
           <div class="grants-stepper__step__circle_container" data-webform-progress-link>
