@@ -448,6 +448,7 @@ class GrantsHandler extends WebformHandlerBase {
     $this->alterFormNavigation($form, $form_state, $webform_submission);
 
     $form['#webform_submission'] = $webform_submission;
+    $webform = $webform_submission->getWebform();
     $form['#form_state'] = $form_state;
 
     $this->setFromThirdPartySettings($webform_submission->getWebform());
@@ -504,6 +505,26 @@ class GrantsHandler extends WebformHandlerBase {
         $this->messenger()->addWarning($this->t('Data integrity mismatch. Please refresh form in a moment'));
       }
     }
+
+    $current_page = $webform_submission->getCurrentPage();
+    $current_errors = $webform->getState('current_errors');
+    $err = reset($this->grantsFormNavigationHelper->getErrors($webform_submission));
+    if (is_array($err)) {
+      $err = $err['data'] ?? [];
+    }
+
+    $all_errors = [];
+    foreach ($current_errors as $key => $errors) {
+      if (!empty($err[$key])) {
+        $all_errors[$key] = array_merge($errors, $err[$key]);
+      }
+      else {
+        $all_errors[$key] = $errors;
+      }
+    }
+
+    $d = 'asdf';
+
   }
 
   /**
@@ -552,6 +573,7 @@ class GrantsHandler extends WebformHandlerBase {
       $visited = $this->grantsFormNavigationHelper->hasVisitedPage($webform_submission, $current_page);
       // Log the page if it has not been visited before.
       if (!$visited) {
+
         $this->grantsFormNavigationHelper->logPageVisit($webform_submission, $current_page);
       }
 
@@ -1158,6 +1180,9 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function logErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state): array {
     try {
+
+      $fe = $form_state->getErrors();
+
       // Log current errors.
       $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
 

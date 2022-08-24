@@ -32,7 +32,7 @@
         "drupal/helfi_formtool_embed": "dev-develop",
         "drupal/helfi_hauki": "^1.0",
         "drupal/helfi_helsinki_profiili": "dev-develop",
-        "drupal/helfi_platform_config": "^2.0",
+        "drupal/helfi_platform_config": "^2.9",
         "drupal/helfi_tpr": "^1.0",
         "drupal/helfi_tunnistamo": "^2.0",
         "drupal/helfi_yjdh": "dev-develop",

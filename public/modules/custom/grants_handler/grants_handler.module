@@ -783,70 +783,6 @@ function grants_handler_preprocess_webform_submission_message_attachments(&$vari
   $variables['attachments_to_print'] = $table;
 }
 
-/**
- * Implements hook_preprocess_HOOK().
- */
-function grants_handler_preprocess_webform_progress_tracker(&$variables) {
-  /** @var \Drupal\webform\WebformInterface $webform */
-  $webform = $variables['webform'];
-  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  $webform_submission = $variables['webform_submission'];
-
-  $pages = $webform->getPages($variables['operation'], $webform_submission);
-  // Get the logged errors for the form.
-  /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
-  $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
-
-  $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-
-  $current_errors = $webform->getState('current_errors');
-
-  // Iterate through the pages and set appropriate page classes.
-  foreach ($pages as $key => $page) {
-    // Add the default class for the page.
-    $variables['page_classes'][$key][] = 'progress-step';
-    // Add the visited and error classes if it has been logged.
-    if (isset($current_errors[$key])) {
-      // Add an error class if the page has errors or complete class if not.
-      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'is-complete' : 'has-errors';
-    }
-    // Add an active class to the current page.
-    if ($variables['current_page'] == $key) {
-      $variables['page_classes'][$key][] = 'is-active';
-    }
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function grants_handler_preprocess_webform_progress_bar(&$variables) {
-  /** @var \Drupal\webform\WebformInterface $webform */
-  $webform = $variables['webform'];
-  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  $webform_submission = $variables['webform_submission'];
-
-  $pages = $webform->getPages($variables['operation'], $webform_submission);
-  // Get the logged errors for the form.
-  /** @var \Drupal\grants_formnavigation\GrantsFormNavigationHelper $grants_formnavigation_helper */
-  $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
-  $current_errors = $webform->getState('current_errors');
-
-  // Iterate through the pages and set appropriate page classes.
-  foreach ($pages as $key => $page) {
-    // Add the default class for the page.
-    $variables['page_classes'][$key][] = 'webform-progress-bar__page';
-    // Add the visited and error classes if it has been logged.
-    if (isset($current_errors[$key])) {
-      // Add an error class if the page has errors or complete class if not.
-      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'webform-progress-bar__page--done' : 'webform-progress-bar__page--errors';
-    }
-    // Add an active class to the current page.
-    if ($variables['current_page'] == $key) {
-      $variables['page_classes'][$key][] = 'webform-progress-bar__page--current';
-    }
-  }
-}
 
 
 /**
@@ -950,10 +886,32 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
   $navigationHelper = \Drupal::service('grants_handler.navigation_helper');
   /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
   $webform_submission = $variables["form"]["#webform_submission"];
+  /** @var \Drupal\webform\Entity\Webform $webform */
+  $webform = $webform_submission->getWebform();
   /** @var \Drupal\Core\Form\FormState $form_state */
   $form_state = $variables["form"]["#form_state"];
 
-  $variables['errors'] = $navigationHelper->getPagedErrors($form_state, $webform_submission);
+  $current_errors = $webform->getState('current_errors');
+
+  $err = $navigationHelper->getErrors($webform_submission);
+//  if (is_array($err)) {
+//    $err = $err['data'];
+//  }
+
+  $all_errors = [];
+  foreach ($current_errors as $key => $errors) {
+    if (is_array($err)) {
+      if (!empty($err[$key])) {
+        $all_errors[$key] = array_merge($errors, $err[$key]);
+      }
+    }
+    else {
+      $all_errors[$key] = $errors;
+    }
+  }
+
+  $variables['errors'] = $all_errors;
+
 }
 
 /**

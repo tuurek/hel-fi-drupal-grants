@@ -20,6 +20,7 @@ COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
 # Make files writable on testing environments. Small edit to deploy.
 # TODO: Remove in production
 RUN chgrp -R 0 /var/www/html/public/modules && chmod g+w -R /var/www/html/public/modules
+RUN chgrp -R 0 /var/www/html/public/core/modules && chmod g+w -R /var/www/html/public/core/modules
 
 # Helper to run commands
 # RUN alias ll='ls -lah'

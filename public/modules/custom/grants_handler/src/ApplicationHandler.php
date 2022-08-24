@@ -1249,7 +1249,7 @@ class ApplicationHandler {
    * @return array
    *   Cleaned values.
    */
-  public static function clearDataForCopying($data) {
+  public static function clearDataForCopying($data): array {
     unset($data["application_number"]);
     unset($data["sender_firstname"]);
     unset($data["sender_lastname"]);

@@ -94,6 +94,13 @@ function grants_handler_schema(): array {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ],
+      's_uuid' => [
+        'description' => 'Submission UUID',
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+        'default' => '',
+      ],
       'handler_id' => [
         'description' => 'The webform handler id.',
         'type' => 'varchar',
@@ -160,5 +167,22 @@ function grants_handler_update_9001(&$sandbox) {
   \Drupal::database()
     ->schema()
     ->createTable('grants_handler_saveids', $schema['grants_handler_saveids']);
+}
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Add submission UUID column for handler log.
+ */
+function grants_handler_update_9002(&$sandbox) {
+  $spec = [
+    'description' => 'Submission UUID',
+    'type' => 'varchar',
+    'length' => 40,
+    'not null' => TRUE,
+    'default' => '',
+  ];
+  $schema = Database::getConnection()->schema();
+  $schema->addField('grants_handler_log', 's_uuid', $spec);
 }
 
