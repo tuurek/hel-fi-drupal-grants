@@ -886,32 +886,8 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
   $navigationHelper = \Drupal::service('grants_handler.navigation_helper');
   /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
   $webform_submission = $variables["form"]["#webform_submission"];
-  /** @var \Drupal\webform\Entity\Webform $webform */
-  $webform = $webform_submission->getWebform();
-  /** @var \Drupal\Core\Form\FormState $form_state */
-  $form_state = $variables["form"]["#form_state"];
 
-  $current_errors = $webform->getState('current_errors');
-
-  $err = $navigationHelper->getErrors($webform_submission);
-//  if (is_array($err)) {
-//    $err = $err['data'];
-//  }
-
-  $all_errors = [];
-  foreach ($current_errors as $key => $errors) {
-    if (is_array($err)) {
-      if (!empty($err[$key])) {
-        $all_errors[$key] = array_merge($errors, $err[$key]);
-      }
-    }
-    else {
-      $all_errors[$key] = $errors;
-    }
-  }
-
-  $variables['errors'] = $all_errors;
-
+  $variables['errors'] = $navigationHelper->getAllErrors($webform_submission);
 }
 
 /**

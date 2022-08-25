@@ -273,26 +273,8 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
 
   $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
 
-  $current_errors = $webform->getState('current_errors');
-  $err = $grants_formnavigation_helper->getErrors($webform_submission);
-//  $err = reset($d);
-//  if (is_array($err)) {
-//    $err = $err['data'] ?? [];
-//  }
+  $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
 
-  $all_errors = [];
-  foreach ($current_errors as $key => $errors) {
-    if (is_array($err)) {
-      if (!empty($err[$key])) {
-        $all_errors[$key] = array_merge($errors, $err[$key]);
-      }
-    }
-    else {
-      $all_errors[$key] = $errors;
-    }
-  }
-
-//  $all = array_merge($err, $current_errors);
 
   // Iterate through the pages and set appropriate page classes.
   foreach ($pages as $key => $page) {
@@ -312,7 +294,7 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
     }
 
     // visited, no errors.
-    if ($hasVisitedThisPage == TRUE && !isset($current_errors[$key])) {
+    if ($hasVisitedThisPage == TRUE && !isset($all_errors[$key])) {
       $variables['page_classes'][$key][] = 'is-complete';
     }
 

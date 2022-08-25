@@ -205,7 +205,7 @@ class GrantsHandlerNavigationHelper {
     // Get outta here if the submission hasn't been saved yet.
     if (empty($webform_submission->id())) {
       $operation = self::ERROR_OPERATION;
-      return array_filter(
+      $errors = array_filter(
               $this->getFromStore($webform_submission->getWebForm()->id()),
               function ($item) use ($operation) {
                 if ($item['operation'] == $operation) {
@@ -213,6 +213,9 @@ class GrantsHandlerNavigationHelper {
                 }
                 return FALSE;
               });
+      ksort($errors);
+      $latest = reset($errors);
+      return $latest['data'] ?? [];
     }
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
@@ -229,9 +232,21 @@ class GrantsHandlerNavigationHelper {
     $data = !empty($submission_log->data) ? unserialize($submission_log->data) : [];
 
     if (!empty($storedData)) {
+
+      $errors = array_filter(
+        $this->getFromStore($webform_submission->getWebForm()->id()),
+        function ($item) use ($operation) {
+          if ($item['operation'] == $operation) {
+            return TRUE;
+          }
+          return FALSE;
+        });
+      ksort($errors);
+      $latest = reset($errors);
+
       // In case we have stored errors in users' session,
       // merge those with the ones from DB.
-      $data = array_merge($data, $storedData);
+      $data = array_merge($data, $latest['data'] ?? []);
       try {
         $this->store->delete($webformId);
       }
@@ -246,6 +261,42 @@ class GrantsHandlerNavigationHelper {
     }
 
     return (!empty($page) && !empty($data[$page])) ? $data[$page] : $data;
+  }
+
+  /**
+   * Get errors for all pages any status.
+   *
+   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   *   Submission object.
+   *
+   * @return array
+   *   All errors.
+   */
+  public function getAllErrors(WebformSubmissionInterface $webform_submission) {
+    /** @var \Drupal\webform\Entity\Webform $webform */
+    $webform = $webform_submission->getWebform();
+
+    if (!$webform_submission->id()) {
+      $operation = 'add';
+    }
+    else {
+      $operation = 'edit';
+    }
+
+    $pages = $webform->getPages($operation, $webform_submission);
+
+    $all_errors = $webform->getState('current_errors');
+    $err = $this->getErrors($webform_submission);
+
+    foreach ($pages as $name => $page) {
+      if (is_array($err)) {
+        if (!empty($err[$name])) {
+          $all_errors[$name] = array_merge($all_errors[$name] ?? [], $err[$name]);
+        }
+      }
+    }
+
+    return $all_errors;
   }
 
   /**
@@ -281,12 +332,16 @@ class GrantsHandlerNavigationHelper {
    * Filter page visits from stored data.
    *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   *   Submission in question. Either saved or non saved one.
    *
    * @return array
+   *   Stored page visits.
    */
   public function getPageVisits(WebformSubmissionInterface $webform_submission) {
 
     $storedVisits = $this->getStoredData(self::PAGE_VISITED_OPERATION, $webform_submission);
+    ksort($storedVisits);
+    $storedVisits = reset($storedVisits);
 
     if ($webform_submission->id()) {
       $query = $this->database->select(self::TABLE, 'l');
@@ -301,8 +356,6 @@ class GrantsHandlerNavigationHelper {
       $query->orderBy('l.lid', 'DESC');
       $query->range(0, 1);
       $submission_log = $query->execute()->fetch();
-
-      $d = 'asdf';
 
     }
     else {
@@ -643,8 +696,15 @@ class GrantsHandlerNavigationHelper {
   public function getPagedErrors(FormStateInterface $form_state, WebformSubmissionInterface $webform_submission): array {
     $form_errors = $form_state->getErrors();
     $current_errors = $this->getErrors($webform_submission);
-    $current_errors = reset($current_errors);
-    $paged_errors = empty($current_errors['data']) ? [] : $current_errors['data'];
+
+    if (!$webform_submission->id()) {
+      $current_errors = reset($current_errors);
+      $paged_errors = empty($current_errors['data']) ? [] : $current_errors['data'];
+    }
+    else {
+      $paged_errors = $current_errors;
+    }
+
     $current_page = $webform_submission->getCurrentPage();
     if ($current_page != NULL) {
       // Reset the current page's errors with those set in the form state.

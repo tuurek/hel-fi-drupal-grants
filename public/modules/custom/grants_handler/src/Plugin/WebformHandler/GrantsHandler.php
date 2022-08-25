@@ -506,25 +506,21 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
-    $current_page = $webform_submission->getCurrentPage();
-    $current_errors = $webform->getState('current_errors');
-    $err = reset($this->grantsFormNavigationHelper->getErrors($webform_submission));
-    if (is_array($err)) {
-      $err = $err['data'] ?? [];
-    }
-
-    $all_errors = [];
-    foreach ($current_errors as $key => $errors) {
-      if (!empty($err[$key])) {
-        $all_errors[$key] = array_merge($errors, $err[$key]);
-      }
-      else {
-        $all_errors[$key] = $errors;
-      }
-    }
-
-    $d = 'asdf';
-
+    // $current_page = $webform_submission->getCurrentPage();
+    //    $current_errors = $webform->getState('current_errors');
+    //    $err = $this->grantsFormNavigationHelper->getErrors($webform_submission);
+    //
+    //    $all_errors = [];
+    //    foreach ($current_errors as $key => $errors) {
+    //      if (!empty($err[$key])) {
+    //        $all_errors[$key] = array_merge($errors, $err[$key]);
+    //      }
+    //      else {
+    //        $all_errors[$key] = $errors;
+    //      }
+    //    }
+    //
+    //    $d = 'asdf';
   }
 
   /**
