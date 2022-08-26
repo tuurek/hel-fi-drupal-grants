@@ -1,25 +1,29 @@
-
-
-<h3>Omat hakemukset</h3>
-
-<div>
-    <label for="applicationListFilter">Filter / hae</label>
-    <input type="text" name="applicationListFilter" />
-</div>
-<div>
-    <label for="applicationListSort">Filter / hae</label>
-    <select>
-        <option>Viimeks lähetetty</option>
-        <option>Viimeks tallennettu</option>
-        <option>Aakkosjärjestys (Hakemustyyppi)</option>
-        <option>Aakkosjärjestys (Hakemusnumero)</option>
-    </select>
-</div>
-
-<div>
-    <ul>
-        {% for item in items %}
-            <li>{{ item }}</li>
-        {% endfor %}
+<div class="application-list" id="{{ id }}">
+  <div class="container">
+    <h2>{{ header }}</h2>
+    <div>{{ description }}</div>
+    <div class="application-list-filter">
+      <label for="applicationListFilter">{{ "Search for an application"|t }}</label>
+      <input class="search" type="text" name="applicationListFilter" id="applicationListFilter" />
+    </div>
+    <label><input type="checkbox" value="">{{ "Show only applications being processed"|t }}</label>
+    <hr/>
+    <div>
+      <label for="applicationListSort">{{ "Sort"|t }}</label>
+      <select name="applicationListSort" id="applicationListSort" class="sort">
+        <option value="" selected>{{ "Sort by"|t }}</option>
+        <option value="application-list-item--submitted">{{ "Submitted time"|t }}</option>
+        <option value="application-list-item--status">{{ "Status"|t }}</option>
+        <option value="application-list-item--name">{{ "Name (a-z)" }}</option>
+        <option value="application-list-item--number">{{ "Application number" }}</option>
+      </select>
+      <button class="sort hidden" data-sort="application-list-item--submitted"></button>
+    </div>
+    <div class="application-list__count">X {{ 'Applications'|t }}</div>
+    <ul class="list application-list">
+      {% for item in items %}
+        {{ item }}
+      {% endfor %}
     </ul>
+  </div>
 </div>

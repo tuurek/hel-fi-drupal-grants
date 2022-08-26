@@ -214,6 +214,10 @@ class ApplicationsListController extends ControllerBase {
     $build = [
       '#theme' => 'application_list',
       '#items' => $items,
+      '#type' => 'all',
+      '#header' => t('My applications'),
+      '#id' => 'applications__list',
+      '#description' => 'DESCRIPTION GOES HERE',
       '#attached' => [
         'library' => [
           'grants_handler/application-search-sort',

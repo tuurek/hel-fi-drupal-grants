@@ -141,10 +141,18 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
       '#theme' => 'grants_oma_asiointi_front',
       '#drafts' => [
         '#theme' => 'application_list',
+        '#type' => 'drafts',
+        '#header' => t('Applications in progress'),
+        '#id' => 'oma-asiointi__drafts',
+        '#description' => 'DESCRIPTION GOES HERE',
         '#items' => $drafts,
       ],
       '#others' => [
         '#theme' => 'application_list',
+        '#type' => 'sent',
+        '#header' => t('Sent applications'),
+        '#id' => 'oma-asiointi__sent',
+        '#description' => 'DESCRIPTION GOES HERE',
         '#items' => $other,
       ],
       '#unread' => $unreadMsg,

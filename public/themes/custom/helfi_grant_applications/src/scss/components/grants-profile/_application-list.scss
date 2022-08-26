@@ -1,0 +1,35 @@
+.application-list {
+  &__item {
+    display: block;
+    background: var(--color-bus-light);
+    margin: var(--spacing-m) 0;
+    padding: var(--spacing-m) var(--spacing-s);
+    h3 {
+      margin: var(--spacing-xs) 0;
+    }
+    &__row {
+      display: flex;
+      justify-content: space-between;
+    }
+    &--status {
+      display: inline-block;
+      font-weight: bold;
+    }
+    &--status--submitted {
+      padding: var(--spacing-3-xs) var(--spacing-s);
+      background: var(--color-bus-light);
+    }
+    &--status--received {
+      padding: var(--spacing-3-xs) var(--spacing-s);
+      background: var(--color-bus-light);
+    }
+    &--status--processing {
+      padding: var(--spacing-3-xs) var(--spacing-s);
+      background: var(--color-bus-light);
+    }
+    &--status--processed {
+      padding: var(--spacing-3-xs) var(--spacing-s);
+      background: var(--color-bus-light);
+    }
+  }
+}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ba8cdd7b6c2e1611f8292ddcb223c3d",
+    "content-hash": "b8fbab825d601e94c0648159a56f9a49",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5542,6 +5542,102 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/linkit",
                 "issues": "http://drupal.org/project/linkit"
+            }
+        },
+        {
+            "name": "drupal/listjs",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/listjs.git",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/listjs-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "11544877413f20f5d20618105b6c7dc0595b3001"
+            },
+            "require": {
+                "drupal/core": "^8.7.7 || ^9 || ^10",
+                "drupal/listjs_lib": "*"
+            },
+            "require-dev": {
+                "drupal/listjs_multi_widget_test": "*",
+                "drupal/listjs_test_views": "*",
+                "drupal/listjs_theme_test": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1644776291",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Subhojit Paul",
+                    "homepage": "http://subhojit777.in",
+                    "email": "subhojitpaul21@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "subhojit777",
+                    "homepage": "https://www.drupal.org/user/1812492"
+                }
+            ],
+            "description": "Search, sort, filter HTML lists using listjs library",
+            "homepage": "https://www.drupal.org/project/listjs",
+            "support": {
+                "source": "https://github.com/subhojit777/listjs",
+                "issues": "https://github.com/subhojit777/listjs/issues",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/listjs_lib",
+            "version": "1.4.0",
+            "require": {
+                "drupal/core": "^8.7.7 || ^9 || ^10",
+                "drupal/listjs": "^1"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1644776291",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Anybody",
+                    "homepage": "https://www.drupal.org/user/291091"
+                },
+                {
+                    "name": "subhojit777",
+                    "homepage": "https://www.drupal.org/user/1812492"
+                }
+            ],
+            "description": "Add <a href=\"http://listjs.com\">list.js</a> library definition.",
+            "homepage": "https://www.drupal.org/project/listjs",
+            "support": {
+                "source": "https://git.drupalcode.org/project/listjs"
             }
         },
         {

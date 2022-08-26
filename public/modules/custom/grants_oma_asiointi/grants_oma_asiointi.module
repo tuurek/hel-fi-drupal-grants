@@ -37,6 +37,19 @@ function grants_oma_asiointi_theme() {
 }
 
 /**
+ *
+ */
+/**
+ * Implements hook_aggregator_fetcher_info_alter().
+ */
+/**
+ * Implements hook_page_attachments().
+ */
+function grants_oma_asiointi_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'grants_oma_asiointi/grants_oma_asiointi';
+}
+
+/**
  * Implements hook_preprocess_HOOK() for block.html.twig.
  */
 function grants_oma_asiointi_preprocess_block(&$vars) {
@@ -53,31 +66,3 @@ function grants_oma_asiointi_preprocess_page_title(&$variables) {
   $variables['initials'] = 'AS';
   $variables['colorscheme'] = 'green';
 }
-
-/**
- * Implements hook_preprocess().
- */
-function grants_oma_asiointi_preprocess_views_view_unformatted(&$variables) {
-  /** @var \Drupal\views\ViewExecutable $view */
-  $view = $variables['view'];
-  $viewId = $view->id();
-  if ($viewId == 'haettavat_avustukset') {
-    $result = $view->result;
-    $d = 'af';
-  }
-}
-
-/**
- * Implements hook_theme().
- */
-function grants_oma_asiointi_preprocess_views_view_fields__haettavat_avustukset__block(&$variables) {
-  $d = 'asdf';
-}
-
-/**
- * Implements hook_theme().
- */
-function grants_oma_asiointi_preprocess_paragraphs_summary(&$variables) {
-  $d = 'asdf';
-}
-

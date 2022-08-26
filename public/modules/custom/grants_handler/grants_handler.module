@@ -129,6 +129,7 @@ function grants_handler_theme(): array {
     'application_list' => [
       'variables' => [
         'items' => NULL,
+        'type' => NULL,
       ],
     ],
     'application_list_item' => [
@@ -461,6 +462,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   $webform_submission = $form_state->getFormObject()->getEntity();
   $formData = $webform_submission->getData();
 
+  $form['#attached']['library'][] = 'listjs/drupal.listjs';
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
 
 //  $form["actions"]["delete"]["#access"] = true;
