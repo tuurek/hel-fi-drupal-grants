@@ -1,119 +1,215 @@
-.webform-progress {
-  .webform-progress-tracker-mobile {
-    display: block;
-    @include breakpoint($breakpoint-m) {
-      display: none;
-    }
-    padding-bottom: $spacing;
-    margin-bottom: $spacing;
-    border-bottom: 1px rgba(0, 0, 0, 0.6) solid;
-    .webform-progress-tracker-mobile-wrapper {
-      display: flex;
-      align-items: baseline;
-
-      .progress-marker::before {
-        background-color: var(--hdbt-color-black);
-        color: var(--color-white);
-        border: 2px var(--hdbt-color-black) solid;
-        width: var(--spacing-layout-l);
-        height: var(--spacing-layout-l);
-        font-size: $base-font-size * 1.5;
-        margin-bottom: $spacing;
-        font-weight: 500;
-        letter-spacing: -2px;
-      }
-      .progress-info {
-        padding-left: $spacing;
-      }
+.grants-stepper {
+  position: relative;
+  --grants-stepper-color: var(--color-black);
+  --grants-stepper-background-color: var(--color-white);
+  --grants-stepper-disabled-color: var(--color-black-20);
+  --grants-stepper-selected-step-label-color: var(--color-black-90);
+  --grants-stepper-not-selected-step-label-color: var(--color-black);
+  --grants-step-background-color: var(--color-white);
+  --grants-step-content-color: var(--color-black);
+  --grants-stepper-focus-border-color: var(--color-coat-of-arms);
+  --grants-step-width: 120px;
+  --circle-container-size: 36px;
+  --progress-line-height: 2px;
+  background-color: var(--grants-stepper-background-color);
+  &__inner {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    margin:0;
+    padding:0;
+  }
+  &__lines {
+    display: flex;
+    position: absolute;
+    line-height: var(--lineheight-l);
+    left: calc(var(--grants-step-width) / 2);
+    height: var(--progress-line-height);
+    z-index: 1;
+    transform: translateY(calc((var(--circle-container-size) / 2) + (var(--progress-line-height) / 2)));
+  }
+  &__line {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    background-color: var(--grants-stepper-color);
+    &__disabled {
+      background-color: var(--grants-stepper-disabled-color);
     }
   }
-  .webform-progress-tracker {
-    display: none;
-    @include breakpoint($breakpoint-m) {
+  &__steps {
+    display: flex;
+    justify-content: center;
+    max-width: var(--grants-step-width);
+    min-width: var(--grants-step-width);
+    flex-shrink: 0;
+    padding: 3px;
+    box-sizing: border-box;
+    background-color: var(--grants-stepper-background-color);
+  }
+  &__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    border: 0;
+    height: 100%;
+    overflow: visible;
+    color: var(--grants-stepper-color);
+    position: relative;
+    outline: none;
+    box-sizing: content-box;
+    &[disabled], &__disabled {
+      color: var(--grants-stepper-disabled-color);
+      cursor: not-allowed;
+      .grants-stepper__circle {
+        border: 2px solid var(--grants-stepper-disabled-color);
+        color: var(--grants-stepper-disabled-color);
+        background-color: var(--grants-stepper-background-color);
+      }
+      .grants-stepper__text {
+        color: var(--grants-stepper-disabled-color);
+      }
+    }
+    &__circle_container {
+      z-index: 2;
+      width: var(--circle-container-size);
+      height: var(--circle-container-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__completed_container {
+      background-color: var(--grants-stepper-color);
+      padding: 4px;
+      border-radius: 16px;
+      outline: 2px solid var(--grants-stepper-background-color);
+      color: var(--color-white);
+      vertical-align: middle;
+      align-items: center;
+      display: none;
+      justify-content: center;
+    }
+  }
+  .grants-stepper__error, .grants-stepper__completed {
+    display:none;
+  }
+  &__text {
+    font-weight: 500;
+    font-size: var(--fontsize-body-m);
+    text-decoration: underline;
+    text-align: center;
+    line-height: var(--lineheight-l);
+    margin-top: 6px;
+    margin-bottom: 0;
+    padding-left: var(--spacing-4-xs);
+    padding-right: var(--spacing-4-xs);
+    color: var(--grants-stepper-not-selected-step-label-color);
+  }
+  &__circle {
+    border-radius: 16px;
+    border: 2px solid var(--grants-stepper-color);
+    text-align: center;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--grants-step-background-color);
+    outline: 2px solid var(--grants-stepper-background-color);
+    color: var(--grants-step-content-color);
+  }
+  &__number {
+    font-weight: 500;
+    font-size: var(--fontsize-body-m);
+    line-height: 1.15;
+  }
+  .is-active {
+    .grants-stepper__circle {
+      border: 4px solid var(--grants-stepper-color);
+      outline: none;
+      border-radius: 18px;
+    }
+    .grants-stepper__text {
+      color: var(--grants-stepper-selected-step-label-color);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .grants-stepper__number {
+      color: var(--grants-stepper-selected-step-label-color);
+      text-decoration: none;
+      font-weight: 700;
+    }
+  }
+  .is-complete {
+    .grants-stepper__container {
+      background-color: var(--grants-stepper-color);
+      padding: 4px;
+      border-radius: 16px;
+      outline: 2px solid var(--grants-stepper-background-color);
+      color: var(--color-white);
+      vertical-align: middle;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+    .grants-stepper__number {
+      display: none;
+    }
+    .grants-stepper__completed {
+      display: inline-block;
+    }
+    .grants-stepper__circle {
+      opacity: 0 ;
+    }
+    .grants-stepper__step__completed_container {
       display: flex;
     }
-    .progress-step .progress-text {
-    color: #666;
+  }
+  .has-errors {
+    .grants-stepper__container {
+      background-color: var(--grants-stepper-color);
+      padding: 4px;
+      border-radius: 16px;
+      outline: 2px solid var(--grants-stepper-background-color);
+      color: var(--color-white);
+      vertical-align: middle;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+    .grants-stepper__number {
+      display: none;
+    }
+    .grants-stepper__error {
+      display: inline-block;
+    }
+  }
+  .progress-marker::before {
+    display: none;
+  }
+  .progress-step .progress-marker {
+    color: var(--color-black);
+  }
+  .progress-step:last-child {
+    flex-grow: 1;
+  }
+}
+@media screen and (max-width: 725px) {
+  .grants-stepper {
+    .grants-stepper__text {
+      display: none;
     }
 
-    .is-active .progress-title {
-      color: var(--hdbt-color-black);
-    }
-    .progress-title[role="link"] {
-      text-decoration: underline;
-      color: var(--hdbt-color-black);
-      &:hover {
-        text-decoration: none;
-      }
-    }
-
-
-    .progress-step {
-      margin-top: 0;
-      .progress-marker::after {
-        right: calc(-50% - 12px);
-        top: var(--spacing-layout-2-xs);
-        height: 2px;
-        background: repeating-linear-gradient(
-          90deg,
-          var(--color-white),
-          var(--color-white) 8px,
-          rgba(0, 0, 0, 0.6) 1px,
-          rgba(0, 0, 0, 0.6) 20px
-        );
-      }
-      .progress-marker::before {
-        background-color: var(--color-white);
-        color: var(--hdbt-color-black);
-        border: 2px var(--hdbt-color-black) solid;
-        width: var(--spacing-layout-s);
-        height: var(--spacing-layout-s);
-        font-size: $base-font-size;
-        margin-bottom: $spacing;
-        font-weight: bold;
-      }
-      &.is-active {
-        &:hover {
-          .progress-marker::before {
-            background-color: var(--hdbt-color-black);
-            color: var(--color-white);
-            border: 4px var(--hdbt-color-black) solid;
-          }
-        }
-        .progress-marker::before {
-          background-color: var(--hdbt-color-black);
-          color: var(--color-white);
-          border: 4px var(--hdbt-color-black) solid;
-        }
-      }
-      .progress-marker::before {
-        background-color: var(--color-white);
-        color: #666;
-        border-color: #666;
-      }
-      &:hover .progress-marker::before {
-        background-color: var(--color-white);
-        color: #666;
-        border-color: #666;
-      }
-
-      &:not(.is-active).is-complete {
-        .progress-marker::before {
-          background-color: var(--color-white);
-          color: var(--hdbt-color-black);
-          border: 4px var(--hdbt-color-black) solid;
-          content: "L";
-          transform: scale(-1, 1) rotate(-45deg);
-          font-size: $base-font-size * 2;
-        }
-        &:hover {
-          .progress-marker::before {
-            background-color: var(--color-white);
-            color: var(--hdbt-color-black);
-            border: 4px var(--hdbt-color-black) solid;
-          }
-        }
-      }
-    }
+    --grants-step-width: 40px;
   }
 }

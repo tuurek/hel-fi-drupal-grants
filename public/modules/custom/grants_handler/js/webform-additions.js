@@ -7,7 +7,7 @@
             const submissionId = drupalSettings.grants_handler.submissionId
 
             if (formData['status'] === 'DRAFT' && !$("#webform-button--delete-draft").length) {
-                $('#edit-actions').append($('<a id="webform-button--delete-draft" class="webform-button--delete-draft hds-button hds-button--secondary" href="/grants-handler/clearnavigation/' + submissionId + '">' +
+                $('#edit-actions').append($('<a id="webform-button--delete-draft" class="webform-button--delete-draft hds-button hds-button--secondary" href="/hakemus/' + submissionId + '/clear">' +
                   '  <span class="hds-button__label">' + Drupal.t('Delete draft') + '</span>' +
                   '</a>'));
             }
