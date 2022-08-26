@@ -202,9 +202,10 @@ class GrantsHandlerNavigationHelper {
     $webformId = $webform_submission->getWebForm()->id();
     $storedData = $this->getStoredData('ALL', $webform_submission);
 
+    $operation = self::ERROR_OPERATION;
+
     // Get outta here if the submission hasn't been saved yet.
     if (empty($webform_submission->id())) {
-      $operation = self::ERROR_OPERATION;
       $errors = array_filter(
               $this->getFromStore($webform_submission->getWebForm()->id()),
               function ($item) use ($operation) {
