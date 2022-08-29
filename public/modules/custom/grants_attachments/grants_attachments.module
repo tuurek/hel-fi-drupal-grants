@@ -46,10 +46,12 @@ function template_preprocess_grants_attachments(array &$variables) {
     $currentDestination = str_replace($currentHost, '', $currentUri);
 
     $submission = \Drupal\webform\Entity\WebformSubmission::load($variables["children"]["#webform_submission"]);
-    $submissionData = $submission->getData();
+    if ($submission != NULL) {
+      $submissionData = $submission->getData();
+    }
 
     // allow only DRAFTs to be deleted.
-    if (isset($submissionData['status']) && $submissionData['status'] == 'DRAFT') {
+    if (is_array($submissionData) && isset($submissionData['status']) && $submissionData['status'] == 'DRAFT') {
       $integrationId = str_replace('/', '_', $variables["children"]["#default_value"]["integrationID"]);
 
       $deleteUrl = \Drupal\Core\Url::fromRoute(

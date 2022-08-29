@@ -131,7 +131,10 @@ class GrantsAttachmentsController extends ControllerBase {
       // Remove given attachment from application.
       $updatedAttachments = [];
       foreach ($submissionData['attachments'] as $key => $attachment) {
-        if ($attachment["integrationID"] == $integrationId) {
+        if (
+          (isset($attachment["integrationID"]) &&
+            $attachment["integrationID"] != NULL) &&
+          $attachment["integrationID"] == $integrationId) {
           unset($submissionData['attachments'][$key]);
         }
       }
@@ -139,10 +142,7 @@ class GrantsAttachmentsController extends ControllerBase {
       // Build data -> should validate ok, since we're
       // only deleting attachments.
       $applicationData = $this->applicationHandler->webformToTypedData(
-        $submissionData,
-        '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
-        'grants_metadata_yleisavustushakemus'
-      );
+        $submissionData);
 
       // Update in ATV.
       $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
