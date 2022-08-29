@@ -1,0 +1,31 @@
+uuid: cea379fa-8309-44d8-98b5-dab90f4f89a8
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_avustuslaji
+    - node.type.form_page
+    - taxonomy.vocabulary.avustuslaji
+  module:
+    - entity_reference_revisions
+id: node.form_page.field_avustuslaji
+field_name: field_avustuslaji
+entity_type: node
+bundle: form_page
+label: Avustuslaji
+description: 'Valitse avustuslaji lomakkeelle. Nämä kentät vaikuttavat hakutuloksiin.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      avustuslaji: avustuslaji
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference_revisions

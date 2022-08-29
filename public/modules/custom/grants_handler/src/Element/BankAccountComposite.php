@@ -71,6 +71,11 @@ class BankAccountComposite extends WebformCompositeBase {
     $accOoptions = [
       '' => '-' . t('Select account') . '-',
     ];
+
+    if (!isset($profileData["bankAccounts"])) {
+      return $element;
+    }
+
     foreach ($profileData["bankAccounts"] as $delta => $account) {
       $accOoptions[$account['bankAccount']] = $account['bankAccount'];
     }

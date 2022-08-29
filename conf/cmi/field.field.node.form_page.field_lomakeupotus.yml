@@ -1,0 +1,25 @@
+uuid: c8190aec-3486-4a9d-a99a-7305951e6124
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_lomakeupotus
+    - node.type.form_page
+  module:
+    - webform
+id: node.form_page.field_lomakeupotus
+field_name: field_lomakeupotus
+entity_type: node
+bundle: form_page
+label: Lomakeupotus
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:webform'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: webform
