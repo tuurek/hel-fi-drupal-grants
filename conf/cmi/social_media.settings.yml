@@ -45,6 +45,6 @@ social_media:
     img: email
     enable_forward: 0
     show_forward: 1
-langcode: en
+langcode: fi
 _core:
   default_config_hash: AyqoIo0GS3jnXfsBkJZCiVA4WsqNkQItXRfQMmg91jI

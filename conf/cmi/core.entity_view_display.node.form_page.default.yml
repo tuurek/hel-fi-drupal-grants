@@ -3,17 +3,22 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.form_page.field_avustuslaji
     - field.field.node.form_page.field_content
+    - field.field.node.form_page.field_hakijatyyppi
     - field.field.node.form_page.field_has_hero
     - field.field.node.form_page.field_hero
     - field.field.node.form_page.field_liftup_image
+    - field.field.node.form_page.field_lomakeupotus
     - field.field.node.form_page.field_lower_content
     - field.field.node.form_page.field_metatags
     - node.type.form_page
   module:
     - entity_reference_revisions
     - metatag
+    - options
     - user
+    - webform
 _core:
   default_config_hash: cz8DhQBJGX0eDYFZNhRAr32GsOmDhhcuMSM3NzTk2fM
 id: node.form_page.default
@@ -21,6 +26,15 @@ targetEntityType: node
 bundle: form_page
 mode: default
 content:
+  field_avustuslaji:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
   field_content:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -29,6 +43,21 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_hakijatyyppi:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_lomakeupotus:
+    type: webform_entity_reference_entity_view
+    label: above
+    settings:
+      source_entity: true
+    third_party_settings: {  }
+    weight: 8
     region: content
   field_lower_content:
     type: entity_reference_revisions_entity_view
