@@ -1,17 +1,26 @@
 (function ($, Drupal, drupalSettings) {
-  Drupal.behaviors.GrantsHandlerApplicationSeachBehavior = {
+  Drupal.behaviors.GrantsHandlerApplicationSearchBehavior = {
     attach: function (context, settings) {
-      var draftListOptions = {
+
+
+
+      var fullListOptions = {
         valueNames: [ 'application-list-item--name', 'application-list-item--status', 'application-list-item--number', 'application-list-item--submitted' ]
       };
-      var draftList = new List('applications__list', draftListOptions);
+      var fullList = new List('applications__list', fullListOptions);
+      $('#applications__list .application-list__count-value').html(fullList.update().matchingItems.length);
+
+      fullList.on('searchComplete', function(){
+        $('#applications__list .application-list__count-value').html(fullList.update().matchingItems.length);
+      });
+
       $('select.sort').change(function(){
         var selection = $(this).val();
-        draftList.sort(selection);
+        fullList.sort(selection);
       });
 
       $('button.sort').click(function() {
-        draftList.sort($(this).data('sort'));
+        fullList.sort($(this).data('sort'));
       });
 
 

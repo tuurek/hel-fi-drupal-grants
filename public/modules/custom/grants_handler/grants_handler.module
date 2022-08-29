@@ -130,6 +130,9 @@ function grants_handler_theme(): array {
       'variables' => [
         'items' => NULL,
         'type' => NULL,
+        'header' => NULL,
+        'id' => NULL,
+        'description' => NULL,
       ],
     ],
     'application_list_item' => [
@@ -1008,8 +1011,8 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   ];
 
 
-  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application'), $viewApplicationUrl);
-  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
+  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $viewApplicationUrl);
+  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editApplicationUrl);
 
 }
 

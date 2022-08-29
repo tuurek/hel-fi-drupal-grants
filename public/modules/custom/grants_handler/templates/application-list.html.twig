@@ -2,32 +2,50 @@
   <div class="container">
     <h2>{{ header }}</h2>
     <div>{{ description }}</div>
+    {% if type != 'drafts' %}
     <div class="application-list__search-row">
-    <div class="application-list-filter hds-text-input">
-      <label for="applicationListFilter" class="hds-text-input__label">{{ "Search for an application"|t }}</label>
-      <div class="hds-text-input__input-wrapper"><input autocomplete="off" class="hds-text-input__input search" type="text" name="applicationListFilter" id="applicationListFilter" />
+      <div class="application-list-filter hds-text-input">
+        <label for="applicationListFilter" class="hds-text-input__label">{{ "Search for an application"|t }}</label>
+        <div class="hds-text-input__input-wrapper">
+          <input autocomplete="off" class="hds-text-input__input search" type="text" name="applicationListFilter" id="applicationListFilter" />
+        </div>
+      </div>
+        <div>
+          <button type="button" class="hds-button hds-button--primary">
+            <span class="hds-button__label">{{ "Search for application"|t }}</span>
+            <span aria-hidden="true" class="hds-icon hds-icon--search"></span>
+          </button>
+        </div>
+    </div>
+    <div class="hds-checkbox">
+      <input type="checkbox" id="checkbox-processed" class="hds-checkbox__input" />
+      <label for="checkbox-processed"  class="hds-checkbox__label">{{ "Show only applications being processed"|t }}</label>
+    </div>
+    <hr/>
+    <div class="application-list__information-row">
+      <div class="application-list__count"><span class="application-list__count-value">&nbsp;</span> {{ 'Applications'|t }}</div>
+      <div class=""application-list--select">
+        <label for="applicationListSort" class="hds-text-input__label">{{ "Sort"|t }}</label>
+        <div class="grant-applications--select-wrapper">
+          <select name="applicationListSort" id="applicationListSort" class="sort form-select grant-applications--select">
+            <option value="" selected>{{ "Sort by"|t }}</option>
+            <option value="application-list-item--submitted">{{ "Submitted time"|t }}</option>
+            <option value="application-list-item--status">{{ "Status"|t }}</option>
+            <option value="application-list-item--name">{{ "Name (a-z)" }}</option>
+            <option value="application-list-item--number">{{ "Application number" }}</option>
+          </select>
+          <span class="grant-applications--select-focus"></span>
+          <i class="hds-icon hds-icon--angle-down hds-icon--size-m" aria-hidden="true" style="vertical-align: middle"></i>
+        <button class="sort hidden" data-sort="application-list-item--submitted"></button>
       </div>
     </div>
-      <div>
-    <button type="button" class="hds-button hds-button--primary">
-      <span class="hds-button__label">{{ "Search for application"|t }}</span>
-      <span aria-hidden="true" class="hds-icon hds-icon--search"></span>
-    </button></div>
+  </div>
+
+  {% else %}
+    <div class="application-list__information-row">
+      <div class="application-list__count"><span class="application-list__count-value">&nbsp;</span> {{ 'Applications'|t }}</div>
     </div>
-    <label><input type="checkbox" value="">{{ "Show only applications being processed"|t }}</label>
-    <hr/>
-    <div>
-      <label for="applicationListSort">{{ "Sort"|t }}</label>
-      <select name="applicationListSort" id="applicationListSort" class="sort">
-        <option value="" selected>{{ "Sort by"|t }}</option>
-        <option value="application-list-item--submitted">{{ "Submitted time"|t }}</option>
-        <option value="application-list-item--status">{{ "Status"|t }}</option>
-        <option value="application-list-item--name">{{ "Name (a-z)" }}</option>
-        <option value="application-list-item--number">{{ "Application number" }}</option>
-      </select>
-      <button class="sort hidden" data-sort="application-list-item--submitted"></button>
-    </div>
-    <div class="application-list__count">X {{ 'Applications'|t }}</div>
+    {% endif %}
     <ul class="list application-list">
       {% for item in items %}
         {{ item }}

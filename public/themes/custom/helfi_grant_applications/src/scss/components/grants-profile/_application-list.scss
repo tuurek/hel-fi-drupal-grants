@@ -7,18 +7,25 @@
     h3, h4 {
       margin-top: var(--spacing-xs);
     }
+    h4 {
+      font-size: 1rem;
+    }
+    &__link {
+      margin-top: var(--spacing-m);
+      a {
+        font-size: 1.25rem;
+        i {
+          vertical-align: text-bottom;
+        }
+      }
+    }
     &__row {
       display: flex;
       flex-flow: row wrap;
       justify-content: space-between;
+      gap: var(--spacing-m);
       &__left {
         justify-content: flex-start;
-      }
-      > div {
-        margin-left: var(--spacing-m);
-        &:first-child {
-          margin-left: 0;
-        }
       }
     }
     &--status {
@@ -44,6 +51,26 @@
     &--status--rejected, &--status--deleted, &--status--canceled, &--status--cancelled, &--status--done {
       padding: var(--spacing-3-xs) var(--spacing-s);
       background: var(--color-alert);
+    }
+  }
+  &__count {
+    font-size: 1.5rem;
+    &-value {
+      font-weight: bold;
+    }
+  }
+  &__information-row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    @media screen and (max-width: 35rem) {
+      flex-flow: row wrap;
+    }
+    .grant-applications--select-wrapper select {
+      width: 322px;
+      max-width: 100%;
     }
   }
   &__search-row {
