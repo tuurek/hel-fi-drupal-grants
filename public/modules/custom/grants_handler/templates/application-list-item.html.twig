@@ -9,6 +9,7 @@
     <div class="application-list__item--status application-list__item--status--{{ statusString|lower }}">
       {{ statusString }}
     </div>
+    {% if (statusString == 'DRAFT') %}
     <div class="applicataion-list__item--delete">
       <a class="hds-link hds-link--medium" href="/">
         <span aria-hidden="true" class="hds-icon hds-icon--trash hds-icon--size-s"></span><span class="link-label">
@@ -16,22 +17,36 @@
         </span>
       </a>
     </div>
+    {% else %}
+      <div class="applicataion-list__item--print">
+        <a class="hds-link hds-link--medium" href="/">
+          <span aria-hidden="true" class="hds-icon hds-icon--printer hds-icon--size-s"></span><span class="link-label">
+          {{ "Print application"|t }}
+        </span>
+        </a>
+      </div>
+    {% endif %}
   </div>
   <h3 class="application-list__item--name">
     {{ applicationFormName }}
   </h3>
-  <div>
-    {{ viewApplicationLink }}
+  <div class="application-list__item__row application-list__item__row__left">
+    <div class="application-list__item--number">
+      <h4>{{ "Application number"|t }}</h4>
+      {{ applicationNumber }}
+    </div>
+    <div class="application-list__item--submitted">
+      <h4>{{ "Submission date"|t }}</h4>
+      {{ applicationSubmitted }}
+    </div>
   </div>
-  <div class="application-list__item--number">
-    <h4>{{ "Application number"|t }}</h4>
-    {{ applicationNumber }}
-  </div>
-  <div class="application-list__item--submitted">
-    {{ applicationSubmitted }}
-  </div>
-
-  <div>
+  {% if (statusString == 'DRAFT') %}
+  <div class="application-list__item__link">
     {{ editApplicationLink }}
   </div>
+  {% else %}
+  <div class="application-list__item__link">
+    {{ viewApplicationLink }}
+  </div>
+  {% endif %}
 </li>

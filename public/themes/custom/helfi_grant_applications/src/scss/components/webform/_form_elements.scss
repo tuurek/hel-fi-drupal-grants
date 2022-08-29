@@ -100,7 +100,7 @@
 .hds-text-input .hds-text-input__input {
   width: auto;
 }
-form .hds-text-input__input-wrapper {
+form .hds-text-input__input-wrapper, .hds-text-input__input-wrapper  {
   input, textarea,  {
     &.webform--small {
       max-width: 184px;

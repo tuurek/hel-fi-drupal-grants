@@ -2,9 +2,17 @@
   <div class="container">
     <h2>{{ header }}</h2>
     <div>{{ description }}</div>
-    <div class="application-list-filter">
-      <label for="applicationListFilter">{{ "Search for an application"|t }}</label>
-      <input class="search" type="text" name="applicationListFilter" id="applicationListFilter" />
+    <div class="application-list__search-row">
+    <div class="application-list-filter hds-text-input">
+      <label for="applicationListFilter" class="hds-text-input__label">{{ "Search for an application"|t }}</label>
+      <div class="hds-text-input__input-wrapper"><input autocomplete="off" class="hds-text-input__input search" type="text" name="applicationListFilter" id="applicationListFilter" />
+      </div>
+    </div>
+      <div>
+    <button type="button" class="hds-button hds-button--primary">
+      <span class="hds-button__label">{{ "Search for application"|t }}</span>
+      <span aria-hidden="true" class="hds-icon hds-icon--search"></span>
+    </button></div>
     </div>
     <label><input type="checkbox" value="">{{ "Show only applications being processed"|t }}</label>
     <hr/>
