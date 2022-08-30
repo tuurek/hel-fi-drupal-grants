@@ -12,7 +12,7 @@ _core:
 id: helfi_grant_applications_heroblock
 theme: helfi_grant_applications
 region: before_content
-weight: -5
+weight: -11
 provider: null
 plugin: hero_block
 settings:
