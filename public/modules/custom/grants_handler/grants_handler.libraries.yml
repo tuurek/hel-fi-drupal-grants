@@ -23,7 +23,6 @@ grants_handler.progress.tracker:
 application-search-sort:
   version: 1.x
   js:
-    js/list.min.js: { }
     js/application-search.js: { }
   dependencies:
     - core/drupalSettings
