@@ -1,0 +1,6 @@
+{
+    "phpSniffer.autoDetect": true,
+    "phpSniffer.standard": "Drupal",
+    "phpSniffer.run": "onSave",
+    "editor.wordSeparators": "`~!@#%^&*()-=+[{]}\\|;:'\",.<>/?"
+  }

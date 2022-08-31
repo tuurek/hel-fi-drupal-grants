@@ -8,3 +8,10 @@ webform.handler.example:
     debug:
       type: boolean
       label: 'Enable debugging'
+grants_handler.statusStrings:
+  type: config_object
+  label: 'Status strings'
+  mapping:
+    message:
+      type: text
+      label: 'Message'

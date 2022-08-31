@@ -10,6 +10,11 @@ grants_oma_asiointi.grantsprofile:
   title: 'Grants profile'
   base_route: grants_oma_asiointi.front
 
+#grants_oma_asiointi.grantsprofile.edit:
+#  route_name: grants_profile.edit
+#  title: 'Grants profile'
+#  base_route: grants_oma_asiointi.front
+
 grants_oma_asiointi.applications:
   route_name: grants_oma_asiointi.applications_list
   title: 'Company applications'

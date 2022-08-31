@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f366f923deea1d0c0a3b5d12fe2a8845",
+    "content-hash": "5fa4580bf381c95cc0213f7a50ac29fa",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5967,6 +5967,102 @@
             }
         },
         {
+            "name": "drupal/listjs",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/listjs.git",
+                "reference": "8.x-1.4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/listjs-8.x-1.4.zip",
+                "reference": "8.x-1.4",
+                "shasum": "11544877413f20f5d20618105b6c7dc0595b3001"
+            },
+            "require": {
+                "drupal/core": "^8.7.7 || ^9 || ^10",
+                "drupal/listjs_lib": "*"
+            },
+            "require-dev": {
+                "drupal/listjs_multi_widget_test": "*",
+                "drupal/listjs_test_views": "*",
+                "drupal/listjs_theme_test": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1644776291",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Subhojit Paul",
+                    "homepage": "http://subhojit777.in",
+                    "email": "subhojitpaul21@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "subhojit777",
+                    "homepage": "https://www.drupal.org/user/1812492"
+                }
+            ],
+            "description": "Search, sort, filter HTML lists using listjs library",
+            "homepage": "https://www.drupal.org/project/listjs",
+            "support": {
+                "source": "https://github.com/subhojit777/listjs",
+                "issues": "https://github.com/subhojit777/listjs/issues",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/listjs_lib",
+            "version": "1.4.0",
+            "require": {
+                "drupal/core": "^8.7.7 || ^9 || ^10",
+                "drupal/listjs": "^1"
+            },
+            "type": "metapackage",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.4",
+                    "datestamp": "1644776291",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Anybody",
+                    "homepage": "https://www.drupal.org/user/291091"
+                },
+                {
+                    "name": "subhojit777",
+                    "homepage": "https://www.drupal.org/user/1812492"
+                }
+            ],
+            "description": "Add <a href=\"http://listjs.com\">list.js</a> library definition.",
+            "homepage": "https://www.drupal.org/project/listjs",
+            "support": {
+                "source": "https://git.drupalcode.org/project/listjs"
+            }
+        },
+        {
             "name": "drupal/matomo",
             "version": "1.19.0",
             "source": {
@@ -6405,6 +6501,108 @@
                 "source": "https://git.drupalcode.org/project/metatag",
                 "issues": "https://www.drupal.org/project/issues/metatag",
                 "docs": "https://www.drupal.org/docs/8/modules/metatag"
+            }
+        },
+        {
+            "name": "drupal/multivalue_form_element",
+            "version": "1.0.0-beta4",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/multivalue_form_element.git",
+                "reference": "1.0.0-beta4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/multivalue_form_element-1.0.0-beta4.zip",
+                "reference": "1.0.0-beta4",
+                "shasum": "e44990d002988c734e65551cf3534d57801a96a5"
+            },
+            "require": {
+                "drupal/core": "^9.3",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "composer/installers": "^1.11",
+                "drupal/core-composer-scaffold": "^9.3",
+                "drupal/core-dev": "^9.3",
+                "drupal/drupal-extension": "^4.1",
+                "drush/drush": "^10.3",
+                "openeuropa/code-review": "^2.0",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0.0-beta5",
+                "phpspec/prophecy-phpunit": "^2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta4",
+                    "datestamp": "1659428979",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                },
+                "composer-exit-on-patch-failure": true,
+                "enable-patching": true,
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                },
+                "installer-paths": {
+                    "build/core": [
+                        "type:drupal-core"
+                    ],
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
+                    ],
+                    "build/modules/contrib/{$name}": [
+                        "type:drupal-module"
+                    ],
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\multivalue_form_element\\": "./src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Drupal\\Tests\\multivalue_form_element\\": "./tests/src/"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "scripts": {
+                "post-install-cmd": [
+                    "./vendor/bin/run drupal:site-setup"
+                ],
+                "post-update-cmd": [
+                    "./vendor/bin/run drupal:site-setup"
+                ]
+            },
+            "license": [
+                "EUPL-1.2"
+            ],
+            "authors": [
+                {
+                    "name": "hernani",
+                    "homepage": "https://www.drupal.org/user/448086"
+                },
+                {
+                    "name": "ieguskiza",
+                    "homepage": "https://www.drupal.org/user/2652665"
+                },
+                {
+                    "name": "sardara",
+                    "homepage": "https://www.drupal.org/user/2353864"
+                }
+            ],
+            "description": "Provides a form element that wraps existing form elements, making them multi-value.",
+            "homepage": "https://www.drupal.org/project/multivalue_form_element",
+            "support": {
+                "source": "https://git.drupalcode.org/project/multivalue_form_element"
             }
         },
         {
@@ -6856,26 +7054,26 @@
         },
         {
             "name": "drupal/redirect",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/redirect.git",
-                "reference": "8.x-1.7"
+                "reference": "8.x-1.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/redirect-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "013b2541a5ef0cf423a3caa1ae89cc5866504877"
+                "url": "https://ftp.drupal.org/files/projects/redirect-8.x-1.8.zip",
+                "reference": "8.x-1.8",
+                "shasum": "a7a440423434472ff7115ae69df01553f763f839"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9"
+                "drupal/core": "^9.2 || ^10"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1639380488",
+                    "version": "8.x-1.8",
+                    "datestamp": "1661806955",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -17958,6 +18156,7 @@
         "drupal/helfi_formtool_embed": 20,
         "drupal/helfi_helsinki_profiili": 20,
         "drupal/helfi_yjdh": 20,
+        "drupal/multivalue_form_element": 10,
         "drupal/webform_views": 10
     },
     "prefer-stable": true,

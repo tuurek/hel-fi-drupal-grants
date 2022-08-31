@@ -214,6 +214,7 @@ class GrantsAttachments extends WebformCompositeBase {
       $lines[] = $value["description"];
     }
 
+    // @todo Integraatio lisää tiedostonimeen oman prefixin, tän pitäs tukea sitä.
     if (isset($value["fileName"])) {
       if (in_array($value["fileName"], $attachmentEvents["event_targets"])) {
         $lines[] = '<span class="ikoniluokka">Upload OK</span>';

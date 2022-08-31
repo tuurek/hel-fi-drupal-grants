@@ -7,6 +7,8 @@ use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Returns responses for Grants Profile routes.
@@ -56,19 +58,17 @@ class GrantsProfileController extends ControllerBase {
 
       $profile = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
 
+      if (empty($profile)) {
+        $editProfileUrl = Url::fromRoute(
+          'grants_profile.edit'
+        );
+        return new RedirectResponse($editProfileUrl->toString());
+      }
+
       $build['#profile'] = $profile;
     }
 
-    $gpForm = \Drupal::formBuilder()
-      ->getForm('Drupal\grants_profile\Form\GrantsProfileForm');
-    $build['#grants_profile_form'] = $gpForm;
-
     $build['#theme'] = 'own_profile';
-    $build['#content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('It works!'),
-    ];
-    $build['#title'] = $profile['companyName'] ?? '';
     $initials = NULL;
     $name = $profile['companyName'] ?? '';
     $words = explode(' ', $name);
@@ -87,6 +87,16 @@ class GrantsProfileController extends ControllerBase {
     }
     $build['#initials'] = $initials;
     $build['#colorscheme'] = 0;
+
+    $editProfileUrl = Url::fromRoute(
+      'grants_profile.edit',
+      [
+        'attributes' => [
+          'data-drupal-selector' => 'application-edit-link',
+        ],
+      ]
+    );
+    $build['#editProfileLink'] = Link::fromTextAndUrl($this->t('Edit profile <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editProfileUrl);
 
     $build['#attached']['library'][] = 'grants_profile/tabs';
     return $build;
@@ -224,24 +234,29 @@ class GrantsProfileController extends ControllerBase {
   public function deleteAddress(string $address_id): RedirectResponse {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
+    $selectedCompany = $grantsProfileService->getSelectedCompany();
 
-    $grantsProfileService->removeAddress($address_id);
+    if ($grantsProfileService->removeAddress($address_id)) {
+      try {
 
-    try {
-      $grantsProfileService->saveGrantsProfileAtv();
+        $profileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany['identifier']);
+        $grantsProfileService->saveGrantsProfile($profileContent);
 
-      $this->messenger()
-        ->addStatus($this->t('Address deleted.'));
+        $this->messenger()
+          ->addStatus($this->t('Address deleted.'));
 
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+        $this->getLogger('grants_profile')
+          ->error('Profile saving failed. ' . $e->getMessage());
+        $this->messenger()
+          ->addStatus($this->t('Address deleting failed.'));
+      }
     }
-    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-      $this->getLogger('grants_profile')
-        ->error('Profile saving failed. ' . $e->getMessage());
-      $this->messenger()
-        ->addStatus($this->t('Official deleted & profile saved.'));
-    }
-
-    return new RedirectResponse('/grants-profile');
+    $editProfileUrl = Url::fromRoute(
+      'grants_profile.edit'
+    );
+    return new RedirectResponse($editProfileUrl->toString());
   }
 
   /**
@@ -256,24 +271,31 @@ class GrantsProfileController extends ControllerBase {
   public function deleteOfficial(string $official_id): RedirectResponse {
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
+    $selectedCompanyData = $grantsProfileService->getSelectedCompany();
+    $selectedCompany = $selectedCompanyData['identifier'];
 
-    $grantsProfileService->removeOfficial($official_id);
+    if ($grantsProfileService->removeOfficial($official_id)) {
+      $profileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
-    try {
-      $grantsProfileService->saveGrantsProfileAtv();
+      try {
+        $grantsProfileService->saveGrantsProfile($profileContent);
 
-      $this->messenger()
-        ->addStatus($this->t('Official deleted.'));
+        $this->messenger()
+          ->addStatus($this->t('Official deleted.'));
 
+      }
+      catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+        $this->getLogger('grants_profile')
+          ->error('Profile saving failed. ' . $e->getMessage());
+        $this->messenger()
+          ->addStatus($this->t('Official deleted & profile saved.'));
+      }
     }
-    catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-      $this->getLogger('grants_profile')
-        ->error('Profile saving failed. ' . $e->getMessage());
-      $this->messenger()
-        ->addStatus($this->t('Official deleted & profile saved.'));
-    }
 
-    return new RedirectResponse('/grants-profile');
+    $editProfileUrl = Url::fromRoute(
+      'grants_profile.edit'
+    );
+    return new RedirectResponse($editProfileUrl->toString());
   }
 
   /**
@@ -299,12 +321,14 @@ class GrantsProfileController extends ControllerBase {
 
     $attachment = $grantsProfile->getAttachmentForFilename($bankAccount['confirmationFile']);
     try {
-      $grantsProfileService->deleteAttachment($selectedCompany, $attachment['id']);
+ 
 
       unset($bankAccount['confirmationFile']);
 
       $grantsProfileService->removeBankAccount($bank_account_id);
-      $grantsProfileService->saveGrantsProfileAtv();
+      $profileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+      $grantsProfileService->saveGrantsProfile($profileContent);
 
       $this->messenger()
         ->addStatus($this->t('Bank account deleted'));
@@ -313,8 +337,9 @@ class GrantsProfileController extends ControllerBase {
     catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       unset($bankAccount['confirmationFile']);
       $grantsProfileService->removeBankAccount($bank_account_id);
+      $profileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany);
       try {
-        $grantsProfileService->saveGrantsProfileAtv();
+        $grantsProfileService->saveGrantsProfile($profileContent);
       }
       catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
@@ -324,7 +349,10 @@ class GrantsProfileController extends ControllerBase {
       }
     }
 
-    return new RedirectResponse('/grants-profile');
+    $editProfileUrl = Url::fromRoute(
+      'grants_profile.edit'
+    );
+    return new RedirectResponse($editProfileUrl->toString());
 
   }
 
