@@ -16,7 +16,6 @@ use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionStorageInterface;
 use Drupal\grants_handler\EventsService;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Implements hook_theme().
@@ -989,7 +988,6 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     '#applicationID' => $submissionData["application_number"],
   ];
 
-
   $variables['classes'] = [
     strtolower(ApplicationHandler::$applicationStatuses[$submissionData["status"]]),
     strtolower($submissionData["application_number"]),
@@ -1005,17 +1003,23 @@ function grants_handler_preprocess_application_list_item(&$variables) {
  */
 function grants_handler_preprocess_application_status_tag(&$variables) {
 
-  $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($variables['applicationID']);
-  $submissionData = $submissionObject->getData();
-  if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
-    $config = \Drupal::config('grants_handler.settings');
-    $statusStrings = $config->get('statusStrings');
-    $variables['statusStringHumanReadable'] = t($statusStrings[$submissionData['status']]);
-    $variables['statusString'] = $submissionData['status'];
+  try {
+    $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($variables['applicationID']);
+    $submissionData = $submissionObject->getData();
+    if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
+      $config = \Drupal::config('grants_handler.settings');
+      $statusStrings = $config->get('statusStrings');
+      $variables['statusStringHumanReadable'] = t($statusStrings[$submissionData['status']]);
+      $variables['statusString'] = $submissionData['status'];
+    }
+    else {
+      \Drupal::logger('grants_handler')
+        ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+    }
   }
-  else {
-    \Drupal::logger('grants_handler')
-      ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+  catch (\Exception $e) {
+    $variables['statusStringHumanReadable'] = '';
+    $variables['statusString'] = '';
   }
 }
 
