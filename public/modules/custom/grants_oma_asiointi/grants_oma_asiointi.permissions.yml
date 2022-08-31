@@ -1,0 +1,9 @@
+access grants_oma_asiointi:
+  title: 'Access Oma Asiointi'
+  description: 'Access to oma asiointi services.'
+  restrict access: true
+
+administer grants_oma_asiointi configuration:
+  title: 'Administer grants_oma_asiointi configuration'
+  description: 'Optional description.'
+  restrict access: true

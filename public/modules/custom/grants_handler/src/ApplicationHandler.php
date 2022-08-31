@@ -4,6 +4,7 @@ namespace Drupal\grants_handler;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Access\AccessException;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -11,8 +12,8 @@ use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_metadata\AtvSchema;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -32,6 +33,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * ApplicationUploader service.
  */
 class ApplicationHandler {
+
+  /**
+   * Name of the table where log entries are stored.
+   */
+  const TABLE = 'grants_handler_saveids';
+
+  /**
+   * Name of the navigation handler.
+   */
+  const HANDLER_ID = 'application_handler';
+
 
   /**
    * The HTTP client.
@@ -133,6 +145,10 @@ class ApplicationHandler {
   public static array $applicationTypes = [
     'ECONOMICGRANTAPPLICATION' => [
       'code' => 'YLEIS',
+      'dataDefinition' => [
+        'definitionClass' => 'Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
+        'definitionId' => 'grants_metadata_yleisavustushakemus',
+      ],
       'fi' => 'Yleisavustushakemus',
       'en' => 'EN Yleisavustushakemus',
       'sv' => 'SV Yleisavustushakemus',
@@ -176,6 +192,13 @@ class ApplicationHandler {
   protected string $newStatusHeader;
 
   /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * Constructs an ApplicationUploader object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -194,6 +217,8 @@ class ApplicationHandler {
    *   Messenger.
    * @param \Drupal\grants_handler\EventsService $eventsService
    *   Access to events.
+   * @param \Drupal\Core\Database\Connection $datababse
+   *   Database connection.
    */
   public function __construct(
     ClientInterface $http_client,
@@ -203,7 +228,8 @@ class ApplicationHandler {
     GrantsProfileService $grantsProfileService,
     LoggerChannelFactory $loggerChannelFactory,
     Messenger $messenger,
-    EventsService $eventsService
+    EventsService $eventsService,
+    Connection $datababse,
   ) {
 
     $this->httpClient = $http_client;
@@ -223,7 +249,7 @@ class ApplicationHandler {
     $this->password = getenv('AVUSTUS2_PASSWORD');
 
     $this->newStatusHeader = '';
-
+    $this->database = $datababse;
   }
 
   /*
@@ -279,6 +305,7 @@ class ApplicationHandler {
     else {
       $data = $submission->getData();
       $submissionStatus = $data['status'];
+
     }
 
     if (in_array($submissionStatus, [
@@ -286,6 +313,39 @@ class ApplicationHandler {
       self::$applicationStatuses['SUBMITTED'],
       self::$applicationStatuses['SENT'],
       self::$applicationStatuses['RECEIVED'],
+    ])) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Check if given submission is allowed to be edited.
+   *
+   * @param \Drupal\webform\Entity\WebformSubmission|null $submission
+   *   Submission in question.
+   * @param string $status
+   *   If no object is available, do text comparison.
+   *
+   * @return bool
+   *   Is submission editable?
+   */
+  public static function isSubmissionFinished(?WebformSubmission $submission, string $status = ''): bool {
+    if (NULL === $submission) {
+      $submissionStatus = $status;
+    }
+    else {
+      $data = $submission->getData();
+      $submissionStatus = $data['status'];
+    }
+
+    if (in_array($submissionStatus, [
+      self::$applicationStatuses['READY'],
+      self::$applicationStatuses['DONE'],
+      self::$applicationStatuses['DELETED'],
+      self::$applicationStatuses['CANCELED'],
+      self::$applicationStatuses['CANCELLED'],
+      self::$applicationStatuses['CLOSED'],
     ])) {
       return TRUE;
     }
@@ -489,19 +549,14 @@ class ApplicationHandler {
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-
     $destination = \Drupal::request()->getRequestUri();
-
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
+    // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      /** @var \Drupal\Core\Url $rrUrl */
-      $rrUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
-
-      /** @var \Symfony\Component\HttpFoundation\RedirectResponse $rr */
-      $rr = new RedirectResponse($rrUrl->toString());
-
-      $rr->send();
+      $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
+      $redirectResponse = new RedirectResponse($redirectUrl->toString());
+      $redirectResponse->send();
     }
 
     if ($document == NULL) {
@@ -524,14 +579,26 @@ class ApplicationHandler {
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-      throw new AtvDocumentNotFoundException('Submission not found.');
+      if (self::getAppEnv() == 'LOCAL') {
+        $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
+        $submissionObject->set('serial', $submissionSerial);
+        $submissionObject->save();
+      }
+      else {
+        throw new AtvDocumentNotFoundException('Submission not found.');
+      }
     }
     else {
       $submissionObject = reset($result);
+    }
+    if ($submissionObject) {
+
+      $dataDefinition = self::getDataDefinition($document->getType());
 
       $sData = $atvSchema->documentContentToTypedData(
         $document->getContent(),
-        YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus')
+        $dataDefinition,
+        $document->getMetadata()
       );
 
       if ($selectedCompany['identifier'] !== $sData['company_number']) {
@@ -545,6 +612,7 @@ class ApplicationHandler {
 
       return $submissionObject;
     }
+    return NULL;
   }
 
   /**
@@ -588,11 +656,13 @@ class ApplicationHandler {
    */
   public function webformToTypedData(
     array $submittedFormData,
-    string $definitionClass,
-    string $definitionKey
+    string $definitionClass = '',
+    string $definitionKey = ''
   ): TypedDataInterface {
 
-    $dataDefinition = $definitionClass::create($definitionKey);
+    $dataDefinitionKeys = self::getDataDefinitionClass($submittedFormData['application_type']);
+
+    $dataDefinition = $dataDefinitionKeys['definitionClass']::create($dataDefinitionKeys['definitionId']);
 
     $typeManager = $dataDefinition->getTypedDataManager();
     $applicationData = $typeManager->create($dataDefinition);
@@ -737,6 +807,8 @@ class ApplicationHandler {
       // Set application number to meta as well to enable better searches.
       $headers['X-hki-saveId'] = Uuid::uuid4()->toString();
 
+      $this->logSubmissionSaveid(NULL, $applicationNumber, $headers['X-hki-saveId']);
+
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
           $this->username,
@@ -798,11 +870,13 @@ class ApplicationHandler {
    *
    * @param array $data
    *   Submission data.
+   * @param bool $onlyUnread
+   *   Return only unread messages.
    *
    * @return array
    *   Parsed messages with read information
    */
-  public static function parseMessages(array $data) {
+  public static function parseMessages(array $data, $onlyUnread = FALSE) {
 
     $messageEvents = array_filter($data['events'], function ($event) {
       if ($event['eventType'] == EventsService::$eventTypes['MESSAGE_READ']) {
@@ -814,15 +888,27 @@ class ApplicationHandler {
     $eventIds = array_column($messageEvents, 'eventTarget');
 
     $messages = [];
+    $unread = [];
 
     foreach ($data['messages'] as $key => $message) {
+      $msgUnread = NULL;
+      $ts = strtotime($message["sendDateTime"]);
       if (in_array($message['messageId'], $eventIds)) {
         $message['messageStatus'] = 'READ';
+        $msgUnread = FALSE;
       }
       else {
         $message['messageStatus'] = 'UNREAD';
+        $msgUnread = TRUE;
       }
-      $messages[] = $message;
+
+      if ($onlyUnread == TRUE && $msgUnread == TRUE) {
+        $unread[$ts] = $message;
+      }
+      $messages[$ts] = $message;
+    }
+    if ($onlyUnread == TRUE) {
+      return $unread;
     }
     return $messages;
   }
@@ -867,6 +953,323 @@ class ApplicationHandler {
    */
   public function clearCache(string $applicationNumber) {
     $this->atvService->clearCache($applicationNumber);
+  }
+
+  /**
+   * Get data definition class from application type.
+   *
+   * @param string $type
+   *   Type of the application.
+   */
+  public static function getDataDefinition(string $type) {
+    $defClass = self::$applicationTypes[$type]['dataDefinition']['definitionClass'];
+    $defId = self::$applicationTypes[$type]['dataDefinition']['definitionId'];
+    return $defClass::create($defId);
+  }
+
+  /**
+   * Get data definition class from application type.
+   *
+   * @param string $type
+   *   Type of the application.
+   */
+  public static function getDataDefinitionClass(string $type) {
+    return self::$applicationTypes[$type]['dataDefinition'];
+  }
+
+  /**
+   * Get company applications, either sorted by finished or all in one array.
+   *
+   * @param array $selectedCompany
+   *   Company data.
+   * @param string $appEnv
+   *   Environment.
+   * @param bool $sortByFinished
+   *   When true, results will be sorted by finished status.
+   * @param bool $sortByStatus
+   *   Sort by application status.
+   * @param string $themeHook
+   *   Use theme hook to render content. Set this to theme hook wanted to use,
+   *   and sen #submission to webform submission.
+   *
+   * @return array
+   *   Submissions in array.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public static function getCompanyApplications(
+    array $selectedCompany,
+    string $appEnv,
+    bool $sortByFinished = FALSE,
+    bool $sortByStatus = FALSE,
+  string $themeHook = '') {
+
+    /** @var \Drupal\helfi_atv\AtvService $atvService */
+    $atvService = \Drupal::service('helfi_atv.atv_service');
+
+    $applications = [];
+    $finished = [];
+    $unfinished = [];
+
+    try {
+      $applicationDocuments = $atvService->searchDocuments([
+        'service' => 'AvustushakemusIntegraatio',
+        'business_id' => $selectedCompany['identifier'],
+        'lookfor' => 'appenv:' . $appEnv,
+      ]);
+
+      /**
+       * Create rows for table.
+       *
+       * @var integer $key
+       * @var  \Drupal\helfi_atv\AtvDocument $document
+       */
+      foreach ($applicationDocuments as $key => $document) {
+        // Make sure we only use submissions from this env and the type is
+        // acceptable one.
+        if (
+          str_contains($document->getTransactionId(), $appEnv) &&
+          array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
+        ) {
+
+          try {
+            $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
+            $submissionData = $submissionObject->getData();
+            $ts = strtotime($submissionData['form_timestamp']);
+            if ($themeHook !== '') {
+              $submission = [
+                '#theme' => $themeHook,
+                '#submission' => $submissionObject,
+                '#document' => $document,
+              ];
+            }
+            else {
+              $submission = $submissionObject;
+            }
+            if ($sortByFinished == TRUE) {
+              if (self::isSubmissionFinished($submission)) {
+                $finished[$ts] = $submission;
+              }
+              else {
+                $unfinished[$ts] = $submission;
+              }
+            }
+            elseif ($sortByStatus == TRUE) {
+              $applications[$submissionData['status']][] = $submission;
+            }
+            else {
+              $applications[$ts] = $submission;
+            }
+          }
+          catch (AtvDocumentNotFoundException $e) {
+          }
+        }
+      }
+    }
+    catch (\Exception $e) {
+    }
+
+    if ($sortByFinished == TRUE) {
+      ksort($finished);
+      ksort($unfinished);
+      return [
+        'finished' => $finished,
+        'unifinished' => $unfinished,
+      ];
+    }
+    else {
+      ksort($applications);
+      return $applications;
+    }
+  }
+
+  /**
+   * Logs the current submission page.
+   *
+   * @param \Drupal\webform\WebformSubmissionInterface|null $webform_submission
+   *   A webform submission entity.
+   * @param string $applicationNumber
+   *   The page to log.
+   * @param string $saveId
+   *   Submission save id.
+   *
+   * @throws \Exception
+   */
+  public function logSubmissionSaveid(
+    ?WebformSubmissionInterface $webform_submission,
+    string $applicationNumber,
+    string $saveId
+  ) {
+
+    if ($webform_submission == NULL) {
+      $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($applicationNumber);
+    }
+
+    $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
+    $fields = [
+      'webform_id' => ($webform_submission) ? $webform_submission->getWebform()->id() : '',
+      'sid' => ($webform_submission) ? $webform_submission->id() : 0,
+      'handler_id' => self::HANDLER_ID,
+      'application_number' => $applicationNumber,
+      'saveid' => $saveId,
+      'uid' => \Drupal::currentUser()->id(),
+      'user_uuid' => $userData['sub'] ?? '',
+      'timestamp' => (string) \Drupal::time()->getRequestTime(),
+    ];
+
+    $query = $this->database->insert(self::TABLE, $fields);
+    $query->fields($fields)->execute();
+
+  }
+
+  /**
+   * Validate submission data integrity.
+   *
+   * Validates file uploads as well, we can't allow other updates to data
+   * before all attachment related things are done properly with integration.
+   *
+   * @param \Drupal\webform\WebformSubmissionInterface|null $webform_submission
+   *   Webform submission object, if known. If this is not set, submission data must be provided.
+   * @param array|null $submissionData
+   *   Submission data. If no submission object, this is required.
+   * @param string $applicationNumber
+   *   Application number.
+   * @param string $saveIdToValidate
+   *   Save uuid to validate data integrity against.
+   *
+   * @return string
+   *   Data integrity status.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   */
+  public function validateDataIntegrity(
+    ?WebformSubmissionInterface $webform_submission,
+    ?array $submissionData,
+    string $applicationNumber,
+    string $saveIdToValidate): string {
+
+    if ($submissionData == NULL || empty($submissionData)) {
+      if ($webform_submission == NULL) {
+        $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($applicationNumber);
+      }
+      $submissionData = $webform_submission->getData();
+    }
+    if ($submissionData == NULL || empty($submissionData)) {
+      $this->logger->error('No submissiondata when trying to validate saveid: @saveid', ['@saveid' => $saveIdToValidate]);
+      return 'NO_SUBMISSION_DATA';
+    }
+
+    $query = $this->database->select(self::TABLE, 'l');
+    $query->condition('application_number', $applicationNumber);
+    $query->fields('l', [
+      'lid',
+      'saveid',
+    ]);
+    $query->orderBy('l.lid', 'DESC');
+    $query->range(0, 1);
+
+    $saveid_log = $query->execute()->fetch();
+    $latestSaveid = !empty($saveid_log->saveid) ? $saveid_log->saveid : '';
+
+    if ($saveIdToValidate !== $latestSaveid) {
+      return 'DATA_NOT_SAVED_ATV';
+    }
+
+    $applicationEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_APP_OK');
+
+    if (!in_array($saveIdToValidate, $applicationEvents['event_targets'])) {
+      if ($submissionData['status'] != 'DRAFT') {
+        return 'DATA_NOT_SAVED_AVUS2';
+      }
+    }
+
+    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_ATT_OK');
+
+    $fileFieldNames = AttachmentHandler::getAttachmentFieldNames();
+
+    $nonUploaded = 0;
+    foreach ($fileFieldNames as $fieldName) {
+      $fileField = $submissionData[$fieldName] ?? NULL;
+      if ($fileField == NULL) {
+        continue;
+      }
+      if (self::isMulti($fileField)) {
+        foreach ($fileField as $muu_liite) {
+          if (isset($muu_liite['fileName'])) {
+            if (!in_array($muu_liite['fileName'], $attachmentEvents["event_targets"])) {
+              // $nonUploaded++;
+            }
+          }
+        }
+      }
+      else {
+        if (isset($fileField['fileName'])) {
+          if (!in_array($fileField['fileName'], $attachmentEvents["event_targets"])) {
+            $nonUploaded++;
+          }
+        }
+
+      }
+    }
+
+    if ($nonUploaded !== 0) {
+      return 'FILE_UPLOAD_PENDING';
+    }
+
+    return 'OK';
+
+  }
+
+  /**
+   * Is array multidimensional.
+   *
+   * @param array $arr
+   *   Array to be inspected.
+   *
+   * @return bool
+   *   True or false.
+   */
+  public static function isMulti(array $arr) {
+    foreach ($arr as $v) {
+      if (is_array($v)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Clear application data for noncopyable elements.
+   *
+   * @param $data
+   *   Data to copy from
+   *
+   * @return array
+   *   Cleaned values.
+   */
+  public static function clearDataForCopying($data): array {
+    unset($data["application_number"]);
+    unset($data["sender_firstname"]);
+    unset($data["sender_lastname"]);
+    unset($data["sender_person_id"]);
+    unset($data["sender_user_id"]);
+    unset($data["sender_email"]);
+    unset($data["metadata"]);
+    unset($data["attachments"]);
+
+    $data['events'] = [];
+    $data['messages'] = [];
+    $data['status_updates'] = [];
+
+    // Clear uploaded files..
+    foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
+      unset($data[$fieldName]);
+    }
+
+    return $data;
+
   }
 
 }

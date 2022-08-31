@@ -1,5 +1,5 @@
 uuid: 8ba67498-4133-4445-917b-12b234f19e73
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -55,12 +55,6 @@ settings:
     drupallink:
       linkit_enabled: true
       linkit_profile: helfi
-    language:
-      language_list: un
-    stylescombo:
-      styles: ''
-    tokenbrowser:
-      token_types: {  }
 image_upload:
   status: false
   scheme: public

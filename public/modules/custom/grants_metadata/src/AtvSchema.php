@@ -84,7 +84,9 @@ class AtvSchema {
    */
   public function documentContentToTypedData(
     array $documentData,
-    ComplexDataDefinitionInterface $typedDataDefinition): array {
+    ComplexDataDefinitionInterface $typedDataDefinition,
+    ?array $metadata = []
+  ): array {
 
     if (isset($documentData['content']) && is_array($documentData['content'])) {
       $documentContent = $documentData['content'];
@@ -183,6 +185,8 @@ class AtvSchema {
     }
 
     $typedDataValues['muu_liite'] = $other_attachments;
+
+    $typedDataValues['metadata'] = $metadata;
 
     return $typedDataValues;
 

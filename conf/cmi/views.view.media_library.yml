@@ -1,5 +1,5 @@
 uuid: 6c72327b-5e21-4862-aa05-c9d23a61c852
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -1314,6 +1314,8 @@ display:
           settings:
             image_link: ''
             image_style: media_library
+            image_loading:
+              attribute: lazy
         name:
           id: name
           table: media_field_data

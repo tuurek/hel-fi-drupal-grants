@@ -52,6 +52,8 @@ class GrantsAttachmentsController extends ControllerBase {
    *   Application handler.
    * @param \Drupal\Core\Http\RequestStack $requestStack
    *   Drupal requests.
+   * @param \Drupal\grants_handler\EventsService $eventsService
+   *   Use submission events productively.
    */
   public function __construct(
     AtvService $helfi_atv,
@@ -129,17 +131,18 @@ class GrantsAttachmentsController extends ControllerBase {
       // Remove given attachment from application.
       $updatedAttachments = [];
       foreach ($submissionData['attachments'] as $key => $attachment) {
-        if ($attachment["integrationID"] == $integrationId) {
+        if (
+          (isset($attachment["integrationID"]) &&
+            $attachment["integrationID"] != NULL) &&
+          $attachment["integrationID"] == $integrationId) {
           unset($submissionData['attachments'][$key]);
         }
       }
 
-      // Build data -> should validate ok, since we're only deleting attachments.
+      // Build data -> should validate ok, since we're
+      // only deleting attachments.
       $applicationData = $this->applicationHandler->webformToTypedData(
-        $submissionData,
-        '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
-        'grants_metadata_yleisavustushakemus'
-      );
+        $submissionData);
 
       // Update in ATV.
       $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(

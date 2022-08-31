@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -80,6 +79,13 @@ class ApplicationController extends ControllerBase {
   protected GrantsProfileService $grantsProfileService;
 
   /**
+   * Application handler.
+   *
+   * @var \Drupal\grants_handler\ApplicationHandler
+   */
+  protected ApplicationHandler $applicationHandler;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): ApplicationController {
@@ -92,6 +98,7 @@ class ApplicationController extends ControllerBase {
     $instance->renderer = $container->get('renderer');
     $instance->request = $container->get('request_stack');
     $instance->grantsProfileService = $container->get('grants_profile.service');
+    $instance->applicationHandler = $container->get('grants_handler.application_handler');
     return $instance;
   }
 
@@ -218,6 +225,12 @@ class ApplicationController extends ControllerBase {
 
       if ($webform_submission != NULL) {
         $webform = $webform_submission->getWebform();
+        $submissionData = $webform_submission->getData();
+        $saveIdValidates = $this->applicationHandler->validateDataIntegrity(
+          $webform_submission,
+          NULL,
+          $submissionData['application_number'],
+          $submissionData['metadata']['saveid'] ?? '');
 
         // Set webform submission template.
         $build = [
@@ -236,7 +249,7 @@ class ApplicationController extends ControllerBase {
 
         // Information.
         $build['information'] = [
-          '#type' => 'webform_submission_information',
+          '#theme' => 'webform_submission_information',
           '#webform_submission' => $webform_submission,
           '#source_entity' => $webform_submission,
         ];
@@ -286,73 +299,73 @@ class ApplicationController extends ControllerBase {
    * @return array
    *   Build for the page.
    */
-  public function edit(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
-    try {
-      $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
-      if ($webform_submission == NULL) {
-        throw new NotFoundHttpException($this->t('Application @number not found.', [
-          '@number' => $submission_id,
-        ]));
-      }
-
-      $my_form = \Drupal::entityTypeManager()
-        ->getStorage('webform')
-        ->load($webform_submission->getWebform()->id());
-
-      $my_form->setOriginalId($webform_submission->id());
-
-      $form = $my_form->getSubmissionForm(['data' => $webform_submission->getData()]);
-
-      // $webform = $webform_submission->getWebform();
-      // $webform->entity = $webform_submission;
-      //
-      // $form = \Drupal::entityTypeManager()
-      // ->getViewBuilder('webform')
-      // ->view($rr);
-      return [
-        '#theme' => 'grants_handler_edit_application',
-        '#view_mode' => $view_mode,
-        '#submissionObject' => $webform_submission,
-        '#submissionId' => $submission_id,
-        '#editForm' => $form,
-        // '#editForm' => [
-        // '#type' => 'webform',
-        // '#webform' => $webform_submission->getWebform()->id(),
-        // '#default_data' =>
-        // ],
-      ];
-
-    }
-    catch (InvalidPluginDefinitionException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (PluginNotFoundException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (AtvDocumentNotFoundException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (GuzzleException $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-    catch (\Exception $e) {
-      throw new NotFoundHttpException('Application not found');
-    }
-  }
+  // Public function edit(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
+  //    try {
+  //      $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
+  //      if ($webform_submission == NULL) {
+  //        throw new NotFoundHttpException($this->t('Application @number not found.', [
+  //          '@number' => $submission_id,
+  //        ]));
+  //      }
+  //
+  //      $my_form = \Drupal::entityTypeManager()
+  //        ->getStorage('webform')
+  //        ->load($webform_submission->getWebform()->id());
+  //
+  //      $my_form->setOriginalId($webform_submission->id());
+  //
+  //      $form = $my_form->getSubmissionForm(['data' => $webform_submission->getData()]);
+  //
+  //      // $webform = $webform_submission->getWebform();
+  //      // $webform->entity = $webform_submission;
+  //      //
+  //      // $form = \Drupal::entityTypeManager()
+  //      // ->getViewBuilder('webform')
+  //      // ->view($rr);
+  //      return [
+  //        '#theme' => 'grants_handler_edit_application',
+  //        '#view_mode' => $view_mode,
+  //        '#submissionObject' => $webform_submission,
+  //        '#submissionId' => $submission_id,
+  //        '#editForm' => $form,
+  //        // '#editForm' => [
+  //        // '#type' => 'webform',
+  //        // '#webform' => $webform_submission->getWebform()->id(),
+  //        // '#default_data' =>
+  //        // ],
+  //      ];
+  //
+  //    }
+  //    catch (InvalidPluginDefinitionException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (PluginNotFoundException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (AtvDocumentNotFoundException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (GuzzleException $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //    catch (\Exception $e) {
+  //      throw new NotFoundHttpException('Application not found');
+  //    }
+  //  }.
 
   /**
    * Returns a page title.
    */
-  public function getEditTitle($webform_submission): TranslatableMarkup {
+  public function getEditTitle($webform_submission): string {
     $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-    return $this->t('Edit application: @submissionId', ['@submissionId' => $applicationNumber]);
+    return $applicationNumber;
   }
 
   /**
    * Returns a page title.
    */
-  public function getTitle($submission_id): TranslatableMarkup {
-    return $this->t('View application: @submissionId', ['@submissionId' => $submission_id]);
+  public function getTitle($submission_id): string {
+    return $submission_id;
   }
 
 }

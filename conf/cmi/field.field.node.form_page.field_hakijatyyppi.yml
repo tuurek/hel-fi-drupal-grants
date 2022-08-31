@@ -1,0 +1,21 @@
+uuid: d1b50a65-1f69-4f2b-b9e0-d3f10c7a2286
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hakijatyyppi
+    - node.type.form_page
+  module:
+    - options
+id: node.form_page.field_hakijatyyppi
+field_name: field_hakijatyyppi
+entity_type: node
+bundle: form_page
+label: Hakijatyyppi
+description: 'Mille hakijatyypille tämä hakemus on tarkoitettu.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

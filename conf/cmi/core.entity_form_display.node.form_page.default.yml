@@ -3,19 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.form_page.field_avustuslaji
     - field.field.node.form_page.field_content
+    - field.field.node.form_page.field_hakijatyyppi
     - field.field.node.form_page.field_has_hero
     - field.field.node.form_page.field_hero
     - field.field.node.form_page.field_liftup_image
+    - field.field.node.form_page.field_lomakeupotus
     - field.field.node.form_page.field_lower_content
     - field.field.node.form_page.field_metatags
     - node.type.form_page
   module:
+    - hdbt_admin_editorial
     - media_library
     - metatag
     - paragraphs
     - path
     - scheduler
+    - webform
 _core:
   default_config_hash: oUmoqulpXoZX5g_0a69tPAnB0rc83VIa3qW7WjWYMWQ
 id: node.form_page.default
@@ -29,9 +34,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_avustuslaji:
+    type: options_select
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_content:
     type: paragraphs
-    weight: 12
+    weight: 15
     region: content
     settings:
       title: Paragraph
@@ -47,6 +58,12 @@ content:
         add_above: '0'
         collapse_edit_all: collapse_edit_all
         duplicate: duplicate
+    third_party_settings: {  }
+  field_hakijatyyppi:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_has_hero:
     type: boolean_checkbox
@@ -76,14 +93,22 @@ content:
     third_party_settings: {  }
   field_liftup_image:
     type: media_library_widget
-    weight: 3
+    weight: 4
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_lomakeupotus:
+    type: webform_entity_reference_select
+    weight: 16
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
+    third_party_settings: {  }
   field_lower_content:
     type: paragraphs
-    weight: 52
+    weight: 22
     region: content
     settings:
       title: Paragraph
@@ -102,10 +127,11 @@ content:
     third_party_settings: {  }
   field_metatags:
     type: metatag_firehose
-    weight: 51
+    weight: 21
     region: content
     settings:
       sidebar: false
+      use_details: true
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -116,7 +142,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -129,25 +155,30 @@ content:
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 20
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 11
+    weight: 14
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 9
+    weight: 11
     region: content
     settings:
       display_label: true
@@ -177,12 +208,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 30
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 50
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }

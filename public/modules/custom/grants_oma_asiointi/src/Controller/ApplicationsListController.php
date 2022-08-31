@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\grants_handler\Controller;
+namespace Drupal\grants_oma_asiointi\Controller;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -10,6 +10,7 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\TempStoreException;
+use Drupal\Core\Url;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
@@ -20,6 +21,7 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -147,12 +149,19 @@ class ApplicationsListController extends ControllerBase {
 
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
+    // If no company selected, no mandates no access.
+    if ($selectedCompany == NULL) {
+      $destination = \Drupal::request()->getRequestUri();
+      $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
+      $redirectResponse = new RedirectResponse($redirectUrl->toString());
+      $redirectResponse->send();
+    }
+
     try {
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
-      // 'service' => 'AvustushakemusIntegraatio',
+        'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany['identifier'],
-      ],
-        TRUE);
+      ]);
 
       $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
@@ -170,7 +179,7 @@ class ApplicationsListController extends ControllerBase {
         // @todo when ATV/integration supports search via meta fields,
         // we can search per environment.
         if (
-          str_contains($document->getTransactionId(), $appEnv) &&
+         str_contains($document->getTransactionId(), $appEnv) &&
           array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
         ) {
 
@@ -205,6 +214,10 @@ class ApplicationsListController extends ControllerBase {
     $build = [
       '#theme' => 'application_list',
       '#items' => $items,
+      '#type' => 'all',
+      '#header' => t('My applications'),
+      '#id' => 'applications__list',
+      '#description' => 'DESCRIPTION GOES HERE',
       '#attached' => [
         'library' => [
           'grants_handler/application-search-sort',

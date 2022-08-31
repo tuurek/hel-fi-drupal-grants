@@ -1,0 +1,10 @@
+# Custom module library for general purposes.
+grants_oma_asiointi:
+  js:
+    js/list.min.js: { }
+    js/application-draft-list.js: { }
+  css:
+    component:
+      css/grants-oma-asiointi.css: {}
+  dependencies:
+    - core/drupalSettings

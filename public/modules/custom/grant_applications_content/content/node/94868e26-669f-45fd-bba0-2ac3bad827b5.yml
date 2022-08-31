@@ -29,6 +29,9 @@ default:
   color_palette:
     -
       value: engel
+  hide_sidebar_navigation:
+    -
+      value: false
   toc_enabled:
     -
       value: false
@@ -37,7 +40,7 @@ default:
       value: Sisällysluettelo
   path:
     -
-      alias: /yleisavustuslomake
+      alias: /yleisavustushakemus
       langcode: fi
       pathauto: 0
   content_translation_source:
@@ -65,9 +68,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_list_of_links_design:
             -
               value: without-image
@@ -90,9 +90,6 @@ default:
                   behavior_settings:
                     -
                       value: {  }
-                  revision_translation_affected:
-                    -
-                      value: true
                   field_list_of_links_desc:
                     -
                       value: 'Haluatko tietää, mitä tietoja yhteisön tulee valmistautua antamaan tätä avustushakemusta hakiessaan? Tutustu ennen lomakkeen täyttämistä hakemiseen vaadittaviin tietoihin.'
@@ -120,9 +117,6 @@ default:
                   behavior_settings:
                     -
                       value: {  }
-                  revision_translation_affected:
-                    -
-                      value: true
                   field_list_of_links_desc:
                     -
                       value: 'Hakemukseen on liitettävä yhteisön toimintaan liittyviä liitteitä. Tutustu listaan tarvittavista liitteistä.'
@@ -150,9 +144,6 @@ default:
                   behavior_settings:
                     -
                       value: {  }
-                  revision_translation_affected:
-                    -
-                      value: true
                   field_list_of_links_desc:
                     -
                       value: 'Löydät lisää vinkkejä hakemuksen kenttien täydentämiseen ?-ikonin takaa tai lukemalla vastauksia usein kysyttyihin kysymyksiin.'
@@ -162,34 +153,9 @@ default:
                       title: 'Tarvitsetko apua?'
                       options:
                         target_new: 0
+  field_hakijatyyppi:
     -
-      entity:
-        _meta:
-          version: '1.0'
-          entity_type: paragraph
-          uuid: 95ec31cc-1f5b-49d9-972d-612fff9a772a
-          bundle: webform
-          default_langcode: fi
-        default:
-          status:
-            -
-              value: true
-          created:
-            -
-              value: 1647351272
-          behavior_settings:
-            -
-              value: {  }
-          revision_translation_affected:
-            -
-              value: true
-          field_webform:
-            -
-              target_id: yleisavustushakemus
-              default_data: ''
-              status: open
-              open: ''
-              close: ''
+      value: registered_community
   field_has_hero:
     -
       value: true
@@ -212,9 +178,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_hero_bg_color:
             -
               value: engel
@@ -231,7 +194,606 @@ default:
           field_hero_title:
             -
               value: Yleisavustuslomake
+  field_lomakeupotus:
+    -
+      target_id: yleisavustushakemus
+      default_data: ''
+      status: open
+      open: ''
+      close: ''
   field_metatags:
     -
       value:
         description: Yleisavustuslomake
+translations:
+  sv:
+    status:
+      -
+        value: true
+    uid:
+      -
+        target_id: 1
+    title:
+      -
+        value: 'SV Yleisavustuslomake'
+    created:
+      -
+        value: 1661756969
+    promote:
+      -
+        value: false
+    sticky:
+      -
+        value: false
+    toc_enabled:
+      -
+        value: false
+    toc_title:
+      -
+        value: Sisällysluettelo
+    path:
+      -
+        alias: ''
+        langcode: sv
+        pathauto: 0
+    content_translation_source:
+      -
+        value: fi
+    content_translation_outdated:
+      -
+        value: false
+    field_content:
+      -
+        entity:
+          _meta:
+            version: '1.0'
+            entity_type: paragraph
+            uuid: 3202a7d7-6c47-400f-8ef1-4faad850666b
+            bundle: list_of_links
+            default_langcode: sv
+          default:
+            status:
+              -
+                value: true
+            created:
+              -
+                value: 1647351170
+            behavior_settings:
+              -
+                value: {  }
+            revision_translation_affected:
+              -
+                value: true
+            field_list_of_links_design:
+              -
+                value: without-image
+            field_list_of_links_links:
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: c243737a-0710-4833-83a7-d4fe83f8f352
+                    bundle: list_of_links_item
+                    default_langcode: sv
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351170
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Haluatko tietää, mitä tietoja yhteisön tulee valmistautua antamaan tätä avustushakemusta hakiessaan? Tutustu ennen lomakkeen täyttämistä hakemiseen vaadittaviin tietoihin.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Hakemiseen tarvittavat tiedot'
+                        options:
+                          target_new: true
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: 7a3f2323-627b-4ebb-8c5a-a2b9c8b01bf7
+                    bundle: list_of_links_item
+                    default_langcode: sv
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351235
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Hakemukseen on liitettävä yhteisön toimintaan liittyviä liitteitä. Tutustu listaan tarvittavista liitteistä.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Hakemukselle tarvittavat liitteet (1-5 liitettä)'
+                        options:
+                          target_new: 0
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: 57acff33-3366-4105-a0b6-751634bb46b8
+                    bundle: list_of_links_item
+                    default_langcode: sv
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351253
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Löydät lisää vinkkejä hakemuksen kenttien täydentämiseen ?-ikonin takaa tai lukemalla vastauksia usein kysyttyihin kysymyksiin.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Tarvitsetko apua?'
+                        options:
+                          target_new: 0
+    field_has_hero:
+      -
+        value: true
+    field_hero:
+      -
+        entity:
+          _meta:
+            version: '1.0'
+            entity_type: paragraph
+            uuid: 74ce59f5-fe30-42dd-bad6-63e41ad995f1
+            bundle: hero
+            default_langcode: sv
+          default:
+            status:
+              -
+                value: true
+            created:
+              -
+                value: 1647351120
+            behavior_settings:
+              -
+                value: {  }
+            revision_translation_affected:
+              -
+                value: true
+            field_hero_bg_color:
+              -
+                value: engel
+            field_hero_desc:
+              -
+                value: "<p>Kaupunginvaltuusto</p>\r\n"
+                format: full_html
+            field_hero_design:
+              -
+                value: no-background
+            field_hero_link_design:
+              -
+                value: primary
+            field_hero_title:
+              -
+                value: Yleisavustuslomake
+    field_metatags:
+      -
+        value:
+          description: Yleisavustuslomake
+  en:
+    status:
+      -
+        value: true
+    uid:
+      -
+        target_id: 1
+    title:
+      -
+        value: 'EN Yleisavustuslomake'
+    created:
+      -
+        value: 1661757029
+    promote:
+      -
+        value: false
+    sticky:
+      -
+        value: false
+    toc_enabled:
+      -
+        value: false
+    toc_title:
+      -
+        value: Sisällysluettelo
+    path:
+      -
+        alias: ''
+        langcode: en
+        pathauto: 0
+    content_translation_source:
+      -
+        value: fi
+    content_translation_outdated:
+      -
+        value: false
+    field_content:
+      -
+        entity:
+          _meta:
+            version: '1.0'
+            entity_type: paragraph
+            uuid: 68765e6b-5061-4eb6-a3c4-e3350f8d87da
+            bundle: list_of_links
+            default_langcode: en
+          default:
+            status:
+              -
+                value: true
+            created:
+              -
+                value: 1647351170
+            behavior_settings:
+              -
+                value: {  }
+            revision_translation_affected:
+              -
+                value: true
+            field_list_of_links_design:
+              -
+                value: without-image
+            field_list_of_links_links:
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: c34273c6-c0cc-4118-a321-972334c49299
+                    bundle: list_of_links_item
+                    default_langcode: en
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351170
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Haluatko tietää, mitä tietoja yhteisön tulee valmistautua antamaan tätä avustushakemusta hakiessaan? Tutustu ennen lomakkeen täyttämistä hakemiseen vaadittaviin tietoihin.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Hakemiseen tarvittavat tiedot'
+                        options:
+                          target_new: true
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: aeebf377-97d5-444d-9660-858d79724387
+                    bundle: list_of_links_item
+                    default_langcode: en
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351235
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Hakemukseen on liitettävä yhteisön toimintaan liittyviä liitteitä. Tutustu listaan tarvittavista liitteistä.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Hakemukselle tarvittavat liitteet (1-5 liitettä)'
+                        options:
+                          target_new: 0
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: 3a9499bf-8319-4945-99d1-9a86b4e51f03
+                    bundle: list_of_links_item
+                    default_langcode: en
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351253
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Löydät lisää vinkkejä hakemuksen kenttien täydentämiseen ?-ikonin takaa tai lukemalla vastauksia usein kysyttyihin kysymyksiin.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Tarvitsetko apua?'
+                        options:
+                          target_new: 0
+    field_has_hero:
+      -
+        value: true
+    field_hero:
+      -
+        entity:
+          _meta:
+            version: '1.0'
+            entity_type: paragraph
+            uuid: b4848527-2e6e-44a4-8b07-2ead3fba1cef
+            bundle: hero
+            default_langcode: en
+          default:
+            status:
+              -
+                value: true
+            created:
+              -
+                value: 1647351120
+            behavior_settings:
+              -
+                value: {  }
+            revision_translation_affected:
+              -
+                value: true
+            field_hero_bg_color:
+              -
+                value: engel
+            field_hero_desc:
+              -
+                value: "<p>Kaupunginvaltuusto</p>\r\n"
+                format: full_html
+            field_hero_design:
+              -
+                value: no-background
+            field_hero_link_design:
+              -
+                value: primary
+            field_hero_title:
+              -
+                value: Yleisavustuslomake
+    field_metatags:
+      -
+        value:
+          description: Yleisavustuslomake
+  ru:
+    status:
+      -
+        value: true
+    uid:
+      -
+        target_id: 1
+    title:
+      -
+        value: 'RU Yleisavustuslomake'
+    created:
+      -
+        value: 1661757196
+    promote:
+      -
+        value: false
+    sticky:
+      -
+        value: false
+    toc_enabled:
+      -
+        value: false
+    toc_title:
+      -
+        value: Sisällysluettelo
+    path:
+      -
+        alias: ''
+        langcode: ru
+        pathauto: 0
+    content_translation_source:
+      -
+        value: fi
+    content_translation_outdated:
+      -
+        value: false
+    field_content:
+      -
+        entity:
+          _meta:
+            version: '1.0'
+            entity_type: paragraph
+            uuid: 3e1c1091-dbdf-40cf-8dd4-7a57530643ea
+            bundle: list_of_links
+            default_langcode: ru
+          default:
+            status:
+              -
+                value: true
+            created:
+              -
+                value: 1647351170
+            behavior_settings:
+              -
+                value: {  }
+            revision_translation_affected:
+              -
+                value: true
+            field_list_of_links_design:
+              -
+                value: without-image
+            field_list_of_links_links:
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: a461ec0f-9aa5-4984-bace-eb13b5418256
+                    bundle: list_of_links_item
+                    default_langcode: ru
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351170
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Haluatko tietää, mitä tietoja yhteisön tulee valmistautua antamaan tätä avustushakemusta hakiessaan? Tutustu ennen lomakkeen täyttämistä hakemiseen vaadittaviin tietoihin.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Hakemiseen tarvittavat tiedot'
+                        options:
+                          target_new: true
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: 2770a4f6-fb78-4167-9107-d9884b76b526
+                    bundle: list_of_links_item
+                    default_langcode: ru
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351235
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Hakemukseen on liitettävä yhteisön toimintaan liittyviä liitteitä. Tutustu listaan tarvittavista liitteistä.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Hakemukselle tarvittavat liitteet (1-5 liitettä)'
+                        options:
+                          target_new: 0
+              -
+                entity:
+                  _meta:
+                    version: '1.0'
+                    entity_type: paragraph
+                    uuid: cd8b62ce-eff1-4ac4-a895-f7416dac0400
+                    bundle: list_of_links_item
+                    default_langcode: ru
+                  default:
+                    status:
+                      -
+                        value: true
+                    created:
+                      -
+                        value: 1647351253
+                    behavior_settings:
+                      -
+                        value: {  }
+                    revision_translation_affected:
+                      -
+                        value: true
+                    field_list_of_links_desc:
+                      -
+                        value: 'Löydät lisää vinkkejä hakemuksen kenttien täydentämiseen ?-ikonin takaa tai lukemalla vastauksia usein kysyttyihin kysymyksiin.'
+                    field_list_of_links_link:
+                      -
+                        uri: 'https://google.fi'
+                        title: 'Tarvitsetko apua?'
+                        options:
+                          target_new: 0
+    field_has_hero:
+      -
+        value: true
+    field_hero:
+      -
+        entity:
+          _meta:
+            version: '1.0'
+            entity_type: paragraph
+            uuid: 038189bd-2c23-4230-9631-bf0a085791f7
+            bundle: hero
+            default_langcode: ru
+          default:
+            status:
+              -
+                value: true
+            created:
+              -
+                value: 1647351120
+            behavior_settings:
+              -
+                value: {  }
+            revision_translation_affected:
+              -
+                value: true
+            field_hero_bg_color:
+              -
+                value: engel
+            field_hero_desc:
+              -
+                value: "<p>Kaupunginvaltuusto</p>\r\n"
+                format: full_html
+            field_hero_design:
+              -
+                value: no-background
+            field_hero_link_design:
+              -
+                value: primary
+            field_hero_title:
+              -
+                value: Yleisavustuslomake
+    field_metatags:
+      -
+        value:
+          description: Yleisavustuslomake

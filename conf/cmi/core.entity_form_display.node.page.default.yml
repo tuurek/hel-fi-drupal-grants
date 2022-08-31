@@ -1,5 +1,5 @@
 uuid: c2c45dfb-e67b-45ed-a311-d24961762174
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -135,6 +135,11 @@ content:
     third_party_settings: {  }
   scheduler_settings:
     weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

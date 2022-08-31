@@ -16,10 +16,11 @@ function grants_webform_print_preprocess_webform_container_base_html(&$variables
     $variables['element']['#attributes']['class'][] = "webform-preview-inner-section";
   }
   if ($variables['element']['#type'] == 'webform_wizard_page') {
-    $variables['value']['#type'] = 'details';
-    unset($variables['value']['#open']);
-    $variables['element']['#type'] = 'details';
-    $variables['element']['#webform_plugin_id'] = 'details';
+    $variables['value']['#type'] = 'webform_section';
+    $variables['value']['#open'] = true;
+    $variables['element']['#type'] = 'webform_section';
+    $variables['element']['#open'] = true;
+    $variables['element']['#webform_plugin_id'] = 'webform_section';
   }
 }
 
@@ -251,5 +252,90 @@ function grants_webform_print_preprocess_page_title(&$variables) {
   // @see shortcut_preprocess_page_title()
   if (isset($variables['title_suffix'])) {
     unset($variables['title_suffix']['add_or_remove_shortcut']);
+  }
+}
+
+use Drupal\grants_handler\ApplicationHandler;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
+  /** @var \Drupal\webform\WebformInterface $webform */
+  $webform = $variables['webform'];
+  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
+  $webform_submission = $variables['webform_submission'];
+
+  $pages = $webform->getPages($variables['operation'], $webform_submission);
+  // Get the logged errors for the form.
+  /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
+  $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
+
+  $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
+
+  $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
+
+  // Iterate through the pages and set appropriate page classes.
+  foreach ($pages as $key => $page) {
+
+    // Add the default class for the page.
+    $variables['page_classes'][$key][] = 'progress-step';
+
+    $hasVisitedThisPage = $grants_formnavigation_helper->hasVisitedPage(
+      $webform_submission,
+      $key
+    );
+
+    if ($hasVisitedThisPage == TRUE ) {
+      $variables['page_classes'][$key][] = 'has-visited';
+    } else {
+      $variables['page_classes'][$key][] = 'not-visited';
+    }
+
+    // visited, no errors.
+    if ($hasVisitedThisPage == TRUE && !isset($all_errors[$key])) {
+      $variables['page_classes'][$key][] = 'is-complete';
+    }
+
+    // Add the visited and error classes if it has been logged.
+    if (/*$hasVisitedThisPage == TRUE && */(isset($all_errors[$key]) && !empty($all_errors[$key]))) {
+      // Add an error class if the page has errors or complete class if not.
+      $variables['page_classes'][$key][] = 'has-errors';
+    }
+    // Add an active class to the current page.
+    if ($variables['current_page'] == $key) {
+      $variables['page_classes'][$key][] = 'is-active';
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_webform_print_preprocess_webform_progress_bar(&$variables) {
+  /** @var \Drupal\webform\WebformInterface $webform */
+  $webform = $variables['webform'];
+  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
+  $webform_submission = $variables['webform_submission'];
+
+  $pages = $webform->getPages($variables['operation'], $webform_submission);
+  // Get the logged errors for the form.
+  /** @var \Drupal\grants_formnavigation\GrantsFormNavigationHelper $grants_formnavigation_helper */
+  $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
+  $current_errors = $webform->getState('current_errors');
+
+  // Iterate through the pages and set appropriate page classes.
+  foreach ($pages as $key => $page) {
+    // Add the default class for the page.
+    $variables['page_classes'][$key][] = 'webform-progress-bar__page';
+    // Add the visited and error classes if it has been logged.
+    if (isset($current_errors[$key])) {
+      // Add an error class if the page has errors or complete class if not.
+      $variables['page_classes'][$key][] = empty($current_errors[$key]) ? 'webform-progress-bar__page--done' : 'webform-progress-bar__page--errors';
+    }
+    // Add an active class to the current page.
+    if ($variables['current_page'] == $key) {
+      $variables['page_classes'][$key][] = 'webform-progress-bar__page--current';
+    }
   }
 }

@@ -20,11 +20,14 @@
 ]
 %}
 
-<h3>Messages</h3>
+<div class="container">
+    <h3>{{ 'Messages'|t }}</h3>
 
-<div{{ attributes.addClass(classes) }}>
-    {{ messages }}
-</div>
-<div{{ attributes.addClass(classes) }}>
-    {{ message_form }}
+    <div{{ attributes.addClass(classes) }}>
+        {{ messages }}
+    </div>
+    <div{{ attributes.addClass(classes) }}>
+        {{ message_form }}
+    </div>
+
 </div>

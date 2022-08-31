@@ -18,6 +18,10 @@
     view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
 ] %}
 <div class="container">
+
+    <h3>{{ 'Application'|t }}</h3>
+    <p>{{ 'Here you can see details of your application'|t }}</p>
+
     <div{{ attributes.addClass(classes) }}>
         {{ elements }}
     </div>

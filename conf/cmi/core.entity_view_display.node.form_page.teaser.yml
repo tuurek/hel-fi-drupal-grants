@@ -4,10 +4,13 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.form_page.field_avustuslaji
     - field.field.node.form_page.field_content
+    - field.field.node.form_page.field_hakijatyyppi
     - field.field.node.form_page.field_has_hero
     - field.field.node.form_page.field_hero
     - field.field.node.form_page.field_liftup_image
+    - field.field.node.form_page.field_lomakeupotus
     - field.field.node.form_page.field_lower_content
     - field.field.node.form_page.field_metatags
     - node.type.form_page
@@ -30,9 +33,12 @@ content:
     weight: 0
     region: content
 hidden:
+  field_avustuslaji: true
   field_content: true
+  field_hakijatyyppi: true
   field_has_hero: true
   field_hero: true
+  field_lomakeupotus: true
   field_lower_content: true
   field_metatags: true
   langcode: true

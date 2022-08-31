@@ -1,0 +1,18 @@
+#oma-asiointi__sent {
+  background: var(--color-silver-light);
+  .application-list__item {
+    background: var(--color-white);
+  }
+}
+.oma-asiointi {
+  ul {
+    padding: 0;
+  }
+  &__list {
+    padding-top: var(--spacing-l);
+    padding-bottom: var(--spacing-l);
+    h2 {
+      margin-bottom: var(--spacing-m);
+    }
+  }
+}

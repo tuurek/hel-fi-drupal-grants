@@ -1,6 +1,6 @@
 _core:
   default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
-langcode: en
+langcode: fi
 uuid: c7259448-db95-43bf-9851-b51cf95b0159
 name: 'Hel.fi Avustusasiointi'
 mail: noreply@hel.fi
@@ -11,4 +11,4 @@ page:
   front: /avustukset
 admin_compact_mode: false
 weight_select_max: 100
-default_langcode: en
+default_langcode: fi

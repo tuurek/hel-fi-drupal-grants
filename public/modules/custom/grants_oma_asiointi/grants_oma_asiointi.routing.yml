@@ -1,0 +1,15 @@
+grants_oma_asiointi.front:
+  path: '/oma-asiointi'
+  defaults:
+    _title_callback: '\Drupal\grants_oma_asiointi\Controller\GrantsOmaAsiointiController::title'
+    _controller: '\Drupal\grants_oma_asiointi\Controller\GrantsOmaAsiointiController::build'
+  requirements:
+    _permission: 'access content'
+
+grants_oma_asiointi.applications_list:
+  path: '/oma-asiointi/hakemukset'
+  defaults:
+    _title: 'Yhteisön hakemukset'
+    _controller: '\Drupal\grants_oma_asiointi\Controller\ApplicationsListController::build'
+  requirements:
+    _permission: 'view own webform submission'

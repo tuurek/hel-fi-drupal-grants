@@ -1,0 +1,18 @@
+uuid: 64518817-1f91-43ac-ad6e-d596e2f43fa0
+langcode: fi
+status: true
+dependencies:
+  theme:
+    - helfi_grant_applications
+id: sivunotsikko
+theme: helfi_grant_applications
+region: tools
+weight: -12
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Sivun otsikko'
+  label_display: '0'
+  provider: core
+visibility: {  }

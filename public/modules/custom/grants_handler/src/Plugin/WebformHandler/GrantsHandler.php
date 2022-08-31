@@ -448,6 +448,7 @@ class GrantsHandler extends WebformHandlerBase {
     $this->alterFormNavigation($form, $form_state, $webform_submission);
 
     $form['#webform_submission'] = $webform_submission;
+    $webform = $webform_submission->getWebform();
     $form['#form_state'] = $form_state;
 
     $this->setFromThirdPartySettings($webform_submission->getWebform());
@@ -491,6 +492,66 @@ class GrantsHandler extends WebformHandlerBase {
       $thisYearPlus1 => $thisYearPlus1,
       $thisYearPlus2 => $thisYearPlus2,
     ];
+
+    if ($this->applicationNumber) {
+      $dataIntegrityStatus = $this->applicationHandler->validateDataIntegrity(
+      NULL,
+      $submissionData,
+      $this->applicationNumber,
+      $submissionData['metadata']['saveid'] ?? '');
+
+      if ($dataIntegrityStatus != 'OK') {
+        $form['#disabled'] = TRUE;
+        $this->messenger()->addWarning($this->t('Data integrity mismatch. Please refresh form in a moment'));
+      }
+    }
+
+    $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
+
+    // Foreach ($all_errors as $page => $errors) {
+    //      /**.
+    /** * @var string $fieldName */
+    /** * @var  \Drupal\Core\StringTranslation\TranslatableMarkup $error */
+    // */
+    //      foreach ($errors as $fieldName => $error) {
+    //        foreach ($form['elements'] as $key1 => $element) {
+    //          foreach ($element as $key2 => $element2) {
+    //            if (!str_starts_with($key2, '#')) {
+    //              // If found on this level.
+    //              if ($fieldName == $key2) {
+    //                $e = 'asdf';
+    //              }
+    //              elseif (is_array($element2)) {
+    //                foreach ($element2 as $key3 => $element3) {
+    //                  if (!str_starts_with($key3, '#')) {
+    //                    // If found on this level.
+    //                    if ($fieldName == $key3) {
+    //                      // $element3['errors'][] = $error;
+    //                      //                      $form['elements'][$key1][$key2][$key3]['#errors'][] = $error;
+    //                    }
+    //                    elseif (is_array($element3)) {
+    //                      foreach ($element3 as $key4 => $element4) {
+    //                        if (!str_starts_with($key4, '#')) {
+    //                          if ($fieldName == $key4) {
+    //                            $e = 'asdf';
+    //                          }
+    //                          if (is_array($element4)) {
+    //                            $d = 'asfd';
+    //                          }
+    //                        }
+    //                      }
+    //                    }
+    //                  }
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //        $d = 'asdf';
+    //        // $element["toiminnasta_vastaavat_henkilot"]["community_officials"]
+    //      }
+    //    }.
+    $form['#errors'] = $all_errors;
   }
 
   /**
@@ -539,6 +600,7 @@ class GrantsHandler extends WebformHandlerBase {
       $visited = $this->grantsFormNavigationHelper->hasVisitedPage($webform_submission, $current_page);
       // Log the page if it has not been visited before.
       if (!$visited) {
+
         $this->grantsFormNavigationHelper->logPageVisit($webform_submission, $current_page);
       }
 
@@ -1040,29 +1102,19 @@ class GrantsHandler extends WebformHandlerBase {
         // $redirectResponse->send();
       }
       else {
-        $redirectUrl = Url::fromRoute(
-          'grants_handler.completion',
-          ['submission_id' => $this->applicationNumber],
-          [
-            'attributes' => [
-              'data-drupal-selector' => 'application-saved-successfully-link',
-            ],
-          ]
-        );
-
         $this->messenger()
           ->addStatus(
             t(
               'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
               [
                 '@number' => $this->applicationNumber,
-                '@link' => Link::fromTextAndUrl('here', $url)->toString(),
+                '@link' => 'Support link',
               ]
             )
           );
       }
       // $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      //      return $redirectResponse;
+      //  return $redirectResponse;
       $form_state->setRedirect(
                 'grants_handler.completion',
                 ['submission_id' => $this->applicationNumber],
@@ -1155,6 +1207,9 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function logErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state): array {
     try {
+
+      $fe = $form_state->getErrors();
+
       // Log current errors.
       $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
 
