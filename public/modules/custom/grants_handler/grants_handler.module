@@ -16,6 +16,7 @@ use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionStorageInterface;
 use Drupal\grants_handler\EventsService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Implements hook_theme().
@@ -135,6 +136,11 @@ function grants_handler_theme(): array {
       'variables' => [
         'submission' => NULL,
         'document' => NULL,
+      ],
+    ],
+    'application_status_tag' => [
+      'variables' => [
+        'applicationID' => NULL,
       ],
     ],
     'message_list' => [
@@ -943,16 +949,6 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
   $variables['applicationFormName'] = ApplicationHandler::$applicationTypes[$submissionData["application_type"]][$language];
 
-  if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
-    $config = \Drupal::config('grants_handler.settings');
-    $statusStrings = $config->get('statusStrings');
-    $variables['statusString'] = t($statusStrings[$submissionData['status']]);
-  }
-  else {
-    \Drupal::logger('grants_handler')
-      ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
-  }
-
   $variables['applicationNumber'] = $submissionData["application_number"];
 
   try {
@@ -988,6 +984,11 @@ function grants_handler_preprocess_application_list_item(&$variables) {
       ],
     ]
   );
+  $variables['statusTag'] = [
+    '#theme' => 'application_status_tag',
+    '#applicationID' => $submissionData["application_number"],
+  ];
+
 
   $variables['classes'] = [
     strtolower(ApplicationHandler::$applicationStatuses[$submissionData["status"]]),
@@ -997,6 +998,30 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $viewApplicationUrl);
   $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editApplicationUrl);
 
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_application_status_tag(&$variables) {
+
+  try {
+    $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($variables['applicationID']);
+    $submissionData = $submissionObject->getData();
+    if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
+      $config = \Drupal::config('grants_handler.settings');
+      $statusStrings = $config->get('statusStrings');
+      $variables['statusStringHumanReadable'] = t($statusStrings[$submissionData['status']]);
+      $variables['statusString'] = $submissionData['status'];
+    }
+    else {
+      \Drupal::logger('grants_handler')
+        ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+    }
+  }
+  catch (\Exception $e) {
+    throw new NotFoundHttpException($this->t('Submission not found'));
+  }
 }
 
 /**
