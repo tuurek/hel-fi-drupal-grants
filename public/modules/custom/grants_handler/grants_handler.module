@@ -1024,6 +1024,29 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_grants_handler_completion(&$variables) {
+  $variables['statusTag'] = [
+    '#theme' => 'application_status_tag',
+    '#applicationID' => $variables["submissionId"],
+  ];
+  $variables['ownApplicationsLink'] = Link::createFromRoute(t('My Applications'), 'grants_oma_asiointi.applications_list')->toRenderable();
+  $variables['viewApplicationLink'] = Link::createFromRoute(t('View Application'), 'grants_handler.view_application', [
+          'submission_id' => $variables["submissionId"],
+        ]);
+  try {
+    $submissionObject = $variables['submissionObject'];
+    $submissionData = $submissionObject->getData();
+    $variables['applicationTimestamp'] = $submissionData['form_timestamp'];
+  }
+  catch (\Exception $e) {
+    $variables['applicationTimestamp'] = '';
+  }
+}
+
+
+/**
  * Implements hook_preprocess().
  */
 function grants_handler_preprocess_message_list_item(&$variables) {
