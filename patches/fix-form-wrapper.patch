@@ -1,0 +1,13 @@
+diff --git a/core/modules/system/templates/form.html.twig b/core/modules/system/templates/form.html.twig
+index 2cd1e95f28..1fc1a54974 100644
+--- a/core/modules/system/templates/form.html.twig
++++ b/core/modules/system/templates/form.html.twig
+@@ -12,6 +12,8 @@
+  * @ingroup themeable
+  */
+ #}
++<div class="block-system-main-block">
+ <form{{ attributes }}>
+   {{ children }}
+ </form>
++</div>
