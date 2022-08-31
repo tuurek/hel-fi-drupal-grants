@@ -1005,22 +1005,17 @@ function grants_handler_preprocess_application_list_item(&$variables) {
  */
 function grants_handler_preprocess_application_status_tag(&$variables) {
 
-  try {
-    $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($variables['applicationID']);
-    $submissionData = $submissionObject->getData();
-    if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
-      $config = \Drupal::config('grants_handler.settings');
-      $statusStrings = $config->get('statusStrings');
-      $variables['statusStringHumanReadable'] = t($statusStrings[$submissionData['status']]);
-      $variables['statusString'] = $submissionData['status'];
-    }
-    else {
-      \Drupal::logger('grants_handler')
-        ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
-    }
+  $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($variables['applicationID']);
+  $submissionData = $submissionObject->getData();
+  if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
+    $config = \Drupal::config('grants_handler.settings');
+    $statusStrings = $config->get('statusStrings');
+    $variables['statusStringHumanReadable'] = t($statusStrings[$submissionData['status']]);
+    $variables['statusString'] = $submissionData['status'];
   }
-  catch (\Exception $e) {
-    throw new NotFoundHttpException($this->t('Submission not found'));
+  else {
+    \Drupal::logger('grants_handler')
+      ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
   }
 }
 
