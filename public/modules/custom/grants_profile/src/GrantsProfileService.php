@@ -771,7 +771,7 @@ class GrantsProfileService {
   /**
    * Get selected company id.
    *
-   * @return string|null
+   * @return array|null
    *   Selected company
    */
   public function getSelectedCompany(): ?array {

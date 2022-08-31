@@ -13,6 +13,8 @@ use Drupal\grants_mandate\Controller\GrantsMandateController;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for Oma Asiointi routes.
@@ -107,6 +109,16 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
    */
   public function build() {
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+
+    if ($selectedCompany == NULL) {
+      // $current_uri = \Drupal::request()->getRequestUri();
+      $url = Url::fromRoute('grants_mandate.mandateform')
+        ->setAbsolute()
+        ->toString();
+      $response = new RedirectResponse($url);
+      return $response;
+    }
+
     $appEnv = ApplicationHandler::getAppEnv();
 
     $applications = ApplicationHandler::getCompanyApplications(

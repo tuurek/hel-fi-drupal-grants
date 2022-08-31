@@ -71,7 +71,7 @@ class WebformNavigationController extends ControllerBase {
       }
     }
 
-    return new RedirectResponse('/form/' . $webForm->id());
+    return new RedirectResponse('/oma-asiointi');
 
   }
 
