@@ -18,4 +18,25 @@
     view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
 ] %}
 
-Kiitos sivu tässä!
+<div{{ attributes.addClass(classes) }}>
+  <div class="container">
+    <div class="grants-handler__completion">
+      icon
+      <h2>{{ "Grant application sent successfully"|t }}</h2>
+      <div class="grants-handler__completion__info-row">
+        <div class="grants-handler__completion__item--submitted">
+          <h4>{{ "Submission date"|t }}</h4>
+          {# TODO: lähetyksen ajankohta tähän? #}
+        </div>
+        <div class="grants-handler__completion__item--number">
+          <h4>{{ "Application number"|t }}</h4>
+          {# TODO: hakemusnumero tähän #}
+        </div>
+      </div>
+      <div>
+        {# TODO: statusrivi, kun löytyy omasta teemasta, myös tähän. #}
+      </div>
+
+    </div>
+  </div>
+</div>
