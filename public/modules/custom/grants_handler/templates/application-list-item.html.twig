@@ -1,14 +1,10 @@
-
-
 <li
   data-drupal-selector="{{ applicationNumber }}"
   id="{{ applicationNumber }}"
   class="application-list__item {{ classes|join(' ') }}"
 >
   <div class="application-list__item__row">
-    <div class="application-list__item--status application-list__item--status--{{ statusString|lower }}">
-      {{ statusString }}
-    </div>
+    {{ statusTag }}
     {% if (statusString == 'DRAFT') %}
     <div class="applicataion-list__item--delete">
       <a class="hds-link hds-link--medium" href="/">{# TODO: Link #}
