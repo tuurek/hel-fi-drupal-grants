@@ -11,13 +11,16 @@
     value: menu_link_content
   revision_created:
     value: '1660553694'
-  revision_user: false
-  revision_log_message: false
+  revision_user:
+    target_id: '0'
+  revision_log_message:
+    value: ''
   enabled:
     value: '1'
   title:
     value: Yleisavustushakemus
-  description: false
+  description:
+    value: ''
   menu_name:
     value: main
   link:
@@ -34,7 +37,8 @@
     value: '0'
   expanded:
     value: '0'
-  parent: false
+  parent:
+    value: ''
   changed:
     value: '1660553694'
   default_langcode:
@@ -71,7 +75,8 @@
     value: menu_link_content
   revision_created:
     value: '1661414471'
-  revision_user: false
+  revision_user:
+    target_id: '0'
   revision_log_message: false
   enabled:
     value: '1'
@@ -81,7 +86,7 @@
   menu_name:
     value: main
   link:
-    uri: 'route:<nolink>'
+    uri: 'internal:/haettavat-avustukset'
     title: ''
     options:
       attributes:
@@ -89,14 +94,14 @@
   external:
     value: '0'
   rediscover:
-    value: '0'
+    value: '1'
   weight:
     value: '0'
   expanded:
     value: '0'
   parent: false
   changed:
-    value: '1661414471'
+    value: '1661929729'
   default_langcode:
     value: '1'
   revision_default:
@@ -131,13 +136,16 @@
     value: menu_link_content
   revision_created:
     value: '1661414499'
-  revision_user: false
-  revision_log_message: false
+  revision_user:
+    target_id: '0'
+  revision_log_message:
+    value: ''
   enabled:
     value: '1'
   title:
     value: 'Tietoa avustuksisista'
-  description: false
+  description:
+    value: ''
   menu_name:
     value: main
   link:
@@ -154,7 +162,8 @@
     value: '0'
   expanded:
     value: '0'
-  parent: false
+  parent:
+    value: ''
   changed:
     value: '1661414499'
   default_langcode:
@@ -191,13 +200,16 @@
     value: menu_link_content
   revision_created:
     value: '1661414515'
-  revision_user: false
-  revision_log_message: false
+  revision_user:
+    target_id: '0'
+  revision_log_message:
+    value: ''
   enabled:
     value: '1'
   title:
     value: 'Ohjeita hakijalle'
-  description: false
+  description:
+    value: ''
   menu_name:
     value: main
   link:
@@ -214,7 +226,8 @@
     value: '0'
   expanded:
     value: '0'
-  parent: false
+  parent:
+    value: ''
   changed:
     value: '1661414515'
   default_langcode:
@@ -251,13 +264,16 @@
     value: menu_link_content
   revision_created:
     value: '1661414530'
-  revision_user: false
-  revision_log_message: false
+  revision_user:
+    target_id: '0'
+  revision_log_message:
+    value: ''
   enabled:
     value: '1'
   title:
     value: 'Oma asiointi'
-  description: false
+  description:
+    value: ''
   menu_name:
     value: main
   link:
@@ -274,7 +290,8 @@
     value: '0'
   expanded:
     value: '0'
-  parent: false
+  parent:
+    value: ''
   changed:
     value: '1661414672'
   default_langcode:
@@ -311,13 +328,16 @@
     value: menu_link_content
   revision_created:
     value: '1661414625'
-  revision_user: false
-  revision_log_message: false
+  revision_user:
+    target_id: '0'
+  revision_log_message:
+    value: ''
   enabled:
     value: '1'
   title:
     value: Yleisavustushakemus
-  description: false
+  description:
+    value: ''
   menu_name:
     value: main
   link:
