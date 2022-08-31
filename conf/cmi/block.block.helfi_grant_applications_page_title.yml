@@ -11,7 +11,7 @@ _core:
 id: helfi_grant_applications_page_title
 theme: helfi_grant_applications
 region: before_content
-weight: -6
+weight: -12
 provider: null
 plugin: page_title_block
 settings:

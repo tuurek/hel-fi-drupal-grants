@@ -49,6 +49,8 @@
     padding-bottom: var(--spacing-2-xl);
     h3 {
       font-size: var(--fontsize-heading-xl);
+      padding-top: var(--spacing-3-xl);
+      margin-top: 0;
     }
   }
   &--extrainfo {
@@ -196,4 +198,7 @@ div.grants-handler--prefilled-field, .grants-profile-prh-info {
     }
 
   }
+}
+.grants-profile__local-tasks__wrapper {
+  margin-bottom: 0;
 }
