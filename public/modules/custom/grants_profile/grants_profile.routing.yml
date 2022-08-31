@@ -6,6 +6,14 @@ grants_profile.show:
   requirements:
     _permission: 'view own grants_profile'
 
+grants_profile.edit:
+  path: '/oma-asiointi/hakuprofiili/muokkaa'
+  defaults:
+    _form: '\Drupal\grants_profile\Form\GrantsProfileForm'
+    _title: 'Edit Application profile.'
+  requirements:
+    _permission: 'administer own grants_profile'
+
 grants_profile.company_addresses:
   path: '/oma-asiointi/hakuprofiili/address'
   defaults:

@@ -7,7 +7,7 @@ dependencies:
 id: sivunotsikko
 theme: helfi_grant_applications
 region: tools
-weight: -12
+weight: -10
 provider: null
 plugin: page_title_block
 settings:

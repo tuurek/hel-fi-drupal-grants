@@ -17,6 +17,7 @@ use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use Drupal\helfi_yjdh\Exception\YjdhException;
 use Drupal\helfi_yjdh\YjdhClient;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -122,7 +123,7 @@ class GrantsProfileService {
    * @param array $data
    *   Data for the new profile document.
    *
-   * @return array
+   * @return Drupal\helfi_atv\AtvDocument
    *   New profile
    */
   public function newProfile(array $data): AtvDocument {
@@ -196,18 +197,6 @@ class GrantsProfileService {
   }
 
   /**
-   * Saves grants profile to cache.
-   *
-   * @param array|AtvDocument $data
-   *   Profile data.
-   */
-  public function saveGrantsProfile(array|AtvDocument $data) {
-    // Get selected company.
-    $selectedCompanyArray = $this->getSelectedCompany();
-    $this->setToCache($selectedCompanyArray['identifier'], $data);
-  }
-
-  /**
    * Format data from tempstore & save document back to ATV.
    *
    * @return bool|AtvDocument
@@ -217,25 +206,27 @@ class GrantsProfileService {
    * @throws \Drupal\helfi_atv\AtvFailedToConnectException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function saveGrantsProfileAtv(): bool|AtvDocument {
+  public function saveGrantsProfile(array $documentContent): bool|AtvDocument {
     // Get selected company.
     $selectedCompany = $this->getSelectedCompany();
     // Get grants profile.
-    $grantsProfileDocument = $this->getGrantsProfile($selectedCompany['identifier']);
+    $grantsProfileDocument = $this->getGrantsProfile($selectedCompany['identifier'], TRUE);
+    // make sure business id is saved.
+    $documentContent['businessId'] = $selectedCompany['identifier'];
 
     $transactionId = $this->newTransactionId(time());
 
-    if ($grantsProfileDocument->isNew()) {
-      $grantsProfileDocument->setStatus(self::DOCUMENT_STATUS_SAVED);
-      $grantsProfileDocument->setTransactionId($transactionId);
+    if ($grantsProfileDocument == NULL) {
+      $newGrantsProfileDocument = $this->newProfile($documentContent);
+      $newGrantsProfileDocument->setStatus(self::DOCUMENT_STATUS_SAVED);
+      $newGrantsProfileDocument->setTransactionId($transactionId);
       $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
-      return $this->atvService->postDocument($grantsProfileDocument);
+      return $this->atvService->postDocument($newGrantsProfileDocument);
     }
     else {
 
-      $documentContent = $grantsProfileDocument->getContent();
-
       foreach ($documentContent['bankAccounts'] as $key => $bank_account) {
+        unset($documentContent['bankAccounts'][$key]['confirmationFileName']);
         if (isset($bank_account['confirmationFile']) && str_contains($bank_account['confirmationFile'], 'FID-')) {
           $fileId = str_replace('FID-', '', $bank_account['confirmationFile']);
           $fileEntity = File::load((int) $fileId);
@@ -299,7 +290,7 @@ class GrantsProfileService {
       $payloadData = [
         'content' => $documentContent,
         'metadata' => $grantsProfileDocument->getMetadata(),
-        'transaction_id' => $this->newTransactionId($transactionId),
+        'transaction_id' => $transactionId,
       ];
       $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
       return $this->atvService->patchDocument($grantsProfileDocument->getId(), $payloadData);
@@ -562,11 +553,17 @@ class GrantsProfileService {
       $profileContent["companyHome"] = $assosiationDetails["Address"][0]["City"];
     }
     else {
-      // If not, get company details and use them.
-      $companyDetails = $this->yjdhClient->getCompany($businessId);
+      try {
+        // If not, get company details and use them.
+        $companyDetails = $this->yjdhClient->getCompany($businessId);
+
+      }
+      catch (\Exception $e) {
+        $companyDetails = NULL;
+      }
 
       if ($companyDetails == NULL) {
-        throw new NotFoundHttpException('Company details not found from YTJ');
+        throw new YjdhException('Company details not found from YTJ');
       }
 
       $profileContent["companyName"] = $companyDetails["TradeName"]["Name"];
@@ -645,21 +642,27 @@ class GrantsProfileService {
 
     $profileData = $this->getGrantsProfile($businessId, $refetch);
 
-    try {
-      $profile = $this->initGrantsProfile($businessId,
-        $profileData->getContent());
-    }
-    catch (\Exception $e) {
-      $msg = $this->t('No compnay data found for business id @businessid. Cannot continue.', [
-        '@businessid' => $businessId,
-      ]);
-      $this->messenger->addError($msg);
-      $this->logger->error($msg->render());
-      $profile = [];
+    if ($profileData == NULL) {
+      return [];
     }
 
-    return $profile;
+    return $profileData->getContent();
 
+    // try {
+    //   $profile = $this->initGrantsProfile($businessId,
+    //     $profileData->getContent());
+    // }
+    // catch (\Exception $e) {
+    //   $msg = $this->t('No compnay data found for business id @businessid. Cannot continue.', [
+    //     '@businessid' => $businessId,
+    //   ]);
+    //   $this->messenger->addError($msg);
+    //   $this->messenger->addError($e->getMessage());
+    //   $this->logger->error($msg->render());
+    //   $profile = [];
+    // }
+
+    // return $profile;
   }
 
   /**
@@ -704,7 +707,7 @@ class GrantsProfileService {
   public function getGrantsProfile(
     string $businessId,
     bool $refetch = FALSE
-  ): AtvDocument {
+  ): AtvDocument|null {
     if ($refetch === FALSE) {
       if ($this->isCached($businessId)) {
         $document = $this->getFromCache($businessId);
@@ -715,20 +718,18 @@ class GrantsProfileService {
     // Get profile document from ATV.
     try {
       $profileDocument = $this->getGrantsProfileFromAtv($businessId, $refetch);
+      if (!empty($profileDocument)) {
+        $this->setToCache($businessId, $profileDocument);
+        return $profileDocument;
+      }
     }
     catch (AtvDocumentNotFoundException $e) {
-      $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
-      $this->logger->info($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
-      // Initialize new profile.
-      $profileDocument = $this->newProfile([]);
-    }
+      return NULL;
 
-    if (!empty($profileDocument)) {
-      $this->setToCache($businessId, $profileDocument);
-      return $profileDocument;
-    }
-    else {
-      return $document ?? [];
+      // $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
+      // $this->logger->info($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
+      // // Initialize new profile.
+      // $profileDocument = $this->newProfile([]);
     }
   }
 

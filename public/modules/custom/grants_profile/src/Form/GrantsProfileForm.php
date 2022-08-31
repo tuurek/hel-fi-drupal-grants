@@ -4,12 +4,10 @@ namespace Drupal\grants_profile\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\Core\Url;
-use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
+use Drupal\helfi_yjdh\Exception\YjdhException;
 
 /**
  * Provides a Grants Profile form.
@@ -47,6 +45,24 @@ class GrantsProfileForm extends FormBase {
   }
 
   /**
+   * Get officials' roles.
+   *
+   * @return array
+   *   Available roles.
+   */
+  public function getOfficialRoles(): array {
+    return [
+      1 => $this->t('Chairperson'),
+      2 => $this->t('Contact person'),
+      3 => $this->t('Other'),
+      4 => $this->t('Financial officer'),
+      5 => $this->t('Auditor'),
+      7 => $this->t('Secretary'),
+      8 => $this->t('Vice Chairperson'),
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
@@ -56,15 +72,32 @@ class GrantsProfileForm extends FormBase {
     $selectedCompanyArray = $grantsProfileService->getSelectedCompany();
     $selectedCompany = $selectedCompanyArray['identifier'];
 
-    $grantsProfileContent = $grantsProfileService->getGrantsProfileContent($selectedCompany, TRUE);
+    // load grants profile
+    $grantsProfile = $grantsProfileService->getGrantsProfile($selectedCompany, TRUE);
 
-    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    // if no profile exist
+    if ($grantsProfile == NULL) {
+      try {
+        // initialize a new one.
+        // this fetches company details from yrtti / ytj
+        $grantsProfileContent = $grantsProfileService->initGrantsProfile($selectedCompany, []);
 
-    if (empty($grantsProfileContent)) {
-      $this->messenger()->addError($this->t('Error fetching profile data'));
-      $this->logger('grants_profile')->error('Profile fetch failed.');
-      return $form;
+      }
+      catch (YjdhException $e) {
+        // if no company data is found, we cannot continue.
+        $this->messenger()->addError($this->t('Company details not found in registries. Please contact customer service'));
+        $form['#disabled'] = TRUE;
+        return $form;
+      }
+
     }
+    else {
+      // get content from document.
+      $grantsProfileContent = $grantsProfile->getContent();
+    }
+
+    // use custom theme hook
+    $form['#theme'] = 'own_profile_form';
 
     // Set profile content for other fields than this form.
     $form_state->setStorage(['grantsProfileContent' => $grantsProfileContent]);
@@ -98,306 +131,7 @@ class GrantsProfileForm extends FormBase {
       '#title' => $this->t('Company www address'),
       '#default_value' => $grantsProfileContent['companyHomePage'],
     ];
-    $addressMarkup = '<p>' . $this->t("You can add several addresses to your company. The addresses given are available on applications. The address is used for postal deliveries, such as letters regarding the decisions.") . '</p>';
 
-    $addAddressUrl = Url::fromRoute(
-      'grants_profile.company_address_modal_form',
-      [
-        'address_id' => 'new',
-        'nojs' => 'ajax',
-      ],
-      [
-        'attributes' => [
-          'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-          // Add this id so that we can test this form.
-          'id' => 'add-addres-modal-form-link',
-        ],
-      ]
-    );
-
-    if (is_array($grantsProfileContent["addresses"]) && count($grantsProfileContent["addresses"]) > 0) {
-      $addressMarkup .= '<ul class="grants-profile--officials">';
-      foreach ($grantsProfileContent["addresses"] as $key => $address) {
-
-        $editAddressUrl = Url::fromRoute(
-          'grants_profile.company_address_modal_form',
-          [
-            'address_id' => $key,
-            'nojs' => 'ajax',
-          ],
-          [
-            'attributes' => [
-              'class' => ['use-ajax'],
-              'data-dialog-type' => 'modal',
-              'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-              // Add this id so that we can test this form.
-              'id' => 'edit-addres-modal-form-link',
-            ],
-          ]
-        );
-
-        $deleteAddressUrl = Url::fromRoute(
-          'grants_profile.company_addresses.remove',
-          [
-            'address_id' => $key,
-          ],
-          [
-            'attributes' => [
-              // Add this id so that we can test this form.
-              'id' => 'delete-address-link-' . $key,
-              'class' => ['delete-address-link'],
-            ],
-          ]
-        );
-
-        $linkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
-        $deleteAddressLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span>');
-
-        $addressMarkup .= '
-    <li class="grants-profile--officials-item">
-        <div class="grants-profile--officials-item-wrapper">
-          <div class="grants-profile--officials-item--name">
-            ' . $address['street'] . ', ' . $address['postCode'] . ' ' . $address['city'] . '
-          </div>
-        </div>
-        <div class="grants-profile--officials-edit-wrapper">' .
-          Link::fromTextAndUrl($linkText, $editAddressUrl)->toString()
-          . '</div>
-        <div class="grants-profile--officials-edit-wrapper">' .
-          Link::fromTextAndUrl($deleteAddressLinkText, $deleteAddressUrl)
-            ->toString()
-          . '</div>
-    </li>';
-      }
-      $addressMarkup .= '</ul>';
-    }
-    else {
-      $addressMarkup .= '
-    <section aria-label="Notification" class="hds-notification hds-notification--alert">
-      <div class="hds-notification__content">
-        <div class="hds-notification__label" role="heading" aria-level="2">
-          <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
-          <span>' . $this->t('Add at least one address') . '</span>
-        </div>
-      </div>
-    </section>';
-    }
-    $addressMarkup .= '<div class="form-item">';
-
-    $addressMarkup .= Link::fromTextAndUrl($this->t('New address'), $addAddressUrl)
-      ->toString();
-
-    $addressMarkup .= '<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Address') . '</span></a></div>';
-    $addressMarkup = '<div>' . $addressMarkup . '</div>';
-
-    $form['addressWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Company Addresses'),
-    ];
-    $form['addressWrapper']['address_markup'] = [
-      '#type' => 'markup',
-      '#markup' => $addressMarkup,
-    ];
-
-    $bankAccountMarkup = '<p>' . $this->t('You can add several bank accounts to your company. The bank account must be a Finnish IBAN account number.') . '</p>';
-    $bankAccountMarkup .= '<p>' . $this->t("The information you give are usable when making grants applications. If a grant is given to an application, it is paid to the account number you've given on the application") . '</p>';
-
-    if (is_array($grantsProfileContent["bankAccounts"]) && count($grantsProfileContent["bankAccounts"]) > 0) {
-      $bankAccountMarkup .= '<ul class="grants-profile--officials">';
-      foreach ($grantsProfileContent["bankAccounts"] as $key => $bankAccount) {
-
-        $editAccountUrl = Url::fromRoute(
-          'grants_profile.bank_account_form_modal_form',
-          [
-            'bank_account_id' => $key,
-            'nojs' => 'ajax',
-          ],
-          [
-            'attributes' => [
-              'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
-              'data-dialog-type' => 'modal',
-              'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-              // Add this id so that we can test this form.
-              'id' => 'add-bankaccount-modal-form-link',
-            ],
-          ]
-        );
-
-        $deleteAccountUrl = Url::fromRoute(
-          'grants_profile.bank_account.remove',
-          [
-            'bank_account_id' => $key,
-          ],
-          [
-            'attributes' => [
-              // Add this id so that we can test this form.
-              'id' => 'delete-bankaccount-link-' . $key,
-              'class' => ['delete-bankaccount-link'],
-            ],
-          ]
-        );
-
-        $bankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
-        $deleteBankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Delete') . '</span>');
-
-        $bankAccountMarkup .= '
-    <li class="grants-profile--officials-item">
-        <div class="grants-profile--officials-item-wrapper">
-          <div class="grants-profile--officials-item--name">
-            ' . $bankAccount['bankAccount'] . '
-          </div>
-        </div>
-        <div class="grants-profile--officials-edit-wrapper">' .
-          Link::fromTextAndUrl($bankAccountLinkText, $editAccountUrl)->toString()
-          . '</div><div class="grants-profile--officials-delete-wrapper">' .
-          Link::fromTextAndUrl($deleteBankAccountLinkText, $deleteAccountUrl)
-            ->toString() . '
-       </div>
-    </li>';
-      }
-      $bankAccountMarkup .= '</ul>';
-    }
-    else {
-      $bankAccountMarkup .= '
-    <section aria-label="Notification" class="hds-notification hds-notification--alert">
-      <div class="hds-notification__content">
-        <div class="hds-notification__label" role="heading" aria-level="2">
-          <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
-          <span>' . $this->t('Add at least one account number') . '</span>
-        </div>
-      </div>
-    </section>';
-    }
-
-    $addAccountUrl = Url::fromRoute(
-      'grants_profile.bank_account_form_modal_form',
-      [
-        'bank_account_id' => 'new',
-        'nojs' => 'ajax',
-      ],
-      [
-        'attributes' => [
-          'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-          // Add this id so that we can test this form.
-          'id' => 'add-bankaccount-modal-form-link',
-        ],
-      ]
-    );
-
-    $bankAccountLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Bank account') . '</span>');
-
-    $bankAccountMarkup .= '<div class="form-item">';
-    $bankAccountMarkup .= Link::fromTextAndUrl($bankAccountLinkText, $addAccountUrl)
-      ->toString();
-    $bankAccountMarkup .= '</div>';
-
-    $form['bankAccountWrapper'] = [
-      '#type' => 'webform_section',
-      '#title' => $this->t('Company Bank Accounts'),
-    ];
-    $form['bankAccountWrapper']['bankAccount_markup'] = [
-      '#type' => 'markup',
-      '#markup' => $bankAccountMarkup,
-    ];
-    $officialsMarkup = '<p>' . $this->t('Report the names and contact information of officials, such as the chairperson, secretary, etc.') . '</p>';
-    $officialsMarkup .= '<p>' . $this->t("The information you give are usable during grants applciations.") . '</p>';
-    $officialsMarkup .= '<ul class="grants-profile--officials">';
-    foreach ($grantsProfileContent["officials"] as $key => $official) {
-
-      $editOfficialUrl = Url::fromRoute(
-        'grants_profile.application_official_modal_form',
-        [
-          'official_id' => $key,
-          'nojs' => 'ajax',
-        ],
-        [
-          'attributes' => [
-            'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
-            'data-dialog-type' => 'modal',
-            'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-            // Add this id so that we can test this form.
-            'id' => 'add-bankaccount-modal-form-link',
-          ],
-        ]
-      );
-
-      $deleteOfficialUrl = Url::fromRoute(
-        'grants_profile.application_official.remove',
-        [
-          'official_id' => $key,
-        ],
-        [
-          'attributes' => [
-            // Add this id so that we can test this form.
-            'id' => 'delete-official-link-' . $key,
-            'class' => ['delete-official-link'],
-          ],
-        ]
-      );
-
-      $officialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('Edit') . '</span>');
-
-      $deleteOfficialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--cross hds-icon--size-s"></span></span><span class="link-label">' . $this->t('Delete') . '</span>');
-
-      $roles = ModalApplicationOfficialForm::getOfficialRoles();
-
-      $officialRole = $roles[$official['role']];
-
-      $officialsMarkup .= '
-    <li class="grants-profile--officials-item">
-        <div class="grants-profile--officials-item-wrapper">
-          <h3 class="grants-profile--officials-item--position">
-            ' . $officialRole . '
-          </h3>
-          <div class="grants-profile--officials-item--name">
-            ' . $official['name'] . '
-          </div>
-          <div class="grants-profile--officials-item--phone">
-            ' . $official['phone'] . '
-          </div>
-          <div class="grants-profile--officials-item--email">
-            ' . $official['email'] . '
-          </div>
-        </div>
-        <div class="grants-profile--officials-edit-wrapper">' .
-        Link::fromTextAndUrl($officialLinkText, $editOfficialUrl)
-          ->toString()
-        .
-        Link::fromTextAndUrl($deleteOfficialLinkText, $deleteOfficialUrl)
-          ->toString()
-        . '</div>
-
-    </li>';
-    }
-    $officialsMarkup .= '</ul>';
-
-    $addOfficialUrl = Url::fromRoute(
-      'grants_profile.application_official_modal_form',
-      [
-        'official_id' => 'new',
-        'nojs' => 'ajax',
-      ],
-      [
-        'attributes' => [
-          'class' => ['use-ajax', 'hds-link', 'hds-link--medium'],
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => json_encode(ModalAddressForm::getDataDialogOptions()),
-          // Add this id so that we can test this form.
-          'id' => 'add-official-modal-form-link',
-        ],
-      ]
-    );
-
-    $officialLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--plus-circle hds-icon--size-s"></span><span class="link-label">' . $this->t('New Official') . '</span>');
-
-    $officialsMarkup .= '<div class="form-item">' .
-      Link::fromTextAndUrl($officialLinkText, $addOfficialUrl)->toString()
-      . '</div>';
-    $officialsMarkup = '<div>' . $officialsMarkup . '</div>';
     $form['businessPurposeWrapper'] = [
       '#type' => 'webform_section',
       '#title' => $this->t('Business Purpose'),
@@ -415,21 +149,153 @@ class GrantsProfileForm extends FormBase {
     ];
     $form['businessPurposeWrapper']['businessPurpose']['#attributes']['class'][] = 'webform--large';
 
-    $form['officialsWrapper'] = [
+    $form['addressWrapper'] = [
       '#type' => 'webform_section',
-      '#title' => $this->t('Company officials'),
+      '#title' => $this->t('Addresses'),
     ];
-    $form['officialsWrapper']['officials_markup'] = [
-      '#type' => 'markup',
-      '#markup' => $officialsMarkup,
+
+    $addressValues = [];
+    foreach ($grantsProfileContent['addresses'] as $delta => $official) {
+      $addressValues[$delta] = $official;
+      $addressValues[$delta]['address_id'] = $delta;
+    }
+
+    $form['addressWrapper']['addresses'] = [
+      '#type' => 'multivalue',
+      '#title' => $this->t('Addresses'),
+      '#required' => TRUE,
+      'street' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Street'),
+      ],
+      'city' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('City'),
+      ],
+      'postCode' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Post code'),
+      ],
+      'country' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Country'),
+      ],
+      // we need the delta / id to create delete links in element.
+      'address_id' => [
+        '#type' => 'hidden',
+      ],
+      // address delta is replaced with alter hook in module file.
+      'deleteButton' => [
+        '#type' => 'markup',
+        '#markup' => '<a href="/oma-asiointi/hakuprofiili/address/{address_delta}/delete">Poista</a>',
+      ],
+      '#default_value' => $addressValues,
     ];
+    $form['addressWrapper']['addresses']['#attributes']['class'][] = 'webform--large';
+
+    $form['officialWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Officials'),
+    ];
+
+    $roles = [
+      0 => $this->t('Select'),
+    ] + $this->getOfficialRoles();
+
+    $officialValues = [];
+    foreach ($grantsProfileContent['officials'] as $delta => $official) {
+      $officialValues[$delta] = $official;
+      $officialValues[$delta]['official_id'] = $delta;
+    }
+
+    $form['officialWrapper']['officials'] = [
+      '#type' => 'multivalue',
+      '#title' => $this->t('Officials'),
+      'name' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Name'),
+      ],
+      'role' => [
+        '#type' => 'select',
+        '#options' => $roles,
+        '#title' => $this->t('Role'),
+      ],
+      'email' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Email'),
+      ],
+      'phone' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Phone'),
+      ],
+      'official_id' => [
+        '#type' => 'hidden',
+      ],
+      'deleteButton' => [
+        '#type' => 'markup',
+        '#markup' => '<a href="/oma-asiointi/hakuprofiili/application-officials/{official_delta}/delete">Poista</a>',
+      ],
+      '#default_value' => $officialValues,
+    ];
+    $form['officialWrapper']['officials']['#attributes']['class'][] = 'webform--large';
+
+    $form['bankAccountWrapper'] = [
+      '#type' => 'webform_section',
+      '#title' => $this->t('Officials'),
+    ];
+
+    $bankAccountValues = [];
+    foreach ($grantsProfileContent['bankAccounts'] as $k => $v) {
+      $bankAccountValues[$k]['bankAccount'] = $v['bankAccount'];
+      $bankAccountValues[$k]['confirmationFileName'] = $v['confirmationFile'];
+      $bankAccountValues[$k]['bank_account_id'] = $k;
+    }
+
+    $form['bankAccountWrapper']['bankAccounts'] = [
+      '#type' => 'multivalue',
+      '#title' => $this->t('Bank accounts'),
+      'bankAccount' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Bank account'),
+        '#required' => TRUE,
+      ],
+      'confirmationFileName' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Saved confirmation File'),
+        '#attributes' => ['readonly' => 'readonly'],
+      ],
+      'confirmationFile' => [
+        '#type' => 'managed_file',
+        '#title' => $this->t('Confirmation File'),
+        '#multiple' => FALSE,
+        '#required' => TRUE,
+        '#uri_scheme' => 'private',
+        '#file_extensions' => 'doc,docx,gif,jpg,jpeg,pdf,png,ppt,pptx,rtf,txt,xls,xlsx,zip',
+        '#upload_validators' => [
+          'file_validate_extensions' => ['doc docx gif jpg jpeg pdf png ppt pptx rtf txt xls xlsx zip'],
+        ],
+        '#upload_location' => 'private://grants_profile',
+        '#sanitize' => TRUE,
+        '#description' => $this->t('Confirm this bank account.'),
+      ],
+      'bank_account_id' => [
+        '#type' => 'hidden',
+      ],
+      'deleteButton' => [
+        '#type' => 'markup',
+        '#markup' => '<a href="/oma-asiointi/hakuprofiili/bank-accounts/{bank_account_delta}/delete">Poista</a>',
+      ],
+      '#default_value' => $bankAccountValues,
+    ];
+
+    $form['bankAccountWrapper']['bankAccounts']['#attributes']['class'][] = 'webform--large';
 
     $form['actions'] = [
       '#type' => 'actions',
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Send'),
+      '#value' => $this->t('Save profile'),
     ];
 
     return $form;
@@ -448,6 +314,52 @@ class GrantsProfileForm extends FormBase {
 
     $values = $form_state->getValues();
 
+    // Clean up empty values from form values.
+    foreach ($values as $key => $value) {
+      if (is_array($value)) {
+        foreach ($value as $key2 => $value2) {
+          if ($key == 'addresses') {
+            if (
+              empty($value2['street']) ||
+              empty($value2['city']) ||
+              empty($value2['postCode']) ||
+              empty($value2['country'])
+            ) {
+              unset($values[$key][$key2]);
+            }
+          }
+          if ($key == 'officials') {
+            if (
+              empty($value2['name']) ||
+              empty($value2['email']) ||
+              empty($value2['phone']) ||
+              $value2['role'] == '0'
+            ) {
+              unset($values[$key][$key2]);
+            }
+          }
+          if ($key == 'bankAccounts') {
+            if (!isset($value2['bankAccount']) || empty($value2['bankAccount'])) {
+              unset($values[$key][$key2]);
+            }
+            else {
+              if (isset($value2["confirmationFileName"]) && !empty($value2["confirmationFileName"])) {
+                $values[$key][$key2]['confirmationFile'] = $value2["confirmationFileName"];
+              }
+              if (
+                isset($value2["confirmationFile"]) &&
+                is_array($value2["confirmationFile"]) &&
+                !empty($value2["confirmationFile"])
+              ) {
+                $values[$key][$key2]['confirmationFile'] = 'FID-' . $value2["confirmationFile"][0] ?? '';
+              }
+            }
+          }
+        }
+      }
+    }
+    // Set clean values to form state.
+    $form_state->setValues($values);
     $grantsProfileContent = $storage['grantsProfileContent'];
 
     foreach ($grantsProfileContent as $key => $value) {
@@ -456,25 +368,33 @@ class GrantsProfileForm extends FormBase {
       }
     }
 
-    // @todo Created profile needs to be set to cache.
-    $grantsProfileDefinition = GrantsProfileDefinition::create('grants_profile_profile');
-    // Create data object.
-    $grantsProfileData = $this->typedDataManager->create($grantsProfileDefinition);
-    $grantsProfileData->setValue($grantsProfileContent);
-    // Validate inserted data.
-    $violations = $grantsProfileData->validate();
-    // If there's violations in data.
-    if ($violations->count() != 0) {
-      foreach ($violations as $violation) {
-        // Print errors by form item name.
-        $form_state->setErrorByName(
-          $violation->getPropertyPath(),
-          $violation->getMessage());
-      }
+    parent::validateForm($form, $form_state);
+
+    $errors = $form_state->getErrors();
+    if ($errors) {
+      $d = 'asfd';
     }
     else {
-      // Move addressData object to form_state storage.
-      $form_state->setStorage(['grantsProfileData' => $grantsProfileData]);
+      // @todo Created profile needs to be set to cache.
+      $grantsProfileDefinition = GrantsProfileDefinition::create('grants_profile_profile');
+      // Create data object.
+      $grantsProfileData = $this->typedDataManager->create($grantsProfileDefinition);
+      $grantsProfileData->setValue($grantsProfileContent);
+      // Validate inserted data.
+      $violations = $grantsProfileData->validate();
+      // If there's violations in data.
+      if ($violations->count() != 0) {
+        foreach ($violations as $violation) {
+          // Print errors by form item name.
+          $form_state->setErrorByName(
+            $violation->getPropertyPath(),
+            $violation->getMessage());
+        }
+      }
+      else {
+        // Move addressData object to form_state storage.
+        $form_state->setStorage(['grantsProfileData' => $grantsProfileData]);
+      }
     }
   }
 
@@ -490,6 +410,7 @@ class GrantsProfileForm extends FormBase {
     }
 
     $grantsProfileData = $storage['grantsProfileData'];
+    $values = $form_state->getValues();
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -498,16 +419,15 @@ class GrantsProfileForm extends FormBase {
 
     $profileDataArray = $grantsProfileData->toArray();
 
-    $grantsProfileService->saveGrantsProfile($profileDataArray);
+    $success = $grantsProfileService->saveGrantsProfile($profileDataArray);
+    $grantsProfileService->clearCache($selectedCompany);
 
-    $success = $grantsProfileService->saveGrantsProfileAtv();
-
-    if ($success == TRUE) {
+    if ($success != FALSE) {
       $this->messenger()
         ->addStatus($this->t('Grantsprofile for company number %s saved and can be used in grant applications', ['%s' => $selectedCompany]));
     }
 
-    $form_state->setRedirect('grants_profile.show');
+    $form_state->setRedirect('grants_profile.edit');
   }
 
 }

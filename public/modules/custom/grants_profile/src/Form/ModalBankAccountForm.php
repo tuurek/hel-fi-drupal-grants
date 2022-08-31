@@ -140,7 +140,6 @@ class ModalBankAccountForm extends FormBase {
         '#value' => $selectedBankAccount["confirmationFile"],
         '#suffix' => '<a href="/grants-profile/bank-accounts/' . $bank_account_id . '/delete-confirmation">[X]</a>',
       ];
-
     }
     else {
       $form['confirmationFile'] = [

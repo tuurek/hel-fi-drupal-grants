@@ -1,0 +1,16 @@
+grants_handler.statusStrings:
+  names:
+      - grants_handler.statusStrings
+  DRAFT: "Draft"
+  SENT: "Sent"
+  SUBMITTED: "Submitted"
+  RECEIVED: "Received"
+  PENDING: "Pending"
+  PROCESSING: "Processing"
+  READY: "Ready"
+  DONE: "Done"
+  REJECTED: "Rejected"
+  DELETED: "Deleted"
+  CANCELED: "Canceled"
+  CANCELLED: "Canceled"
+  CLOSED: "Closed"
