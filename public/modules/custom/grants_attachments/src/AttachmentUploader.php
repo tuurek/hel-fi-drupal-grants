@@ -156,12 +156,14 @@ class AttachmentUploader {
     foreach ($attachments as $fileId) {
       try {
         $file = File::load($fileId);
-        $filename = $file->getFilename();
 
         // If for some reason the file entity does not wxist, do no more.
         if ($file === NULL) {
           continue;
         }
+
+        $filename = $file->getFilename();
+
         // Get file metadata.
         $fileUri = $file->get('uri')->value;
         $filePath = \Drupal::service('file_system')->realpath($fileUri);
