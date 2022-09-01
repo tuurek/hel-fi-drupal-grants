@@ -166,6 +166,20 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
       if (isset($variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"])) {
         $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"]["#markup"] = str_replace('{bank_account_delta}', $value["bank_account_id"]["#value"], $value["deleteButton"]["#markup"]);
       }
+
+      // if bank account id is no set, a new account
+      if (isset($value["bank_account_id"]) && $value["bank_account_id"]["#value"] == '') {
+        $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["confirmationFileName"]["#access"] = FALSE;
+      }
+      else {
+        // if bank account value is set, then we are editing and want to hide things.
+        if (isset($value["bankAccount"]) && $value["bankAccount"]["#value"] != '') {
+          // hide confirmation file name
+          $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["confirmationFile"]["#access"] = FALSE;
+          // and make bank account readonly.
+          $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["bankAccount"]["#attributes"] = ['readonly' => 'readonly'];
+        }
+      }
     }
   }
 
@@ -184,4 +198,5 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
       }
     }
   }
+
 }

@@ -381,13 +381,13 @@ class GrantsHandler extends WebformHandlerBase {
 
       if ($this->applicantType === NULL) {
         $this->messenger()
-          ->addError(t("You need to select company you're acting behalf of."));
+          ->addError($this->t("You need to select company you're acting behalf of."));
         $redirectApplicantType = TRUE;
       }
 
       if ($selectedCompany == NULL) {
         $this->messenger()
-          ->addError(t("You need to select company you're acting behalf of."));
+          ->addError($this->t("You need to select company you're acting behalf of."));
         $redirectApplicantType = TRUE;
       }
 
@@ -405,17 +405,17 @@ class GrantsHandler extends WebformHandlerBase {
 
       if (empty($grantsProfile['officials'])) {
         $this->messenger()
-          ->addError(t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+          ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
         $redirectToProfile = TRUE;
       }
       if (empty($grantsProfile['addresses'])) {
         $this->messenger()
-          ->addError(t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+          ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
         $redirectToProfile = TRUE;
       }
       if (empty($grantsProfile['bankAccounts'])) {
         $this->messenger()
-          ->addError(t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+          ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
         $redirectToProfile = TRUE;
       }
 
@@ -432,7 +432,7 @@ class GrantsHandler extends WebformHandlerBase {
     }
     else {
       $this->messenger()
-        ->addError(t("No prefill for admin"));
+        ->addError($this->t("No prefill for admin"));
     }
   }
 
@@ -968,7 +968,7 @@ class GrantsHandler extends WebformHandlerBase {
 
         $this->messenger()
           ->addStatus(
-            t(
+            $this->t(
               'Grant application (<span id="saved-application-number">@number</span>) saved as DRAFT',
               [
                 '@number' => $this->applicationNumber,
@@ -997,7 +997,7 @@ class GrantsHandler extends WebformHandlerBase {
 
         $this->messenger()
           ->addStatus(
-            t(
+            $this->t(
               'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
               [
                 '@number' => $this->applicationNumber,
@@ -1071,7 +1071,7 @@ class GrantsHandler extends WebformHandlerBase {
 
         $this->messenger()
           ->addStatus(
-            t(
+            $this->t(
               'Grant application (<span id="saved-application-number">@number</span>) saved. You can view your new application from @here.',
               [
                 '@number' => $this->applicationNumber,
@@ -1104,7 +1104,7 @@ class GrantsHandler extends WebformHandlerBase {
       else {
         $this->messenger()
           ->addStatus(
-            t(
+            $this->t(
               'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
               [
                 '@number' => $this->applicationNumber,

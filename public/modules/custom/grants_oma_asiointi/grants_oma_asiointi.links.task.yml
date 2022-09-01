@@ -1,21 +1,6 @@
 # grants_oma_asiointi.links.task.yml
 
-grants_oma_asiointi.front:
-  route_name: grants_oma_asiointi.front
-  title: 'Own details'
-  base_route: grants_oma_asiointi.front
+grants_oma_asiointi.local_tasks:
+  deriver: 'Drupal\grants_oma_asiointi\Plugin\Derivative\DynamicLocalTasks'
+  weight: 100
 
-grants_oma_asiointi.grantsprofile:
-  route_name: grants_profile.show
-  title: 'Grants profile'
-  base_route: grants_oma_asiointi.front
-
-#grants_oma_asiointi.grantsprofile.edit:
-#  route_name: grants_profile.edit
-#  title: 'Grants profile'
-#  base_route: grants_oma_asiointi.front
-
-grants_oma_asiointi.applications:
-  route_name: grants_oma_asiointi.applications_list
-  title: 'Company applications'
-  base_route: grants_oma_asiointi.front
