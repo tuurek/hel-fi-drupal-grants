@@ -1,18 +1,31 @@
 .grants-handler {
   &__completion {
+    padding: var(--spacing-layout-l) var(--spacing-layout-2-xl);
+    background: var(--color-bus-light);
+    h2 {
+      margin-top: var(--spacing-l);
+
+    }
+    h3 {
+      margin-top: var(--spacing-m);
+      font-size: 1rem;
+      font-weight: bold;
+    }
     &__info-row {
       display: flex;
       flex-flow: row wrap;
       gap: var(--spacing-m);
       justify-content: flex-start;
+      margin-bottom: var(--spacing-m);
     }
-    &__item {
-      &--number {
-
-      }
-      &--submitted {
-
-      }
+    &__button-row {
+      display: flex;
+      flex-flow: row wrap;
+      gap: var(--spacing-m);
+      justify-content: flex-start;
+    }
+    &__longtext {
+      margin: var(--spacing-l) 0;
     }
   }
 }
