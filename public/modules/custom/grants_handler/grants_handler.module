@@ -996,6 +996,19 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $viewApplicationUrl);
   $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editApplicationUrl);
 
+  try {
+    if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
+      $variables['statusString'] = $submissionData['status'];
+    }
+    else {
+      \Drupal::logger('grants_handler')
+        ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+    }
+  }
+  catch (\Exception $e) {
+    $variables['statusString'] = '';
+  }
+
 }
 
 /**
