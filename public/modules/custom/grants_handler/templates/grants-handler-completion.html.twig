@@ -13,34 +13,39 @@
  */
 #}
 {% set classes = [
-    'webform-submission-data',
-    'webform-submission-data--webform-' ~ webform.id()|clean_class,
-    view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
+  'webform-submission-data',
+  'webform-submission-data--webform-' ~ webform.id()|clean_class,
+  view_mode ? 'webform-submission-data--view-mode-' ~ view_mode|clean_class,
 ] %}
 
 <div{{ attributes.addClass(classes) }}>
   <div class="container">
     <div class="grants-handler__completion">
-      icon
+      <div><i class="hds-icon hds-icon--check-circle hds-icon--size-xl" aria-hidden="true"></i></div>
       <h2>{{ "Grant application sent successfully"|t }}</h2>
-
       <div class="grants-handler__completion__info-row">
         <div class="grants-handler__completion__item--submitted">
-          <h4>{{ "Submission date"|t }}</h4>
+          <h3>{{ "Submission date"|t }}</h3>
           {{ applicationTimestamp }}
         </div>
         <div class="grants-handler__completion__item--number">
-          <h4>{{ "Application number"|t }}</h4>
+          <h3>{{ "Application number"|t }}</h3>
           {{ submissionId }}
         </div>
       </div>
       <div>
         {{ statusTag }}
       </div>
-      <div>
-        {{ ownApplicationsLink }}
+      <div class="grants-handler__completion__longtext">
+        <p>
+          Muistathan varmistaa, että hakemuksen tila vaihtuu “Lähetetty - odotetaan vahvistusta” -tilasta “Vastaanotettu tilaan. Hakemus on vastaanotettu vasta, kun tila on muodossa: “Vastaanotettu”.
+        </p>
+        <p>
+          Tilan vaihtuminen voi kestää sekunneista muutamaan minuuttiin. Ongelmatilanteissa ota yhteyttä …@hel.fi ja varmista, että hakemuksesi on tullut perille.
+        </p>
       </div>
-      <div>
+      <div class="grants-handler__completion__button-row">
+        {{ ownApplicationsLink }}
         {{ viewApplicationLink }}
       </div>
     </div>
