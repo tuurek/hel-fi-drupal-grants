@@ -72,19 +72,19 @@ class GrantsProfileForm extends FormBase {
     $selectedCompanyArray = $grantsProfileService->getSelectedCompany();
     $selectedCompany = $selectedCompanyArray['identifier'];
 
-    // load grants profile
+    // Load grants profile.
     $grantsProfile = $grantsProfileService->getGrantsProfile($selectedCompany, TRUE);
 
-    // if no profile exist
+    // If no profile exist.
     if ($grantsProfile == NULL) {
       try {
-        // initialize a new one.
-        // this fetches company details from yrtti / ytj
+        // Initialize a new one.
+        // This fetches company details from yrtti / ytj.
         $grantsProfileContent = $grantsProfileService->initGrantsProfile($selectedCompany, []);
 
       }
       catch (YjdhException $e) {
-        // if no company data is found, we cannot continue.
+        // If no company data is found, we cannot continue.
         $this->messenger()->addError($this->t('Company details not found in registries. Please contact customer service'));
         $form['#disabled'] = TRUE;
         return $form;
@@ -92,11 +92,11 @@ class GrantsProfileForm extends FormBase {
 
     }
     else {
-      // get content from document.
+      // Get content from document.
       $grantsProfileContent = $grantsProfile->getContent();
     }
 
-    // use custom theme hook
+    // Use custom theme hook.
     $form['#theme'] = 'own_profile_form';
 
     // Set profile content for other fields than this form.
@@ -180,11 +180,11 @@ class GrantsProfileForm extends FormBase {
         '#type' => 'textfield',
         '#title' => $this->t('Country'),
       ],
-      // we need the delta / id to create delete links in element.
+      // We need the delta / id to create delete links in element.
       'address_id' => [
         '#type' => 'hidden',
       ],
-      // address delta is replaced with alter hook in module file.
+      // Address delta is replaced with alter hook in module file.
       'deleteButton' => [
         '#type' => 'markup',
         '#markup' => '<a href="/oma-asiointi/hakuprofiili/address/{address_delta}/delete">Poista</a>',
