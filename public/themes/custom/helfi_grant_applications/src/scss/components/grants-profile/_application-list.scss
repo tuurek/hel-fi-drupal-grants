@@ -1,5 +1,6 @@
 .application-list {
   padding-left: 0;
+  padding-bottom: var(--spacing-xl);
   &__item {
     display: block;
     background: var(--color-bus-light);

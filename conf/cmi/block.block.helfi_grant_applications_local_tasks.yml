@@ -8,8 +8,8 @@ _core:
   default_config_hash: _UoTG8MagibHn89173NtrwtSq5ylXJRanQkHTZmRGe4
 id: helfi_grant_applications_local_tasks
 theme: helfi_grant_applications
-region: tools
-weight: -9
+region: content
+weight: -11
 provider: null
 plugin: local_tasks_block
 settings:

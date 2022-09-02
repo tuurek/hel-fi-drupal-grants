@@ -9,7 +9,7 @@ _core:
 id: helfi_grant_applications_local_actions
 theme: helfi_grant_applications
 region: tools
-weight: -8
+weight: -11
 provider: null
 plugin: local_actions_block
 settings:
