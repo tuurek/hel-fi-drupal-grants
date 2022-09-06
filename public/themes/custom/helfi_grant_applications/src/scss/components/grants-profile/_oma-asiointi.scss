@@ -5,6 +5,7 @@
   }
 }
 .oma-asiointi {
+  margin-top: var(--spacing-l);
   ul {
     padding: 0;
   }
@@ -13,6 +14,10 @@
     padding-bottom: var(--spacing-l);
     h2 {
       margin-bottom: var(--spacing-m);
+      margin-top: 0;
     }
+  }
+  #oma-asiointi__sent {
+    padding-top: var(--spacing-s);
   }
 }

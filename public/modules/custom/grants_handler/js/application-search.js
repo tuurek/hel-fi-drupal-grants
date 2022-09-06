@@ -18,6 +18,8 @@
         $('select.sort').change(function () {
           var selection = $(this).val();
           fullList.sort(selection);
+          console.log(fullList);
+          console.log(selection);
         });
 
         $('button.sort').click(function () {

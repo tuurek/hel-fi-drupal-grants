@@ -145,6 +145,7 @@ function grants_handler_theme(): array {
     'message_list' => [
       'variables' => [
         'items' => NULL,
+        'style' => NULL,
       ],
     ],
     'message_list_item' => [
@@ -668,6 +669,7 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
   $variables['messages'] = [
     '#theme' => 'message_list',
     '#items' => $messages,
+    '#style' => 'default',
   ];
 
   // if submission is ok for messaging

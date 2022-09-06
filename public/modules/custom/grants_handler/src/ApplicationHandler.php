@@ -762,7 +762,7 @@ class ApplicationHandler {
   /**
    * Take in typed data object, export to Avus2 document structure & upload.
    *
-   * @param \Drupal\Core\TypedData\TypedDataInterface $applicationData
+   * @param Drupal\Core\TypedData\TypedDataInterface $applicationData
    *   Typed data object.
    * @param string $applicationNumber
    *   Used application number.
