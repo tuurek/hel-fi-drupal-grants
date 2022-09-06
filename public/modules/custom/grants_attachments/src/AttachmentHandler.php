@@ -541,6 +541,7 @@ class AttachmentHandler {
       if ($field['fileStatus'] === 'uploaded') {
         if (isset($field['attachmentName'])) {
           $retval['fileName'] = $field["attachmentName"];
+          $retval['isNewAttachment'] = FALSE;
         }
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
@@ -572,6 +573,7 @@ class AttachmentHandler {
 
       if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
         $retval['integrationID'] = $field["integrationID"];
+        $retval['isNewAttachment'] = FALSE;
       }
 
     }

@@ -97,7 +97,7 @@ class GrantsAttachments extends WebformCompositeBase {
         $element["attachment"]["#attributes"] = ['readonly' => 'readonly'];
 
         if (isset($element["isNewAttachment"])) {
-          $element["isNewAttachment"]["#value"] = TRUE;
+          $element["isNewAttachment"]["#value"] = FALSE;
         }
 
         $element["fileStatus"]["#value"] = 'uploaded';
@@ -123,7 +123,7 @@ class GrantsAttachments extends WebformCompositeBase {
         $element["attachment"]["#attributes"] = ['readonly' => 'readonly'];
 
         if (isset($element["isNewAttachment"])) {
-          $element["isNewAttachment"]["#value"] = TRUE;
+          $element["isNewAttachment"]["#value"] = FALSE;
         }
 
         $element["fileStatus"]["#value"] = 'uploaded';
