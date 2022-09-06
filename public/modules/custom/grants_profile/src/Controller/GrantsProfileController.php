@@ -321,7 +321,6 @@ class GrantsProfileController extends ControllerBase {
 
     $attachment = $grantsProfile->getAttachmentForFilename($bankAccount['confirmationFile']);
     try {
- 
 
       unset($bankAccount['confirmationFile']);
 

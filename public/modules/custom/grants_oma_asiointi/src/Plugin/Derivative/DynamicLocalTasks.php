@@ -13,7 +13,9 @@ class DynamicLocalTasks extends DeriverBase {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    // Implement dynamic logic to provide values for the same keys as in example.links.task.yml.
+    /* Implement dynamic logic to provide values for the same keys as
+     * in example. links.task.yml.
+     */
 
     $this->derivatives['grants_oma_asiointi.front'] = $base_plugin_definition;
     $this->derivatives['grants_oma_asiointi.front']['title'] = "My Services";

@@ -140,8 +140,7 @@ class CopyApplicationForm extends FormBase {
     $uploadResults = $this->applicationHandler->handleApplicationUpload($applicationData, $newAppNumber);
 
     if ($uploadResults == TRUE) {
-      // $this->messenger()->addStatus('Application copied and saved as DRAFT.');
-
+      // $this->messenger()->addStatus('Application copied/saved as DRAFT.');
       $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
         'submission_id' => $clearedData['application_number'],
       ]);

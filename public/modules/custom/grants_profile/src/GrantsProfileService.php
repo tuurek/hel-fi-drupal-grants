@@ -19,7 +19,6 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\helfi_yjdh\Exception\YjdhException;
 use Drupal\helfi_yjdh\YjdhClient;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Handle all profile functionality.
@@ -211,7 +210,7 @@ class GrantsProfileService {
     $selectedCompany = $this->getSelectedCompany();
     // Get grants profile.
     $grantsProfileDocument = $this->getGrantsProfile($selectedCompany['identifier'], TRUE);
-    // make sure business id is saved.
+    // Make sure business id is saved.
     $documentContent['businessId'] = $selectedCompany['identifier'];
 
     $transactionId = $this->newTransactionId(time());

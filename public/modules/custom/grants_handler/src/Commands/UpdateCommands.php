@@ -26,6 +26,8 @@ class UpdateCommands extends DrushCommands {
   protected $keyValueStore;
 
   /**
+   * Constructor.
+   *
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key value store to use.
    */
@@ -34,16 +36,18 @@ class UpdateCommands extends DrushCommands {
   }
 
   /**
-   * Corrects a field storage configuration. See https://www.drupal.org/project/drupal/issues/2916266 for more info.
+   * Corrects a field storage configuration.
    *
-   * @command update:correct-field-config-storage
+   * See https://www.drupal.org/project/drupal/issues/2916266 for more info.
    *
    * @param string $entity_type
-   *   Entity type
+   *   Entity type.
    * @param string $bundle
-   *   Bundle name
+   *   Bundle name.
    * @param string $field_name
-   *   Field name
+   *   Field name.
+   *
+   * @command update:correct-field-config-storage
    */
   public function correctFieldStorageConfig($entity_type, $bundle, $field_name) {
     $field_map_kv_store = $this->keyValueStore->get('entity.definitions.bundle_field_map');

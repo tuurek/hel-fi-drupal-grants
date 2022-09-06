@@ -1129,7 +1129,8 @@ class ApplicationHandler {
    * before all attachment related things are done properly with integration.
    *
    * @param \Drupal\webform\WebformSubmissionInterface|null $webform_submission
-   *   Webform submission object, if known. If this is not set, submission data must be provided.
+   *   Webform submission object, if known. If this is not set,
+   *   submission data must be provided.
    * @param array|null $submissionData
    *   Submission data. If no submission object, this is required.
    * @param string $applicationNumber
@@ -1243,13 +1244,13 @@ class ApplicationHandler {
   /**
    * Clear application data for noncopyable elements.
    *
-   * @param $data
-   *   Data to copy from
+   * @param array $data
+   *   Data to copy from.
    *
    * @return array
    *   Cleaned values.
    */
-  public static function clearDataForCopying($data): array {
+  public static function clearDataForCopying(array $data): array {
     unset($data["application_number"]);
     unset($data["sender_firstname"]);
     unset($data["sender_lastname"]);
