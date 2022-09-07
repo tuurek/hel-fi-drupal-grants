@@ -580,6 +580,7 @@ class ApplicationHandler {
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
       if (self::getAppEnv() == 'LOCAL') {
+        /** WebformSubmission */
         $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
         $submissionObject->set('serial', $submissionSerial);
         $submissionObject->save();
@@ -775,7 +776,7 @@ class ApplicationHandler {
     string $applicationNumber
   ): bool {
 
-    /** @var \Drupal\Core\TypedData\DataDefinitionInterface $applicationData */
+    /** @var TypedDataInterface $applicationData */
     $appDocument = $this->atvSchema->typedDataToDocumentContent($applicationData);
     $myJSON = Json::encode($appDocument);
 

@@ -15,6 +15,24 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  */
 class GrantsAttachmentData extends Map {
 
+  public function setValue($values, $notify = TRUE) {
+
+    /**
+     * Make sure if we have integrationID, the new attachemnt is set to false.
+     *
+     * This is because integration does not update new attachment value in content even if they do update other values.
+     *
+     * If this is true, integration waits for another file to arrive, and empties ALL other attachments.
+     *
+     */
+    if (isset($values["integrationID"]) && $values["integrationID"] != '') {
+      $values["isNewAttachment"] = FALSE;
+    }
+
+    parent::setValue($values, $notify);
+
+  }
+
   /**
    * {@inheritdoc}
    */
