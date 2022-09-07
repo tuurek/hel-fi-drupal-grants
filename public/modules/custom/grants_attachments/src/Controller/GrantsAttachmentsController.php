@@ -120,7 +120,7 @@ class GrantsAttachmentsController extends ControllerBase {
       }
     }
     catch (AtvDocumentNotFoundException $e) {
-      $this->getLogger('grants_attachments')->error('Document attachment not found. IntegrationID' . $integrationId);
+      $this->getLogger('grants_attachments')->error('Document attachment not found. IntegrationID: %inteId', ['%inteId' => $integrationId]);
     }
     catch (\Exception $e) {
       $this->messenger()->addError($e->getMessage());
@@ -162,7 +162,9 @@ class GrantsAttachmentsController extends ControllerBase {
       }
     }
     catch (\Exception $e) {
-      $this->getLogger('grants_attachments')->error($e->getMessage());
+      $this->getLogger('grants_attachments')->error('Error: %msg', [
+        '%msg' => $e->getMessage(),
+      ]);
     }
 
     $destination = $this->request->getMainRequest()->get('destination');

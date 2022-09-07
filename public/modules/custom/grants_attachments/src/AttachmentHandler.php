@@ -315,7 +315,9 @@ class AttachmentHandler {
         );
       }
       catch (TempStoreException | GuzzleException $e) {
-        $this->logger->error($e->getMessage());
+        $this->logger->error('Error: %msg', [
+          '%msg' => $e->getMessage(),
+        ]);
       }
     }
 
@@ -430,8 +432,9 @@ class AttachmentHandler {
           $this->attachmentFileIds[] = $file->id();
         }
         catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-          $this->logger
-            ->error($e->getMessage());
+          $this->logger->error('Error: %msg', [
+            '%msg' => $e->getMessage(),
+          ]);
           $this->messenger
             ->addError(t('Bank account confirmation file attachment failed.'));
         }

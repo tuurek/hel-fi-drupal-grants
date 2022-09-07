@@ -555,8 +555,3 @@ msgstr ""
 #: config/install/webform.webform.grants_handler.yml:0
 msgid "An example of a custom Webform handler."
 msgstr ""
-
-#: config/install/webform.webform.grants_handler.yml:0
-msgid "value:\n  '#type': textfield\n  '#title': Value\n  '#required': true\n  '#description': 'Enter a value to displayed in a custom message.'\n"
-msgstr ""
-
