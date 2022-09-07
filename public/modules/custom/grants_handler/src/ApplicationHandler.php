@@ -776,7 +776,7 @@ class ApplicationHandler {
     string $applicationNumber
   ): bool {
 
-    /** @var TypedDataInterface $applicationData */
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $applicationData */
     $appDocument = $this->atvSchema->typedDataToDocumentContent($applicationData);
     $myJSON = Json::encode($appDocument);
 

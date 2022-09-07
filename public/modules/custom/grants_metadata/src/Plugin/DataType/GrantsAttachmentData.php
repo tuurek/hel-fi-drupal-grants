@@ -15,6 +15,9 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  */
 class GrantsAttachmentData extends Map {
 
+  /**
+   *
+   */
   public function setValue($values, $notify = TRUE) {
 
     /**

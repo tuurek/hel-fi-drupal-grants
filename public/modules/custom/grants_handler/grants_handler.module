@@ -27,8 +27,8 @@ function grants_handler_theme(): array {
     'webform_handler_grants_summary' => [
       'variables' => ['settings' => NULL, 'handler' => []],
     ],
-    // TODO: composite elements' custom themes.
-    //    'community_officials_composite' => [
+    // @todo composite elements' custom themes.
+    //   'community_officials_composite' => [
     //      'variables' => [],
     //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
     //      'template' => 'select'
@@ -42,7 +42,7 @@ function grants_handler_theme(): array {
     //      'variables' => [],
     //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
     //      'template' => 'select'
-    //    ],
+    //    ],.
     'webform_submission_messages' => [
       'variables' => [
         'messages' => NULL,
@@ -160,7 +160,7 @@ function grants_handler_theme(): array {
  * Implements hook_entity_type_alter().
  */
 function grants_handler_entity_type_alter(array &$entity_types) {
-  // Add our custom handler for webform
+  // Add our custom handler for webform.
   $entity_types['webform_submission']->setStorageClass('Drupal\grants_handler\GrantsHandlerSubmissionStorage');
 }
 
@@ -246,21 +246,21 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       $typeNames = CompensationsComposite::getOptionsForTypes();
       // Get subvention types from settings form.
       $subventionTypes = $element['#subventionType'];
-      // Set element cardinality to match whatever is selected in
+      // Set element cardinality to match whatever is selected in.
       $element['#cardinality'] = $subventionTypes ? count($subventionTypes) : -1;
 
       $defaultValues = [];
-      // get items either from form values or from loaded data
+      // Get items either from form values or from loaded data.
       $inputItems = ($formValues["subventions"] ?? isset($webformData['subventions'])) ? $webformData['subventions'] : [];
       foreach ($subventionTypes as $id => $typeId) {
         $itemFound = 'notfound';
-        // If this item is not already been added to user input array
+        // If this item is not already been added to user input array.
         foreach ($inputItems as $sKey => $sItem) {
           if ($sItem['subventionType'] == (string) $id) {
             $itemFound = $sKey;
           }
         }
-        // then we set default values to contain type id + name.
+        // Then we set default values to contain type id + name.
         if ($itemFound == 'notfound') {
           $defaultValues[] = [
             'subventionTypeTitle' => $typeNames[$typeId],
@@ -311,7 +311,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       $element["#default_value"] = $newValues;
     }
 
-    // for some reason this selection cannot be done in address composite class.
+    // For some reason this selection cannot be done in address composite class.
     // so we'll need to hack this here.
     // @todo Can the composite default value be added here?
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_address')) {
@@ -344,7 +344,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       }
     }
 
-    // for some reason this selection cannot be done in official composite class.
+    // For some reason this selection cannot be done in official composite class.
     // so we'll need to hack this here.
     // @todo Can the composite default value be added here?
     if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_officials')) {
@@ -443,7 +443,7 @@ function _grants_handler_missing_data(
         <span>' . $str1 . '</span>
       </div>
       <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-  ->toString() . ' ' . $str3 . '</div>
+    ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -477,7 +477,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
 
     $grantsProfile = $grantsProfileService->getGrantsProfileContent($selectedCompany);
 
-    // pass variable to Drupal.Settings
+    // Pass variable to Drupal.Settings.
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
     $form['#attached']['drupalSettings']['grants_handler']['selectedCompany'] = $selectedCompany;
     $form['#attached']['drupalSettings']['grants_handler']['formData'] = $formData;
@@ -592,7 +592,7 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function grants_handler_preprocess_webform_submission(&$variables) {
-  // get submission object
+  // Get submission object.
   /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables['webform_submission'];
   $webform = $submission->getWebform();
@@ -605,7 +605,7 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     $variables["elements"]["data"]["3_yhteison_tiedot"]["#element"]["business_info"]["community_purpose"] = $data["business_purpose"];
   }
 
-  // parse messages
+  // Parse messages.
   $variables['messages'] = [
     '#theme' => 'webform_submission_messages',
     '#submission' => $submission,
@@ -616,8 +616,7 @@ function grants_handler_preprocess_webform_submission(&$variables) {
   //    '#theme' => 'webform_submission_events',
   //    '#submission' => $submission,
   //  ];
-
-  // parse history
+  // Parse history
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',
     '#submission' => $submission,
@@ -672,9 +671,9 @@ function grants_handler_preprocess_webform_submission_messages(&$variables) {
     '#style' => 'default',
   ];
 
-  // if submission is ok for messaging
+  // If submission is ok for messaging.
   if (ApplicationHandler::isSubmissionMessageable($submission, NULL)) {
-    // add message form
+    // Add message form.
     $variables['message_form'] = \Drupal::formBuilder()
       ->getForm('Drupal\grants_handler\Form\MessageForm', $submission);
   }
@@ -805,7 +804,6 @@ function grants_handler_submission_validation(array &$form, FormStateInterface $
   //  $form_state->clearErrors();
   //  // Validate our submission values.
   //  $logged_errors = $grants_formnavigation_helper->getErrors($webform_submission);
-
   $d = 'asfd';
 
   // // Set form errors if the values are in-valid.
@@ -963,7 +961,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $viewApplicationUrl = Url::fromRoute(
     'grants_handler.view_application',
     [
-    'submission_id' => $variables['applicationNumber'],
+      'submission_id' => $variables['applicationNumber'],
     ],
     [
       'attributes' => [
@@ -1047,10 +1045,10 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     '#applicationID' => $variables["submissionId"],
   ];
   $variables['ownApplicationsLink'] = Link::createFromRoute(t('My Applications'), 'grants_oma_asiointi.applications_list')->toRenderable();
-  $variables['ownApplicationsLink']['#title'] = ['#markup' => '<span class="hds-button__label">'.$variables['ownApplicationsLink']['#title'].'</span><span aria-hidden="true" class="hds-icon hds-icon--arrow-right"></span>'];
+  $variables['ownApplicationsLink']['#title'] = ['#markup' => '<span class="hds-button__label">' . $variables['ownApplicationsLink']['#title'] . '</span><span aria-hidden="true" class="hds-icon hds-icon--arrow-right"></span>'];
   $variables['ownApplicationsLink']['#attributes'] = ['class' => 'hds-button hds-button--primary'];
-  $variables['viewApplicationLink'] = Link::createFromRoute(t('View Application'), 'grants_handler.view_application', ['submission_id' => $variables["submissionId"],])->toRenderable();
-  $variables['viewApplicationLink']['#title'] = ['#markup' => '<span class="hds-button__label">'.$variables['viewApplicationLink']['#title'].'</span><span aria-hidden="true" class="hds-icon hds-icon--eye"></span>'];
+  $variables['viewApplicationLink'] = Link::createFromRoute(t('View Application'), 'grants_handler.view_application', ['submission_id' => $variables["submissionId"]])->toRenderable();
+  $variables['viewApplicationLink']['#title'] = ['#markup' => '<span class="hds-button__label">' . $variables['viewApplicationLink']['#title'] . '</span><span aria-hidden="true" class="hds-icon hds-icon--eye"></span>'];
   $variables['viewApplicationLink']['#attributes'] = ['class' => 'hds-button hds-button--secondary'];
 
   try {
@@ -1062,7 +1060,6 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     $variables['applicationTimestamp'] = '';
   }
 }
-
 
 /**
  * Implements hook_preprocess().

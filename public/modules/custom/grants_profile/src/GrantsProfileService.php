@@ -647,21 +647,6 @@ class GrantsProfileService {
 
     return $profileData->getContent();
 
-    // try {
-    //   $profile = $this->initGrantsProfile($businessId,
-    //     $profileData->getContent());
-    // }
-    // catch (\Exception $e) {
-    //   $msg = $this->t('No compnay data found for business id @businessid. Cannot continue.', [
-    //     '@businessid' => $businessId,
-    //   ]);
-    //   $this->messenger->addError($msg);
-    //   $this->messenger->addError($e->getMessage());
-    //   $this->logger->error($msg->render());
-    //   $profile = [];
-    // }
-
-    // return $profile;
   }
 
   /**

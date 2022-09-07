@@ -577,8 +577,6 @@ class AttachmentHandler {
         $retval['isNewAttachment'] = FALSE;
       }
 
-      
-
     }
     return $retval;
   }

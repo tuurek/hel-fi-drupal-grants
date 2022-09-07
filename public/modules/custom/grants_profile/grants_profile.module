@@ -12,6 +12,9 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 
+/**
+ *
+ */
 function grants_profile_theme(): array {
   $theme['view_application'] = [
     'render element' => 'build',
@@ -115,10 +118,10 @@ function grants_profile_form_alter(&$form, FormStateInterface $form_state, $form
    * Hide fields from login forms without proper query strings.
    */
 
-  // If we're at user login
+  // If we're at user login.
   if ($form_id == 'user_login_form') {
     $qParams = \Drupal::request()->query->all();
-    // we want to hide all normal login elements
+    // We want to hide all normal login elements
     // to only allow login via Tunnistamo.
     if (!isset($qParams['login']) || $qParams['login'] != 'admin') {
       unset($form['name']);
@@ -167,16 +170,16 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
         $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"]["#markup"] = str_replace('{bank_account_delta}', $value["bank_account_id"]["#value"], $value["deleteButton"]["#markup"]);
       }
 
-      // if bank account id is no set, a new account
+      // If bank account id is no set, a new account.
       if (isset($value["bank_account_id"]) && $value["bank_account_id"]["#value"] == '') {
         $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["confirmationFileName"]["#access"] = FALSE;
       }
       else {
-        // if bank account value is set, then we are editing and want to hide things.
+        // If bank account value is set, then we are editing and want to hide things.
         if (isset($value["bankAccount"]) && $value["bankAccount"]["#value"] != '') {
-          // hide confirmation file name
+          // Hide confirmation file name.
           $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["confirmationFile"]["#access"] = FALSE;
-          // and make bank account readonly.
+          // And make bank account readonly.
           $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["bankAccount"]["#attributes"] = ['readonly' => 'readonly'];
         }
       }

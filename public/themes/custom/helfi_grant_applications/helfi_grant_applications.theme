@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @file
+ */
+
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Html;
 
@@ -13,8 +18,7 @@ use Drupal\Component\Utility\Html;
  * @return string|null
  *   Returns path for the icons SVG or null.
  */
-function helfi_grant_applications_get_icons_path()
-{
+function helfi_grant_applications_get_icons_path() {
   static $icon_path;
   if (!isset($icon_path)) {
     $theme_handler = \Drupal::service('theme_handler');
@@ -31,34 +35,37 @@ function helfi_grant_applications_get_icons_path()
 /**
  * Implements hook_preprocess().
  */
-function helfi_grant_applications_preprocess(&$variables)
-{
+function helfi_grant_applications_preprocess(&$variables) {
   $variables['helfi_grant_applications_icons_path'] = helfi_grant_applications_get_icons_path();
   $variables['#attached']['drupalSettings']['helfigrantapplicationsIconsPath'] = $variables['helfi_grant_applications_icons_path'];
 }
 
-function helfi_grant_applications_field_widget_paragraphs_form_alter(&$element, FormStateInterface &$form_state, $context)
-{
+/**
+ *
+ */
+function helfi_grant_applications_field_widget_paragraphs_form_alter(&$element, FormStateInterface &$form_state, $context) {
   switch ($element['#paragraph_type']) {
     case 'myparagraphs':
       $term = $form_state->getFormObject()->getEntity();
 
-      //Check if paragraph is inside a form term
+      // Check if paragraph is inside a form term.
       if ($term && ($term->getEntityTypeId() == 'taxonomy_term')) {
         $voc = $term->bundle();
-        //Check if it is the desired voc
+        // Check if it is the desired voc.
         if ($voc == 'my_voc') {
-          //unset($element['subform']['field_to_be hidded']); //to hide only one field
-          $element = []; //to hide all the form
+          // unset($element['subform']['field_to_be hidded']); //to hide only one field.
+          // To hide all the form.
+          $element = [];
         }
       }
       break;
   }
 }
+
 /**
- * Adds webform details to the preview page for printing
+ * Adds webform details to the preview page for printing.
  */
-function grants_webform_print_preprocess_webform_submission_data(&$vars){
+function grants_webform_print_preprocess_webform_submission_data(&$vars) {
   $wf = $vars['webform_submission']->getWebform();
   $vars["title"] = $wf->label();
   $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -93,7 +100,8 @@ function grants_webform_print_preprocess_webform_submission_data(&$vars){
         c0-1.9,1.2-3.1,2.8-3.1c1.6,0,2.6,1.1,2.6,2.8C21.5,13.8,21.4,14.2,21.4,14.2 M13.1,16.7h1.7V8.5h-1.7v3.2H9.9V8.5H8.2v8.2h1.7v-3.4
         h3.2V16.7z"/>
       </svg>';
-  } else if ($language == 'ru') {
+  }
+  elseif ($language == 'ru') {
     $vars["helsinki_logo"] = '
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 78 28" style="enable-background:new 0 0 78 28;" xml:space="preserve" fill="currentColor">
@@ -120,7 +128,8 @@ function grants_webform_print_preprocess_webform_submission_data(&$vars){
       </g>
       </svg>
 ';
-  } else {
+  }
+  else {
     $vars["helsinki_logo"] = '
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 78 36" style="enable-background:new 0 0 78 36;" xml:space="preserve" fill="currentColor">
@@ -143,6 +152,7 @@ function grants_webform_print_preprocess_webform_submission_data(&$vars){
         </svg>';
   }
 }
+
 /**
  * Prepares webform element description, help, and more templates.
  *
@@ -161,8 +171,9 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
   $type = $element['#type'] ?? '';
 
   // This stuff is done already with webform forms, so we're skipping it for them.
-  if (array_key_exists('#webform', $element))
+  if (array_key_exists('#webform', $element)) {
     return;
+  }
 
   // Fix details 'description' property which does not have description.content.
   // @see template_preprocess_details
@@ -183,17 +194,17 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
       }
       $variables['description'] = [];
       $variables['description']['content'] = [
-          '#type' => 'container',
-          '#attributes' => new Attribute($description_attributes),
-        ] + $description;
+        '#type' => 'container',
+        '#attributes' => new Attribute($description_attributes),
+      ] + $description;
     }
     else {
       $variables['description'] += ['attributes' => new Attribute()];
       // Wrap description in a container.
       $variables['description']['content'] = [
-          '#type' => 'container',
-          '#attributes' => $variables['description']['attributes'],
-        ] + $description;
+        '#type' => 'container',
+        '#attributes' => $variables['description']['attributes'],
+      ] + $description;
       $variables['description']['attributes'] = new Attribute();
     }
 
@@ -240,7 +251,6 @@ function _helfi_grant_applications_preprocess_help(array &$variables, $title_par
   $element = &$variables['element'];
   $type = $element['#type'] ?? '';
 
-
   if (empty($element['#help'])) {
     return;
   }
@@ -282,8 +292,8 @@ function _helfi_grant_applications_preprocess_help(array &$variables, $title_par
     $build[$target] = (is_array($target_element)) ? $target_element : ['#markup' => $target_element];
   }
   $build['help'] = [
-      '#type' => 'webform_help',
-    ] + array_intersect_key($element, array_flip(['#help', '#help_title']));
+    '#type' => 'webform_help',
+  ] + array_intersect_key($element, array_flip(['#help', '#help_title']));
 
   // Add help attributes.
   if (isset($element['#help_attributes'])) {

@@ -1,6 +1,12 @@
 <?php
 
-use Drupal\Core\Render\Element;
+/**
+ * @file
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\webform\Entity\WebformSubmission;
 
 /**
  * @file
@@ -10,7 +16,6 @@ use Drupal\Core\Render\Element;
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
-
 
 /**
  * Implements hook_theme().
@@ -45,28 +50,28 @@ function template_preprocess_grants_attachments(array &$variables) {
     $currentHost = \Drupal::request()->getSchemeAndHttpHost();
     $currentDestination = str_replace($currentHost, '', $currentUri);
 
-    $submission = \Drupal\webform\Entity\WebformSubmission::load($variables["children"]["#webform_submission"]);
+    $submission = WebformSubmission::load($variables["children"]["#webform_submission"]);
     if ($submission != NULL) {
       $submissionData = $submission->getData();
     }
 
-    // allow only DRAFTs to be deleted.
+    // Allow only DRAFTs to be deleted.
     if (is_array($submissionData) && isset($submissionData['status']) && $submissionData['status'] == 'DRAFT') {
       $integrationId = str_replace('/', '_', $variables["children"]["#default_value"]["integrationID"]);
 
-      $deleteUrl = \Drupal\Core\Url::fromRoute(
+      $deleteUrl = Url::fromRoute(
         'grants_attachments.delete_attachment',
         [
           'submission_id' => $submissionData['application_number'] ?? 'not-saved',
-          'integration_id' => $integrationId
+          'integration_id' => $integrationId,
         ],
         [
           'query' => [
             'destination' => $currentDestination,
-          ]
+          ],
         ]
       );
-      $variables['attachmentDeleteLink'] = \Drupal\Core\Link::fromTextAndUrl(t('Delete attachment'), $deleteUrl);
+      $variables['attachmentDeleteLink'] = Link::fromTextAndUrl(t('Delete attachment'), $deleteUrl);
     }
   }
 }
@@ -76,11 +81,11 @@ function template_preprocess_grants_attachments(array &$variables) {
  */
 function grants_attachments_cron() {
 
-  // get saved files from db
+  // Get saved files from db.
   $database = \Drupal::database();
   $query = $database->query("SELECT * FROM {grants_attachments}");
   $result = $query->fetchAll();
-  // parse results into structure that uploader eats
+  // Parse results into structure that uploader eats.
   $resultParsed = [];
   foreach ($result as $item) {
     $resultParsed[$item->grants_application_number]['fid'][] = $item->fid;
@@ -89,7 +94,7 @@ function grants_attachments_cron() {
   /** @var \Drupal\grants_attachments\AttachmentUploader $attachmentUploader */
   $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
   foreach ($resultParsed as $applicationNumber => $item) {
-    // try to upload again with added data.
+    // Try to upload again with added data.
     $attachmentUploader->uploadAttachments($item['fid'], $applicationNumber);
   }
 
