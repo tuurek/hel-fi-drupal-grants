@@ -17,7 +17,7 @@ display:
             format_custom_false: 'Ej publicerad'
             format_custom_true: Publicerad
         changed:
-          label: Uppdaterad
+          label: Updated
         operations:
           label: Funktioner
       title: Innehåll
