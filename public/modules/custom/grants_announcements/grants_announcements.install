@@ -6,20 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function grants_announcements_install() {
-  \Drupal::messenger()->addStatus(__FUNCTION__);
-}
-
-/**
- * Implements hook_uninstall().
- */
-function grants_announcements_uninstall() {
-  \Drupal::messenger()->addStatus(__FUNCTION__);
-}
-
-/**
  * Implements hook_schema().
  */
 function grants_announcements_schema() {

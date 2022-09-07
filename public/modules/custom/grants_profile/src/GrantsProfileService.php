@@ -242,7 +242,7 @@ class GrantsProfileService {
               );
             }
             else {
-              $this->messenger->addStatus(
+              $this->messenger->addError(
                 $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
                   ['%account' => $bank_account['bankAccount']]
                 )
@@ -709,11 +709,6 @@ class GrantsProfileService {
     }
     catch (AtvDocumentNotFoundException $e) {
       return NULL;
-
-      // $this->messenger->addStatus($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
-      // $this->logger->info($this->t('Grants profile not found for %s, new profile created.', ['%s' => $businessId]));
-      // // Initialize new profile.
-      // $profileDocument = $this->newProfile([]);
     }
   }
 

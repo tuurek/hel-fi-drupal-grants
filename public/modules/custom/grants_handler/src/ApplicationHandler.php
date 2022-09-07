@@ -782,16 +782,16 @@ class ApplicationHandler {
 
     if ($this->isDebug()) {
       $t_args = [
-        '@endpoint' => $this->endpoint,
+        '%endpoint' => $this->endpoint,
       ];
       $this->logger
-        ->debug(t('DEBUG: Endpoint: @endpoint', $t_args));
+        ->debug('DEBUG: Endpoint: %endpoint', $t_args);
 
       $t_args = [
-        '@myJSON' => $myJSON,
+        '%myJSON' => $myJSON,
       ];
       $this->logger
-        ->debug('DEBUG: Sent JSON: @myJSON', $t_args);
+        ->debug('DEBUG: Sent JSON: %myJSON', $t_args);
     }
 
     try {
@@ -839,8 +839,8 @@ class ApplicationHandler {
       }
     }
     catch (\Exception $e) {
-      $this->messenger->addError($e->getMessage());
-      $this->logger->error($e->getMessage());
+      $this->messenger->addError(t('Application saving failed, error has been logged.'));
+      $this->logger->error('Error saving application: %msg',['%msg' => $e->getMessage()]);
       return FALSE;
     }
     return FALSE;

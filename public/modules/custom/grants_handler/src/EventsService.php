@@ -153,7 +153,7 @@ class EventsService {
     $eventDataJson = Json::encode($eventData);
 
     if ($this->debug == TRUE) {
-      $this->logger->debug('Event ID: ' . $eventData['eventID'] . ', JSON:  ' . $eventDataJson);
+      $this->logger->debug('Event ID: %eventId, JSON:  %json', ['%eventId' => $eventData['eventID'], '%json' => $eventDataJson]);
     }
 
     try {
@@ -164,7 +164,7 @@ class EventsService {
       ]);
 
       if ($res->getStatusCode() == 201) {
-        $this->logger->info('Event logged:  ' . $eventData['eventID'] . ', message sent.');
+        $this->logger->info('Event logged: %eventId, message sent.', ['%eventId' => $eventData['eventID']]);
         return $eventData['eventID'];
       }
 

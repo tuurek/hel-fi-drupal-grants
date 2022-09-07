@@ -4,7 +4,6 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -996,12 +995,11 @@ class GrantsHandler extends WebformHandlerBase {
         );
 
         $this->messenger()
-          ->addStatus(
+          ->addError(
             $this->t(
-              'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
+              'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support.',
               [
                 '@number' => $this->applicationNumber,
-                '@link' => '<a href="/" >here</a>',
               ]
             ),
             TRUE
@@ -1072,11 +1070,9 @@ class GrantsHandler extends WebformHandlerBase {
         $this->messenger()
           ->addStatus(
             $this->t(
-              'Grant application (<span id="saved-application-number">@number</span>) saved. You can view your new application from @here.',
+              'Grant application (<span id="saved-application-number">@number</span>) saved.',
               [
                 '@number' => $this->applicationNumber,
-                '@here' => Link::fromTextAndUrl('here', $viewApplicationUrl)
-                  ->toString(),
               ]
             )
           );
@@ -1090,31 +1086,18 @@ class GrantsHandler extends WebformHandlerBase {
                     ],
                   ]
                 );
-        $redirectUrl = Url::fromRoute(
-                  'grants_handler.completion',
-                  ['submission_id' => $this->applicationNumber],
-                  [
-                    'attributes' => [
-                      'data-drupal-selector' => 'application-saved-successfully-link',
-                    ],
-                  ]
-                 );
-        // $redirectResponse->send();
       }
       else {
         $this->messenger()
-          ->addStatus(
+          ->addERror(
             $this->t(
-              'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support from @link',
+              'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support.',
               [
                 '@number' => $this->applicationNumber,
-                '@link' => 'Support link',
               ]
             )
           );
       }
-      // $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      //  return $redirectResponse;
       $form_state->setRedirect(
                 'grants_handler.completion',
                 ['submission_id' => $this->applicationNumber],
@@ -1126,7 +1109,8 @@ class GrantsHandler extends WebformHandlerBase {
               );
     }
     catch (\Exception $e) {
-      // @todo log errors properly
+      $this->getLogger('grants_handler')->error('Error: %error', ['%error' => $e->getMessage()]);
+
     }
   }
 

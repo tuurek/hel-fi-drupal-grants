@@ -618,7 +618,8 @@ class AttachmentHandler {
               [
                 '@filename' => $attResult['filename'],
                 '@msg' => $attResult['msg'],
-              ]));
+              ])
+            );
       }
     }
 

@@ -66,8 +66,8 @@ class WebformNavigationController extends ControllerBase {
       }
       catch (\Exception $e) {
         \Drupal::messenger()
-          ->addError($this->t('Deleting failed. Error has been logged, please contact support.'));
-        \Drupal::logger('grants_handler')->error($e->getMessage());
+          ->addError($this->t('Deleting draft failed. Error has been logged, please contact support.'));
+        \Drupal::logger('grants_handler')->error('Error: %error', ['%error' => $e->getMessage()]);
       }
     }
 

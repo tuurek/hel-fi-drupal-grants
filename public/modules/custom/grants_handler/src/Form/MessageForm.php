@@ -227,7 +227,7 @@ class MessageForm extends FormBase {
 
       }
       $this->messenger()
-        ->addStatus($this->t('Your message has been sent. Please note that it may not show up on this page straight away.'));
+        ->addStatus($this->t('Your message has been sent. Please note that it will take some time it appears on application.'));
       $this->messenger()
         ->addStatus($this->t('Your message: @message', ['@message' => $data['body']]));
     }

@@ -424,7 +424,10 @@ class GrantsProfileForm extends FormBase {
 
     if ($success != FALSE) {
       $this->messenger()
-        ->addStatus($this->t('Grantsprofile for company number %s saved and can be used in grant applications', ['%s' => $selectedCompany]));
+        ->addStatus($this->t('Grantsprofile for %c (%s) saved.', [
+          '%c' => $selectedCompanyArray["name"],
+          '%s' => $selectedCompany,
+        ]));
     }
 
     $form_state->setRedirect('grants_profile.edit');

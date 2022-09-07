@@ -156,7 +156,7 @@ class GrantsAttachmentsController extends ControllerBase {
         $eventId = $this->eventsService->logEvent(
           $submission_id,
           'APP_INFO_ATT_DELETED',
-          t('Attachment deleted.'),
+          'Attachment deleted.',
           $integrationId
         );
       }

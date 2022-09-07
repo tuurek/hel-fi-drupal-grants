@@ -694,7 +694,7 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
       $eventDate = new \DateTime($event['timeCreated']);
       $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $history[] = t(ucfirst(strtolower($event['citizenCaseStatus']))) . ': ' . $eventDate->format('d.m.Y H:i');
+      $history[] = t('%status: %date', ['%status' => $event['citizenCaseStatus'], '%date' => $eventDate->format('d.m.Y H:i')]);
     }
   }
 
@@ -704,7 +704,6 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
     '#title' => t('Hakemuksen tila'),
     '#items' => $history,
     '#attributes' => ['class' => 'application-status-history'],
-  // '#wrapper_attributes' => ['class' => 'container'],
   ];
 }
 
@@ -993,8 +992,10 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $viewApplicationUrl);
-  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editApplicationUrl);
+  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application %icon', [
+    '%icon' => '<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>',
+  ]), $viewApplicationUrl);
+  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application %icon', ['%icon' => '<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>']), $editApplicationUrl);
 
   try {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
@@ -1002,7 +1003,9 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     }
     else {
       \Drupal::logger('grants_handler')
-        ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+        ->error('Application status not in valid statuses: %number', [
+          '%number' => $submissionData["application_number"],
+        ]);
     }
   }
   catch (\Exception $e) {
@@ -1022,12 +1025,14 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
       $config = \Drupal::config('grants_handler.settings');
       $statusStrings = $config->get('statusStrings');
-      $variables['statusStringHumanReadable'] = t($statusStrings[$submissionData['status']]);
+      $variables['statusStringHumanReadable'] = t('%status', ['%status' => $statusStrings[$submissionData['status']]]);
       $variables['statusString'] = $submissionData['status'];
     }
     else {
       \Drupal::logger('grants_handler')
-        ->error('Application status not in valid statuses.' . $submissionData["application_number"]);
+        ->error('Application status not in valid statuses: %appno',[
+          '%appno' => $submissionData["application_number"]
+        ]);
     }
   }
   catch (\Exception $e) {
