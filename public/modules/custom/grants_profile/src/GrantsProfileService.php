@@ -219,7 +219,7 @@ class GrantsProfileService {
       $newGrantsProfileDocument = $this->newProfile($documentContent);
       $newGrantsProfileDocument->setStatus(self::DOCUMENT_STATUS_SAVED);
       $newGrantsProfileDocument->setTransactionId($transactionId);
-      $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
+      $this->logger->info('Grants profile POSTed, transactionID: %transId', ['%transId' => $transactionId]);
       return $this->atvService->postDocument($newGrantsProfileDocument);
     }
     else {
@@ -252,29 +252,26 @@ class GrantsProfileService {
               // Delete temp file.
               $fileEntity->delete();
 
-              $this->logger->debug($this->t(
-                'File deleted: %id.',
+              $this->logger->debug('File deleted: %id.',
                 [
                   '%id' => $fileEntity->id(),
                 ]
-              ));
+              );
             }
             catch (EntityStorageException $e) {
-              $this->logger->error($this->t(
-                'File deleting failed: %id.',
+              $this->logger->error('File deleting failed: %id.',
                 [
                   '%id' => $fileEntity->id(),
                 ]
-              ));
+              );
             }
           }
           else {
-            $this->logger->error($this->t(
-              'No file found: %id.',
+            $this->logger->error('No file found: %id.',
               [
                 '%id' => $fileEntity->id(),
               ]
-            ));
+            );
 
             $this->messenger->addError(
               $this->t('Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file.',
@@ -291,7 +288,7 @@ class GrantsProfileService {
         'metadata' => $grantsProfileDocument->getMetadata(),
         'transaction_id' => $transactionId,
       ];
-      $this->logger->info('Grants profile POSTed, transactionID: ' . $transactionId);
+      $this->logger->info('Grants profile POSTed, transactionID: %transactionId', ['%transactionId' => $transactionId]);
       return $this->atvService->patchDocument($grantsProfileDocument->getId(), $payloadData);
     }
   }

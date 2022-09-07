@@ -443,7 +443,7 @@ function _grants_handler_missing_data(
         <span>' . $str1 . '</span>
       </div>
       <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-    ->toString() . ' ' . $str3 . '</div>
+  ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -992,10 +992,9 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application %icon', [
-    '%icon' => '<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>',
-  ]), $viewApplicationUrl);
-  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application %icon', ['%icon' => '<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>']), $editApplicationUrl);
+  // TODO: these icon should really not go through t()
+  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $viewApplicationUrl);
+  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editApplicationUrl);
 
   try {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
@@ -1030,8 +1029,8 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
     }
     else {
       \Drupal::logger('grants_handler')
-        ->error('Application status not in valid statuses: %appno',[
-          '%appno' => $submissionData["application_number"]
+        ->error('Application status not in valid statuses: %appno', [
+          '%appno' => $submissionData["application_number"],
         ]);
     }
   }

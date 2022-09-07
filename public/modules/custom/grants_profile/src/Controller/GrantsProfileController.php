@@ -214,7 +214,7 @@ class GrantsProfileController extends ControllerBase {
       }
       catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
-          ->error('Profile saving failed. ' . $e->getMessage());
+          ->error('Profile saving failed. Message: %msg', ['%msg' => $e->getMessage()]);
         $this->messenger()
           ->addStatus($this->t('Bank account confirmation deleting failed. Issue has been logged.'));
       }
@@ -250,7 +250,7 @@ class GrantsProfileController extends ControllerBase {
       }
       catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
-          ->error('Profile saving failed. ' . $e->getMessage());
+          ->error('Profile saving failed. Message: %msg', ['%msg' => $e->getMessage()]);
         $this->messenger()
           ->addStatus($this->t('Address deleting failed.'));
       }
@@ -288,7 +288,7 @@ class GrantsProfileController extends ControllerBase {
       }
       catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
-          ->error('Profile saving failed. ' . $e->getMessage());
+          ->error('Profile saving failed. Message: %msg', ['%msg' => $e->getMessage()]);
         $this->messenger()
           ->addStatus($this->t('Official deleted & profile saved.'));
       }
@@ -344,7 +344,7 @@ class GrantsProfileController extends ControllerBase {
       }
       catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
         $this->getLogger('grants_profile')
-          ->error('Profile saving failed. ' . $e->getMessage());
+          ->error('Profile saving failed. Message: %msg', ['%msg' => $e->getMessage()]);
         $this->messenger()
           ->addStatus($this->t('Bank account deletion failed, and error has been logged.'));
       }
