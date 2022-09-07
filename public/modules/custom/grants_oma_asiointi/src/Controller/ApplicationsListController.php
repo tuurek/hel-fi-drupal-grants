@@ -13,7 +13,6 @@ use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\Url;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_metadata\AtvSchema;
-use Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvFailedToConnectException;
@@ -22,6 +21,7 @@ use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -86,6 +86,13 @@ class ApplicationsListController extends ControllerBase {
   protected $messenger;
 
   /**
+   * Current request.
+   *
+   * @var Symfony\Component\HttpFoundation\Request
+   */
+  protected Request $request;
+
+  /**
    * The controller constructor.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
@@ -104,6 +111,8 @@ class ApplicationsListController extends ControllerBase {
    *   The messenger.
    * @param \Drupal\grants_metadata\AtvSchema $atvShema
    *   Parse document data.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   Current request object.
    */
   public function __construct(
     AccountInterface $current_user,
@@ -113,7 +122,8 @@ class ApplicationsListController extends ControllerBase {
     AtvService $helfi_atv_atv_service,
     LoggerChannelFactoryInterface $logger,
     MessengerInterface $messenger,
-    AtvSchema $atvShema
+    AtvSchema $atvShema,
+    Request $request
   ) {
 
     $this->currentUser = $current_user;
@@ -124,6 +134,7 @@ class ApplicationsListController extends ControllerBase {
     $this->logger = $logger->get('applications_list');
     $this->messenger = $messenger;
     $this->atvSchema = $atvShema;
+    $this->request = $request;
   }
 
   /**
@@ -138,7 +149,8 @@ class ApplicationsListController extends ControllerBase {
       $container->get('helfi_atv.atv_service'),
       $container->get('logger.factory'),
       $container->get('messenger'),
-      $container->get('grants_metadata.atv_schema')
+      $container->get('grants_metadata.atv_schema'),
+      $container->get('request_stack')->getCurrentRequest()
     );
   }
 
@@ -151,21 +163,20 @@ class ApplicationsListController extends ControllerBase {
 
     // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      $destination = \Drupal::request()->getRequestUri();
+      $destination = $this->request->getRequestUri();
       $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
       $redirectResponse = new RedirectResponse($redirectUrl->toString());
       $redirectResponse->send();
     }
 
     try {
+      $appEnv = ApplicationHandler::getAppEnv();
+
       $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
         'service' => 'AvustushakemusIntegraatio',
         'business_id' => $selectedCompany['identifier'],
+        'lookfor' => 'appenv:' . $appEnv,
       ]);
-
-      $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
-
-      $appEnv = ApplicationHandler::getAppEnv();
 
       $items = [];
 
@@ -175,26 +186,18 @@ class ApplicationsListController extends ControllerBase {
        * @var integer $key
        * @var  \Drupal\helfi_atv\AtvDocument $document
        */
-      foreach ($applicationDocuments as $key => $document) {
-        // @todo when ATV/integration supports search via meta fields,
-        // we can search per environment.
-        if (
-         str_contains($document->getTransactionId(), $appEnv) &&
-          array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
-        ) {
+      foreach ($applicationDocuments as $document) {
+        try {
+          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
 
-          try {
-            $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
+          $items[] = [
+            '#theme' => 'application_list_item',
+            '#document' => $document,
+            '#submission' => $submission,
+          ];
 
-            $items[] = [
-              '#theme' => 'application_list_item',
-              '#document' => $document,
-              '#submission' => $submission,
-            ];
-
-          }
-          catch (AtvDocumentNotFoundException $e) {
-          }
+        }
+        catch (AtvDocumentNotFoundException $e) {
         }
       }
     }
@@ -202,7 +205,7 @@ class ApplicationsListController extends ControllerBase {
       TempStoreException |
       AtvFailedToConnectException |
       GuzzleException $e) {
-      throw new NotFoundHttpException($this->t('No documents found'));
+      throw new NotFoundHttpException('No documents found');
     }
     catch (AtvDocumentNotFoundException $e) {
     }
@@ -215,9 +218,8 @@ class ApplicationsListController extends ControllerBase {
       '#theme' => 'application_list',
       '#items' => $items,
       '#type' => 'all',
-      '#header' => t('My applications'),
+      '#header' => $this->t('My applications'),
       '#id' => 'applications__list',
-      '#description' => 'DESCRIPTION GOES HERE',
       '#attached' => [
         'library' => [
           'grants_handler/application-search-sort',

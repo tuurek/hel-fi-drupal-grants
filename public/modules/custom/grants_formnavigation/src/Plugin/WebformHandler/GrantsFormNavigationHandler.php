@@ -5,7 +5,6 @@ namespace Drupal\grants_formnavigation\Plugin\WebformHandler;
 use Drupal\grants_formnavigation\GrantsFormNavigationHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\webform\Plugin\WebformHandlerBase;
-use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -149,7 +148,6 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
   public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
     $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
   }
-
 
   /**
    * {@inheritdoc}

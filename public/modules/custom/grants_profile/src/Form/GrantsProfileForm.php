@@ -371,10 +371,7 @@ class GrantsProfileForm extends FormBase {
     parent::validateForm($form, $form_state);
 
     $errors = $form_state->getErrors();
-    if ($errors) {
-      $d = 'asfd';
-    }
-    else {
+    if (empty($errors)) {
       // @todo Created profile needs to be set to cache.
       $grantsProfileDefinition = GrantsProfileDefinition::create('grants_profile_profile');
       // Create data object.

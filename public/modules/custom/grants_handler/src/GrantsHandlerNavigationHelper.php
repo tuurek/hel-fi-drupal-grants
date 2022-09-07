@@ -389,7 +389,7 @@ class GrantsHandlerNavigationHelper {
     if (empty($webform_submission->id())) {
       // Log visit only if user has not visited.
       if (!$hasVisitedPage) {
-        $storedata = $this->logDataToStore(self::PAGE_VISITED_OPERATION, $webform_submission, $page);
+        $this->logDataToStore(self::PAGE_VISITED_OPERATION, $webform_submission, $page);
       }
       // And return to stop execution.
       return;

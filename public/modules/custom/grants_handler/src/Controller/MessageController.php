@@ -132,7 +132,7 @@ class MessageController extends ControllerBase {
       }
       catch (EventException $ee) {
         $this->getLogger('message_controller')->error('Error: %error', [
-          '%error' => $ee->getMessage()
+          '%error' => $ee->getMessage(),
         ]);
         $this->messenger()->addError($this->t('Message marking as read failed.'));
       }

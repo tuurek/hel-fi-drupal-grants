@@ -37,13 +37,6 @@ function grants_oma_asiointi_theme() {
 }
 
 /**
- *
- */
-/**
- * Implements hook_aggregator_fetcher_info_alter().
- */
-
-/**
  * Implements hook_page_attachments().
  */
 function grants_oma_asiointi_page_attachments(array &$attachments) {

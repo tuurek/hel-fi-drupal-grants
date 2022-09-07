@@ -155,14 +155,12 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
    * Callback for user mandates.
    */
   public function mandateCallbackHpa() {
-    $d = 'asdf';
   }
 
   /**
    * Callback for hpa listing.
    */
   public function mandateCallbackHpaList() {
-    $d = 'asdf';
   }
 
 }

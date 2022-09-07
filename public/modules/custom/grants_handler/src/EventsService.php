@@ -153,7 +153,12 @@ class EventsService {
     $eventDataJson = Json::encode($eventData);
 
     if ($this->debug == TRUE) {
-      $this->logger->debug('Event ID: %eventId, JSON:  %json', ['%eventId' => $eventData['eventID'], '%json' => $eventDataJson]);
+      $this->logger->debug(
+        'Event ID: %eventId, JSON:  %json',
+        [
+          '%eventId' => $eventData['eventID'],
+          '%json' => $eventDataJson,
+        ]);
     }
 
     try {

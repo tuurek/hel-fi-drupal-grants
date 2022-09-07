@@ -28,7 +28,7 @@ class CompletionController extends ControllerBase {
 
     }
     catch (\Exception $e) {
-      throw new NotFoundHttpException($this->t('Submission not found'));
+      throw new NotFoundHttpException('Submission not found');
     }
 
     return $build;

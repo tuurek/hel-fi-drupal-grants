@@ -134,10 +134,10 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
           $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
             ->error('Document %appno not found when loading WebformSubmission: %submission. Error: %msg',
             [
-                '%appno' => $applicationNumber,
-                '%submission' => $submission->uuid(),
-                '%msg' => $exception->getMessage(),
-              ]);
+              '%appno' => $applicationNumber,
+              '%submission' => $submission->uuid(),
+              '%msg' => $exception->getMessage(),
+            ]);
           $submission->setData([]);
         }
       }

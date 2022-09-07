@@ -2,12 +2,13 @@
 
 /**
  * @file
+ * Module hooks.
  */
 
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- *
+ * Alter form.
  */
 function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_id == 'webform_settings_form' || $form_id == 'webform_add_form' || $form_id == 'webform_duplicate_form') {
