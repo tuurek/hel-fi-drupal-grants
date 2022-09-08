@@ -9,13 +9,14 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
+use Drupal\grants_handler\EventsService;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionStorageInterface;
-use Drupal\grants_handler\EventsService;
 
 /**
  * Implements hook_theme().
@@ -1119,13 +1120,13 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hod-button--secondary'],
+        'class' => ['hds-button', 'hds-button-complimentary']
       ],
     ]
   );
 
-  $printApplicationLink = Link::fromTextAndUrl(t('Print application'), $printApplicationUrl);
-
+  $printApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--printer hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Print application'));
+  $printApplicationLink = Link::fromTextAndUrl($printApplicationLinkText, $printApplicationUrl);
   $editApplicationUrl = Url::fromRoute(
     'grants_handler.edit_application',
     [
@@ -1135,7 +1136,7 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hod-button--secondary'],
+        'class' => ['hds-button', 'hds-button--supplementary'],
       ],
     ]
   );
@@ -1149,13 +1150,14 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     ],
     [
       'attributes' => [
-        'data-drupal-selector' => 'application-copy-link',
-        'class' => ['hds-button', 'hod-button--secondary'],
+        'data-drupal-selector' => 'application-edit-link',
+        'class' => ['hds-button', 'hds-button-complimentary']
       ],
     ]
   );
+  $copyApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--copy hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Copy application'));
 
-  $copyApplicationLink = Link::fromTextAndUrl(t('Copy application'), $copyApplicationUrl);
+  $copyApplicationLink = Link::fromTextAndUrl($copyApplicationLinkText, $copyApplicationUrl);
 
   $variables['printApplicationLink'] = $printApplicationLink;
   $variables['editApplicationLink'] = $editApplicationLink;

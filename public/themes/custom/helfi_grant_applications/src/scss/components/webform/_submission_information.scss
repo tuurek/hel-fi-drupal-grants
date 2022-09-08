@@ -1,0 +1,21 @@
+.webform-submission-information {
+  background: var(--color-silver-light);
+  padding: var(--spacing-l);
+  h4 {
+    margin-top: 0;
+  }
+  &__row {
+    display: flex;
+    &-top {
+      border-bottom: 1px solid var(--color-black-20);
+      align-items: center;
+      justify-content: space-between;
+    }
+    &-main {}
+  }
+  &__supportlinks {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--spacing-m);
+  }
+}

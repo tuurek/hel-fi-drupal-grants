@@ -33,16 +33,28 @@
 <div class="container">
 <h3>{{ 'Application info'|t }}</h3>
 <p>{{ 'Summary about your application and processing details.'|t }}</p>
+  <div class="webform-submission-information">
+    <div class="webform-submission-information__row webform-submission-information__row-top">
+      <h4>TODO: Headline</h4>
+      <div class="webform-submission-information__supportlinks">
+        {{ printApplicationLink }}
+        {{ copyApplicationLink }}
+      </div>
+    </div>
+    <div class="webform-submission-information__row webform-submission-information__row-main">
 
-    {{ printApplicationLink }}
-    {{ copyApplicationLink }}
+      <div>
+        Hakemuksen Numero: {{ applicationNumber }}
+        lähetetty
+        {{ handler }}
+      </div>
+      {{ history }}
+      {{ attachments }}
 
-    <div>Hakemuksen Numero: {{ applicationNumber }}</div>
-
-    {{ handler }}
-    {{ history }}
-    {{ attachments }}
-
+    </div>
     {{ editApplicationLink }}
 
+
+
+  </div>
 </div>

@@ -33,9 +33,7 @@
   --color-hover-focus: var(--color-black);
   --color-disabled: var(--color-black-40);
 }
-.hds-button:not(:disabled) {
-  border-color: transparent;
-  border-color: transparent;
+.hds-button--secondary:not(:disabled), .hds-button--primary:not(:disabled) {
   border-color: var(--color-black, transparent);
 }
 .webform-button--delete-draft {
