@@ -70,7 +70,6 @@ msgid "Helfi"
 msgstr ""
 
 #: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:12
-msgid "A webform submission handler for the webform
- *   navigation module."
+msgid "A webform submission handler for the webform navigation module."
 msgstr ""
 

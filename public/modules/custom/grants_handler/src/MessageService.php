@@ -183,7 +183,12 @@ class MessageService {
             $nextMessageId
           );
 
-          $this->logger->info('MSG id: %nextId, message sent. Event logged: %eventId', ['%nextId' => $nextMessageId, '%eventId' => $eventId]);
+          $this->logger->info(
+            'MSG id: %nextId, message sent. Event logged: %eventId', 
+            [
+              '%nextId' => $nextMessageId,
+              '%eventId' => $eventId
+            ]);
 
         }
         catch (EventException $e) {
