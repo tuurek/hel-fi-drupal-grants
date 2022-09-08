@@ -184,10 +184,10 @@ class MessageService {
           );
 
           $this->logger->info(
-            'MSG id: %nextId, message sent. Event logged: %eventId', 
+            'MSG id: %nextId, message sent. Event logged: %eventId',
             [
               '%nextId' => $nextMessageId,
-              '%eventId' => $eventId
+              '%eventId' => $eventId,
             ]);
 
         }

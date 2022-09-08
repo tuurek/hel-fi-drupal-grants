@@ -4,7 +4,6 @@ namespace Drupal\grants_handler\Plugin\WebformHandler;
 
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\TempStoreException;
