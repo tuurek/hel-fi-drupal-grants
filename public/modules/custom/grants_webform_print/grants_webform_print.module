@@ -279,6 +279,8 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
 
   $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
 
+  $currentPage = $webform_submission->getCurrentPage();
+
   // Iterate through the pages and set appropriate page classes.
   foreach ($pages as $key => $page) {
 
@@ -297,19 +299,18 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
       $variables['page_classes'][$key][] = 'not-visited';
     }
 
-    // visited, no errors.
-    if ($hasVisitedThisPage == TRUE && !isset($all_errors[$key])) {
-      $variables['page_classes'][$key][] = 'is-complete';
-    }
-
     // Add the visited and error classes if it has been logged.
     if (/*$hasVisitedThisPage == TRUE && */(isset($all_errors[$key]) && !empty($all_errors[$key]))) {
       // Add an error class if the page has errors or complete class if not.
       $variables['page_classes'][$key][] = 'has-errors';
     }
+
     // Add an active class to the current page.
-    if ($variables['current_page'] == $key) {
+    if ($currentPage == $key) {
       $variables['page_classes'][$key][] = 'is-active';
+    }
+    if ($hasVisitedThisPage == TRUE && !isset($all_errors[$key])) {
+      $variables['page_classes'][$key][] = 'is-complete';
     }
   }
 }

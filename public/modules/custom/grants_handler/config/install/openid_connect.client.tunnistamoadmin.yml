@@ -1,0 +1,17 @@
+uuid: 82be1e93-121b-4da1-8e27-86688d63ae75
+langcode: en
+status: true
+dependencies:
+  module:
+    - helfi_tunnistamo
+id: tunnistamoadmin
+label: TunnistamoAdmin
+plugin: tunnistamo
+settings:
+  client_id: admin
+  client_secret: admin
+  is_production: 0
+  auto_login: 0
+  environment_url: ''
+  client_scopes: 'openid,email'
+  client_roles: {  }

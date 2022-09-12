@@ -484,7 +484,7 @@ class GrantsHandler extends WebformHandlerBase {
 
       if ($dataIntegrityStatus != 'OK') {
         $form['#disabled'] = TRUE;
-        $this->messenger()->addWarning($this->t('Data integrity mismatch. Please refresh form in a moment'));
+        $this->messenger()->addWarning($this->t('Application data is not yet fully saved, please refresh page in few moments.'));
       }
     }
 
