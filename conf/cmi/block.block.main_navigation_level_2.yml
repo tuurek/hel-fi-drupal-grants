@@ -1,6 +1,6 @@
 uuid: 8842e5da-fb08-416a-a35a-d7838179b3ca
 langcode: fi
-status: true
+status: false
 dependencies:
   config:
     - system.menu.main
@@ -13,7 +13,7 @@ _core:
   default_config_hash: zS9zgTlcanrv75vk0WibXcekGUttnN4EwP1pwFdTAcM
 id: main_navigation_level_2
 theme: hdbt
-region: before_footer
+region: header_top
 weight: 0
 provider: null
 plugin: 'menu_block_current_language:main'
