@@ -44,12 +44,24 @@
     <div class="webform-submission-information__row webform-submission-information__row-main">
 
       <div>
-        Hakemuksen Numero: {{ applicationNumber }}
+        <h5>{{ "Application number"|t }}</h5>
+        {{ applicationNumber }}
+        <h5>{{ 'Sent date'|t }}</h5>
         lähetetty
+        <h5>{{ 'Handler information'|t }}</h5>
         {{ handler }}
       </div>
-      {{ history }}
-      {{ attachments }}
+      <div>
+        <h5>{{ "Application statuses"|t }}</h5>
+        {{ history }}
+
+      </div>
+      <div>
+        <h5>{{ "Application attachments"|t }}</h5>
+
+        {{ attachments }}
+
+      </div>
 
     </div>
     {{ editApplicationLink }}

@@ -701,10 +701,8 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
   $variables['history'] = [
     '#theme' => 'item_list',
     '#list_type' => 'ul',
-    '#title' => t('Hakemuksen tila'),
     '#items' => $history,
     '#attributes' => ['class' => 'application-status-history'],
-  // '#wrapper_attributes' => ['class' => 'container'],
   ];
 }
 
@@ -903,7 +901,7 @@ function grants_handler_preprocess_webform_submission_handler_details(&$variable
   });
 
   foreach ($handlerEvents as $handlerEvent) {
-    $variables['handler_strings'][] = $handlerEvent['eventDescription'];
+    $variables['handler_strings'] = explode(";",$handlerEvent['eventDescription']);
   }
   $variables['handlers'] = $handlerEvents;
 
