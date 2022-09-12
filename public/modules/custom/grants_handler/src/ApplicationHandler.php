@@ -580,6 +580,7 @@ class ApplicationHandler {
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
       if (self::getAppEnv() == 'LOCAL') {
+        /** WebformSubmission */
         $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
         $submissionObject->set('serial', $submissionSerial);
         $submissionObject->save();
@@ -762,7 +763,7 @@ class ApplicationHandler {
   /**
    * Take in typed data object, export to Avus2 document structure & upload.
    *
-   * @param \Drupal\Core\TypedData\TypedDataInterface $applicationData
+   * @param Drupal\Core\TypedData\TypedDataInterface $applicationData
    *   Typed data object.
    * @param string $applicationNumber
    *   Used application number.
@@ -775,7 +776,7 @@ class ApplicationHandler {
     string $applicationNumber
   ): bool {
 
-    /** @var \Drupal\Core\TypedData\DataDefinitionInterface $applicationData */
+    /** @var TypedDataInterface $applicationData */
     $appDocument = $this->atvSchema->typedDataToDocumentContent($applicationData);
     $myJSON = Json::encode($appDocument);
 
@@ -1129,7 +1130,8 @@ class ApplicationHandler {
    * before all attachment related things are done properly with integration.
    *
    * @param \Drupal\webform\WebformSubmissionInterface|null $webform_submission
-   *   Webform submission object, if known. If this is not set, submission data must be provided.
+   *   Webform submission object, if known. If this is not set,
+   *   submission data must be provided.
    * @param array|null $submissionData
    *   Submission data. If no submission object, this is required.
    * @param string $applicationNumber
@@ -1243,13 +1245,13 @@ class ApplicationHandler {
   /**
    * Clear application data for noncopyable elements.
    *
-   * @param $data
-   *   Data to copy from
+   * @param array $data
+   *   Data to copy from.
    *
    * @return array
    *   Cleaned values.
    */
-  public static function clearDataForCopying($data): array {
+  public static function clearDataForCopying(array $data): array {
     unset($data["application_number"]);
     unset($data["sender_firstname"]);
     unset($data["sender_lastname"]);

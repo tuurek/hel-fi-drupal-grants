@@ -417,8 +417,8 @@ class GrantsHandlerNavigationHelper {
   /**
    * Log data about page visit or errors when submission is not yet saved.
    *
-   * @param $operation
-   *   Operation to save.
+   * @param string $operation
+   *   Name of the operation to save.
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
    *   Submission in question.
    * @param mixed $dataToStore

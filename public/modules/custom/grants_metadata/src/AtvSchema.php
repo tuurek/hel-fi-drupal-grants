@@ -78,6 +78,8 @@ class AtvSchema {
    *   Document as array.
    * @param \Drupal\Core\TypedData\ComplexDataDefinitionInterface $typedDataDefinition
    *   Data definition for this document / application.
+   * @param array|null $metadata
+   *   Metadata to attach.
    *
    * @return array
    *   Mapped dta from document.

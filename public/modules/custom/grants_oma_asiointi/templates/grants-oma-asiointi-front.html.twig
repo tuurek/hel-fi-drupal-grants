@@ -1,16 +1,22 @@
 
 <div class="oma-asiointi">
-    {% if unread %}
-        <ul class="container unreadlist">
-        {% for msg in unread %}
-            <li>{{ msg }}</li>
-        {% endfor %}
-        </ul>
+  {% if unread %}
+    <div class="container">
+      <section aria-label="Notification" class="hds-notification hds-notification--alert">
+        <div class="hds-notification__content">
+          <div class="hds-notification__label" role="heading" aria-level="2">
+            <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+            <span>{{ "New message"|t }}</span>
+          </div>
+          {% for msg in unread %}
+            <div class="hds-notification__body">
+              {{ msg }}
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
     {% endif %}
-    <div class="oma-asiointi__list" id="oma-asiointi__drafts">
-      {{ drafts }}
-    </div>
-    <div class="oma-asiointi__list" id="oma-asiointi__sent">
-      {{ others }}
-    </div>
+    {{ drafts }}
+    {{ others }}
 </div>

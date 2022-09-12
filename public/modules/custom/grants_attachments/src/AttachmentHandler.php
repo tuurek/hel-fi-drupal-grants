@@ -557,9 +557,11 @@ class AttachmentHandler {
         }
         if (isset($field['isDeliveredLater'])) {
           $retval['isDeliveredLater'] = $field['isDeliveredLater'] === "1";
+          $retval['isNewAttachment'] = FALSE;
         }
         else {
           $retval['isDeliveredLater'] = '0';
+          $retval['isNewAttachment'] = FALSE;
         }
 
         if (isset($field['isIncludedInOtherFile'])) {
@@ -572,7 +574,10 @@ class AttachmentHandler {
 
       if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
         $retval['integrationID'] = $field["integrationID"];
+        $retval['isNewAttachment'] = FALSE;
       }
+
+      
 
     }
     return $retval;
