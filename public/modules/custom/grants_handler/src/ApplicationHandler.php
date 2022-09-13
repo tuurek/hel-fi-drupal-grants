@@ -10,6 +10,7 @@ use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\grants_attachments\AttachmentHandler;
@@ -34,6 +35,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ApplicationHandler {
 
+  use StringTranslationTrait;
+
   /**
    * Name of the table where log entries are stored.
    */
@@ -43,7 +46,6 @@ class ApplicationHandler {
    * Name of the navigation handler.
    */
   const HANDLER_ID = 'application_handler';
-
 
   /**
    * The HTTP client.
@@ -580,7 +582,6 @@ class ApplicationHandler {
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
       if (self::getAppEnv() == 'LOCAL') {
-        /** WebformSubmission */
         $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
         $submissionObject->set('serial', $submissionSerial);
         $submissionObject->save();
@@ -696,7 +697,6 @@ class ApplicationHandler {
   ): ConstraintViolationListInterface {
 
     $violations = $applicationData->validate();
-    $webform = $webform_submission->getWebform();
 
     $appProps = $applicationData->getProperties();
 
@@ -705,17 +705,12 @@ class ApplicationHandler {
     if ($violations->count() > 0) {
       foreach ($violations as $violation) {
         $propertyPath = $violation->getPropertyPath();
-        $root = $violation->getRoot();
-        $cause = $violation->getCause();
-        $constraint = $violation->getConstraint();
-        $code = $violation->getCode();
 
         $thisProperty = $appProps[$propertyPath];
         // $webformElement = $webformElements[$propertyPath];
         $thisDefinition = $thisProperty->getDataDefinition();
         $label = $thisDefinition->getLabel();
         $thisDefinitionSettings = $thisDefinition->getSettings();
-        $parent = $thisProperty->getParent();
         $message = $violation->getMessage();
 
         // formErrorElement setting controls what element on form errors
@@ -728,7 +723,7 @@ class ApplicationHandler {
             $errorMsg = $thisDefinitionSettings['formSettings']['formError'] ?? $violation->getMessage();
 
             // Set message.
-            $message = t(
+            $message = $this->t(
               '@label: @msg',
               [
                 '@label' => $label,
@@ -776,22 +771,22 @@ class ApplicationHandler {
     string $applicationNumber
   ): bool {
 
-    /** @var TypedDataInterface $applicationData */
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $applicationData */
     $appDocument = $this->atvSchema->typedDataToDocumentContent($applicationData);
     $myJSON = Json::encode($appDocument);
 
     if ($this->isDebug()) {
       $t_args = [
-        '@endpoint' => $this->endpoint,
+        '%endpoint' => $this->endpoint,
       ];
       $this->logger
-        ->debug(t('DEBUG: Endpoint: @endpoint', $t_args));
+        ->debug('DEBUG: Endpoint: %endpoint', $t_args);
 
       $t_args = [
-        '@myJSON' => $myJSON,
+        '%myJSON' => $myJSON,
       ];
       $this->logger
-        ->debug('DEBUG: Sent JSON: @myJSON', $t_args);
+        ->debug('DEBUG: Sent JSON: %myJSON', $t_args);
     }
 
     try {
@@ -839,8 +834,8 @@ class ApplicationHandler {
       }
     }
     catch (\Exception $e) {
-      $this->messenger->addError($e->getMessage());
-      $this->logger->error($e->getMessage());
+      $this->messenger->addError($this->t('Application saving failed, error has been logged.'));
+      $this->logger->error('Error saving application: %msg', ['%msg' => $e->getMessage()]);
       return FALSE;
     }
     return FALSE;
@@ -891,7 +886,7 @@ class ApplicationHandler {
     $messages = [];
     $unread = [];
 
-    foreach ($data['messages'] as $key => $message) {
+    foreach ($data['messages'] as $message) {
       $msgUnread = NULL;
       $ts = strtotime($message["sendDateTime"]);
       if (in_array($message['messageId'], $eventIds)) {
@@ -1025,7 +1020,7 @@ class ApplicationHandler {
        * @var integer $key
        * @var  \Drupal\helfi_atv\AtvDocument $document
        */
-      foreach ($applicationDocuments as $key => $document) {
+      foreach ($applicationDocuments as $document) {
         // Make sure we only use submissions from this env and the type is
         // acceptable one.
         if (
@@ -1182,7 +1177,7 @@ class ApplicationHandler {
     $applicationEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_APP_OK');
 
     if (!in_array($saveIdToValidate, $applicationEvents['event_targets'])) {
-      if ($submissionData['status'] != 'DRAFT') {
+      if (isset($submissionData['status']) && $submissionData['status'] != 'DRAFT') {
         return 'DATA_NOT_SAVED_AVUS2';
       }
     }

@@ -1,0 +1,10 @@
+uuid: 885d5917-3096-44c7-aa82-4d89375d1567
+langcode: en
+status: true
+dependencies: {  }
+id: content_liftup
+label: 'Content liftup'
+icon_uuid: null
+icon_default: null
+description: 'With content liftup you can reference to a single content inside this site. The information about the content is automatically fetched through the reference.'
+behavior_plugins: {  }

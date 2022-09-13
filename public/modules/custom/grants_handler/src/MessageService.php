@@ -165,7 +165,10 @@ class MessageService {
       ]);
 
       if ($this->debug == TRUE) {
-        $this->logger->debug('MSG id: ' . $nextMessageId . ', JSON: ' . $messageDataJson);
+        $this->logger->debug('MSG id: %msgId, JSON: %json', [
+          '%msgId' => $nextMessageId,
+          '%json' => $messageDataJson,
+        ]);
       }
 
       if ($res->getStatusCode() == 201) {
@@ -180,12 +183,17 @@ class MessageService {
             $nextMessageId
           );
 
-          $this->logger->info('MSG id: ' . $nextMessageId . ', message sent. Event logged: ' . $eventId);
+          $this->logger->info(
+            'MSG id: %nextId, message sent. Event logged: %eventId',
+            [
+              '%nextId' => $nextMessageId,
+              '%eventId' => $eventId,
+            ]);
 
         }
         catch (EventException $e) {
           // Log event error.
-          $this->logger->error($e->getMessage());
+          $this->logger->error('%error', ['%error' => $e->getMessage()]);
         }
 
         return TRUE;

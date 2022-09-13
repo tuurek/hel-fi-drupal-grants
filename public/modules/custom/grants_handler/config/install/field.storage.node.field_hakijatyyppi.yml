@@ -1,0 +1,30 @@
+uuid: 04f43b2f-c980-4dcd-b264-e52427ae71fe
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_hakijatyyppi
+field_name: field_hakijatyyppi
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: registered_community
+      label: 'Rekisteröity yhdistys'
+    -
+      value: unregistered_community
+      label: 'Rekisteröimätön yhdistys'
+    -
+      value: private_person
+      label: Yksityishenkilö
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

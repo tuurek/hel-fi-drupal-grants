@@ -12,6 +12,7 @@ use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvService;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides an example block.
@@ -53,6 +54,13 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
   protected AtvService $helfiAtvAtvService;
 
   /**
+   * Current request.
+   *
+   * @var Symfony\Component\HttpFoundation\Request
+   */
+  protected Request $request;
+
+  /**
    * Construct block object.
    *
    * @param array $configuration
@@ -69,6 +77,8 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   The grants_handler.application_handler service.
    * @param \Drupal\helfi_atv\AtvService $helfi_atv_atv_service
    *   The helfi_atv.atv_service service.
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   Current request object.
    */
   public function __construct(
     array $configuration,
@@ -78,12 +88,14 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
     GrantsProfileService $grants_profile_service,
     ApplicationHandler $grants_handler_application_handler,
     AtvService $helfi_atv_atv_service,
+    Request $request
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->helfiHelsinkiProfiiliUserdata = $helsinkiProfiiliUserData;
     $this->grantsProfileService = $grants_profile_service;
     $this->applicationHandler = $grants_handler_application_handler;
     $this->helfiAtvAtvService = $helfi_atv_atv_service;
+    $this->request = $request;
   }
 
   /**
@@ -114,6 +126,7 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
       $container->get('grants_profile.service'),
       $container->get('grants_handler.application_handler'),
       $container->get('helfi_atv.atv_service'),
+      $container->get('request_stack')->getCurrentRequest()
     );
   }
 
@@ -126,7 +139,7 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
 
     // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      $destination = \Drupal::request()->getRequestUri();
+      $destination = $this->request->getRequestUri();
       $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
       $redirectResponse = new RedirectResponse($redirectUrl->toString());
       $redirectResponse->send();
@@ -151,7 +164,7 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
        * @var integer $key
        * @var  \Drupal\helfi_atv\AtvDocument $document
        */
-      foreach ($applicationDocuments as $key => $document) {
+      foreach ($applicationDocuments as $document) {
         if (
           str_contains($document->getTransactionId(), $appEnv) &&
           array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)

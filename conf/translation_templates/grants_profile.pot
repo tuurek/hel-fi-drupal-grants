@@ -1,0 +1,460 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/custom/grants_profile/grants_profile.info.yml: n/a
+#  modules/custom/grants_profile/src/Plugin/Block/GrantsProfileMenuItemBlock.php: n/a
+#  modules/custom/grants_profile/src/Plugin/DataType/GrantsProfileData.php: n/a
+#  modules/custom/grants_profile/grants_profile.permissions.yml: n/a
+#  modules/custom/grants_profile/grants_profile.routing.yml: n/a
+#  modules/custom/grants_profile/src/Plugin/DataType/AddressData.php: n/a
+#  modules/custom/grants_profile/src/Form/GrantsProfileForm.php: n/a
+#  modules/custom/grants_profile/src/Form/ModalBankAccountForm.php: n/a
+#  modules/custom/grants_profile/src/GrantsProfileService.php: n/a
+#  modules/custom/grants_profile/src/Controller/GrantsProfileController.php: n/a
+#  modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php: n/a
+#  modules/custom/grants_profile/src/Form/ModalAddressForm.php: n/a
+#  modules/custom/grants_profile/src/Plugin/DataType/ApplicationOfficialData.php: n/a
+#  modules/custom/grants_profile/src/Plugin/DataType/BankAccountData.php: n/a
+#  modules/custom/grants_profile/src/Plugin/Validation/Constraint/NotEmptyValue.php: n/a
+#  modules/custom/grants_profile/src/Plugin/Validation/Constraint/ValidIban.php: n/a
+#  modules/custom/grants_profile/templates/block--grants-profile-menuitem.html.twig: n/a
+#  modules/custom/grants_profile/templates/own-profile-form.html.twig: n/a
+#  modules/custom/grants_profile/templates/own-profile.html.twig: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 16:45+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/custom/grants_profile/grants_profile.info.yml:0 modules/custom/grants_profile/src/Plugin/Block/GrantsProfileMenuItemBlock.php:7 modules/custom/grants_profile/src/Plugin/DataType/GrantsProfileData.php:7
+msgid "Grants Profile"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.info.yml:0
+msgid "Module to handle all interactions with users data in ATV"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.info.yml:0
+msgid "Hel.fi"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.permissions.yml:0
+msgid "Administer grants_profile configuration"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.permissions.yml:0;0;0
+msgid "Optional description."
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.permissions.yml:0
+msgid "View own grants profile"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.permissions.yml:0
+msgid "Administer own grants profile"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Show Grants profile"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Edit Application profile."
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Saved addresses"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Delete addresses"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Edit address"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0 modules/custom/grants_profile/src/Plugin/DataType/AddressData.php:7
+msgid "Address"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Edit official"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Delete official"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0 modules/custom/grants_profile/src/Form/GrantsProfileForm.php:259 modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:131
+msgid "Bank account"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Edit bank account"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Delete bank account"
+msgstr ""
+
+#: modules/custom/grants_profile/grants_profile.routing.yml:0
+msgid "Delete confirmation"
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:239
+msgid "Confirmation file saved for account %account. You can now use this account as receipient of grants."
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:246;277
+msgid "Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file."
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:255
+msgid "File deleted: %id."
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:222
+msgid "Grants profile POSTed, transactionID: %transId"
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:291
+msgid "Grants profile POSTed, transactionID: %transactionId"
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:262
+msgid "File deleting failed: %id."
+msgstr ""
+
+#: modules/custom/grants_profile/src/GrantsProfileService.php:270
+msgid "No file found: %id."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:32;123;168
+msgid "It works!"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:51
+msgid "No profile data available, select company"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:99
+msgid "Edit profile <i class=\"hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon\" aria-hidden=\"true\"></i>"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:204
+msgid "Bank account confirmation successfully deleted"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:219
+msgid "Bank account confirmation deleting failed. Issue has been logged."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:248
+msgid "Address deleted."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:255
+msgid "Address deleting failed."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:286
+msgid "Official deleted."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:293
+msgid "Official deleted & profile saved."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:335
+msgid "Bank account deleted"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:349
+msgid "Bank account deletion failed, and error has been logged."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Controller/GrantsProfileController.php:217;253;291;347
+msgid "Profile saving failed. Message: %msg"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:55 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:78
+msgid "Chairperson"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:56 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:79
+msgid "Contact person"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:57 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:80
+msgid "Other"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:58 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:81
+msgid "Financial officer"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:59 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:82
+msgid "Auditor"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:60 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:83
+msgid "Secretary"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:61 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:84
+msgid "Vice Chairperson"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:88
+msgid "Company details not found in registries. Please contact customer service"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:106;110
+msgid "Founding year"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:117;121
+msgid "Company short name"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:127;131
+msgid "Company www address"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:137
+msgid "Business Purpose"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:141
+msgid "Description of business purpose (max. 500 characters)"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:148
+msgid "Briefly describe the purpose for which the community is working and how the community is fulfilling its purpose. For example, you can use the text \"Community purpose and forms of action\" in the Community rules. Please do not describe the purpose of the grant here, it will be asked later when completing the grant application."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:154;165
+msgid "Addresses"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:169 modules/custom/grants_profile/src/Form/ModalAddressForm.php:128
+msgid "Street"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:173 modules/custom/grants_profile/src/Form/ModalAddressForm.php:140
+msgid "City"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:177 modules/custom/grants_profile/src/Form/ModalAddressForm.php:134
+msgid "Post code"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:181 modules/custom/grants_profile/src/Form/ModalAddressForm.php:146
+msgid "Country"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:198;213;244
+msgid "Officials"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:202
+msgid "Select"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:216 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:146
+msgid "Name"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:221 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:152
+msgid "Role"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:225 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:160
+msgid "Email"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:229 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:166
+msgid "Phone"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:256
+msgid "Bank accounts"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:264
+msgid "Saved confirmation File"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:269
+msgid "Confirmation File"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:279 modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:157
+msgid "Confirm this bank account."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:298
+msgid "Save profile"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:311
+msgid "grantsProfileContent not found!"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:408
+msgid "grantsProfileData not found!"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/GrantsProfileForm.php:427
+msgid "Grantsprofile for %c (%s) saved."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:101 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:119 modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:104
+msgid "In order to show a modal dialog by clicking on a link, that link has to have class <code>use-ajax</code> and <code>data-dialog-type=\"modal\"</code>. This link has those attributes."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:105 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:123 modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:108
+msgid "See this form as a modal."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:161
+msgid "Save address"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:181
+msgid "Delete address"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:242
+msgid "addressData not found!"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:253
+msgid "Address has been saved."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalAddressForm.php:283 modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:305 modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:286
+msgid "Errors"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:182
+msgid "Save official"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:196
+msgid "Delete"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:265
+msgid "applicationOfficialData not found!"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalApplicationOfficialForm.php:275
+msgid "Official has been saved."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:147
+msgid "Confirmation file"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:172
+msgid "Save bank account"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:236
+msgid "bankAccountData not found!"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:249
+msgid "Bank account has been saved."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Form/ModalBankAccountForm.php:255
+msgid "Bank account saving failed."
+msgstr ""
+
+#: modules/custom/grants_profile/src/Plugin/Block/GrantsProfileMenuItemBlock.php:7
+msgid "Menu Items For Profile"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Plugin/DataType/ApplicationOfficialData.php:7
+msgid "Application Official"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Plugin/DataType/BankAccountData.php:7
+msgid "Bank Account"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Plugin/Validation/Constraint/NotEmptyValue.php:7
+msgctxt "Validation"
+msgid "Not empty value"
+msgstr ""
+
+#: modules/custom/grants_profile/src/Plugin/Validation/Constraint/ValidIban.php:7
+msgctxt "Validation"
+msgid "Valid Finnish IBAN number"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/block--grants-profile-menuitem.html.twig:54
+msgid "Switch role"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/block--grants-profile-menuitem.html.twig:58
+msgid "Signout"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/block--grants-profile-menuitem.html.twig:63
+msgid "Sign in"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:6 modules/custom/grants_profile/templates/own-profile.html.twig:5
+msgid "Company information"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:7 modules/custom/grants_profile/templates/own-profile.html.twig:6
+msgid "Avustusten hakeminen edellyttää yhteisön tietojen täydentämistä. Tehdessäsi avustushakemuksia antamasi tiedot täytetää niihin automaattisesti."
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:8 modules/custom/grants_profile/templates/own-profile.html.twig:7
+msgid "Basic Information"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:12 modules/custom/grants_profile/templates/own-profile.html.twig:11
+msgid "Company name"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:19 modules/custom/grants_profile/templates/own-profile.html.twig:18
+msgid "Business ID"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:23 modules/custom/grants_profile/templates/own-profile.html.twig:22
+msgid "Company Location"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:27 modules/custom/grants_profile/templates/own-profile.html.twig:26
+msgid "Registration Date"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:31 modules/custom/grants_profile/templates/own-profile.html.twig:30
+msgid "Company Status"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:35 modules/custom/grants_profile/templates/own-profile.html.twig:34
+msgid "Special Status"
+msgstr ""
+
+#: modules/custom/grants_profile/templates/own-profile-form.html.twig:42 modules/custom/grants_profile/templates/own-profile.html.twig:41
+msgid "Marked fields habe been retreived from PRH and cannot be edited."
+msgstr ""
+

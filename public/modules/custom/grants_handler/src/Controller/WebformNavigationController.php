@@ -28,13 +28,12 @@ class WebformNavigationController extends ControllerBase {
 
     $submission = WebformSubmission::load($submission_id);
     $submissionData = $submission->getData();
-    $webForm = $submission->getWebform();
 
     if (empty($submissionData)) {
-      $submissionDeleteResult = $submission->delete();
+      $submission->delete();
     }
     elseif ($submissionData['status'] !== 'DRAFT') {
-      \Drupal::messenger()
+      $this->messenger()
         ->addError($this->t('Only DRAFT status submissions are deletable'));
       // Throw new AccessException('Only DRAFT status submissions
       // are deletable');.
@@ -60,14 +59,15 @@ class WebformNavigationController extends ControllerBase {
         $document = reset($document);
 
         if ($atvService->deleteDocument($document)) {
-          $submissionDeleteResult = $submission->delete();
-          \Drupal::messenger()->addStatus('Draft deleted & data cleared');
+          $submission->delete();
+          $this->messenger()->addStatus('Draft deleted & data cleared');
+
         }
       }
       catch (\Exception $e) {
-        \Drupal::messenger()
-          ->addError($this->t('Deleting failed. Error has been logged, please contact support.'));
-        \Drupal::logger('grants_handler')->error($e->getMessage());
+        $this->messenger()
+          ->addError($this->t('Deleting draft failed. Error has been logged, please contact support.'));
+        $this->getLogger('grants_handler')->error('Error: %error', ['%error' => $e->getMessage()]);
       }
     }
 

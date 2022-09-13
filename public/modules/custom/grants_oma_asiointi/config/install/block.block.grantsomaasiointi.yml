@@ -1,0 +1,33 @@
+uuid: c9fd4681-ae64-481d-b6f1-7943215ea05d
+langcode: fi
+status: true
+dependencies:
+  module:
+    - grants_oma_asiointi
+    - system
+    - user
+  theme:
+    - helfi_grant_applications
+id: grantsomaasiointi
+theme: helfi_grant_applications
+region: before_content
+weight: -10
+provider: null
+plugin: grants_oma_asiointi_block
+settings:
+  id: grants_oma_asiointi_block
+  label: 'Oma Asiointi'
+  label_display: visible
+  provider: grants_oma_asiointi
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '<front>'
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      helsinkiprofiili: helsinkiprofiili

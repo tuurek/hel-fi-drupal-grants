@@ -21,7 +21,7 @@ function grants_webform_summation_field_theme() {
   return $info;
 }
 
- /**
+/**
  * Implements hook_page_attachments().
  */
 function grants_webform_summation_field_page_attachments(array &$page) {

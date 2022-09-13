@@ -1,0 +1,23 @@
+uuid: 39d9fd15-1552-4984-a551-54d66aeeccc3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_avustuslajiumero
+    - taxonomy.vocabulary.avustuslaji
+id: taxonomy_term.avustuslaji.field_avustuslajiumero
+field_name: field_avustuslajiumero
+entity_type: taxonomy_term
+bundle: avustuslaji
+label: Avustuslajiumero
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

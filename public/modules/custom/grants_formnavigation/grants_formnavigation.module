@@ -132,7 +132,7 @@ function grants_formnavigation_webform_submission_form_alter(array &$form, FormS
  * @throws \Exception
  */
 function grants_formnavigation_submission_validation(array &$form, FormStateInterface $form_state) {
-  //  /** @var \Drupal\grants_formnavigation\grants_formnavigationHelper $grants_formnavigation_helper */
+  // /** @var \Drupal\grants_formnavigation\grants_formnavigationHelper $grants_formnavigation_helper */
   //  $grants_formnavigation_helper = Drupal::service('grants_formnavigation.helper');
   //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
   //  $webform_submission = $form_state->getFormObject()->getEntity();
@@ -146,10 +146,7 @@ function grants_formnavigation_submission_validation(array &$form, FormStateInte
   //  $form_state->clearErrors();
   //  // Validate our submission values.
   //  $logged_errors = $grants_formnavigation_helper->getErrors($webform_submission);
-
-  $d = 'asfd';
-
-  //  // Set form errors if the values are in-valid.
+  // // Set form errors if the values are in-valid.
   //  foreach ($webform_submission->getWebform()
   //             ->getPages('edit', $webform_submission) as $page_key => $page) {
   //    $page_errors = !empty($logged_errors[$page_key]) ? $logged_errors[$page_key] : [];
@@ -185,6 +182,7 @@ function grants_formnavigation_webform_presave(WebformInterface $webform) {
       case WebformSubmissionStorageInterface::PURGE_COMPLETED:
         $purge = WebformSubmissionStorageInterface::PURGE_ALL;
         break;
+
       default:
         $purge = WebformSubmissionStorageInterface::PURGE_DRAFT;
         break;

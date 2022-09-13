@@ -131,7 +131,9 @@ class MessageController extends ControllerBase {
         $this->atvService->clearCache($application_number);
       }
       catch (EventException $ee) {
-        $this->getLogger('message_controller')->error($ee->getMessage());
+        $this->getLogger('message_controller')->error('Error: %error', [
+          '%error' => $ee->getMessage(),
+        ]);
         $this->messenger()->addError($this->t('Message marking as read failed.'));
       }
     }

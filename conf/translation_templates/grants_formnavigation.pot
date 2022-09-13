@@ -1,0 +1,75 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/custom/grants_formnavigation/grants_formnavigation.module: n/a
+#  modules/custom/grants_formnavigation/grants_formnavigation.info.yml: n/a
+#  modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php: n/a
+#  modules/custom/grants_formnavigation/config/schema/grants_formnavigation.schema.yml: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 16:09+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/custom/grants_formnavigation/grants_formnavigation.module:21
+msgid "About"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/grants_formnavigation.module:22
+msgid "Allows users to navigate forwards and backwards through multi-page webforms using the wizard progress bar."
+msgstr ""
+
+#: modules/custom/grants_formnavigation/grants_formnavigation.info.yml:0 modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:12
+msgid "Grants Webform Navigation"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/grants_formnavigation.info.yml:0
+msgid "Creates a navigation setting for webform that allows users to navigate forwards and backwards through wizard pages when the wizard navigation progress bar is enabled."
+msgstr ""
+
+#: modules/custom/grants_formnavigation/grants_formnavigation.info.yml:0
+msgid "Webform"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/config/schema/grants_formnavigation.schema.yml:0
+msgid "Webform Navigation settings"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/config/schema/grants_formnavigation.schema.yml:0
+msgid "Forward Navigation"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:69
+msgid "Development settings"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:73
+msgid "Enable debugging"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:74
+msgid "If checked, every handler method invoked will be displayed onscreen to all users."
+msgstr ""
+
+#: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:198
+msgid "Invoked @id: @class_name:@method_name @context1"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:12
+msgid "Helfi"
+msgstr ""
+
+#: modules/custom/grants_formnavigation/src/Plugin/WebformHandler/GrantsFormNavigationHandler.php:12
+msgid "A webform submission handler for the webform navigation module."
+msgstr ""
+

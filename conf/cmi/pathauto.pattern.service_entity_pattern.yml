@@ -1,0 +1,14 @@
+uuid: 74041ac7-f0b0-4e56-a6c5-4a06f5cf8c73
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: IWvSKmxM6YS9noET0SzVZH1Z8brcnwBuE1iIKyR5k0g
+id: service_entity_pattern
+label: 'Service entity pattern'
+type: 'canonical_entities:tpr_service'
+pattern: '[tpr_service:label]'
+selection_criteria: {  }
+selection_logic: and
+weight: 0
+relationships: {  }

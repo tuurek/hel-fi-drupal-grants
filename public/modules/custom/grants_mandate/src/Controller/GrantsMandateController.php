@@ -141,7 +141,7 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
           '@error_uri' => $error_uri,
         ]);
 
-      $this->logger->error($msg->render());
+      $this->logger->error('Error: %error', ['%error' => $msg->render()]);
 
       throw new GrantsMandateException("Code Exchange failed, state: " . $state);
     }
@@ -155,14 +155,12 @@ class GrantsMandateController extends ControllerBase implements ContainerInjecti
    * Callback for user mandates.
    */
   public function mandateCallbackHpa() {
-    $d = 'asdf';
   }
 
   /**
    * Callback for hpa listing.
    */
   public function mandateCallbackHpaList() {
-    $d = 'asdf';
   }
 
 }

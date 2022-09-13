@@ -5,21 +5,25 @@
  * Allows webforms to be shared on other websites using an iframe.
  */
 
+use Drupal\webform\Entity\Webform;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_webform_print\GrantsWebformPrintPreRender;
 use Drupal\grants_webform_print\GrantsWebformPrintHelper;
 
+/**
+ *
+ */
 function grants_webform_print_preprocess_webform_container_base_html(&$variables) {
   if ($variables['element']['#type'] == 'webform_section') {
     $variables['element']['#attributes']['class'][] = "webform-preview-inner-section";
   }
   if ($variables['element']['#type'] == 'webform_wizard_page') {
     $variables['value']['#type'] = 'webform_section';
-    $variables['value']['#open'] = true;
+    $variables['value']['#open'] = TRUE;
     $variables['element']['#type'] = 'webform_section';
-    $variables['element']['#open'] = true;
+    $variables['element']['#open'] = TRUE;
     $variables['element']['#webform_plugin_id'] = 'webform_section';
   }
 }
@@ -96,7 +100,6 @@ function grants_webform_print_theme_suggestions_webform_submission_form(array $v
   return (GrantsWebformPrintHelper::isPage()) ? ['webform_submission_form__grants_webform_print'] : [];
 }
 
-
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
@@ -108,11 +111,10 @@ function grants_webform_print_theme_suggestions_page(array $variables) {
  * Prepares variables for the webform print page webform submission form templates.
  */
 function template_preprocess_webform_submission_form__grants_webform_print(&$variables) {
-  $webform= \Drupal\webform\Entity\Webform::load($variables['form']['#webform_id']);
+  $webform = Webform::load($variables['form']['#webform_id']);
   $variables['metadata'] = $webform->getThirdPartySettings('grants_metadata');
 
-  //$variables['title'] = $variables['page']['#title'];
-
+  // $variables['title'] = $variables['page']['#title'];
   $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
   if ($language == 'sv') {
     $variables["helsinki_logo"] = '
@@ -145,7 +147,8 @@ function template_preprocess_webform_submission_form__grants_webform_print(&$var
         c0-1.9,1.2-3.1,2.8-3.1c1.6,0,2.6,1.1,2.6,2.8C21.5,13.8,21.4,14.2,21.4,14.2 M13.1,16.7h1.7V8.5h-1.7v3.2H9.9V8.5H8.2v8.2h1.7v-3.4
         h3.2V16.7z"/>
       </svg>';
-  } else if ($language == 'ru') {
+  }
+  elseif ($language == 'ru') {
     $variables["helsinki_logo"] = '
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 78 28" style="enable-background:new 0 0 78 28;" xml:space="preserve" fill="currentColor">
@@ -172,7 +175,8 @@ function template_preprocess_webform_submission_form__grants_webform_print(&$var
       </g>
       </svg>
 ';
-  } else {
+  }
+  else {
     $variables["helsinki_logo"] = '
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 78 36" style="enable-background:new 0 0 78 36;" xml:space="preserve" fill="currentColor">
@@ -271,9 +275,9 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
   /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
   $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
 
-  $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-
   $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
+
+  $currentPageVariables = $variables["current_page"];
 
   // Iterate through the pages and set appropriate page classes.
   foreach ($pages as $key => $page) {
@@ -286,25 +290,27 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
       $key
     );
 
-    if ($hasVisitedThisPage == TRUE ) {
+    if ($hasVisitedThisPage == TRUE) {
       $variables['page_classes'][$key][] = 'has-visited';
-    } else {
+    }
+    else {
       $variables['page_classes'][$key][] = 'not-visited';
     }
 
-    // visited, no errors.
-    if ($hasVisitedThisPage == TRUE && !isset($all_errors[$key])) {
-      $variables['page_classes'][$key][] = 'is-complete';
-    }
-
     // Add the visited and error classes if it has been logged.
-    if (/*$hasVisitedThisPage == TRUE && */(isset($all_errors[$key]) && !empty($all_errors[$key]))) {
+    if ((isset($all_errors[$key]) && !empty($all_errors[$key]))) {
       // Add an error class if the page has errors or complete class if not.
       $variables['page_classes'][$key][] = 'has-errors';
     }
+
     // Add an active class to the current page.
-    if ($variables['current_page'] == $key) {
+    if ($currentPageVariables == $key) {
       $variables['page_classes'][$key][] = 'is-active';
+    }
+    if (is_array($all_errors)) {
+      if ($hasVisitedThisPage == TRUE && isset($all_errors[$key]) && empty($all_errors[$key])) {
+        $variables['page_classes'][$key][] = 'is-complete';
+      }
     }
   }
 }

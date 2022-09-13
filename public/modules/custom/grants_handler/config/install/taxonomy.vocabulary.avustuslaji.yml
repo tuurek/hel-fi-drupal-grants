@@ -1,0 +1,8 @@
+uuid: 34d620f0-1b64-4ddb-a738-fcef7634aca8
+langcode: und
+status: true
+dependencies: {  }
+name: Avustuslaji
+vid: avustuslaji
+description: 'Minkälaiseen toimintaan haet avustusta'
+weight: 0

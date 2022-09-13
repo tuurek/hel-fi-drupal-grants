@@ -1,0 +1,10 @@
+uuid: c0b1fc78-1db9-42f9-a3dd-93b7ed032b50
+langcode: en
+status: true
+dependencies: {  }
+id: from_library
+label: 'From library'
+icon_uuid: null
+icon_default: null
+description: null
+behavior_plugins: {  }
