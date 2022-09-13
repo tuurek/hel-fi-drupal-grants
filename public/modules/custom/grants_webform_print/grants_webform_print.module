@@ -275,11 +275,8 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
   /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
   $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
 
-  $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-
   $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
 
-  $currentPage = $webform_submission->getCurrentPage();
   $currentPageVariables = $variables["current_page"];
 
   // Iterate through the pages and set appropriate page classes.

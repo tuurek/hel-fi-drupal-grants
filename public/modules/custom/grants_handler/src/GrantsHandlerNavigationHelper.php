@@ -560,8 +560,9 @@ class GrantsHandlerNavigationHelper {
    * @throws \Exception
    */
   public function logErrors(WebformSubmissionInterface $webform_submission, array $errors) {
+    $wfId = $webform_submission->id();
     // Get outta here if the submission hasn't been saved yet.
-    if (empty($webform_submission->id())) {
+    if ($wfId == NULL) {
       $this->logDataToStore(self::ERROR_OPERATION, $webform_submission, $errors);
       return;
     }
@@ -662,6 +663,7 @@ class GrantsHandlerNavigationHelper {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   private function validateSinglePage(WebformSubmissionInterface $webform_submission, string $page) {
+
     // Stash the current page.
     $current_page = $webform_submission->getCurrentPage();
     // Let's ensure we are on the page that needs to be validated.
@@ -695,24 +697,21 @@ class GrantsHandlerNavigationHelper {
    *   All errors paged.
    */
   public function getPagedErrors(FormStateInterface $form_state, WebformSubmissionInterface $webform_submission): array {
+    // get form errors for this page
     $form_errors = $form_state->getErrors();
-    $current_errors = $this->getErrors($webform_submission);
+    // get saved errors
+    $paged_errors = $this->getErrors($webform_submission);
 
-    if (!$webform_submission->id()) {
-      $current_errors = reset($current_errors);
-      $paged_errors = empty($current_errors['data']) ? [] : $current_errors['data'];
-    }
-    else {
-      $paged_errors = $current_errors;
+    // merge saved errors with ones from this page.
+    foreach ($paged_errors as $page => $errors) {
+      $form_errors = array_merge($form_errors, $errors);
     }
 
     $current_page = $webform_submission->getCurrentPage();
-    if ($current_page != NULL) {
-      // Reset the current page's errors with those set in the form state.
-      $paged_errors[$current_page] = [];
-    }
+
     foreach ($form_errors as $element => $error) {
       $base_element = explode('][', $element)[0];
+      // application_number
       $page = $this->getElementPage($webform_submission->getWebform(), $base_element);
       // Place error on current page if the page is empty.
       if (!empty($page) && is_string($page)) {

@@ -1177,7 +1177,7 @@ class ApplicationHandler {
     $applicationEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_APP_OK');
 
     if (!in_array($saveIdToValidate, $applicationEvents['event_targets'])) {
-      if ($submissionData['status'] != 'DRAFT') {
+      if (isset($submissionData['status']) && $submissionData['status'] != 'DRAFT') {
         return 'DATA_NOT_SAVED_AVUS2';
       }
     }

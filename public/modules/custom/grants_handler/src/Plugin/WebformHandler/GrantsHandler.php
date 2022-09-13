@@ -712,6 +712,7 @@ class GrantsHandler extends WebformHandlerBase {
         $triggeringElement
       );
     }
+
     $current_errors = $this->logErrors($webform_submission, $form_state);
 
     // If ($triggeringElement == '::next') {
@@ -1129,6 +1130,8 @@ class GrantsHandler extends WebformHandlerBase {
    */
   public function logErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state): array {
     try {
+
+      $page = $webform_submission->getCurrentPage();
 
       // Log current errors.
       $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
