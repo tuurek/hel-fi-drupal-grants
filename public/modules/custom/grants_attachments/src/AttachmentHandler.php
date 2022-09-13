@@ -675,7 +675,7 @@ class AttachmentHandler {
 
       $attFound = FALSE;
 
-      foreach ($attachments as $k => $v) {
+      foreach ($attachments as $v) {
         if (str_contains($v['filename'], $fn)) {
           $attFound = TRUE;
         }

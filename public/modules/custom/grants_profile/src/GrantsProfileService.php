@@ -803,10 +803,17 @@ class GrantsProfileService {
    * @return bool
    *   Is this cached?
    */
-  public function clearCache(string $key): bool {
+  public function clearCache($key = ''): bool {
 
     try {
-      return $this->tempStore->delete($key);
+      if ($key == '') {
+        $this->tempStore->deleteAllUser();
+      }
+      else {
+        $this->tempStore->delete($key);
+      }
+
+      return TRUE;
     }
     catch (\Exception $e) {
       return FALSE;

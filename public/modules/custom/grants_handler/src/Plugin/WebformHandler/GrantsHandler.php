@@ -713,6 +713,9 @@ class GrantsHandler extends WebformHandlerBase {
       );
     }
 
+    // $dd = $this->grantsFormNavigationHelper->validateAllPages($webform_submission, $form_state);
+
+
     $current_errors = $this->logErrors($webform_submission, $form_state);
 
     // If ($triggeringElement == '::next') {

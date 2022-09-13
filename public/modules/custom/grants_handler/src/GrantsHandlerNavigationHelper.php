@@ -169,8 +169,6 @@ class GrantsHandlerNavigationHelper {
       return FALSE;
     }
 
-    $userData = $this->helsinkiProfiiliUserData->getUserData();
-
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
     $query->condition('sid', $webform_submission->id());
@@ -204,7 +202,6 @@ class GrantsHandlerNavigationHelper {
 
     $operation = self::ERROR_OPERATION;
 
-    // Get outta here if the submission hasn't been saved yet.
     if (empty($webform_submission->id())) {
       $errors = array_filter(
               $this->getFromStore($webform_submission->getWebForm()->id()),
@@ -677,6 +674,9 @@ class GrantsHandlerNavigationHelper {
     $new_form_state = new FormState();
     // Lets make sure we don't create a validation loop.
     $new_form_state->set('validating', TRUE);
+
+    $new_form_state->setTriggeringElement(['#parents' => ['manual_validation']]);
+
     // Submit the form.
     $this->formBuilder->submitForm($form_object, $new_form_state);
     $this->logPageVisit($webform_submission, $page);
@@ -703,9 +703,9 @@ class GrantsHandlerNavigationHelper {
     $paged_errors = $this->getErrors($webform_submission);
 
     // merge saved errors with ones from this page.
-    foreach ($paged_errors as $page => $errors) {
-      $form_errors = array_merge($form_errors, $errors);
-    }
+    // foreach ($paged_errors as $page => $errors) {
+    //   $form_errors = array_merge($form_errors, $errors);
+    // }
 
     $current_page = $webform_submission->getCurrentPage();
 

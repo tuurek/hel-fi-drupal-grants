@@ -147,7 +147,7 @@ function grants_profile_form_alter(&$form, FormStateInterface $form_state, $form
 function grants_profile_user_logout(AccountInterface $account) {
   /** @var \Drupal\grants_profile\GrantsProfileService $profileService */
   $profileService = \Drupal::service('grants_profile.service');
-  $profileService->clearCache('selected_company');
+  $profileService->clearCache();
 }
 
 /**
@@ -203,3 +203,4 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
   }
 
 }
+
