@@ -488,8 +488,9 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
-    $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
-    $form['#errors'] = $all_errors;
+    // $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
+    // $form['#errors'] = $all_errors;
+    $form['#errors'] = $webform->getState('current_errors');
   }
 
   /**
@@ -545,7 +546,8 @@ class GrantsHandler extends WebformHandlerBase {
       // If there's errors on the form (any page), disable form submit.
       $current_errors = $webform->getState('current_errors');
       if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
-        $form["actions"]["submit"]['#disabled'] = TRUE;
+        $this->messenger()->addError('Form validation failed, no point clicking save.');
+        // $form["actions"]["submit"]['#disabled'] = TRUE;
       }
     }
   }
@@ -563,7 +565,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     if ($this->triggeringElement == '') {
       $triggeringElement = $form_state->getTriggeringElement();
-      if (is_string($triggeringElement['#submit'][0])) {
+      if (isset($triggeringElement['#submit']) && is_string($triggeringElement['#submit'][0])) {
         $this->triggeringElement = $triggeringElement['#submit'][0];
       }
     }
@@ -638,10 +640,6 @@ class GrantsHandler extends WebformHandlerBase {
     WebformSubmissionInterface $webform_submission
   ) {
 
-    parent::validateForm($form, $form_state, $webform_submission);
-
-    $current_page = $webform_submission->getCurrentPage();
-
     // These need to be set here to the handler object, bc we do the saving to
     // ATV in postSave and in that method these are not available.
     // and the triggering element is pivotal in figuring if we're
@@ -652,6 +650,15 @@ class GrantsHandler extends WebformHandlerBase {
     // Does these need to be done in validate??
     // maybe the submittedData is even not required?
     $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
+
+    $webform = $webform_submission->getWebform();
+
+    // if all page validation is in progress, skip further
+    // execution of this hook to avoid loops
+    if ($webform->getState('validateAllPages') == TRUE) {
+      // parent::validateForm($form, $form_state, $webform_submission);
+      return;
+    }
 
     $this->setTotals();
 
@@ -690,6 +697,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set form update value based on new & old status + Avus2 logic.
     $this->submittedFormData["form_update"] = $this->getFormUpdate();
 
+    // parse 3rd party settings from webform.
     $this->setFromThirdPartySettings($webform_submission->getWebform());
 
     // Figure out status for this application.
@@ -703,20 +711,18 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    // Loop through fieldnames and validate fields.
-    foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
-      AttachmentHandler::validateAttachmentField(
-        $fieldName,
-        $form_state,
-        $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
-        $triggeringElement
+    // validate all pages in separate function
+    // we don't want page by page validation bc we need all errors always.
+    // saving them to db does not solve issue when we're
+    // interested of current errors also.
+    $this->grantsFormNavigationHelper->validateAllPages(
+      $webform_submission,
+      $form_state,
+      $triggeringElement,
+      $form
       );
-    }
 
-    // $dd = $this->grantsFormNavigationHelper->validateAllPages($webform_submission, $form_state);
-
-
-    $current_errors = $this->logErrors($webform_submission, $form_state);
+    $current_errors = $webform->getState('current_errors');
 
     // If ($triggeringElement == '::next') {
     // // parent::validateForm($form, $form_state, $webform_submission);.
@@ -746,7 +752,12 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           // If we HAVE errors, then refresh them from the.
-          $current_errors = $this->logErrors($webform_submission, $form_state);
+          $this->grantsFormNavigationHelper->validateAllPages(
+            $webform_submission,
+            $form_state,
+            $triggeringElement,
+            $form
+          );
         }
       }
     }
@@ -773,8 +784,6 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-
-    $triggeringElement = $this->getTriggeringElementName($form_state);
 
     // Because of funky naming convention, we need to manually
     // set purpose field value.
@@ -875,7 +884,6 @@ class GrantsHandler extends WebformHandlerBase {
     // If triggering element is either draft save or proper one,
     // we want to parse attachments from form.
     if ($this->triggeringElement == '::submitForm') {
-      $webForm = $webform_submission->getWebform();
 
       // submitForm is triggering element when saving as draft.
       // Parse attachments to data structure.
