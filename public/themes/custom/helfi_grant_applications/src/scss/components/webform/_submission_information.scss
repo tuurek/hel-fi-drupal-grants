@@ -15,7 +15,27 @@
       align-items: center;
       justify-content: space-between;
     }
-    &-main {}
+    &-main {
+      gap: var(--spacing-m);
+      justify-content: space-between;
+      flex-flow: row nowrap;
+      @media screen and (max-width: 1179px) {
+        flex-flow: row wrap;
+      }
+        > div {
+          @media screen and (max-width: 1179px) {
+            width: 100%;
+          }
+        ul {
+          padding-left: 0;
+          list-style-type: none;
+          li {
+            padding: 0;
+            margin: 0;
+          }
+        }
+      }
+    }
   }
   &__supportlinks {
     display: flex;

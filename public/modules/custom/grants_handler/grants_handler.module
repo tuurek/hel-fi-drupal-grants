@@ -929,7 +929,6 @@ function grants_handler_preprocess_webform_submission_attachment_list(&$variable
   $variables['attachments'] = [
     '#theme' => 'item_list',
     '#list_type' => 'ul',
-    '#title' => t('Application attachments'),
     '#items' => $attachments,
     '#attributes' => ['class' => 'application-attachment-list'],
   ];
@@ -1136,12 +1135,12 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hds-button--supplementary'],
+        'class' => ['hds-button', 'hds-button--complementary'],
       ],
     ]
   );
-
-  $editApplicationLink = Link::fromTextAndUrl(t('Edit application'), $editApplicationUrl);
+  $printApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLink = Link::fromTextAndUrl($printApplicationLinkText, $editApplicationUrl);
 
   $copyApplicationUrl = Url::fromRoute(
     'grants_handler.copy_application',
