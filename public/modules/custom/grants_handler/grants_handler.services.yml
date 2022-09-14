@@ -40,3 +40,9 @@ services:
   grants_handler.events_service:
     class: Drupal\grants_handler\EventsService
     arguments: [ '@http_client', '@logger.factory' ]
+
+  grants_handler.force_selected_company_middleware:
+    class: \Drupal\grants_handler\Middleware\ForceSelectedCompanyMiddleware
+    arguments: ['@logger.factory']
+    tags:
+      - { name: http_middleware, priority: 1000 }
