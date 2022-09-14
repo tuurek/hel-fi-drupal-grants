@@ -1,0 +1,49 @@
+label: 'Custom block library'
+description: 'Find and manage custom blocks.'
+display:
+  default:
+    display_title: Förvald
+    display_options:
+      title: 'Custom block library'
+      fields:
+        info:
+          label: 'Block description'
+          separator: ', '
+        type:
+          label: 'Block type'
+          separator: ', '
+        changed:
+          label: Updated
+        operations:
+          label: Funktioner
+      pager:
+        options:
+          tags:
+            next: 'Nästa ›'
+            previous: '‹ Föregående'
+          expose:
+            items_per_page_label: 'Inlägg per sida'
+            items_per_page_options_all_label: '- Alla -'
+            offset_label: Kompensera
+      exposed_form:
+        options:
+          submit_button: Verkställ
+          reset_button_label: Återställ
+          exposed_sorts_label: 'Sortera efter'
+          sort_asc_label: Stigande
+          sort_desc_label: Fallande
+      empty:
+        area_text_custom:
+          content: 'There are no custom blocks available.'
+      filters:
+        info:
+          expose:
+            label: 'Block description'
+        type:
+          expose:
+            label: 'Block type'
+  page_1:
+    display_title: Sida
+    display_options:
+      menu:
+        title: 'Custom block library'

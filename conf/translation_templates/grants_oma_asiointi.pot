@@ -1,0 +1,82 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/custom/grants_oma_asiointi/grants_oma_asiointi.info.yml: n/a
+#  modules/custom/grants_oma_asiointi/src/Plugin/Block/OmaAsiointiBlock.php: n/a
+#  modules/custom/grants_oma_asiointi/grants_oma_asiointi.permissions.yml: n/a
+#  modules/custom/grants_oma_asiointi/grants_oma_asiointi.routing.yml: n/a
+#  modules/custom/grants_oma_asiointi/src/Controller/ApplicationsListController.php: n/a
+#  modules/custom/grants_oma_asiointi/src/Controller/GrantsOmaAsiointiController.php: n/a
+#  modules/custom/grants_oma_asiointi/templates/grants-oma-asiointi-front.html.twig: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 16:34+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.info.yml:0 modules/custom/grants_oma_asiointi/src/Plugin/Block/OmaAsiointiBlock.php:16
+msgid "Oma Asiointi"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.info.yml:0
+msgid "Module for person/company own details &amp; things related to them."
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.info.yml:0
+msgid "Helfi"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.permissions.yml:0
+msgid "Access Oma Asiointi"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.permissions.yml:0
+msgid "Access to oma asiointi services."
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.permissions.yml:0
+msgid "Administer grants_oma_asiointi configuration"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.permissions.yml:0
+msgid "Optional description."
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/grants_oma_asiointi.routing.yml:0
+msgid "Yhteisön hakemukset"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/src/Controller/ApplicationsListController.php:205
+msgid "No documents found"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/src/Controller/ApplicationsListController.php:218
+msgid "My applications"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/src/Controller/GrantsOmaAsiointiController.php:157
+msgid "Applications in progress"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/src/Controller/GrantsOmaAsiointiController.php:165
+msgid "Sent applications"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/src/Plugin/Block/OmaAsiointiBlock.php:16
+msgid "Grants Oma Asiointi"
+msgstr ""
+
+#: modules/custom/grants_oma_asiointi/templates/grants-oma-asiointi-front.html.twig:9
+msgid "New message"
+msgstr ""
+

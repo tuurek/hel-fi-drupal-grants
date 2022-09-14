@@ -19,9 +19,8 @@ function grants_attachments_uninstall() {
   \Drupal::messenger()->addStatus(__FUNCTION__);
 }
 
-
 /**
- * Grants file schema
+ * Grants file schema.
  *
  * @return array[]
  */
@@ -99,10 +98,10 @@ function grants_attachments_requirements($phase) {
  */
 function grants_attachments_update_9001(&$sandbox) {
   $privatePath = \Drupal::service('file_system')
-      ->realpath("private://") . '/grants_messages';
+    ->realpath("private://") . '/grants_messages';
 
   if (!file_exists($privatePath)) {
-    mkdir($privatePath, 0777, true);
+    mkdir($privatePath, 0777, TRUE);
   }
 
 }

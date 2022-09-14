@@ -14,7 +14,6 @@ class NotEmptyValueValidator extends ConstraintValidator {
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
-    $d = 'adsf';
     // If (!$constraint instanceof NotEmptyValue) {
     // throw new UnexpectedTypeException($constraint, NotEmptyValue::class);
     // }

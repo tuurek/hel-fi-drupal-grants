@@ -1,0 +1,557 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  grants_handler.module: n/a
+#  templates/application-list-item.html.twig: n/a
+#  grants_handler.routing.yml: n/a
+#  src/Form/CopyApplicationForm.php: n/a
+#  grants_handler.info.yml: n/a
+#  src/Plugin/WebformHandler/GrantsHandler.php: n/a
+#  config/install/webform.webform.grants_handler.yml: n/a
+#  config/schema/grants_handler.schema.yml: n/a
+#  src/Form/MessageForm.php: n/a
+#  js/webform-additions.js: n/a
+#  src/ApplicationHandler.php: n/a
+#  src/EventsService.php: n/a
+#  src/GrantsHandlerNavigationHelper.php: n/a
+#  src/GrantsHandlerSubmissionStorage.php: n/a
+#  src/MessageService.php: n/a
+#  src/Controller/ApplicationController.php: n/a
+#  src/Controller/CompletionController.php: n/a
+#  src/Controller/MessageController.php: n/a
+#  src/Controller/WebformNavigationController.php: n/a
+#  src/Element/BankAccountComposite.php: n/a
+#  src/Element/CommunityAddressComposite.php: n/a
+#  src/Element/CommunityOfficialsComposite.php: n/a
+#  src/Element/CompensationsComposite.php: n/a
+#  src/Plugin/WebformElement/BankAccountComposite.php: n/a
+#  src/Plugin/WebformElement/CommunityAddressComposite.php: n/a
+#  src/Plugin/WebformElement/CommunityOfficialsComposite.php: n/a
+#  src/Plugin/WebformElement/CompensationsComposite.php: n/a
+#  templates/grants-handler-completion.html.twig: n/a
+#  templates/application-list.html.twig: n/a
+#  templates/grants-handler-example-summary.html.twig: n/a
+#  templates/webform-submission-messages.html.twig: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 14:27+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: grants_handler.module:408
+msgid "Edit"
+msgstr ""
+
+#: grants_handler.module:491
+msgid "Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta."
+msgstr ""
+
+#: grants_handler.module:491
+msgid "Lisää toiminnan kuvaus"
+msgstr ""
+
+#: grants_handler.module:492
+msgid "Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella."
+msgstr ""
+
+#: grants_handler.module:506
+msgid "Some information fetched from personal information"
+msgstr ""
+
+#: grants_handler.module:509
+msgid "Check the information on the form before sending the application. You can change your own information from personal information section of the site."
+msgstr ""
+
+#: grants_handler.module:523
+msgid "Fields marked with an asterisk * are required, that need to be filled before saving."
+msgstr ""
+
+#: grants_handler.module:566
+msgid "You don't have company selected, no fields are prepopulated"
+msgstr ""
+
+#: grants_handler.module:585
+msgid "I have read the terms and accept them"
+msgstr ""
+
+#: grants_handler.module:697
+msgid "%status: %date"
+msgstr ""
+
+#: grants_handler.module:704
+msgid "Hakemuksen tila"
+msgstr ""
+
+#: grants_handler.module:737
+msgid "Date"
+msgstr ""
+
+#: grants_handler.module:738
+msgid "Source"
+msgstr ""
+
+#: grants_handler.module:739
+msgid "Description"
+msgstr ""
+
+#: grants_handler.module:742
+msgid "No events has been found."
+msgstr ""
+
+#: grants_handler.module:930
+msgid "Application attachments"
+msgstr ""
+
+#: grants_handler.module:995
+msgid "View application %icon"
+msgstr ""
+
+#: grants_handler.module:998
+msgid "Edit application %icon"
+msgstr ""
+
+#: grants_handler.module:1028
+msgid "%status"
+msgstr ""
+
+#: grants_handler.module:1052
+msgid "My Applications"
+msgstr ""
+
+#: grants_handler.module:1055
+msgid "View Application"
+msgstr ""
+
+#: grants_handler.module:1089
+msgid "Mark read"
+msgstr ""
+
+#: grants_handler.module:1131 templates/application-list-item.html.twig:20
+msgid "Print application"
+msgstr ""
+
+#: grants_handler.module:1147
+msgid "Edit application"
+msgstr ""
+
+#: grants_handler.module:1162 grants_handler.routing.yml:0 src/Form/CopyApplicationForm.php:105
+msgid "Copy application"
+msgstr ""
+
+#: grants_handler.module:1006
+msgid "Application status not in valid statuses: %number"
+msgstr ""
+
+#: grants_handler.module:1033
+msgid "Application status not in valid statuses: %appno"
+msgstr ""
+
+#: grants_handler.info.yml:0 src/Plugin/WebformHandler/GrantsHandler.php:28 config/install/webform.webform.grants_handler.yml:0
+msgid "Grants Handler"
+msgstr ""
+
+#: grants_handler.info.yml:0
+msgid "Grant applications webform handler module."
+msgstr ""
+
+#: grants_handler.info.yml:0 src/Plugin/WebformHandler/GrantsHandler.php:28
+msgid "helfi"
+msgstr ""
+
+#: grants_handler.routing.yml:0
+msgid "Clear navigations"
+msgstr ""
+
+#: grants_handler.routing.yml:0
+msgid "Mark message read"
+msgstr ""
+
+#: config/schema/grants_handler.schema.yml:0 config/install/webform.webform.grants_handler.yml:0
+msgid "Example"
+msgstr ""
+
+#: config/schema/grants_handler.schema.yml:0;0 src/Form/MessageForm.php:96
+msgid "Message"
+msgstr ""
+
+#: config/schema/grants_handler.schema.yml:0 src/Plugin/WebformHandler/GrantsHandler.php:245
+msgid "Enable debugging"
+msgstr ""
+
+#: config/schema/grants_handler.schema.yml:0
+msgid "Status strings"
+msgstr ""
+
+#: js/webform-additions.js:0
+msgid "Delete draft"
+msgstr ""
+
+#: src/ApplicationHandler.php:731
+msgid "@label: @msg"
+msgstr ""
+
+#: src/ApplicationHandler.php:842
+msgid "Application saving failed, error has been logged."
+msgstr ""
+
+#: src/ApplicationHandler.php:788
+msgid "DEBUG: Endpoint: %endpoint"
+msgstr ""
+
+#: src/ApplicationHandler.php:794
+msgid "DEBUG: Sent JSON: %myJSON"
+msgstr ""
+
+#: src/ApplicationHandler.php:830
+msgid "Data sent to integration, response status: @status"
+msgstr ""
+
+#: src/ApplicationHandler.php:843
+msgid "Error saving application: %msg"
+msgstr ""
+
+#: src/ApplicationHandler.php:1162
+msgid "No submissiondata when trying to validate saveid: @saveid"
+msgstr ""
+
+#: src/EventsService.php:156
+msgid "Event ID: %eventId, JSON:  %json"
+msgstr ""
+
+#: src/EventsService.php:167
+msgid "Event logged: %eventId, message sent."
+msgstr ""
+
+#: src/GrantsHandlerNavigationHelper.php:256
+msgid "Deleting of store data failed. Submission serial @serial. @error"
+msgstr ""
+
+#: src/GrantsHandlerSubmissionStorage.php:135
+msgid "Document %appno not found when loading WebformSubmission: %submission. Error: %msg"
+msgstr ""
+
+#: src/MessageService.php:180
+msgid "New message for @applicationNumber."
+msgstr ""
+
+#: src/MessageService.php:168
+msgid "MSG id: %msgId, JSON: %json"
+msgstr ""
+
+#: src/MessageService.php:186
+msgid "MSG id: %nextId, message sent. Event logged: %eventId"
+msgstr ""
+
+#: src/MessageService.php:191
+msgid "%error"
+msgstr ""
+
+#: src/Controller/ApplicationController.php:274
+msgid "Application @number not found."
+msgstr ""
+
+#: src/Controller/CompletionController.php:31
+msgid "Submission not found"
+msgstr ""
+
+#: src/Controller/CompletionController.php:41
+msgid "Completion page for @submissionId"
+msgstr ""
+
+#: src/Controller/MessageController.php:127;130
+msgid "Message marked as read"
+msgstr ""
+
+#: src/Controller/MessageController.php:137
+msgid "Message marking as read failed."
+msgstr ""
+
+#: src/Controller/MessageController.php:141
+msgid "Message already read."
+msgstr ""
+
+#: src/Controller/MessageController.php:134 src/Controller/WebformNavigationController.php:70 src/Plugin/WebformHandler/GrantsHandler.php:1112
+msgid "Error: %error"
+msgstr ""
+
+#: src/Controller/WebformNavigationController.php:38
+msgid "Only DRAFT status submissions are deletable"
+msgstr ""
+
+#: src/Controller/WebformNavigationController.php:69
+msgid "Deleting draft failed. Error has been logged, please contact support."
+msgstr ""
+
+#: src/Element/BankAccountComposite.php:41
+msgid "Bank account"
+msgstr ""
+
+#: src/Element/BankAccountComposite.php:72
+msgid "Select account"
+msgstr ""
+
+#: src/Element/CommunityAddressComposite.php:41;97
+msgid "Select address"
+msgstr ""
+
+#: src/Element/CommunityAddressComposite.php:48
+msgid "Street address"
+msgstr ""
+
+#: src/Element/CommunityAddressComposite.php:52
+msgid "Post code"
+msgstr ""
+
+#: src/Element/CommunityAddressComposite.php:56
+msgid "City"
+msgstr ""
+
+#: src/Element/CommunityAddressComposite.php:60
+msgid "Country"
+msgstr ""
+
+#: src/Element/CommunityOfficialsComposite.php:42;98
+msgid "Select official"
+msgstr ""
+
+#: src/Element/CommunityOfficialsComposite.php:54
+msgid "Name"
+msgstr ""
+
+#: src/Element/CommunityOfficialsComposite.php:58
+msgid "Role"
+msgstr ""
+
+#: src/Element/CommunityOfficialsComposite.php:62
+msgid "Email"
+msgstr ""
+
+#: src/Element/CommunityOfficialsComposite.php:66
+msgid "Phone"
+msgstr ""
+
+#: src/Element/CompensationsComposite.php:36
+msgid "Subvention name"
+msgstr ""
+
+#: src/Element/CompensationsComposite.php:41
+msgid "Subvention type"
+msgstr ""
+
+#: src/Element/CompensationsComposite.php:46
+msgid "Subvention amount"
+msgstr ""
+
+#: src/Form/CopyApplicationForm.php:145
+msgid "Grant application copied(<span id=\"saved-application-number\">@number</span>)"
+msgstr ""
+
+#: src/Form/MessageForm.php:102
+msgid "Attachment"
+msgstr ""
+
+#: src/Form/MessageForm.php:111
+msgid "Add attachment to your message"
+msgstr ""
+
+#: src/Form/MessageForm.php:115
+msgid "Attachment description"
+msgstr ""
+
+#: src/Form/MessageForm.php:124
+msgid "Send"
+msgstr ""
+
+#: src/Form/MessageForm.php:155
+msgid "webformSubmission not found!"
+msgstr ""
+
+#: src/Form/MessageForm.php:200
+msgid "Attachment (@filename) uploaded"
+msgstr ""
+
+#: src/Form/MessageForm.php:209
+msgid "Attachment (@filename) upload failed with message: @msg. Event has been logged."
+msgstr ""
+
+#: src/Form/MessageForm.php:230
+msgid "Your message has been sent. Please note that it will take some time it appears on application."
+msgstr ""
+
+#: src/Form/MessageForm.php:232
+msgid "Your message: @message"
+msgstr ""
+
+#: src/Form/MessageForm.php:236
+msgid "Sending of your message failed."
+msgstr ""
+
+#: src/Plugin/WebformElement/BankAccountComposite.php:8
+msgid "Community bank account"
+msgstr ""
+
+#: src/Plugin/WebformElement/BankAccountComposite.php:8
+msgid "Provides a bank account element for company."
+msgstr ""
+
+#: src/Plugin/WebformElement/BankAccountComposite.php:8 src/Plugin/WebformElement/CommunityAddressComposite.php:8 src/Plugin/WebformElement/CommunityOfficialsComposite.php:9
+msgid "Helfi"
+msgstr ""
+
+#: src/Plugin/WebformElement/CommunityAddressComposite.php:8
+msgid "Community address composite"
+msgstr ""
+
+#: src/Plugin/WebformElement/CommunityAddressComposite.php:8 src/Plugin/WebformElement/CommunityOfficialsComposite.php:9
+msgid "Provides a address element for company."
+msgstr ""
+
+#: src/Plugin/WebformElement/CommunityOfficialsComposite.php:9
+msgid "Community officials composite"
+msgstr ""
+
+#: src/Plugin/WebformElement/CompensationsComposite.php:90
+msgid "Grants type"
+msgstr ""
+
+#: src/Plugin/WebformElement/CompensationsComposite.php:9
+msgid "Grants Compensations"
+msgstr ""
+
+#: src/Plugin/WebformElement/CompensationsComposite.php:9
+msgid "Element for compensations element"
+msgstr ""
+
+#: src/Plugin/WebformElement/CompensationsComposite.php:9
+msgid "Grants"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:241
+msgid "Development settings"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:246
+msgid "If checked, every handler method invoked will be displayed onscreen to all users."
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:383;389
+msgid "You need to select company you're acting behalf of."
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:407
+msgid "You must have atleast one official for @businessId"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:412
+msgid "You must have atleast one address for @businessId"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:417
+msgid "You must have atleast one bank account for @businessId"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:434
+msgid "No prefill for admin"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:504
+msgid "Data integrity mismatch. Please refresh form in a moment"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:970
+msgid "Grant application (<span id=\"saved-application-number\">@number</span>) saved as DRAFT"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:999;1093
+msgid "Grant application (<span id=\"saved-application-number\">@number</span>) saving failed. Please contact support."
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:1072
+msgid "Grant application (<span id=\"saved-application-number\">@number</span>) saved."
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:1145
+msgid "Invoked @id: @class_name:@method_name @context1"
+msgstr ""
+
+#: src/Plugin/WebformHandler/GrantsHandler.php:28
+msgid "Grants webform handler"
+msgstr ""
+
+#: templates/application-list-item.html.twig:12
+msgid "Delete application"
+msgstr ""
+
+#: templates/application-list-item.html.twig:32
+msgid "Draft saved time"
+msgstr ""
+
+#: templates/application-list-item.html.twig:37 templates/grants-handler-completion.html.twig:28
+msgid "Submission date"
+msgstr ""
+
+#: templates/application-list-item.html.twig:41 templates/grants-handler-completion.html.twig:32
+msgid "Application number"
+msgstr ""
+
+#: templates/application-list.html.twig:8
+msgid "Search for an application"
+msgstr ""
+
+#: templates/application-list.html.twig:15
+msgid "Search for application"
+msgstr ""
+
+#: templates/application-list.html.twig:22
+msgid "Show only applications being processed"
+msgstr ""
+
+#: templates/application-list.html.twig:26;46
+msgid "Applications"
+msgstr ""
+
+#: templates/application-list.html.twig:28
+msgid "Sort"
+msgstr ""
+
+#: templates/application-list.html.twig:31
+msgid "Sort by"
+msgstr ""
+
+#: templates/application-list.html.twig:32
+msgid "Submitted time"
+msgstr ""
+
+#: templates/application-list.html.twig:33
+msgid "Status"
+msgstr ""
+
+#: templates/grants-handler-completion.html.twig:25
+msgid "Grant application sent successfully"
+msgstr ""
+
+#: templates/grants-handler-example-summary.html.twig:19
+msgid "Debugging is enabled"
+msgstr ""
+
+#: templates/webform-submission-messages.html.twig:24
+msgid "Messages"
+msgstr ""
+
+#: config/install/webform.webform.grants_handler.yml:0
+msgid "Example: Webform Handler"
+msgstr ""
+
+#: config/install/webform.webform.grants_handler.yml:0
+msgid "An example of a custom Webform handler."
+msgstr ""

@@ -16,8 +16,6 @@ trait DataFormatTrait {
     foreach ($this->getProperties() as $name => $property) {
       $definition = $property->getDataDefinition();
 
-      $jsonPath = $definition->getSetting('jsonPath');
-      $requiredInJson = $definition->getSetting('requiredInJson');
       $defaultValue = $definition->getSetting('defaultValue');
       $valueCallback = $definition->getSetting('valueCallback');
 

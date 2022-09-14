@@ -37,12 +37,6 @@ function grants_oma_asiointi_theme() {
 }
 
 /**
- *
- */
-/**
- * Implements hook_aggregator_fetcher_info_alter().
- */
-/**
  * Implements hook_page_attachments().
  */
 function grants_oma_asiointi_page_attachments(array &$attachments) {
@@ -53,8 +47,8 @@ function grants_oma_asiointi_page_attachments(array &$attachments) {
  * Implements hook_preprocess_HOOK() for block.html.twig.
  */
 function grants_oma_asiointi_preprocess_block(&$vars) {
-  if($vars["plugin_id"] == 'grants_oma_asiointi_block') {
-    //-- This stops the block being cache in drupal 8
+  if ($vars["plugin_id"] == 'grants_oma_asiointi_block') {
+    // -- This stops the block being cache in drupal 8
     $vars['#cache']['max-age'] = 0;
   }
 }

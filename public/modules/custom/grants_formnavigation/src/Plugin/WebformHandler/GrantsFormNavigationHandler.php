@@ -5,7 +5,6 @@ namespace Drupal\grants_formnavigation\Plugin\WebformHandler;
 use Drupal\grants_formnavigation\GrantsFormNavigationHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\webform\Plugin\WebformHandlerBase;
-use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -89,25 +88,10 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
 
   /**
    * {@inheritdoc}
-   */
-  public function alterElements(array &$elements, WebformInterface $webform) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function overrideSettings(array &$settings, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
    *
    * @throws \Exception
    */
   public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
     // Log the current page.
     $current_page = $webform_submission->getCurrentPage();
     $webform = $webform_submission->getWebform();
@@ -162,68 +146,15 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
    * @throws \Exception
    */
   public function validateForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
     $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Exception
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function confirmForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preCreate(array &$values) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postCreate(WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postLoad(WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preDelete(WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
   public function postDelete(WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
     // Clear the submission's logs when a submission is deleted.
     $this->grantsFormNavigationHelper->deleteSubmissionLogs($webform_submission);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(WebformSubmissionInterface $webform_submission) {
-    $this->debug(__FUNCTION__);
   }
 
   /**
@@ -232,7 +163,6 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
    * @throws \Exception
    */
   public function postSave(WebformSubmissionInterface $webform_submission, $update = TRUE) {
-    $this->debug(__FUNCTION__, $update ? 'update' : 'insert');
     $webform = $webform_submission->getWebform();
     // Get navigation webform settings.
     $forward_navigation = $webform->getThirdPartySetting('grants_formnavigation', 'forward_navigation');
@@ -244,55 +174,6 @@ class GrantsFormNavigationHandler extends WebformHandlerBase {
       // Log any stashed errors.
       $this->grantsFormNavigationHelper->logStashedPageErrors($webform_submission);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preprocessConfirmation(array &$variables) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createHandler() {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateHandler() {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteHandler() {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createElement($key, array $element) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function updateElement($key, array $element, array $original_element) {
-    $this->debug(__FUNCTION__);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteElement($key, array $element) {
-    $this->debug(__FUNCTION__);
   }
 
   /**

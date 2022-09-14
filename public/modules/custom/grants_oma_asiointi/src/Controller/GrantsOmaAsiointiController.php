@@ -134,7 +134,7 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
     $other = [];
     $unreadMsg = [];
 
-    foreach ($applications as $status => $values) {
+    foreach ($applications as $values) {
       $other += $values;
       foreach ($values as $application) {
         $appMessages = ApplicationHandler::parseMessages($application['#submission']->getData());
@@ -154,17 +154,15 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
       '#drafts' => [
         '#theme' => 'application_list',
         '#type' => 'drafts',
-        '#header' => t('Applications in progress'),
+        '#header' => $this->t('Applications in progress'),
         '#id' => 'oma-asiointi__drafts',
-        '#description' => 'DESCRIPTION GOES HERE',
         '#items' => $drafts,
       ],
       '#others' => [
         '#theme' => 'application_list',
         '#type' => 'sent',
-        '#header' => t('Sent applications'),
+        '#header' => $this->t('Sent applications'),
         '#id' => 'oma-asiointi__sent',
-        '#description' => 'DESCRIPTION GOES HERE',
         '#items' => $other,
       ],
       '#unread' => $unreadMsg,

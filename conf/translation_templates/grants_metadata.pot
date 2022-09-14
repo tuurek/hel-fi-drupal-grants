@@ -1,0 +1,70 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/custom/grants_metadata/grants_metadata.module: n/a
+#  modules/custom/grants_metadata/grants_metadata.info.yml: n/a
+#  modules/custom/grants_metadata/src/AtvSchema.php: n/a
+#  modules/custom/grants_metadata/src/Plugin/DataType/CompensationTypeData.php: n/a
+#  modules/custom/grants_metadata/src/Plugin/DataType/GrantsAttachmentData.php: n/a
+#  modules/custom/grants_metadata/src/Plugin/DataType/OtherCompensationData.php: n/a
+#  modules/custom/grants_metadata/src/Plugin/DataType/YleisavustusHakemusData.php: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 16:16+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/custom/grants_metadata/grants_metadata.module:21
+msgid "Application details"
+msgstr ""
+
+#: modules/custom/grants_metadata/grants_metadata.module:28
+msgid "Application Type"
+msgstr ""
+
+#: modules/custom/grants_metadata/grants_metadata.module:35
+msgid "Application Type ID"
+msgstr ""
+
+#: modules/custom/grants_metadata/grants_metadata.info.yml:0
+msgid "Grant Applications: Form Metadata"
+msgstr ""
+
+#: modules/custom/grants_metadata/grants_metadata.info.yml:0
+msgid "Creates additional fields for the Grant Applications forms"
+msgstr ""
+
+#: modules/custom/grants_metadata/grants_metadata.info.yml:0
+msgid "Hel.fi"
+msgstr ""
+
+#: modules/custom/grants_metadata/src/AtvSchema.php:510
+msgid "@field failed parsing, check setup."
+msgstr ""
+
+#: modules/custom/grants_metadata/src/Plugin/DataType/CompensationTypeData.php:8
+msgid "Compensation types"
+msgstr ""
+
+#: modules/custom/grants_metadata/src/Plugin/DataType/GrantsAttachmentData.php:7
+msgid "Attachment"
+msgstr ""
+
+#: modules/custom/grants_metadata/src/Plugin/DataType/OtherCompensationData.php:7
+msgid "Other Compensation"
+msgstr ""
+
+#: modules/custom/grants_metadata/src/Plugin/DataType/YleisavustusHakemusData.php:7
+msgid "Yleisavustushakemus"
+msgstr ""
+

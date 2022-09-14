@@ -1,0 +1,182 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/custom/grants_attachments/grants_attachments.module: n/a
+#  modules/custom/grants_attachments/grants_attachments.routing.yml: n/a
+#  modules/custom/grants_attachments/grants_attachments.install: n/a
+#  modules/custom/grants_attachments/grants_attachments.info.yml: n/a
+#  modules/custom/grants_attachments/grants_attachments.permissions.yml: n/a
+#  modules/custom/grants_attachments/src/AttachmentHandler.php: n/a
+#  modules/custom/grants_attachments/src/Controller/GrantsAttachmentsController.php: n/a
+#  modules/custom/grants_attachments/src/AttachmentRemover.php: n/a
+#  modules/custom/grants_attachments/src/AttachmentUploader.php: n/a
+#  modules/custom/grants_attachments/src/Element/GrantsAttachments.php: n/a
+#  modules/custom/grants_attachments/src/Plugin/WebformElement/GrantsAttachments.php: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 16:06+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/custom/grants_attachments/grants_attachments.module:74 modules/custom/grants_attachments/grants_attachments.routing.yml:0
+msgid "Delete attachment"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.install:87
+msgid "grants_attachments status"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.install:88
+msgid "grants_attachments value: @value"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.info.yml:0
+msgid "grants_attachments"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.info.yml:0
+msgid "Module to handle attachments webform components"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.info.yml:0
+msgid "Hel.fi"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.permissions.yml:0
+msgid "Administer grants_attachments configuration"
+msgstr ""
+
+#: modules/custom/grants_attachments/grants_attachments.permissions.yml:0
+msgid "Optional description."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:204
+msgid "@fieldname field is required"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:213
+msgid "@fieldname has file added, it cannot be added later."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:218
+msgid "@fieldname has file added, it cannot belong to other file."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:227
+msgid "@fieldname has no file uploaded, it must be either delivered later or be included in other file."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:439
+msgid "Bank account confirmation file attachment failed."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:443;477
+msgid "Confirmation for account @accountNumber"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:610
+msgid "Attachment (@filename) uploaded"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:619
+msgid "Attachment (@filename) upload failed with message: @msg. Event has been logged."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentHandler.php:318;435 modules/custom/grants_attachments/src/Controller/GrantsAttachmentsController.php:165
+msgid "Error: %msg"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentRemover.php:151
+msgid "Removed file entity & db log row: @filename"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentRemover.php:172
+msgid "Upload failed, files are saved for retry."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentRemover.php:176
+msgid "Upload failed, removal failed, adding db row failed: @filename"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentRemover.php:215
+msgid "Error purging leftover attachments"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentUploader.php:199
+msgid "Grants attachment(@filename) upload succeeded: Response statusCode = @status"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentUploader.php:210
+msgid "Removed db log row: @filename"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentUploader.php:222
+msgid "Grants attachment upload failed: Response statusCode = @status"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/AttachmentUploader.php:232;247
+msgid "Grants attachment upload failed: @error"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Controller/GrantsAttachmentsController.php:116
+msgid "Document file attachment deleted."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Controller/GrantsAttachmentsController.php:154
+msgid "Application updated."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Controller/GrantsAttachmentsController.php:123
+msgid "Document attachment not found. IntegrationID: %inteId"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Element/GrantsAttachments.php:163
+msgid "Attachment"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Element/GrantsAttachments.php:183
+msgid "Attachment description"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Element/GrantsAttachments.php:187
+msgid "Attachment will delivered at later time"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Element/GrantsAttachments.php:192
+msgid "Attachment already delivered"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Element/GrantsAttachments.php:236
+msgid "You cannot send file and have it delivered later"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Element/GrantsAttachments.php:266
+msgid "You cannot send file and have it in another file"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Plugin/WebformElement/GrantsAttachments.php:109
+msgid "Attachment filetype"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Plugin/WebformElement/GrantsAttachments.php:11
+msgid "Grants attachments"
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Plugin/WebformElement/GrantsAttachments.php:11
+msgid "Provides a grants attachment element."
+msgstr ""
+
+#: modules/custom/grants_attachments/src/Plugin/WebformElement/GrantsAttachments.php:11
+msgid "Hel.fi elements"
+msgstr ""
+

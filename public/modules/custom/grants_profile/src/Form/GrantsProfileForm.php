@@ -371,10 +371,7 @@ class GrantsProfileForm extends FormBase {
     parent::validateForm($form, $form_state);
 
     $errors = $form_state->getErrors();
-    if ($errors) {
-      $d = 'asfd';
-    }
-    else {
+    if (empty($errors)) {
       // @todo Created profile needs to be set to cache.
       $grantsProfileDefinition = GrantsProfileDefinition::create('grants_profile_profile');
       // Create data object.
@@ -424,7 +421,10 @@ class GrantsProfileForm extends FormBase {
 
     if ($success != FALSE) {
       $this->messenger()
-        ->addStatus($this->t('Grantsprofile for company number %s saved and can be used in grant applications', ['%s' => $selectedCompany]));
+        ->addStatus($this->t('Grantsprofile for %c (%s) saved.', [
+          '%c' => $selectedCompanyArray["name"],
+          '%s' => $selectedCompany,
+        ]));
     }
 
     $form_state->setRedirect('grants_profile.edit');

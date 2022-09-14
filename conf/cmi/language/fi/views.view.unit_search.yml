@@ -5,10 +5,6 @@ display:
         options:
           views_infinite_scroll:
             button_text: 'Lataa lisää'
-      filters:
-        combine:
-          group_info:
-            description: ''
       empty:
         area:
           content:

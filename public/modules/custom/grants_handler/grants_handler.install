@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @file
+ */
 
 /**
  * Implements hook_schema().
@@ -185,4 +188,3 @@ function grants_handler_update_9002(&$sandbox) {
   $schema = Database::getConnection()->schema();
   $schema->addField('grants_handler_log', 's_uuid', $spec);
 }
-

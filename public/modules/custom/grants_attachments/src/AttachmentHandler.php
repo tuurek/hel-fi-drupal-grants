@@ -315,7 +315,9 @@ class AttachmentHandler {
         );
       }
       catch (TempStoreException | GuzzleException $e) {
-        $this->logger->error($e->getMessage());
+        $this->logger->error('Error: %msg', [
+          '%msg' => $e->getMessage(),
+        ]);
       }
     }
 
@@ -430,8 +432,9 @@ class AttachmentHandler {
           $this->attachmentFileIds[] = $file->id();
         }
         catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-          $this->logger
-            ->error($e->getMessage());
+          $this->logger->error('Error: %msg', [
+            '%msg' => $e->getMessage(),
+          ]);
           $this->messenger
             ->addError(t('Bank account confirmation file attachment failed.'));
         }
@@ -577,8 +580,6 @@ class AttachmentHandler {
         $retval['isNewAttachment'] = FALSE;
       }
 
-      
-
     }
     return $retval;
   }
@@ -620,7 +621,8 @@ class AttachmentHandler {
               [
                 '@filename' => $attResult['filename'],
                 '@msg' => $attResult['msg'],
-              ]));
+              ])
+            );
       }
     }
 
@@ -673,7 +675,7 @@ class AttachmentHandler {
 
       $attFound = FALSE;
 
-      foreach ($attachments as $k => $v) {
+      foreach ($attachments as $v) {
         if (str_contains($v['filename'], $fn)) {
           $attFound = TRUE;
         }

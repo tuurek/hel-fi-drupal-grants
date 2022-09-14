@@ -1,0 +1,53 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/custom/grants_webform_summation_field/grants_webform_summation_field.info.yml: n/a
+#  modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-09-07 16:47+0300\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/custom/grants_webform_summation_field/grants_webform_summation_field.info.yml:0 modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php:8
+msgid "Grants Webform Summation Field"
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/grants_webform_summation_field.info.yml:0
+msgid "Provides a webform summation field to collect the values of other fields."
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/grants_webform_summation_field.info.yml:0
+msgid "helfi"
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php:52
+msgid "webform summation field settings"
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php:57
+msgid "Collect Fields"
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php:59
+msgid "Which fields should be collected."
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php:8
+msgid "Provide a webform summation field field for grants applications."
+msgstr ""
+
+#: modules/custom/grants_webform_summation_field/src/Plugin/WebformElement/GrantsWebformSummationField.php:8
+msgid "Advanced elements"
+msgstr ""
+

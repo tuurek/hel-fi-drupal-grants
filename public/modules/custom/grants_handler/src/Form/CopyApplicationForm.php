@@ -7,8 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\webform\Entity\WebformSubmission;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Url;
-use Drupal\Core\Link;
 
 /**
  * Provides a Grants Handler form.
@@ -140,19 +138,12 @@ class CopyApplicationForm extends FormBase {
     $uploadResults = $this->applicationHandler->handleApplicationUpload($applicationData, $newAppNumber);
 
     if ($uploadResults == TRUE) {
-      // $this->messenger()->addStatus('Application copied/saved as DRAFT.');
-      $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
-        'submission_id' => $clearedData['application_number'],
-      ]);
-
       $this->messenger()
         ->addStatus(
           $this->t(
-            'Grant application copied(<span id="saved-application-number">@number</span>). You can view your new application from @here.',
+            'Grant application copied(<span id="saved-application-number">@number</span>)',
             [
               '@number' => $clearedData['application_number'],
-              '@here' => Link::fromTextAndUrl('here', $viewApplicationUrl)
-                ->toString(),
             ]
           )
         );
@@ -168,7 +159,7 @@ class CopyApplicationForm extends FormBase {
       );
     }
     else {
-      $this->messenger()->addStatus('Copy failed.');
+      $this->messenger()->addError('Grant application copy failed.');
     }
   }
 

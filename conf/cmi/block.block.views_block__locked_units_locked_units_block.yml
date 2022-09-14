@@ -1,0 +1,31 @@
+uuid: d566e75c-34b7-4dd8-a548-c2c09ca926fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.locked_units
+  module:
+    - system
+    - views
+  theme:
+    - hdbt_admin
+_core:
+  default_config_hash: GUkvSiipo-9GAnDhlWlvpDgwOShmu8wwXbGtbK0U23I
+id: views_block__locked_units_locked_units_block
+theme: hdbt_admin
+region: content
+weight: 2
+provider: null
+plugin: 'views_block:locked_units-locked_units_block'
+settings:
+  id: 'views_block:locked_units-locked_units_block'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /admin/content/locked-content
