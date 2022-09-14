@@ -23,6 +23,7 @@ use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\grants_mandate\CompanySelectException;
 
 /**
  * Webform example handler.
@@ -347,7 +348,10 @@ class GrantsHandler extends WebformHandlerBase {
     // These both are required to be selected.
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+    if ($selectedCompany == NULL) {
+      throw new CompanySelectException('User not authorised');
+    }
 
     $webform = Webform::load($values['webform_id']);
 
@@ -359,57 +363,57 @@ class GrantsHandler extends WebformHandlerBase {
     if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
       ($currentUser->id() != '1')) {
 
-      $redirectApplicantType = FALSE;
+      // $redirectApplicantType = FALSE;
 
-      if ($this->applicantType === NULL) {
-        $this->messenger()
-          ->addError($this->t("You need to select company you're acting behalf of."));
-        $redirectApplicantType = TRUE;
-      }
+      // if ($this->applicantType === NULL) {
+      //   $this->messenger()
+      //     ->addError($this->t("You need to select company you're acting behalf of."));
+      //   $redirectApplicantType = TRUE;
+      // }
 
-      if ($selectedCompany == NULL) {
-        $this->messenger()
-          ->addError($this->t("You need to select company you're acting behalf of."));
-        $redirectApplicantType = TRUE;
-      }
+      // if ($selectedCompany == NULL) {
+      //   $this->messenger()
+      //     ->addError($this->t("You need to select company you're acting behalf of."));
+      //   $redirectApplicantType = TRUE;
+      // }
 
-      if ($redirectApplicantType === TRUE) {
-        $url = Url::fromRoute('grants_mandate.mandateform', [
-          'destination' => $values["uri"],
-        ])
-          ->setAbsolute()
-          ->toString();
-        $response = new RedirectResponse($url);
-        $response->send();
-      }
+      // if ($redirectApplicantType === TRUE) {
+      //   $url = Url::fromRoute('grants_mandate.mandateform', [
+      //     'destination' => $values["uri"],
+      //   ])
+      //     ->setAbsolute()
+      //     ->toString();
+      //   $response = new RedirectResponse($url);
+      //   $response->send();
+      // }
 
-      $redirectToProfile = FALSE;
+      // $redirectToProfile = FALSE;
 
-      if (empty($grantsProfile['officials'])) {
-        $this->messenger()
-          ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-        $redirectToProfile = TRUE;
-      }
-      if (empty($grantsProfile['addresses'])) {
-        $this->messenger()
-          ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-        $redirectToProfile = TRUE;
-      }
-      if (empty($grantsProfile['bankAccounts'])) {
-        $this->messenger()
-          ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-        $redirectToProfile = TRUE;
-      }
+      // if (empty($grantsProfile['officials'])) {
+      //   $this->messenger()
+      //     ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+      //   $redirectToProfile = TRUE;
+      // }
+      // if (empty($grantsProfile['addresses'])) {
+      //   $this->messenger()
+      //     ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+      //   $redirectToProfile = TRUE;
+      // }
+      // if (empty($grantsProfile['bankAccounts'])) {
+      //   $this->messenger()
+      //     ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+      //   $redirectToProfile = TRUE;
+      // }
 
-      if ($redirectToProfile === TRUE) {
-        $url = Url::fromRoute('grants_profile.show', [
-          'destination' => $values["uri"],
-        ])
-          ->setAbsolute()
-          ->toString();
-        $response = new RedirectResponse($url);
-        $response->send();
-      }
+      // if ($redirectToProfile === TRUE) {
+      //   $url = Url::fromRoute('grants_profile.show', [
+      //     'destination' => $values["uri"],
+      //   ])
+      //     ->setAbsolute()
+      //     ->toString();
+      //   $response = new RedirectResponse($url);
+      //   $response->send();
+      // }
 
     }
     else {
@@ -640,6 +644,8 @@ class GrantsHandler extends WebformHandlerBase {
     WebformSubmissionInterface $webform_submission
   ) {
 
+    parent::validateForm($form, $form_state, $webform_submission);
+
     // These need to be set here to the handler object, bc we do the saving to
     // ATV in postSave and in that method these are not available.
     // and the triggering element is pivotal in figuring if we're
@@ -655,10 +661,10 @@ class GrantsHandler extends WebformHandlerBase {
 
     // if all page validation is in progress, skip further
     // execution of this hook to avoid loops
-    if ($webform->getState('validateAllPages') == TRUE) {
-      // parent::validateForm($form, $form_state, $webform_submission);
-      return;
-    }
+    // if ($webform->getState('validateAllPages') == TRUE) {
+    //   // parent::validateForm($form, $form_state, $webform_submission);
+    //   return;
+    // }
 
     $this->setTotals();
 
@@ -715,12 +721,12 @@ class GrantsHandler extends WebformHandlerBase {
     // we don't want page by page validation bc we need all errors always.
     // saving them to db does not solve issue when we're
     // interested of current errors also.
-    $this->grantsFormNavigationHelper->validateAllPages(
-      $webform_submission,
-      $form_state,
-      $triggeringElement,
-      $form
-      );
+    // $this->grantsFormNavigationHelper->validateAllPages(
+    //   $webform_submission,
+    //   $form_state,
+    //   $triggeringElement,
+    //   $form
+    //   );
 
     $current_errors = $webform->getState('current_errors');
 

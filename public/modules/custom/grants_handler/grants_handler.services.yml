@@ -41,8 +41,8 @@ services:
     class: Drupal\grants_handler\EventsService
     arguments: [ '@http_client', '@logger.factory' ]
 
-  grants_handler.force_selected_company_middleware:
-    class: \Drupal\grants_handler\Middleware\ForceSelectedCompanyMiddleware
-    arguments: ['@logger.factory']
+  grants_handler.force_company_authorisation:
+    class: Drupal\grants_handler\EventSubscriber\ForceCompanyAuthorisationSubscriber
+    arguments: ['@messenger','@grants_profile.service', '@current_user']
     tags:
-      - { name: http_middleware, priority: 1000 }
+      - { name: event_subscriber }

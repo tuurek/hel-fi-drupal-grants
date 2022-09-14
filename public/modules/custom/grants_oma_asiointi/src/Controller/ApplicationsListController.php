@@ -10,7 +10,6 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\TempStoreException;
-use Drupal\Core\Url;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\GrantsProfileService;
@@ -20,9 +19,9 @@ use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\grants_mandate\CompanySelectException;
 
 /**
  * Returns responses for Grants Handler routes.
@@ -163,10 +162,7 @@ class ApplicationsListController extends ControllerBase {
 
     // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      $destination = $this->request->getRequestUri();
-      $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
-      $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      $redirectResponse->send();
+      throw new CompanySelectException('User not authorised');
     }
 
     try {
