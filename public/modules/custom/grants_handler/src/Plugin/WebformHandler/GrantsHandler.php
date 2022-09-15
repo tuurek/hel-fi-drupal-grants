@@ -549,7 +549,7 @@ class GrantsHandler extends WebformHandlerBase {
       // If there's errors on the form (any page), disable form submit.
       $current_errors = $webform->getState('current_errors');
       if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
-        $this->messenger()->addError('Form validation failed, no point clicking save.');
+        $this->messenger()->addStatus('Form validation failed within Drupal. No need to worry, this is does not work properly and is debug print.');
         // $form["actions"]["submit"]['#disabled'] = TRUE;
       }
     }
