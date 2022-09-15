@@ -321,7 +321,6 @@ class GrantsHandler extends WebformHandlerBase {
       else {
         // But if we have saved webform earlier, we can get the application
         // number from submission serial.
-        $s = $webform_submission->serial();
         if ($webform_submission->serial()) {
           $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
           $this->submittedFormData['application_number'] = $this->applicationNumber;
@@ -693,6 +692,11 @@ class GrantsHandler extends WebformHandlerBase {
     $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
 
+    // new application.
+    if (empty($this->submittedFormData['application_number'])) {
+      $this->submittedFormData['form_timestamp_created'] = $dt->format('Y-m-d\TH:i:s');
+    }
+
     // Get regdate from profile data and format it for Avustus2
     // This data is immutable for end user so safe to this way.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
@@ -758,12 +762,14 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           // If we HAVE errors, then refresh them from the.
-          $this->grantsFormNavigationHelper->validateAllPages(
-            $webform_submission,
-            $form_state,
-            $triggeringElement,
-            $form
-          );
+          // TODO: fix validation error messages.
+          $this->messenger()->addError('Validation failed, please check inputs. This feature will get better.');
+          // $this->grantsFormNavigationHelper->validateAllPages(
+          //   $webform_submission,
+          //   $form_state,
+          //   $triggeringElement,
+          //   $form
+          // );
         }
       }
     }
