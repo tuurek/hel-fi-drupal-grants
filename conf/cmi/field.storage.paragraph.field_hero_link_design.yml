@@ -15,13 +15,13 @@ settings:
   allowed_values:
     -
       value: primary
-      label: 'Full colour background'
+      label: Täysvärinen
     -
       value: secondary
-      label: 'Only borders'
+      label: Reunustettu
     -
       value: supplementary
-      label: 'No borders or background colour'
+      label: 'Ei reunuksia tai taustaväriä'
   allowed_values_function: ''
 module: options
 locked: false

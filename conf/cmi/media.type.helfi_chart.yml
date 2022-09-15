@@ -7,8 +7,8 @@ dependencies:
 _core:
   default_config_hash: 1Bify-3s5efjndtvBiqv5RO9j0QC-IvMlqOB_fg4pXo
 id: helfi_chart
-label: Chart
-description: 'Media type Chart can be used to present interactive charts. Supports Microsoft Power BI.'
+label: Kaavio
+description: 'Kaaviolla voidaan esittää interaktiivisia kaavioita. Tukee Microsoft Power BI:tä.'
 source: helfi_chart
 queue_thumbnail_downloads: false
 new_revision: false

@@ -259,8 +259,6 @@ function grants_webform_print_preprocess_page_title(&$variables) {
   }
 }
 
-use Drupal\grants_handler\ApplicationHandler;
-
 /**
  * Implements hook_preprocess_HOOK().
  */
@@ -275,7 +273,9 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
   /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
   $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
 
-  $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
+  $all_errors = $webform->getState('current_errors', []);
+
+  // $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
 
   $currentPageVariables = $variables["current_page"];
 

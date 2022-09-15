@@ -13,7 +13,7 @@ id: paragraph.banner.field_icon
 field_name: field_icon
 entity_type: paragraph
 bundle: banner
-label: Icon
+label: Ikoni
 description: ''
 required: false
 translatable: false

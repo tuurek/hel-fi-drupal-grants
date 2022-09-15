@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: ifshZc9C49jtLxCX0dHi5u22TmXRqf4YpOTupSJHf7Y
 id: accordion
-label: Accordion
+label: Haitari
 icon_uuid: null
 icon_default: null
-description: 'Accordion paragraph is used to store information that is perhaps not so relevant to all website users in a compact element that collapses the additional information behind a title.'
+description: 'Haitari-elementtiä käytetään toissijaisen tiedon tallentamiseen kompaktissa muodossa. Sivuston käyttäjät näkevät tiedosta otsikon verran ensimmäisellä silmäyksellä ja voivat tarkastella sisältöä tarkemmin klikkaamalla otsikon auki.'
 behavior_plugins: {  }

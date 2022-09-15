@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: akfMZKbbDlCyIEtmbuAMd7jSSwu8eFf5bjOr87xDx1A
 id: file
-label: File
-description: 'Media type file for general files such as documents and charts.'
+label: Tiedosto
+description: 'Media tyyppi yleisille tiedostoille kuten tekstidokumenteille ja kaavioille.'
 source: file
 queue_thumbnail_downloads: false
 new_revision: true

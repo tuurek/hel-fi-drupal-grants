@@ -19,8 +19,8 @@ id: media.helfi_chart.field_helfi_chart_transcript
 field_name: field_helfi_chart_transcript
 entity_type: media
 bundle: helfi_chart
-label: Transcript
-description: 'Provide a descriptive transcript of the visual information what is presented in the chart.'
+label: Transkriptio
+description: 'Syötä kuvaava transkriptio kaaviossa esitetyistä visuaalisista tiedoista.'
 required: true
 translatable: false
 default_value: {  }

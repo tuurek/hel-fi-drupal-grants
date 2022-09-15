@@ -8,7 +8,7 @@ dependencies:
 _core:
   default_config_hash: MxwbHUmXqKQgTGCTWcMxsfUH9NZJ8ZVqZp6801AOa40
 id: content_recent
-label: 'Recent content'
+label: 'Uusin sisältö'
 module: node
 description: 'Recent content.'
 tag: default
@@ -17,11 +17,11 @@ base_field: nid
 display:
   default:
     id: default
-    display_title: Master
+    display_title: Oletus
     display_plugin: default
     position: 0
     display_options:
-      title: 'Recent content'
+      title: 'Uusin sisältö'
       fields:
         title:
           id: title
@@ -131,10 +131,10 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Apply
+          submit_button: Käytä
           reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
@@ -155,7 +155,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: 'No content available.'
+          content: 'Ei sisältöä.'
           tokenize: false
       sorts:
         changed:
@@ -290,7 +290,7 @@ display:
           required: true
       use_more: false
       use_more_always: false
-      use_more_text: More
+      use_more_text: Lisää
       link_display: '0'
       link_url: ''
       header: {  }
@@ -307,7 +307,7 @@ display:
       tags: {  }
   block_1:
     id: block_1
-    display_title: Block
+    display_title: Lohko
     display_plugin: block
     position: 1
     display_options:

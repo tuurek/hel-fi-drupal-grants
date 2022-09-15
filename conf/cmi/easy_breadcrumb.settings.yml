@@ -8,7 +8,7 @@ replaced_titles: ''
 custom_paths: ''
 include_home_segment: true
 alternative_title_field: field_breadcrumb_title
-home_segment_title: Home
+home_segment_title: Etusivu
 home_segment_keep: false
 include_title_segment: true
 title_from_page_when_available: true
@@ -24,9 +24,9 @@ use_site_title: false
 add_structured_data_json_ld: false
 capitalizator_mode: ucwords
 capitalizator_ignored_words:
-  - of
-  - and
-  - or
+  - /
+  - ja
+  - tai
   - de
   - del
   - 'y'

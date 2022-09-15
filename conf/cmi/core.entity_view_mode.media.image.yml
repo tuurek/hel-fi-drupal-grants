@@ -7,6 +7,6 @@ dependencies:
 _core:
   default_config_hash: _B3q0O_xZZoTEPGo67JMyvbBEstnyqiAJjk8to3c1QM
 id: media.image
-label: Image
+label: Kuva
 targetEntityType: media
 cache: true

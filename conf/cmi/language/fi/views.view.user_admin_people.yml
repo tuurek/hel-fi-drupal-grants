@@ -21,8 +21,6 @@ display:
           label: 'Käyttäjä jo'
         access:
           label: 'Viimeksi paikalla'
-          settings:
-            past_format: '@interval ago'
         operations:
           label: Toimenpiteet
         mail:

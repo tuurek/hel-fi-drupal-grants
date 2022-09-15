@@ -8,7 +8,7 @@ _core:
   default_config_hash: AzAE2ltBPeyP7TmzBO8timcqOmYaJX2RhmRy8qYs6Tc
 id: soundcloud
 label: SoundCloud
-description: 'Media type for adding SoundCloud items.'
+description: 'Mediatyyppi SoundCloud kappaleiden lisäämiseen.'
 source: soundcloud
 queue_thumbnail_downloads: false
 new_revision: false

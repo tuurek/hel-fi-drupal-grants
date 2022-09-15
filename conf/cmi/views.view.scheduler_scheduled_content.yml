@@ -18,7 +18,7 @@ base_field: vid
 display:
   default:
     id: default
-    display_title: Master
+    display_title: Isäntä
     display_plugin: default
     position: 0
     display_options:
@@ -74,7 +74,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          action_title: Action
+          action_title: Toiminto
           include_exclude: exclude
           selected_actions: {  }
         title:
@@ -87,7 +87,7 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: field
-          label: Title
+          label: Otsikko
           exclude: false
           alter:
             alter_text: false
@@ -134,7 +134,7 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: field
-          label: 'Content Type'
+          label: Sisältötyyppi
           exclude: false
           alter:
             alter_text: false
@@ -199,7 +199,7 @@ display:
           entity_type: user
           entity_field: name
           plugin_id: field
-          label: Author
+          label: Kirjoittaja
           exclude: false
           alter:
             alter_text: false
@@ -264,7 +264,7 @@ display:
           entity_type: node
           entity_field: status
           plugin_id: field
-          label: Status
+          label: Tila
           exclude: false
           alter:
             alter_text: false
@@ -309,8 +309,8 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_false: Unpublished
-            format_custom_true: Published
+            format_custom_false: Julkaisematon
+            format_custom_true: Julkaistu
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -331,7 +331,7 @@ display:
           entity_type: node
           entity_field: publish_on
           plugin_id: field
-          label: 'Publish on'
+          label: Julkaisupäivämäärä
           exclude: false
           alter:
             alter_text: false
@@ -398,7 +398,7 @@ display:
           entity_type: node
           entity_field: unpublish_on
           plugin_id: field
-          label: 'Unpublish on'
+          label: 'Julkaisun peruutuspäivämäärä'
           exclude: false
           alter:
             alter_text: false
@@ -464,7 +464,7 @@ display:
           admin_label: ''
           entity_type: node
           plugin_id: entity_operations
-          label: Operations
+          label: Toimenpiteet
           exclude: false
           alter:
             alter_text: false
@@ -514,17 +514,17 @@ display:
           total_pages: null
           id: 0
           tags:
-            next: 'next ›'
-            previous: '‹ previous'
-            first: '« first'
-            last: 'last »'
+            next: 'seuraava ›'
+            previous: '‹ edellinen'
+            first: '« ensimmäinen'
+            last: 'viimeinen »'
       exposed_form:
         type: basic
         options:
-          submit_button: Filter
+          submit_button: Suodata
           reset_button: true
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
+          reset_button_label: Palauta
+          exposed_sorts_label: Lajittele
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
@@ -605,7 +605,7 @@ display:
           exposed: true
           expose:
             operator_id: title_op
-            label: Title
+            label: Otsikko
             description: ''
             use_operator: false
             operator: title_op
@@ -648,7 +648,7 @@ display:
           exposed: true
           expose:
             operator_id: type_op
-            label: 'Content type'
+            label: Sisältötyyppi
             description: ''
             use_operator: false
             operator: type_op
@@ -691,7 +691,7 @@ display:
           exposed: true
           expose:
             operator_id: ''
-            label: Status
+            label: Tila
             description: ''
             use_operator: false
             operator: status_op
@@ -707,7 +707,7 @@ display:
               administrator: '0'
           is_grouped: true
           group_info:
-            label: 'Published status'
+            label: Julkaisutila
             description: ''
             identifier: status
             optional: true
@@ -718,11 +718,11 @@ display:
             default_group_multiple: {  }
             group_items:
               1:
-                title: Published
+                title: Julkaistu
                 operator: '='
                 value: '1'
               2:
-                title: Unpublished
+                title: Julkaisematon
                 operator: '='
                 value: '0'
         langcode:
@@ -741,7 +741,7 @@ display:
           exposed: true
           expose:
             operator_id: langcode_op
-            label: Language
+            label: Kieli
             description: ''
             use_operator: false
             operator: langcode_op
@@ -1004,7 +1004,7 @@ display:
       path: admin/content/scheduled
       menu:
         type: tab
-        title: Scheduled
+        title: Ajastettu
         description: ''
         weight: -10
         expanded: false
@@ -1013,7 +1013,7 @@ display:
         context: '0'
       tab_options:
         type: normal
-        title: Content
+        title: Sisältö
         description: 'Find and manage scheduled content'
         weight: -10
         menu_name: admin
@@ -1060,7 +1060,7 @@ display:
           exception:
             value: all
             title_enable: false
-            title: All
+            title: Kaikki
           title_enable: false
           title: ''
           default_argument_type: fixed
@@ -1099,7 +1099,7 @@ display:
       path: user/%user/scheduled
       menu:
         type: tab
-        title: Scheduled
+        title: Ajastettu
         description: ''
         weight: -10
         menu_name: admin
@@ -1107,7 +1107,7 @@ display:
         context: '0'
       tab_options:
         type: normal
-        title: Content
+        title: Sisältö
         description: 'Find and manage scheduled content'
         weight: -10
         menu_name: admin

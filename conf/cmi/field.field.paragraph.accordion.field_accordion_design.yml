@@ -13,8 +13,8 @@ id: paragraph.accordion.field_accordion_design
 field_name: field_accordion_design
 entity_type: paragraph
 bundle: accordion
-label: Design
-description: 'Choose the paragraph design from the dropdown.'
+label: Tyyli
+description: 'Valitse lohkon tyyli alasvetovalikosta.'
 required: true
 translatable: false
 default_value:

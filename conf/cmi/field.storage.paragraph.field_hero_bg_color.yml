@@ -15,40 +15,40 @@ settings:
   allowed_values:
     -
       value: coat-of-arms
-      label: 'Coat of Arms'
+      label: Vaakuna
     -
       value: gold
-      label: Gold
+      label: Kulta
     -
       value: silver
-      label: Silver
+      label: Hopea
     -
       value: brick
-      label: Brick
+      label: Tiili
     -
       value: bus
-      label: Bus
+      label: Bussi
     -
       value: copper
-      label: Copper
+      label: Kupari
     -
       value: engel
       label: Engel
     -
       value: fog
-      label: Fog
+      label: Sumu
     -
       value: metro
       label: Metro
     -
       value: summer
-      label: Summer
+      label: Kesä
     -
       value: suomenlinna
       label: Suomenlinna
     -
       value: tram
-      label: Tram
+      label: Spåra
   allowed_values_function: ''
 module: options
 locked: false

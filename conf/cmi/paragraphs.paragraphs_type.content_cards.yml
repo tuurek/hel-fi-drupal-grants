@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: ut9kCjel1-qjn3zFgsASesp77nZ_cVGas9AsvpU_104
 id: content_cards
-label: 'Content cards'
+label: Sisältökortit
 icon_uuid: null
 icon_default: null
-description: 'With content cards you can reference to content inside this site. The information about the content is automatically fetched through the reference.'
+description: 'Sisältökorteilla voit nostaa sivuston sisäistä sisältöä korteiksi lohkoon. Kortin sisältö haetaan automaattisesti siitä sisällöstä jonka valitsit.'
 behavior_plugins: {  }

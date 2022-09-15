@@ -130,7 +130,6 @@ class GrantsProfileService {
     $newProfileData = [];
     $selectedCompanyArray = $this->getSelectedCompany();
     $selectedCompany = $selectedCompanyArray['identifier'];
-    $userProfile = $this->helsinkiProfiili->getUserProfileData();
     $userData = $this->helsinkiProfiili->getUserData();
 
     // If data is already in profile format, use that as is.

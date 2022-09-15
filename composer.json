@@ -52,7 +52,8 @@
         "drupal/webform_views": "^5.0@beta",
         "drush/drush": "^10.4 || ^11",
         "globalcitizen/php-iban": "^4.1",
-        "ramsey/uuid": "^4.3"
+        "ramsey/uuid": "^4.3",
+        "league/uri": "^6.7"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.7",

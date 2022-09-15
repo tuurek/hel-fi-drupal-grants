@@ -13,8 +13,8 @@ id: paragraph.liftup_with_image.field_liftup_with_image_design
 field_name: field_liftup_with_image_design
 entity_type: paragraph
 bundle: liftup_with_image
-label: Design
-description: 'Choose the paragraph design from the dropdown.'
+label: Tyyli
+description: 'Valitse lohkon tyyli alasvetovalikosta.'
 required: true
 translatable: false
 default_value:

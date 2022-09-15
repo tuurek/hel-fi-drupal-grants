@@ -23,6 +23,7 @@ use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\grants_mandate\CompanySelectException;
 
 /**
  * Webform example handler.
@@ -320,7 +321,6 @@ class GrantsHandler extends WebformHandlerBase {
       else {
         // But if we have saved webform earlier, we can get the application
         // number from submission serial.
-        $s = $webform_submission->serial();
         if ($webform_submission->serial()) {
           $this->applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
           $this->submittedFormData['application_number'] = $this->applicationNumber;
@@ -347,7 +347,10 @@ class GrantsHandler extends WebformHandlerBase {
     // These both are required to be selected.
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $grantsProfile = $this->grantsProfileService->getGrantsProfileContent($selectedCompany);
+
+    if ($selectedCompany == NULL) {
+      throw new CompanySelectException('User not authorised');
+    }
 
     $webform = Webform::load($values['webform_id']);
 
@@ -359,57 +362,57 @@ class GrantsHandler extends WebformHandlerBase {
     if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
       ($currentUser->id() != '1')) {
 
-      $redirectApplicantType = FALSE;
+      // $redirectApplicantType = FALSE;
 
-      if ($this->applicantType === NULL) {
-        $this->messenger()
-          ->addError($this->t("You need to select company you're acting behalf of."));
-        $redirectApplicantType = TRUE;
-      }
+      // if ($this->applicantType === NULL) {
+      //   $this->messenger()
+      //     ->addError($this->t("You need to select company you're acting behalf of."));
+      //   $redirectApplicantType = TRUE;
+      // }
 
-      if ($selectedCompany == NULL) {
-        $this->messenger()
-          ->addError($this->t("You need to select company you're acting behalf of."));
-        $redirectApplicantType = TRUE;
-      }
+      // if ($selectedCompany == NULL) {
+      //   $this->messenger()
+      //     ->addError($this->t("You need to select company you're acting behalf of."));
+      //   $redirectApplicantType = TRUE;
+      // }
 
-      if ($redirectApplicantType === TRUE) {
-        $url = Url::fromRoute('grants_mandate.mandateform', [
-          'destination' => $values["uri"],
-        ])
-          ->setAbsolute()
-          ->toString();
-        $response = new RedirectResponse($url);
-        $response->send();
-      }
+      // if ($redirectApplicantType === TRUE) {
+      //   $url = Url::fromRoute('grants_mandate.mandateform', [
+      //     'destination' => $values["uri"],
+      //   ])
+      //     ->setAbsolute()
+      //     ->toString();
+      //   $response = new RedirectResponse($url);
+      //   $response->send();
+      // }
 
-      $redirectToProfile = FALSE;
+      // $redirectToProfile = FALSE;
 
-      if (empty($grantsProfile['officials'])) {
-        $this->messenger()
-          ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-        $redirectToProfile = TRUE;
-      }
-      if (empty($grantsProfile['addresses'])) {
-        $this->messenger()
-          ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-        $redirectToProfile = TRUE;
-      }
-      if (empty($grantsProfile['bankAccounts'])) {
-        $this->messenger()
-          ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-        $redirectToProfile = TRUE;
-      }
+      // if (empty($grantsProfile['officials'])) {
+      //   $this->messenger()
+      //     ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+      //   $redirectToProfile = TRUE;
+      // }
+      // if (empty($grantsProfile['addresses'])) {
+      //   $this->messenger()
+      //     ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+      //   $redirectToProfile = TRUE;
+      // }
+      // if (empty($grantsProfile['bankAccounts'])) {
+      //   $this->messenger()
+      //     ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
+      //   $redirectToProfile = TRUE;
+      // }
 
-      if ($redirectToProfile === TRUE) {
-        $url = Url::fromRoute('grants_profile.show', [
-          'destination' => $values["uri"],
-        ])
-          ->setAbsolute()
-          ->toString();
-        $response = new RedirectResponse($url);
-        $response->send();
-      }
+      // if ($redirectToProfile === TRUE) {
+      //   $url = Url::fromRoute('grants_profile.show', [
+      //     'destination' => $values["uri"],
+      //   ])
+      //     ->setAbsolute()
+      //     ->toString();
+      //   $response = new RedirectResponse($url);
+      //   $response->send();
+      // }
 
     }
     else {
@@ -488,8 +491,9 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
-    $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
-    $form['#errors'] = $all_errors;
+    // $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
+    // $form['#errors'] = $all_errors;
+    $form['#errors'] = $webform->getState('current_errors');
   }
 
   /**
@@ -545,7 +549,8 @@ class GrantsHandler extends WebformHandlerBase {
       // If there's errors on the form (any page), disable form submit.
       $current_errors = $webform->getState('current_errors');
       if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
-        $form["actions"]["submit"]['#disabled'] = TRUE;
+        $this->messenger()->addError('Form validation failed, no point clicking save.');
+        // $form["actions"]["submit"]['#disabled'] = TRUE;
       }
     }
   }
@@ -563,7 +568,7 @@ class GrantsHandler extends WebformHandlerBase {
 
     if ($this->triggeringElement == '') {
       $triggeringElement = $form_state->getTriggeringElement();
-      if (is_string($triggeringElement['#submit'][0])) {
+      if (isset($triggeringElement['#submit']) && is_string($triggeringElement['#submit'][0])) {
         $this->triggeringElement = $triggeringElement['#submit'][0];
       }
     }
@@ -640,8 +645,6 @@ class GrantsHandler extends WebformHandlerBase {
 
     parent::validateForm($form, $form_state, $webform_submission);
 
-    $current_page = $webform_submission->getCurrentPage();
-
     // These need to be set here to the handler object, bc we do the saving to
     // ATV in postSave and in that method these are not available.
     // and the triggering element is pivotal in figuring if we're
@@ -652,6 +655,15 @@ class GrantsHandler extends WebformHandlerBase {
     // Does these need to be done in validate??
     // maybe the submittedData is even not required?
     $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
+
+    $webform = $webform_submission->getWebform();
+
+    // if all page validation is in progress, skip further
+    // execution of this hook to avoid loops
+    // if ($webform->getState('validateAllPages') == TRUE) {
+    //   // parent::validateForm($form, $form_state, $webform_submission);
+    //   return;
+    // }
 
     $this->setTotals();
 
@@ -680,6 +692,11 @@ class GrantsHandler extends WebformHandlerBase {
     $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
 
+    // new application.
+    if (empty($this->submittedFormData['application_number'])) {
+      $this->submittedFormData['form_timestamp_created'] = $dt->format('Y-m-d\TH:i:s');
+    }
+
     // Get regdate from profile data and format it for Avustus2
     // This data is immutable for end user so safe to this way.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
@@ -690,6 +707,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set form update value based on new & old status + Avus2 logic.
     $this->submittedFormData["form_update"] = $this->getFormUpdate();
 
+    // parse 3rd party settings from webform.
     $this->setFromThirdPartySettings($webform_submission->getWebform());
 
     // Figure out status for this application.
@@ -703,20 +721,18 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    // Loop through fieldnames and validate fields.
-    foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
-      AttachmentHandler::validateAttachmentField(
-        $fieldName,
-        $form_state,
-        $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
-        $triggeringElement
-      );
-    }
+    // validate all pages in separate function
+    // we don't want page by page validation bc we need all errors always.
+    // saving them to db does not solve issue when we're
+    // interested of current errors also.
+    // $this->grantsFormNavigationHelper->validateAllPages(
+    //   $webform_submission,
+    //   $form_state,
+    //   $triggeringElement,
+    //   $form
+    //   );
 
-    // $dd = $this->grantsFormNavigationHelper->validateAllPages($webform_submission, $form_state);
-
-
-    $current_errors = $this->logErrors($webform_submission, $form_state);
+    $current_errors = $webform->getState('current_errors');
 
     // If ($triggeringElement == '::next') {
     // // parent::validateForm($form, $form_state, $webform_submission);.
@@ -746,7 +762,14 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           // If we HAVE errors, then refresh them from the.
-          $current_errors = $this->logErrors($webform_submission, $form_state);
+          // TODO: fix validation error messages.
+          $this->messenger()->addError('Validation failed, please check inputs. This feature will get better.');
+          // $this->grantsFormNavigationHelper->validateAllPages(
+          //   $webform_submission,
+          //   $form_state,
+          //   $triggeringElement,
+          //   $form
+          // );
         }
       }
     }
@@ -773,8 +796,6 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
-
-    $triggeringElement = $this->getTriggeringElementName($form_state);
 
     // Because of funky naming convention, we need to manually
     // set purpose field value.
@@ -875,7 +896,6 @@ class GrantsHandler extends WebformHandlerBase {
     // If triggering element is either draft save or proper one,
     // we want to parse attachments from form.
     if ($this->triggeringElement == '::submitForm') {
-      $webForm = $webform_submission->getWebform();
 
       // submitForm is triggering element when saving as draft.
       // Parse attachments to data structure.

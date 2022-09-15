@@ -12,8 +12,8 @@ id: paragraph.hero.field_hero_image
 field_name: field_hero_image
 entity_type: paragraph
 bundle: hero
-label: Image
-description: 'Image to be used as an illustration or as a background of the hero depending on what design you chose.'
+label: Kuva
+description: 'Kuva jota käytetään kuvituskuvana tai taustakuvana lohkossa riippuen siitä minkä tyylin olet lohkolle valinnut.'
 required: false
 translatable: false
 default_value: {  }

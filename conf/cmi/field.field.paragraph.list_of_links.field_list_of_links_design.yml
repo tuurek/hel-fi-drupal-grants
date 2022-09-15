@@ -13,8 +13,8 @@ id: paragraph.list_of_links.field_list_of_links_design
 field_name: field_list_of_links_design
 entity_type: paragraph
 bundle: list_of_links
-label: Design
-description: 'Choose the paragraph design from the dropdown. Depending on what design you choose there may be different fields that you need to fill.'
+label: Tyyli
+description: 'Valitse lohkon tyyli alasvetovalikosta. Tarvittavat tiedot riippuvat siitä minkä tyylin valitset.'
 required: true
 translatable: false
 default_value:
