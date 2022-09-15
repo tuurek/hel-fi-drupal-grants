@@ -13,7 +13,7 @@ id: paragraph.chart.field_chart_description
 field_name: field_chart_description
 entity_type: paragraph
 bundle: chart
-label: Description
+label: Kuvaus
 description: ''
 required: false
 translatable: false

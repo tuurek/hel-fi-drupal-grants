@@ -13,8 +13,8 @@ id: paragraph.content_cards.field_content_cards_design
 field_name: field_content_cards_design
 entity_type: paragraph
 bundle: content_cards
-label: Design
-description: 'Choose the paragraph design from the dropdown.'
+label: Tyyli
+description: 'Valitse lohkon tyyli alasvetovalikosta.'
 required: true
 translatable: false
 default_value:

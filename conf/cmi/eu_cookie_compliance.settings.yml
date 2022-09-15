@@ -10,23 +10,23 @@ eu_only_js: null
 popup_position: false
 fixed_top_position: true
 popup_info:
-  value: "<h2>Hel.fi uses cookies&nbsp;</h2>\r\n\r\n<p>We use essential cookies on our website to make the site work. Also third party cookies are used if you give us your permission.</p>\r\n"
+  value: "<h2>Hel.fi käyttää evästeitä</h2><p>Tämä sivusto käyttää välttämättömiä evästeitä suorituskyvyn varmistamiseksi sekä yleisen käytön seurantaan. Lisäksi käytämme kohdennusevästeitä käyttäjäkokemuksen parantamiseksi, analytiikkaan ja kohdistetun sisällön näyttämiseen.</p>\r\n"
   format: full_html
 mobile_popup_info:
   value: ''
   format: full_html
 popup_info_template: new
-popup_agree_button_message: Accept
-popup_more_info_button_message: 'Show cookies'
+popup_agree_button_message: Hyväksy
+popup_more_info_button_message: 'Näytä evästeet'
 mobile_breakpoint: 768
 popup_agreed_enabled: false
 popup_hide_agreed: false
-disagree_button_label: 'No, thanks'
+disagree_button_label: 'Ei kiitos'
 popup_agreed:
   value: "<h2>Thank you for accepting cookies</h2>\r\n\r\n<p>You can now hide this message or find out more about cookies.</p>\r\n"
   format: full_html
-popup_find_more_button_message: 'Show cookies'
-popup_hide_button_message: Hide
+popup_find_more_button_message: 'Näytä evästeet'
+popup_hide_button_message: Piilossa
 popup_link: /node/1
 popup_link_new_window: false
 popup_height: null
@@ -60,12 +60,12 @@ consent_storage_method: do_not_store
 withdraw_message:
   value: "<h2>Hel.fi uses cookies</h2>\r\n\r\n<p>You have given your consent for us to set cookies.</p>\r\n"
   format: full_html
-withdraw_tab_button_label: 'Privacy settings'
+withdraw_tab_button_label: Tietosuoja-asetukset
 withdraw_action_button_label: 'Withdraw consent'
 withdraw_enabled: false
 withdraw_button_on_info_popup: false
-save_preferences_button_label: 'Allow only essential cookies'
-accept_all_categories_button_label: 'Accept all cookies'
+save_preferences_button_label: 'Hyväksy valitut evästeet'
+accept_all_categories_button_label: 'Hyväksy kaikki evästeet'
 enable_save_preferences_button: true
 domain_all_sites: true
 settings_tab_enabled: false

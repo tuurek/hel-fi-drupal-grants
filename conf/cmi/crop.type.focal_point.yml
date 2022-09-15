@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 _core:
   default_config_hash: WMpvWBAte0ZbTumYA46YSXn2rXF01xLV6TTbRxlcYRI
-label: 'Focal point'
+label: Keskipiste
 id: focal_point
 description: 'Crop type used by Focal point module.'
 aspect_ratio: ''

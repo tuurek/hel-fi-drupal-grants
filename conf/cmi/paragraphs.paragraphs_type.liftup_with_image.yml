@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: oTntLu4hOI-a_bRMPM6I79X4Ah0MldQKR2YxFjFwLqw
 id: liftup_with_image
-label: 'Liftup with image'
+label: 'Kuvallinen nosto'
 icon_uuid: null
 icon_default: null
-description: 'Liftup with image is a fairly large element that you can use to promote content with large image next to the text.'
+description: 'Kuvallinen nosto on melko suuri nostoelementti, jolla voit korostaa sisältöä. Elementti koostuu kuvasta ja sen vieressä olevasta tekstialueesta.'
 behavior_plugins: {  }

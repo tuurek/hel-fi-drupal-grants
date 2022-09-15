@@ -12,7 +12,7 @@ id: paragraph.gallery_slide.field_gallery_slide_media
 field_name: field_gallery_slide_media
 entity_type: paragraph
 bundle: gallery_slide
-label: Image
+label: Kuva
 description: ''
 required: true
 translatable: false

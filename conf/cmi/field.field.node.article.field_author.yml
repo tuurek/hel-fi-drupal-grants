@@ -11,7 +11,7 @@ id: node.article.field_author
 field_name: field_author
 entity_type: node
 bundle: article
-label: Author
+label: Tekijä
 description: ''
 required: false
 translatable: true

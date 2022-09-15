@@ -13,7 +13,7 @@ id: node.landing_page.field_metatags
 field_name: field_metatags
 entity_type: node
 bundle: landing_page
-label: Metatags
+label: Metatunnisteet
 description: ''
 required: false
 translatable: true
