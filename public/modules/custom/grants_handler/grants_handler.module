@@ -1056,7 +1056,7 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
   try {
     $submissionObject = $variables['submissionObject'];
     $submissionData = $submissionObject->getData();
-    $variables['applicationTimestamp'] = $submissionData['form_timestamp'];
+    $variables['applicationTimestamp'] = $submissionData['form_timestamp_created'];
   }
   catch (\Exception $e) {
     $variables['applicationTimestamp'] = '';

@@ -173,7 +173,7 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
             $submissionMessages = ApplicationHandler::parseMessages($submissionData, TRUE);
             $messages += $submissionMessages;
 
-            $ts = strtotime($submissionData['form_timestamp']);
+            $ts = strtotime($submissionData['form_timestamp_created']);
             $submissions[$ts] = $submissionData;
 
           }

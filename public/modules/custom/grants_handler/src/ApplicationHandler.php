@@ -1027,7 +1027,7 @@ class ApplicationHandler {
           try {
             $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
             $submissionData = $submissionObject->getData();
-            $ts = strtotime($submissionData['form_timestamp']);
+            $ts = strtotime($submissionData['form_timestamp_created']);
             if ($themeHook !== '') {
               $submission = [
                 '#theme' => $themeHook,
