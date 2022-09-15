@@ -203,6 +203,38 @@ class ApplicationController extends ControllerBase {
   }
 
   /**
+   * Print Drupal messages according to application status.
+   *
+   * @var string $status
+   *  Status string from method.
+   */
+  public function showMessageForDataStatus(string $status) {
+    $message = NULL;
+
+    switch ($status) {
+      case 'DATA_NOT_SAVED_AVUS2':
+      case 'DATA_NOT_SAVED_ATV':
+      case 'NO_SUBMISSION_DATA':
+        $message = $this->t('Application saving process not done, data on this page is not yet updated.');
+        break;
+
+      case 'FILE_UPLOAD_PENDING':
+        $message = $this->t('File uploads are pending. Data on this page is not fully updated.');
+        break;
+
+      case 'OK':
+      default:
+
+        break;
+
+    }
+    if ($message != NULL) {
+      $this->messenger()->addWarning($message);
+    }
+
+  }
+
+  /**
    * View single application.
    *
    * @param string $submission_id
@@ -218,7 +250,6 @@ class ApplicationController extends ControllerBase {
   public function view(string $submission_id, string $view_mode = 'full', string $langcode = 'fi'): array {
 
     $view_mode = 'default';
-    $langcode = 'fi';
 
     try {
       $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
@@ -226,11 +257,14 @@ class ApplicationController extends ControllerBase {
       if ($webform_submission != NULL) {
         $webform = $webform_submission->getWebform();
         $submissionData = $webform_submission->getData();
+
         $saveIdValidates = $this->applicationHandler->validateDataIntegrity(
           $webform_submission,
           NULL,
           $submissionData['application_number'],
           $submissionData['metadata']['saveid'] ?? '');
+
+        $this->showMessageForDataStatus($saveIdValidates);
 
         // Set webform submission template.
         $build = [
@@ -271,9 +305,7 @@ class ApplicationController extends ControllerBase {
         return $build;
       }
       else {
-        throw new NotFoundHttpException($this->t('Application @number not found.', [
-          '@number' => $submission_id,
-        ]));
+        throw new NotFoundHttpException('Application ' . $submission_id . ' not found.');
       }
 
     }
