@@ -11,8 +11,8 @@ id: media.helfi_chart.field_helfi_chart_title
 field_name: field_helfi_chart_title
 entity_type: media
 bundle: helfi_chart
-label: Title
-description: 'The chart is rendered via inline frame. Iframe needs a label so users can determine what content is being presented in the iframe.'
+label: Otsikko
+description: 'Kaavio esitetään iframe elementin kautta. Iframe tarvitsee sisältöä kuvaavan otsikon, jotta käyttäjät voivat tietää mitä sisältöä iframe-kehyksessä esitetään.'
 required: true
 translatable: false
 default_value: {  }

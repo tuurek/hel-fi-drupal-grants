@@ -15,10 +15,10 @@ settings:
   allowed_values:
     -
       value: white
-      label: White
+      label: Valkoinen
     -
       value: grey
-      label: Grey
+      label: Harmaa
   allowed_values_function: ''
 module: options
 locked: false

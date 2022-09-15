@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: M-cucF_MywQRWs1GedbjUzT6HAIH-QUhLICxcZgEPFg
 id: image
-label: Image
+label: Kuva
 icon_uuid: null
 icon_default: null
-description: 'Image with a caption'
+description: 'Kuva kuvatekstillä'
 behavior_plugins: {  }

@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: _4H9fCnHwOpL5pjmptx0qsYlP9XewUE89fmEix-kqxY
 id: short
-label: 'Default short date'
+label: 'Päivämäärä lyhyessä muodossa'
 locked: false
-pattern: j.n.Y
+pattern: 'j.n.Y - H:i'

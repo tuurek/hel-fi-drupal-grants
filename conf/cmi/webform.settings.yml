@@ -8,14 +8,14 @@ settings:
   default_ajax_progress_type: throbber
   default_ajax_effect: fade
   default_ajax_speed: 500
-  default_submit_button_label: Submit
-  default_reset_button_label: Reset
-  default_delete_button_label: Delete
+  default_submit_button_label: Lähetä
+  default_reset_button_label: Palauta
+  default_delete_button_label: Poista
   default_form_submit_once: false
-  default_form_open_message: 'This form has not yet been opened to submissions.'
+  default_form_open_message: 'Tätä lomaketta ei ole vielä avattu lähetyksille.'
   default_form_close_message: 'Sorry… This form is closed to new submissions.'
   default_form_exception_message: 'Unable to display this webform. Please contact the site administrator.'
-  default_form_confidential_message: 'This form is confidential. You must <a href="[site:login-url]/logout?destination=[current-page:url:relative]">Log out</a> to submit it.'
+  default_form_confidential_message: 'Tämä lomake on luottamuksellinen. Sinun täytyy <a href="[site:login-url]/logout?destination=[current-page:url:relative]">kirjautua ulos</a> lähettääksesi se.'
   default_form_access_denied_message: 'Please login to access this form.'
   default_form_disable_remote_addr: false
   default_form_novalidate: false
@@ -29,21 +29,21 @@ settings:
   default_form_file_limit: ''
   default_wizard_prev_button_label: '< Previous'
   default_wizard_next_button_label: 'Next >'
-  default_wizard_start_label: Start
-  default_wizard_confirmation_label: Complete
-  default_wizard_toggle_show_label: 'Show all'
-  default_wizard_toggle_hide_label: 'Hide all'
-  default_preview_next_button_label: Preview
+  default_wizard_start_label: Alkaa
+  default_wizard_confirmation_label: Valmis
+  default_wizard_toggle_show_label: 'Näytä kaikki'
+  default_wizard_toggle_hide_label: 'Piilota kaikki'
+  default_preview_next_button_label: Esikatselu
   default_preview_prev_button_label: '< Previous'
-  default_preview_label: Preview
+  default_preview_label: Esikatselu
   default_preview_title: '[webform:title]: Preview'
   default_preview_message: 'Please review your submission. Your submission is not complete until you press the "Submit" button!'
-  default_draft_button_label: 'Save Draft'
-  default_draft_saved_message: 'Submission saved. You may return to this form later and it will restore the current values.'
+  default_draft_button_label: 'Tallenna keskeneräinen'
+  default_draft_saved_message: 'Tiedot tallennettu. Voit palata tähän lomakkeeseen myöhemmin ja palauttaa nykyiset tiedot.'
   default_draft_loaded_message: 'A partially-completed form was found. Please complete the remaining portions.'
   default_draft_pending_single_message: 'You have a pending draft for this webform. <a href="#">Load your pending draft</a>.'
   default_draft_pending_multiple_message: 'You have pending drafts for this webform. <a href="#">View your pending drafts</a>.'
-  default_confirmation_message: 'New submission added to [webform:title].'
+  default_confirmation_message: 'Lisätty uusi lähetys lomakkeelle [webform:title].'
   default_confirmation_back_label: 'Back to form'
   default_limit_total_message: 'No more submissions are permitted.'
   default_limit_user_message: 'No more submissions are permitted.'
@@ -106,13 +106,13 @@ settings:
   dialog: false
   dialog_options:
     narrow:
-      title: Narrow
+      title: Kapea
       width: 600
     normal:
-      title: Normal
+      title: Normaali
       width: 800
     wide:
-      title: Wide
+      title: Leveä
       width: 1000
 assets:
   css: ''
@@ -148,7 +148,7 @@ element:
     webform-horizontal-rule--flaired
     webform-horizontal-rule--glyph
   default_description_display: ''
-  default_more_title: More
+  default_more_title: Lisää
   default_section_title_tag: h2
   default_empty_option: true
   default_empty_option_required: ''

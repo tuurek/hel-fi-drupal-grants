@@ -1,0 +1,26 @@
+settings:
+  allowed_values:
+    -
+      label: 'Coat of Arms'
+    -
+      label: Gold
+    -
+      label: Silver
+    -
+      label: Brick
+    -
+      label: Bus
+    -
+      label: Copper
+    -
+      label: Engel
+    -
+      label: Fog
+    -
+      label: Metro
+    -
+      label: Summer
+    -
+      label: Suomenlinna
+    -
+      label: Tram

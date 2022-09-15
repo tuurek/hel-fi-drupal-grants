@@ -15,10 +15,10 @@ settings:
   allowed_values:
     -
       value: image-on-right
-      label: 'Image on right'
+      label: 'Kuva oikealla'
     -
       value: image-on-left
-      label: 'Image on left'
+      label: 'Kuva vasemmalla'
     -
       value: background-text-on-right
       label: 'Background image, text on right'

@@ -1,0 +1,12 @@
+settings:
+  allowed_values:
+    -
+      label: h2
+    -
+      label: h3
+    -
+      label: h4
+    -
+      label: h5
+    -
+      label: h6

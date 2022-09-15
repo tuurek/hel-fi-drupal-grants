@@ -15,16 +15,16 @@ settings:
   allowed_values:
     -
       value: small-cards
-      label: 'Small cards'
+      label: 'Pienet kortit'
     -
       value: large-cards
-      label: 'Large cards'
+      label: 'Suuret kortit'
     -
       value: small-cards-grey
-      label: 'Small cards, grey background'
+      label: 'Pienet kortit, harmaa tausta'
     -
       value: large-cards-grey
-      label: 'Large cards, grey background'
+      label: 'Suuret kortit, harmaa tausta'
   allowed_values_function: ''
 module: options
 locked: false

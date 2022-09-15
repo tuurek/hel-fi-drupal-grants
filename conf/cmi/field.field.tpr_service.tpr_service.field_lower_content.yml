@@ -46,23 +46,23 @@ settings:
     negate: 0
     target_bundles_drag_drop:
       accordion:
-        enabled: true
         weight: -27
+        enabled: true
       accordion_item:
         weight: -22
         enabled: false
       banner:
-        enabled: true
         weight: -21
+        enabled: true
       columns:
-        enabled: true
         weight: -28
+        enabled: true
       content_cards:
-        enabled: true
         weight: -23
-      from_library:
         enabled: true
+      from_library:
         weight: 21
+        enabled: true
       gallery:
         weight: -25
         enabled: false
@@ -73,14 +73,14 @@ settings:
         weight: -19
         enabled: false
       image:
-        enabled: true
         weight: -26
+        enabled: true
       liftup_with_image:
-        enabled: true
         weight: -18
-      list_of_links:
         enabled: true
+      list_of_links:
         weight: -24
+        enabled: true
       list_of_links_item:
         weight: -17
         enabled: false
@@ -91,8 +91,8 @@ settings:
         weight: 30
         enabled: false
       remote_video:
-        enabled: true
         weight: 32
+        enabled: true
       text:
         weight: -29
         enabled: false

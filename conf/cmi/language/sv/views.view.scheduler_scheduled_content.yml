@@ -1,4 +1,4 @@
-label: 'Scheduled content'
+label: 'Schemalagt innehåll'
 display:
   default:
     display_options:
@@ -23,7 +23,7 @@ display:
           label: Titel
           separator: ', '
         type:
-          label: 'Content Type'
+          label: Innehållstyp
           separator: ', '
         name:
           label: Författare
@@ -35,10 +35,10 @@ display:
             format_custom_false: 'Ej publicerad'
           separator: ', '
         publish_on:
-          label: 'Publish on'
+          label: 'Publicera den'
           separator: ', '
         unpublish_on:
-          label: 'Unpublish on'
+          label: 'Avpublicera den'
           separator: ', '
         operations:
           label: Funktioner
@@ -62,19 +62,19 @@ display:
         langcode:
           expose:
             label: Språk
-      title: 'Scheduled Content'
-    display_title: Master
+      title: 'Schemalagt innehåll'
+    display_title: Huvud
   overview:
     display_options:
       menu:
-        title: Scheduled
+        title: Schemalagd
       tab_options:
         title: Innehåll
-    display_title: 'Content Overview'
+    display_title: Innehållsöversikt
   user_page:
     display_options:
       menu:
-        title: Scheduled
+        title: Schemalagd
       tab_options:
         title: Innehåll
       arguments:

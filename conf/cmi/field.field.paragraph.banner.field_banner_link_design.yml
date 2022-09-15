@@ -13,8 +13,8 @@ id: paragraph.banner.field_banner_link_design
 field_name: field_banner_link_design
 entity_type: paragraph
 bundle: banner
-label: 'Link design'
-description: 'Choose what kind of design you want to use for the link button. If you don''t add a link to the banner you can ignore this field.'
+label: 'Linkin tyyli'
+description: 'Valitse minkälaisen tyylin haluat linkkipainikkeelle. Jos et lisää banneriin linkkiä voit jättää tämän valinnan huomiotta.'
 required: true
 translatable: false
 default_value:

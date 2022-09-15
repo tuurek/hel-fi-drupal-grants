@@ -10,8 +10,8 @@ third_party_settings:
 _core:
   default_config_hash: Y3YB77frfRg61q6wyiwlydBQeAkhme2vM_Y-iRj8pug
 id: chart
-label: Chart
+label: Kaavio
 icon_uuid: null
 icon_default: null
-description: 'With Chart paragraph content producer can add an embedded chart from https://app.powerbi.com.'
+description: 'Kaavio lohkolla voit lisätä upotettavan kaavion Power BI -palveluista.'
 behavior_plugins: {  }

@@ -8,7 +8,7 @@ dependencies:
 _core:
   default_config_hash: tRylWJSJK7hdRcmTxsffZOTS9BrButW2HHWXToXNxO0
 id: gallery_thumbnail
-label: 'Gallery thumbnail'
+label: 'Gallerian pikkukuva'
 image_style_mappings:
   -
     image_mapping_type: image_style

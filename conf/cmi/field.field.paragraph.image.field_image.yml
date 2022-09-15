@@ -12,8 +12,8 @@ id: paragraph.image.field_image
 field_name: field_image
 entity_type: paragraph
 bundle: image
-label: 'Image file'
-description: 'Add the image file that you want to use from media-library.'
+label: Kuvatiedosto
+description: 'Lisää haluamasi kuvatiedosto tähän media-kirjastosta.'
 required: true
 translatable: false
 default_value: {  }
