@@ -1,6 +1,6 @@
 display:
   default:
-    display_title: Master
+    display_title: Huvud
     display_options:
       exposed_form:
         options:
@@ -25,7 +25,7 @@ display:
           label: '#'
           separator: ', '
         in_draft:
-          label: Draft
+          label: Utkast
           separator: ', '
         created:
           label: Skapad
@@ -52,7 +52,7 @@ display:
           label: '#'
           separator: ', '
         in_draft:
-          label: Draft
+          label: Utkast
           separator: ', '
         sticky:
           label: Klistrad
@@ -64,7 +64,7 @@ display:
           label: Skapad
           separator: ', '
         completed:
-          label: Completed
+          label: Slutförd
           separator: ', '
         remote_addr:
           label: IP-adress
@@ -87,7 +87,7 @@ display:
           label: '#'
           separator: ', '
         in_draft:
-          label: Draft
+          label: Utkast
           separator: ', '
         sticky:
           label: Klistrad
@@ -99,7 +99,7 @@ display:
           label: Skapad
           separator: ', '
         completed:
-          label: Completed
+          label: Slutförd
           separator: ', '
         remote_addr:
           label: IP-adress
@@ -124,7 +124,7 @@ display:
           label: '#'
           separator: ', '
         in_draft:
-          label: Draft
+          label: Utkast
           separator: ', '
         sticky:
           label: Klistrad
@@ -136,7 +136,7 @@ display:
           label: Skapad
           separator: ', '
         completed:
-          label: Completed
+          label: Slutförd
           separator: ', '
         remote_addr:
           label: IP-adress

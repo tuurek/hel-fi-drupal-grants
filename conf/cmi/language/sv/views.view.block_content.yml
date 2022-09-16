@@ -1,19 +1,19 @@
-label: 'Custom block library'
-description: 'Find and manage custom blocks.'
+label: 'Bibliotek med anpassade block'
+description: 'Hitta och hantera anpassade block.'
 display:
   default:
     display_title: Förvald
     display_options:
-      title: 'Custom block library'
+      title: 'Bibliotek med anpassade block'
       fields:
         info:
-          label: 'Block description'
+          label: Blockbeskrivning
           separator: ', '
         type:
-          label: 'Block type'
+          label: 'Typ av block'
           separator: ', '
         changed:
-          label: Updated
+          label: Uppdaterad
         operations:
           label: Funktioner
       pager:
@@ -34,16 +34,16 @@ display:
           sort_desc_label: Fallande
       empty:
         area_text_custom:
-          content: 'There are no custom blocks available.'
+          content: 'Det finns inga anpassade block tillgängliga.'
       filters:
         info:
           expose:
-            label: 'Block description'
+            label: Blockbeskrivning
         type:
           expose:
-            label: 'Block type'
+            label: 'Typ av block'
   page_1:
     display_title: Sida
     display_options:
       menu:
-        title: 'Custom block library'
+        title: 'Bibliotek med anpassade block'

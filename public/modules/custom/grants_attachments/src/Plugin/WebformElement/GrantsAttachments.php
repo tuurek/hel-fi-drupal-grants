@@ -190,37 +190,50 @@ class GrantsAttachments extends WebformCompositeBase {
       return [];
     }
 
+    // This notes that we have uploaded file in process.
     if (isset($value['attachment']) && $value['attachment'] !== NULL) {
       // Load file.
       /** @var \Drupal\file\FileInterface|null $file */
       $file = \Drupal::entityTypeManager()
         ->getStorage('file')
         ->load($value['attachment']);
-
-      $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
+      // file is found, then show filename.
+      if ($file) {
+        $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
+      }
     }
 
+    // Add filename if it has been uploaded earlier
     if (isset($value["fileName"])) {
       $lines[] = $value["fileName"];
     }
+    elseif (isset($value["attachmentName"])) {
+      $lines[] = $value["attachmentName"];
+    }
+    else {
+      // And if not, then show other fields, which cannot be selected while attachment file exists.
+      if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' || $value["isDeliveredLater"] === '1')) {
+        $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
+      }
+      if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' || $value["isIncludedInOtherFile"] === '1')) {
+        $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
+      }
+    }
 
-    if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' || $value["isDeliveredLater"] === '1')) {
-      $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
-    }
-    if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' || $value["isIncludedInOtherFile"] === '1')) {
-      $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
-    }
     if (isset($value["description"]) && (isset($element["#description"]) && $element["#description"] == 'muu_liite')) {
       $lines[] = $value["description"];
     }
 
-    // @todo Integraatio lisää tiedostonimeen oman prefixin, tän pitäs tukea sitä.
-    if (isset($value["fileName"])) {
-      if (in_array($value["fileName"], $attachmentEvents["event_targets"])) {
+    // If filename or attachmentname is set, print out upload status from events.
+    if ((isset($value["fileName"]) && !empty($value["fileName"])) || (isset($value["attachmentName"]) && !empty($value["attachmentName"]))) {
+      if (isset($value["attachmentName"]) && in_array($value["attachmentName"], $attachmentEvents["event_targets"])) {
         $lines[] = '<span class="ikoniluokka">Upload OK</span>';
       }
+      elseif (isset($value["fileName"]) && in_array($value["fileName"], $attachmentEvents["event_targets"])) {
+        $lines[] = '<span class="upload-ok-icon">Upload OK</span>';
+      }
       else {
-        $lines[] = 'File missing.';
+        $lines[] = '<span class="upload-fail-icon">Upload pending / file missing.</span>';
       }
     }
 

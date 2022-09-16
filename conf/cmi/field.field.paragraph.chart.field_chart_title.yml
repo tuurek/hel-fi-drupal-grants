@@ -11,7 +11,7 @@ id: paragraph.chart.field_chart_title
 field_name: field_chart_title
 entity_type: paragraph
 bundle: chart
-label: Title
+label: Otsikko
 description: ''
 required: false
 translatable: false

@@ -11,7 +11,7 @@ use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvService;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\grants_mandate\CompanySelectException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -139,10 +139,7 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
 
     // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      $destination = $this->request->getRequestUri();
-      $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
-      $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      $redirectResponse->send();
+      throw new CompanySelectException('User not authorised');
     }
 
     $helsinkiProfileData = $this->helfiHelsinkiProfiiliUserdata->getUserProfileData();
@@ -176,7 +173,7 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
             $submissionMessages = ApplicationHandler::parseMessages($submissionData, TRUE);
             $messages += $submissionMessages;
 
-            $ts = strtotime($submissionData['form_timestamp']);
+            $ts = strtotime($submissionData['form_timestamp_created']);
             $submissions[$ts] = $submissionData;
 
           }

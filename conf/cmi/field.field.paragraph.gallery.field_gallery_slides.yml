@@ -14,8 +14,8 @@ id: paragraph.gallery.field_gallery_slides
 field_name: field_gallery_slides
 entity_type: paragraph
 bundle: gallery
-label: 'Gallery slides'
-description: 'Create gallery slides here by choosing image from media library and optionally writing a caption to go with it.'
+label: 'Gallerian diat'
+description: 'Luo dia galleriaan valitsemalla kuva media-kirjastosta ja  kirjoita sille halutessasi kuvateksti.'
 required: true
 translatable: false
 default_value: {  }

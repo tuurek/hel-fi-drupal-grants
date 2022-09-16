@@ -5,8 +5,8 @@ dependencies: {  }
 _core:
   default_config_hash: JJbV-c48oaLAnXbQQmvKk3j5QaOWCX84DFicAqITi68
 id: list_of_links_item
-label: 'List of links item'
+label: Linkki
 icon_uuid: null
 icon_default: null
-description: 'One item - a link with metadata - of list of links.'
+description: 'Yksittäinen linkki lisätietoineen linkkilistalohkoon.'
 behavior_plugins: {  }

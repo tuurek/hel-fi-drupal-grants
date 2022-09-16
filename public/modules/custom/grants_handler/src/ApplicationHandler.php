@@ -27,8 +27,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\grants_mandate\CompanySelectException;
 
 /**
  * ApplicationUploader service.
@@ -551,14 +550,11 @@ class ApplicationHandler {
 
     /** @var \Drupal\grants_metadata\AtvSchema $atvSchema */
     $grantsProfileService = \Drupal::service('grants_profile.service');
-    $destination = \Drupal::request()->getRequestUri();
     $selectedCompany = $grantsProfileService->getSelectedCompany();
 
     // If no company selected, no mandates no access.
     if ($selectedCompany == NULL) {
-      $redirectUrl = new Url('grants_mandate.mandateform', [], ['destination' => $destination]);
-      $redirectResponse = new RedirectResponse($redirectUrl->toString());
-      $redirectResponse->send();
+      throw new CompanySelectException('User not authorised');
     }
 
     if ($document == NULL) {
@@ -1031,7 +1027,7 @@ class ApplicationHandler {
           try {
             $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
             $submissionData = $submissionObject->getData();
-            $ts = strtotime($submissionData['form_timestamp']);
+            $ts = strtotime($submissionData['form_timestamp_created']);
             if ($themeHook !== '') {
               $submission = [
                 '#theme' => $themeHook,

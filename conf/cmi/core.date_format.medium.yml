@@ -5,6 +5,6 @@ dependencies: {  }
 _core:
   default_config_hash: haMnRrhw_MHcbhSUNVxrURYqqHmAELhJmaH3o88id84
 id: medium
-label: 'Default medium date'
+label: 'Päivämäärä keskipitkässä muodossa'
 locked: false
-pattern: 'jS F Y'
+pattern: 'j. F\t\a Y'

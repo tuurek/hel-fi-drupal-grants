@@ -14,7 +14,7 @@ field_name: field_helfi_chart_url
 entity_type: media
 bundle: helfi_chart
 label: URL
-description: "Enter the Chart URL. Should be in format <i>https://app.powerbi.com/view?r=eyJrIjo..</i>.\r\n"
+description: 'Syötä kaavion URL-osoite muodossa <i>https://app.powerbi.com/view?r=eyJrIjo..</i>.'
 required: true
 translatable: false
 default_value: {  }

@@ -7,6 +7,6 @@ dependencies:
 _core:
   default_config_hash: 4bWYX7aQyveXIE-cBSeWwmAlN0Q_p5b_1Ml88xlMniM
 id: media.token
-label: Token
+label: Muuttuja
 targetEntityType: media
 cache: true

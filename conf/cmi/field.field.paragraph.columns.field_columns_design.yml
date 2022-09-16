@@ -13,8 +13,8 @@ id: paragraph.columns.field_columns_design
 field_name: field_columns_design
 entity_type: paragraph
 bundle: columns
-label: Design
-description: 'Choose the paragraph design from the dropdown.'
+label: Tyyli
+description: 'Valitse lohkon tyyli alasvetovalikosta.'
 required: true
 translatable: false
 default_value:

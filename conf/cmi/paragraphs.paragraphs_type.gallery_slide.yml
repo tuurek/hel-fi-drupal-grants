@@ -5,7 +5,7 @@ dependencies: {  }
 _core:
   default_config_hash: L8uP-RIaTgYX_jt7seKb2nUAQgfc7rED0pP30-QZhAo
 id: gallery_slide
-label: 'Gallery slide'
+label: 'Gallerian dia'
 icon_uuid: null
 icon_default: null
 description: 'One slide in the gallery that can include image and caption.'

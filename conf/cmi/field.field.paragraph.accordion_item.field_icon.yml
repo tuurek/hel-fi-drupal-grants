@@ -13,7 +13,7 @@ id: paragraph.accordion_item.field_icon
 field_name: field_icon
 entity_type: paragraph
 bundle: accordion_item
-label: Icon
+label: Ikoni
 description: ''
 required: false
 translatable: true

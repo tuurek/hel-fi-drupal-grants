@@ -2,20 +2,20 @@ settings:
   default_submit_button_label: Skicka
   default_reset_button_label: Återställ
   default_delete_button_label: Radera
-  default_wizard_start_label: Start
-  default_wizard_confirmation_label: Complete
+  default_wizard_start_label: Från
+  default_wizard_confirmation_label: Slutförd
   default_preview_next_button_label: Förhandsgranska
   default_preview_label: Förhandsgranska
-  default_draft_button_label: 'Save Draft'
-  default_draft_saved_message: 'Submission saved. You may return to this form later and it will restore the current values.'
-  default_previous_submission_message: 'You have already submitted this webform. <a href="#">View your previous submission</a>.'
+  default_draft_button_label: 'Spara utkast'
+  default_draft_saved_message: 'Formulär sparat. Du kan återvända till detta formulär senare och fortsätta inmatningen.'
+  default_previous_submission_message: 'Du har redan skickat in detta formulär. <a href="#">Se ditt tidigare inlägg</a>.'
   dialog_options:
     narrow:
       title: Smal
     normal:
       title: Normal
     wide:
-      title: Wide
+      title: Bred
 element:
   empty_message: '-'
   default_more_title: Mer

@@ -5,7 +5,7 @@ dependencies: {  }
 _core:
   default_config_hash: 2nmW6lhO-eiXsqMpNi3HbXNvEn3eawAdJnIY09T13iQ
 id: global
-label: Global
+label: Yleinen
 tags:
   canonical_url: '[current-page:url]'
   image_src: '[site:base-url]/themes/custom/hdbt/src/images/og-global.png'

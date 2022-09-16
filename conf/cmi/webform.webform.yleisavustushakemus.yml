@@ -104,7 +104,7 @@ elements: |-
         '#required': true
     contact_person_email_section:
       '#type': webform_section
-      '#title': 'Sähköposti'
+      '#title': Sähköposti
       contact_markup:
         '#type': webform_markup
         '#markup': 'Ilmoita tässä sellainen yhteisön sähköpostiosoite, jota luetaan aktiivisesti. Sähköpostiin lähetetään avustushakemukseen liittyviä yhteydenottoja esim. lisäselvitys- ja täydennyspyyntöjä.'
@@ -365,7 +365,6 @@ elements: |-
             '#counter_type': character
             '#counter_maximum': 1000
             '#counter_maximum_message': '%d/1000 merkkiä jäljellä'
-        '#required': true
     kaupungilta_saadut_lainat_ja_takaukset:
       '#type': webform_section
       '#title': 'Kaupungilta saadut lainat ja takaukset'

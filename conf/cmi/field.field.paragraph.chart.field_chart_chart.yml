@@ -12,7 +12,7 @@ id: paragraph.chart.field_chart_chart
 field_name: field_chart_chart
 entity_type: paragraph
 bundle: chart
-label: Chart
+label: Kaavio
 description: ''
 required: false
 translatable: false
