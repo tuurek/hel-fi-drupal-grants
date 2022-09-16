@@ -58,5 +58,5 @@ function grants_oma_asiointi_preprocess_block(&$vars) {
  */
 function grants_oma_asiointi_preprocess_page_title(&$variables) {
   $variables['initials'] = 'AS';
-  $variables['colorscheme'] = 'green';
+  $variables['colorscheme'] = '0';
 }

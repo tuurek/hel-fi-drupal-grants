@@ -22,6 +22,11 @@
 ]
 %}
 <div class="container">
+  {{ statusTag }}
+  <div>
+    <h2 class="webform-submission__application_id_header">{{ "Application number"|t }}</h2>
+    <div>{{ applicationID }}</div>
+  </div>
 <div{{ attributes.addClass(classes) }}>
   <div id="message-form-wrapper">
     {{ messages }}

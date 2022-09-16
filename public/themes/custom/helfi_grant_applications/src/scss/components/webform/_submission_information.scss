@@ -1,6 +1,8 @@
 .webform-submission-information {
   background: var(--color-silver-light);
   padding: var(--spacing-l);
+  margin-top: var(--spacing-3-xl);
+
   h4 {
     margin-top: 0;
   }
@@ -29,6 +31,7 @@
         ul {
           padding-left: 0;
           list-style-type: none;
+          margin-bottom: 0;
           li {
             padding: 0;
             margin: 0;

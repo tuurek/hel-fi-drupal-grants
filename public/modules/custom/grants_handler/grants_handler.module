@@ -154,6 +154,11 @@ function grants_handler_theme(): array {
         'message' => NULL,
       ],
     ],
+    'message_notification_item' => [
+      'variables' => [
+        'message' => NULL,
+      ],
+    ],
   ];
 }
 
@@ -989,9 +994,11 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  // @todo these icon should really not go through t()
-  $variables['viewApplicationLink'] = Link::fromTextAndUrl(t('View application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $viewApplicationUrl);
-  $variables['editApplicationLink'] = Link::fromTextAndUrl(t('Edit application <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editApplicationUrl);
+  $editApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $viewApplicationLinkText = Markup::create(t('View application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+
+  $variables['viewApplicationLink'] = Link::fromTextAndUrl($viewApplicationLinkText, $viewApplicationUrl);
+  $variables['editApplicationLink'] = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
 
   try {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
@@ -1077,18 +1084,39 @@ function grants_handler_preprocess_message_list_item(&$variables) {
       'message_id' => $message['messageId'],
       'application_number' => $message['caseId'],
     ],
-    [
-      'query' => [
-        'destination' => $currentDestination,
-      ],
-    ]);
+      [
+        'query' => [
+          'destination' => $currentDestination,
+        ],
+      ]);
     $markReadLink = Link::fromTextAndUrl(t('Mark read'), $markReadUrl);
   }
   else {
     $markReadLink = '';
   }
+  $variables['sender'] = t('Oma viesti');
+  if ($message['sentBy'] == 'Avustusten kasittelyjarjestelma') {
+    $variables['sender'] = t('Applications Helsinki');
+    $variables['markReadLink'] = $markReadLink;
+  }
+}
 
-  $variables['markReadLink'] = $markReadLink;
+/**
+ * Implements hook_preprocess().
+ */
+function grants_handler_preprocess_message_notification_item(&$variables) {
+  $currentUri = \Drupal::request()->getUri();
+  $currentHost = \Drupal::request()->getSchemeAndHttpHost();
+
+  $message = $variables['message'];
+
+  $message_url = Url::fromRoute('grants_handler.view_application', [
+    'submission_id' => $message['caseId']
+  ]);
+
+  $message_link = Link::fromTextAndUrl($message['caseId'], $message_url);
+
+  $variables['message_link'] = $message_link;
 }
 
 /**
@@ -1139,8 +1167,8 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
       ],
     ]
   );
-  $printApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
-  $editApplicationLink = Link::fromTextAndUrl($printApplicationLinkText, $editApplicationUrl);
+  $editApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLink = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
 
   $copyApplicationUrl = Url::fromRoute(
     'grants_handler.copy_application',
@@ -1155,7 +1183,6 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     ]
   );
   $copyApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--copy hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Copy application'));
-
   $copyApplicationLink = Link::fromTextAndUrl($copyApplicationLinkText, $copyApplicationUrl);
 
   $variables['printApplicationLink'] = $printApplicationLink;
