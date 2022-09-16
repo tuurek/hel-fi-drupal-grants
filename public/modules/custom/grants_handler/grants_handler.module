@@ -165,6 +165,13 @@ function grants_handler_entity_type_alter(array &$entity_types) {
 }
 
 /**
+ * {@inheritdoc}
+ */
+function grants_handler_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'grants_handler/application-status-check';
+}
+
+/**
  * Alter webform elements.
  *
  * @param array $element
@@ -443,7 +450,7 @@ function _grants_handler_missing_data(
         <span>' . $str1 . '</span>
       </div>
       <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-  ->toString() . ' ' . $str3 . '</div>
+    ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -1024,6 +1031,8 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
       $statusStrings = $config->get('statusStrings');
       $variables['statusStringHumanReadable'] = t('%status', ['%status' => $statusStrings[$submissionData['status']]]);
       $variables['statusString'] = $submissionData['status'];
+      $variables['applicationNumber'] = $submissionData['application_number'];
+
     }
     else {
       \Drupal::logger('grants_handler')

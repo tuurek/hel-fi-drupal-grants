@@ -348,6 +348,12 @@ class GrantsHandler extends WebformHandlerBase {
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
+    // if no helsinkiprofiili, don't process any further.
+    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
+      ($currentUser->id() != '1') || $currentUser->id() == '1') {
+      return;
+    }
+
     if ($selectedCompany == NULL) {
       throw new CompanySelectException('User not authorised');
     }
@@ -356,69 +362,6 @@ class GrantsHandler extends WebformHandlerBase {
 
     $this->setFromThirdPartySettings($webform);
 
-    // \Drupal::messenger()->addMessage
-    // ('Message in GrantsHandler::preCreate()');
-    $this->applicantType = $this->grantsProfileService->getApplicantType();
-    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
-      ($currentUser->id() != '1')) {
-
-      // $redirectApplicantType = FALSE;
-
-      // if ($this->applicantType === NULL) {
-      //   $this->messenger()
-      //     ->addError($this->t("You need to select company you're acting behalf of."));
-      //   $redirectApplicantType = TRUE;
-      // }
-
-      // if ($selectedCompany == NULL) {
-      //   $this->messenger()
-      //     ->addError($this->t("You need to select company you're acting behalf of."));
-      //   $redirectApplicantType = TRUE;
-      // }
-
-      // if ($redirectApplicantType === TRUE) {
-      //   $url = Url::fromRoute('grants_mandate.mandateform', [
-      //     'destination' => $values["uri"],
-      //   ])
-      //     ->setAbsolute()
-      //     ->toString();
-      //   $response = new RedirectResponse($url);
-      //   $response->send();
-      // }
-
-      // $redirectToProfile = FALSE;
-
-      // if (empty($grantsProfile['officials'])) {
-      //   $this->messenger()
-      //     ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-      //   $redirectToProfile = TRUE;
-      // }
-      // if (empty($grantsProfile['addresses'])) {
-      //   $this->messenger()
-      //     ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-      //   $redirectToProfile = TRUE;
-      // }
-      // if (empty($grantsProfile['bankAccounts'])) {
-      //   $this->messenger()
-      //     ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-      //   $redirectToProfile = TRUE;
-      // }
-
-      // if ($redirectToProfile === TRUE) {
-      //   $url = Url::fromRoute('grants_profile.show', [
-      //     'destination' => $values["uri"],
-      //   ])
-      //     ->setAbsolute()
-      //     ->toString();
-      //   $response = new RedirectResponse($url);
-      //   $response->send();
-      // }
-
-    }
-    else {
-      $this->messenger()
-        ->addError($this->t("No prefill for admin"));
-    }
   }
 
   /**

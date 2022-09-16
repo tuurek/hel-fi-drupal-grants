@@ -66,6 +66,7 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
       !in_array('helsinkiprofiili', $currentUserRoles) &&
       !str_contains($uri, '/asiointirooli-valtuutus') &&
       !str_contains($uri, '/user/login') &&
+      !str_contains($uri, '/user/reset') &&
       !str_contains($uri, '/openid-connect/tunnistamo')
       ) {
       return TRUE;
@@ -82,7 +83,8 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
       in_array('helsinkiprofiili', $currentUserRoles) &&
       $selectedCompany == NULL &&
       !str_contains($uri, '/asiointirooli-valtuutus') &&
-      !str_contains($uri, '/user/login')&&
+      !str_contains($uri, '/user/login') &&
+      !str_contains($uri, '/user/reset') &&
       !str_contains($uri, '/openid-connect/tunnistamo')
       ) {
       return TRUE;
