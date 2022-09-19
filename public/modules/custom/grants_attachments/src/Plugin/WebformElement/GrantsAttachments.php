@@ -210,17 +210,16 @@ class GrantsAttachments extends WebformCompositeBase {
     elseif (isset($value["attachmentName"])) {
       $lines[] = $value["attachmentName"];
     }
-    else {
-      // And if not, then show other fields, which cannot be selected
-      // while attachment file exists.
-      if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' ||
+
+    // And if not, then show other fields, which cannot be selected
+    // while attachment file exists.
+    if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' ||
        $value["isDeliveredLater"] === '1')) {
-        $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
-      }
-      if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' ||
+      $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
+    }
+    if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' ||
       $value["isIncludedInOtherFile"] === '1')) {
-        $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
-      }
+      $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
     }
 
     if (isset($value["description"]) && (isset($element["#description"]) &&
