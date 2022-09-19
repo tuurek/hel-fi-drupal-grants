@@ -26,3 +26,11 @@ application-search-sort:
     js/application-search.js: { }
   dependencies:
     - core/drupalSettings
+
+# StatusCheck
+application-status-check:
+  version: 1.x
+  js:
+    js/application-status-check.js: { }
+  dependencies:
+    - core/drupalSettings

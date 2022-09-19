@@ -55,7 +55,7 @@
   function clickEventListener(event) {
     var tab = event.target;
     console.log(tab);
-    activateTab(tab, false);
+    activateTab(tab, FALSE);
   }
 
   // Handle keydown on tabs
@@ -106,16 +106,16 @@
   function determineOrientation(event) {
     var key = event.keyCode;
     var vertical = tablist.getAttribute('aria-orientation') == 'vertical';
-    var proceed = false;
+    var proceed = FALSE;
 
     if (vertical) {
       if (key === keys.up || key === keys.down) {
         event.preventDefault();
-        proceed = true;
+        proceed = TRUE;
       }
     } else {
       if (key === keys.left || key === keys.right) {
-        proceed = true;
+        proceed = TRUE;
       }
     }
 
@@ -149,7 +149,7 @@
 
   // Activates any given tab panel
   function activateTab(tab, setFocus) {
-    setFocus = setFocus || true;
+    setFocus = setFocus || TRUE;
     // Deactivate all other tabs
     deactivateTabs();
 
@@ -253,7 +253,7 @@
     var focused = document.activeElement;
 
     if (target === focused) {
-      activateTab(target, false);
+      activateTab(target, FALSE);
     }
   }
 })();

@@ -197,13 +197,13 @@ class GrantsAttachments extends WebformCompositeBase {
       $file = \Drupal::entityTypeManager()
         ->getStorage('file')
         ->load($value['attachment']);
-      // file is found, then show filename.
+      // File is found, then show filename.
       if ($file) {
         $lines[] = ($file !== NULL) ? $file->get('filename')->value : '';
       }
     }
 
-    // Add filename if it has been uploaded earlier
+    // Add filename if it has been uploaded earlier.
     if (isset($value["fileName"])) {
       $lines[] = $value["fileName"];
     }
@@ -211,21 +211,27 @@ class GrantsAttachments extends WebformCompositeBase {
       $lines[] = $value["attachmentName"];
     }
     else {
-      // And if not, then show other fields, which cannot be selected while attachment file exists.
-      if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' || $value["isDeliveredLater"] === '1')) {
+      // And if not, then show other fields, which cannot be selected
+      // while attachment file exists.
+      if (isset($value["isDeliveredLater"]) && ($value["isDeliveredLater"] === 'true' ||
+       $value["isDeliveredLater"] === '1')) {
         $lines[] = $element["#webform_composite_elements"]["isDeliveredLater"]["#title"]->render();
       }
-      if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' || $value["isIncludedInOtherFile"] === '1')) {
+      if (isset($value["isIncludedInOtherFile"]) && ($value["isIncludedInOtherFile"] === 'true' ||
+      $value["isIncludedInOtherFile"] === '1')) {
         $lines[] = $element["#webform_composite_elements"]["isIncludedInOtherFile"]["#title"]->render();
       }
     }
 
-    if (isset($value["description"]) && (isset($element["#description"]) && $element["#description"] == 'muu_liite')) {
+    if (isset($value["description"]) && (isset($element["#description"]) &&
+      $element["#description"] == 'muu_liite')) {
       $lines[] = $value["description"];
     }
 
-    // If filename or attachmentname is set, print out upload status from events.
-    if ((isset($value["fileName"]) && !empty($value["fileName"])) || (isset($value["attachmentName"]) && !empty($value["attachmentName"]))) {
+    // If filename or attachmentname is set, print out upload
+    // status from events.
+    if ((isset($value["fileName"]) && !empty($value["fileName"])) || (isset($value["attachmentName"]) &&
+    !empty($value["attachmentName"]))) {
       if (isset($value["attachmentName"]) && in_array($value["attachmentName"], $attachmentEvents["event_targets"])) {
         $lines[] = '<span class="ikoniluokka">Upload OK</span>';
       }

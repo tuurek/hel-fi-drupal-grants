@@ -348,6 +348,12 @@ class GrantsHandler extends WebformHandlerBase {
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
+    // If no helsinkiprofiili, don't process any further.
+    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
+      ($currentUser->id() != '1') || $currentUser->id() == '1') {
+      return;
+    }
+
     if ($selectedCompany == NULL) {
       throw new CompanySelectException('User not authorised');
     }
@@ -356,69 +362,6 @@ class GrantsHandler extends WebformHandlerBase {
 
     $this->setFromThirdPartySettings($webform);
 
-    // \Drupal::messenger()->addMessage
-    // ('Message in GrantsHandler::preCreate()');
-    $this->applicantType = $this->grantsProfileService->getApplicantType();
-    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
-      ($currentUser->id() != '1')) {
-
-      // $redirectApplicantType = FALSE;
-
-      // if ($this->applicantType === NULL) {
-      //   $this->messenger()
-      //     ->addError($this->t("You need to select company you're acting behalf of."));
-      //   $redirectApplicantType = TRUE;
-      // }
-
-      // if ($selectedCompany == NULL) {
-      //   $this->messenger()
-      //     ->addError($this->t("You need to select company you're acting behalf of."));
-      //   $redirectApplicantType = TRUE;
-      // }
-
-      // if ($redirectApplicantType === TRUE) {
-      //   $url = Url::fromRoute('grants_mandate.mandateform', [
-      //     'destination' => $values["uri"],
-      //   ])
-      //     ->setAbsolute()
-      //     ->toString();
-      //   $response = new RedirectResponse($url);
-      //   $response->send();
-      // }
-
-      // $redirectToProfile = FALSE;
-
-      // if (empty($grantsProfile['officials'])) {
-      //   $this->messenger()
-      //     ->addError($this->t("You must have atleast one official for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-      //   $redirectToProfile = TRUE;
-      // }
-      // if (empty($grantsProfile['addresses'])) {
-      //   $this->messenger()
-      //     ->addError($this->t("You must have atleast one address for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-      //   $redirectToProfile = TRUE;
-      // }
-      // if (empty($grantsProfile['bankAccounts'])) {
-      //   $this->messenger()
-      //     ->addError($this->t("You must have atleast one bank account for @businessId", ['@businessId' => $selectedCompany["identifier"]]), TRUE);
-      //   $redirectToProfile = TRUE;
-      // }
-
-      // if ($redirectToProfile === TRUE) {
-      //   $url = Url::fromRoute('grants_profile.show', [
-      //     'destination' => $values["uri"],
-      //   ])
-      //     ->setAbsolute()
-      //     ->toString();
-      //   $response = new RedirectResponse($url);
-      //   $response->send();
-      // }
-
-    }
-    else {
-      $this->messenger()
-        ->addError($this->t("No prefill for admin"));
-    }
   }
 
   /**
@@ -658,13 +601,12 @@ class GrantsHandler extends WebformHandlerBase {
 
     $webform = $webform_submission->getWebform();
 
-    // if all page validation is in progress, skip further
+    // If all page validation is in progress, skip further
     // execution of this hook to avoid loops
     // if ($webform->getState('validateAllPages') == TRUE) {
     //   // parent::validateForm($form, $form_state, $webform_submission);
     //   return;
-    // }
-
+    // }.
     $this->setTotals();
 
     // Merge form sender data from handler.
@@ -692,7 +634,7 @@ class GrantsHandler extends WebformHandlerBase {
     $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
 
-    // new application.
+    // New application.
     if (empty($this->submittedFormData['application_number'])) {
       $this->submittedFormData['form_timestamp_created'] = $dt->format('Y-m-d\TH:i:s');
     }
@@ -707,7 +649,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set form update value based on new & old status + Avus2 logic.
     $this->submittedFormData["form_update"] = $this->getFormUpdate();
 
-    // parse 3rd party settings from webform.
+    // Parse 3rd party settings from webform.
     $this->setFromThirdPartySettings($webform_submission->getWebform());
 
     // Figure out status for this application.
@@ -721,7 +663,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    // validate all pages in separate function
+    // Validate all pages in separate function
     // we don't want page by page validation bc we need all errors always.
     // saving them to db does not solve issue when we're
     // interested of current errors also.
@@ -730,8 +672,7 @@ class GrantsHandler extends WebformHandlerBase {
     //   $form_state,
     //   $triggeringElement,
     //   $form
-    //   );
-
+    //   );.
     $current_errors = $webform->getState('current_errors');
 
     // If ($triggeringElement == '::next') {
@@ -762,7 +703,7 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           // If we HAVE errors, then refresh them from the.
-          // TODO: fix validation error messages.
+          // @todo fix validation error messages.
           $this->messenger()->addError('Validation failed, please check inputs. This feature will get better.');
           // $this->grantsFormNavigationHelper->validateAllPages(
           //   $webform_submission,

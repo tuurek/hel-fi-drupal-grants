@@ -15,7 +15,6 @@ use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
-use Drupal\grants_attachments\AttachmentHandler;
 
 /**
  * Defines a helper class for the webform navigation module.
@@ -620,6 +619,10 @@ class GrantsHandlerNavigationHelper {
    *   A webform submission.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
+   * @param string $triggeringElement
+   *   Button clicked in form.
+   * @param array $form
+   *   Form data in array.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
@@ -637,10 +640,10 @@ class GrantsHandlerNavigationHelper {
     // Validate and log pages we have yet to visit.
     $webform = $webform_submission->getWebform();
 
-    // set flag to skip manual validation in validateForm
+    // Set flag to skip manual validation in validateForm.
     $webform->setState('validateAllPages', TRUE);
 
-    // loop pages
+    // Loop pages.
     foreach ($webform->getPages() as $key => $page) {
       // Log and validate all the pages.
       if ($key != 'webform_confirmation' && empty($page['#states'])) {
@@ -668,8 +671,7 @@ class GrantsHandlerNavigationHelper {
     //     $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
     //     $triggeringElement
     //   );
-    // }
-
+    // }.
     // $errors = $form_state->getErrors();
     // $webform->setState('current_errors', $errors);
     // Reset the submission to it's original settings.
@@ -704,7 +706,7 @@ class GrantsHandlerNavigationHelper {
     // Lets make sure we don't create a validation loop.
     $new_form_state->set('validating', TRUE);
 
-    // need to have #parents element, or file validation errors.
+    // Need to have #parents element, or file validation errors.
     $new_form_state->setTriggeringElement(['#parents' => ['manual_validation']]);
 
     // Submit the form.
@@ -727,24 +729,22 @@ class GrantsHandlerNavigationHelper {
    *   All errors paged.
    */
   public function getPagedErrors(FormStateInterface $form_state, WebformSubmissionInterface $webform_submission): array {
-    // get form errors for this page
+    // Get form errors for this page.
     $form_errors = $form_state->getErrors();
 
-    // get saved errors
+    // Get saved errors
     // $paged_errors_1 = $this->getErrors($webform_submission);
-
     $paged_errors = [];
 
-    // merge saved errors with ones from this page.
+    // Merge saved errors with ones from this page.
     // foreach ($paged_errors as $page => $errors) {
     //   $form_errors = array_merge($form_errors, $errors);
-    // }
-
+    // }.
     $current_page = $webform_submission->getCurrentPage();
 
     foreach ($form_errors as $element => $error) {
       $base_element = explode('][', $element)[0];
-      // application_number
+      // application_number.
       $page = $this->getElementPage($webform_submission->getWebform(), $base_element);
       // Place error on current page if the page is empty.
       if (!empty($page) && is_string($page)) {
