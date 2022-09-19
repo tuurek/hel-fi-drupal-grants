@@ -42,10 +42,8 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
-   *
    * @param \Drupal\grants_profile\GrantsProfileService $grantsProfileService
    *   The profile service.
-   *
    * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The profile service.
    */
@@ -59,6 +57,15 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
     $this->currentUser = $currentUser;
   }
 
+  /**
+   * Check if user needs to be redirected to login page.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   Event from request.
+   *
+   * @return bool
+   *   If needs redirect or not.
+   */
   public function needsRedirectToLogin(GetResponseEvent $event) {
     $uri = $event->getRequest()->getRequestUri();
     $currentUserRoles = $this->currentUser->getRoles();
@@ -75,6 +82,15 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
     return FALSE;
   }
 
+  /**
+   * If user needs to be redirected to mandate page.
+   *
+   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   Event from request.
+   *
+   * @return bool
+   *   If needs redirect or not.
+   */
   public function needsRedirectToMandate(GetResponseEvent $event) {
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $uri = $event->getRequest()->getRequestUri();
@@ -106,7 +122,7 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // anonymous or missing user role.
+    // Anonymous or missing user role.
     if ($this->needsRedirectToLogin($event)) {
       $redirect = new TrustedRedirectResponse('/user/login');
       $event->setResponse(

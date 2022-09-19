@@ -207,7 +207,6 @@ trait ApplicationDefinitionTrait {
     // ->setRequired(TRUE)
     // ->addConstraint('NotBlank')
     // ->addConstraint('NotEmptyValue')
-
     $info['form_timestamp'] = DataDefinition::create('string')
       ->setRequired(TRUE)
       ->setLabel('formTimeStamp')

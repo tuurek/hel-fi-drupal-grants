@@ -2,7 +2,6 @@
 
 namespace Drupal\grants_oma_asiointi\Plugin\Block;
 
-use Drupal\Core\Url;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Symfony\Component\DependencyInjection\ContainerInterface;

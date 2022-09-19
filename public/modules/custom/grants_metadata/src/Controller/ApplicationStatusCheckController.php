@@ -60,7 +60,11 @@ class ApplicationStatusCheckController extends ControllerBase {
    *   Json representation of data.
    */
   public function build($submission_id = '') {
-    return new JsonResponse(['data' => $this->getData($submission_id), 'method' => 'GET', 'status' => 200]);
+    return new JsonResponse([
+      'data' => $this->getData($submission_id),
+      'method' => 'GET',
+      'status' => 200,
+    ]);
   }
 
   /**
@@ -70,6 +74,7 @@ class ApplicationStatusCheckController extends ControllerBase {
    *   Id of submission.
    *
    * @return array
+   *   Data from ATV.
    */
   public function getData($submission_id) {
 

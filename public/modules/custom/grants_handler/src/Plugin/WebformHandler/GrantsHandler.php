@@ -348,7 +348,7 @@ class GrantsHandler extends WebformHandlerBase {
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
-    // if no helsinkiprofiili, don't process any further.
+    // If no helsinkiprofiili, don't process any further.
     if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
       ($currentUser->id() != '1') || $currentUser->id() == '1') {
       return;
@@ -601,13 +601,12 @@ class GrantsHandler extends WebformHandlerBase {
 
     $webform = $webform_submission->getWebform();
 
-    // if all page validation is in progress, skip further
+    // If all page validation is in progress, skip further
     // execution of this hook to avoid loops
     // if ($webform->getState('validateAllPages') == TRUE) {
     //   // parent::validateForm($form, $form_state, $webform_submission);
     //   return;
-    // }
-
+    // }.
     $this->setTotals();
 
     // Merge form sender data from handler.
@@ -635,7 +634,7 @@ class GrantsHandler extends WebformHandlerBase {
     $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
     $this->submittedFormData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
 
-    // new application.
+    // New application.
     if (empty($this->submittedFormData['application_number'])) {
       $this->submittedFormData['form_timestamp_created'] = $dt->format('Y-m-d\TH:i:s');
     }
@@ -650,7 +649,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set form update value based on new & old status + Avus2 logic.
     $this->submittedFormData["form_update"] = $this->getFormUpdate();
 
-    // parse 3rd party settings from webform.
+    // Parse 3rd party settings from webform.
     $this->setFromThirdPartySettings($webform_submission->getWebform());
 
     // Figure out status for this application.
@@ -664,7 +663,7 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    // validate all pages in separate function
+    // Validate all pages in separate function
     // we don't want page by page validation bc we need all errors always.
     // saving them to db does not solve issue when we're
     // interested of current errors also.
@@ -673,8 +672,7 @@ class GrantsHandler extends WebformHandlerBase {
     //   $form_state,
     //   $triggeringElement,
     //   $form
-    //   );
-
+    //   );.
     $current_errors = $webform->getState('current_errors');
 
     // If ($triggeringElement == '::next') {
@@ -705,7 +703,7 @@ class GrantsHandler extends WebformHandlerBase {
         }
         else {
           // If we HAVE errors, then refresh them from the.
-          // TODO: fix validation error messages.
+          // @todo fix validation error messages.
           $this->messenger()->addError('Validation failed, please check inputs. This feature will get better.');
           // $this->grantsFormNavigationHelper->validateAllPages(
           //   $webform_submission,
