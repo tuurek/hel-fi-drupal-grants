@@ -169,6 +169,7 @@ function grants_handler_entity_type_alter(array &$entity_types) {
  */
 function grants_handler_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'grants_handler/application-status-check';
+  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()->getSchemeAndHttpHost();;
 }
 
 /**

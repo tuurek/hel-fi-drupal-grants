@@ -55,12 +55,20 @@ class ApplicationStatusCheckController extends ControllerBase {
 
   /**
    * Builds the response.
+   *
+   * @return Symfony\Component\HttpFoundation\JsonResponse
+   *   Json representation of data.
    */
   public function build($submission_id = '') {
     return new JsonResponse(['data' => $this->getData($submission_id), 'method' => 'GET', 'status' => 200]);
   }
 
   /**
+   * Run query to ATV rest endpoint & return metadata for document.
+   *
+   * @param string $submission_id
+   *   Id of submission.
+   *
    * @return array
    */
   public function getData($submission_id) {
@@ -68,15 +76,37 @@ class ApplicationStatusCheckController extends ControllerBase {
     $userData = $this->helsinkiProfiiliUserData->getUserData();
 
     if (empty($userData) || !isset($userData['sub'])) {
+      $this->getLogger('status_check_controller')
+        ->error('Status check, submission %application_number not found',
+        [
+          'application_number' => $submission_id,
+        ]
+      );
       return [];
     }
 
-    $userDocuments = $this->helfiAtv->getUserDocuments($userData['sub']);
+    $userDocuments = $this->helfiAtv->getUserDocuments($userData['sub'], $submission_id);
 
-    /** AtvDocument */
+    if (empty($userDocuments)) {
+      return [];
+    }
     $selectedDocument = reset($userDocuments);
 
-    return $selectedDocument->getStatusArray() ?? [];
+    $statusArray = $selectedDocument->getStatusArray();
+
+    if (empty($statusArray)) {
+      return [];
+    }
+
+    $config = \Drupal::config('grants_handler.settings');
+    $statusStrings = $config->get('statusStrings');
+
+    $statusArray['statusStringHumanReadable'] = strip_tags(
+      $this->t('%status',
+      ['%status' => $statusStrings[$statusArray['value']]])
+        ->render());
+
+    return $statusArray;
   }
 
 }
