@@ -330,7 +330,11 @@ class ApplicationController extends ControllerBase {
    * Returns a page title.
    */
   public function getTitle($submission_id): string {
-    return $submission_id;
+    $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
+    $submissionData = $submissionObject->getData();
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $title = ApplicationHandler::$applicationTypes[$submissionData["application_type"]][$language];
+    return $title;
   }
 
 }

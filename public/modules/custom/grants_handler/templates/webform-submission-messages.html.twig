@@ -20,14 +20,17 @@
 ]
 %}
 
-<div class="container">
+<div class="webform-submission-messages__wrapper">
     <h3>{{ 'Messages'|t }}</h3>
-
-    <div{{ attributes.addClass(classes) }}>
+    <p>{{ 'You can send a message to the handler of the application or provide a missing attachment'|t }}</p>
+    <div class="webform-submission-messages">
+      <h4>{{ 'Sent messages'|t }}</h4>
+      <hr/>
+      <div{{ attributes.addClass(classes) }}>
         {{ messages }}
-    </div>
-    <div{{ attributes.addClass(classes) }}>
+      </div>
+      <div{{ attributes.addClass(classes) }}>
         {{ message_form }}
+      </div>
     </div>
-
 </div>
