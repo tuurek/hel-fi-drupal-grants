@@ -434,9 +434,6 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
-    // $all_errors = $this->grantsFormNavigationHelper
-    // ->getAllErrors($webform_submission);
-    // $form['#errors'] = $all_errors;
     $form['#errors'] = $webform->getState('current_errors');
   }
 
@@ -684,7 +681,7 @@ class GrantsHandler extends WebformHandlerBase {
     // if ($triggeringElement == '::submitForm') {
     // }.
     if ($triggeringElement == '::submit') {
-      if (self::emptyRecursive($current_errors)) {
+      if ($current_errors === NULL || self::emptyRecursive($current_errors)) {
         $applicationData = $this->applicationHandler->webformToTypedData(
           $this->submittedFormData,
           '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',

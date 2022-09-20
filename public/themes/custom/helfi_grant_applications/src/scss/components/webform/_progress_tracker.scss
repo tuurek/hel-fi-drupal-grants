@@ -187,6 +187,10 @@
       display: flex;
       justify-content: center;
     }
+    .grants-stepper__circle {
+      color: var(--color-error);
+      border-color:  var(--color-error);
+    }
     .grants-stepper__number {
       display: none;
     }
