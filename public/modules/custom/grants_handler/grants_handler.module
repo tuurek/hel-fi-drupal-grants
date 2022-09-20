@@ -6,6 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
@@ -14,6 +15,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_handler\ApplicationHandler;
+use Drupal\grants_handler\Event\UserLogoutEvent;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\EventsService;
 use Drupal\webform\WebformInterface;
@@ -459,7 +461,7 @@ function _grants_handler_missing_data(
         <span>' . $str1 . '</span>
       </div>
       <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-  ->toString() . ' ' . $str3 . '</div>
+    ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -1223,5 +1225,33 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     '#theme' => 'webform_submission_attachment_list',
     '#submission' => $submission,
   ];
+
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function grants_handler_user_logout(AccountInterface $account) {
+
+  // Instantiate our event.
+  $event = new UserLogoutEvent($account);
+
+  // Get the event_dispatcher service and dispatch the event.
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event, UserLogoutEvent::EVENT_NAME);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function grants_handler_node_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  $result = AccessResult::neutral();
+  $type = $entity->bundle();
+  if ( $type == 'form_page') {
+    if ($account->isAnonymous()) {
+      $result = AccessResult::forbidden();
+    }
+  }
+  return $result;
 
 }

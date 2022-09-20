@@ -434,7 +434,8 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
 
-    // $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
+    // $all_errors = $this->grantsFormNavigationHelper
+    // ->getAllErrors($webform_submission);
     // $form['#errors'] = $all_errors;
     $form['#errors'] = $webform->getState('current_errors');
   }
@@ -604,8 +605,8 @@ class GrantsHandler extends WebformHandlerBase {
     // If all page validation is in progress, skip further
     // execution of this hook to avoid loops
     // if ($webform->getState('validateAllPages') == TRUE) {
-    //   // parent::validateForm($form, $form_state, $webform_submission);
-    //   return;
+    // // parent::validateForm($form, $form_state, $webform_submission);
+    // return;
     // }.
     $this->setTotals();
 
@@ -668,11 +669,11 @@ class GrantsHandler extends WebformHandlerBase {
     // saving them to db does not solve issue when we're
     // interested of current errors also.
     // $this->grantsFormNavigationHelper->validateAllPages(
-    //   $webform_submission,
-    //   $form_state,
-    //   $triggeringElement,
-    //   $form
-    //   );.
+    // $webform_submission,
+    // $form_state,
+    // $triggeringElement,
+    // $form
+    // );.
     $current_errors = $webform->getState('current_errors');
 
     // If ($triggeringElement == '::next') {
@@ -706,10 +707,10 @@ class GrantsHandler extends WebformHandlerBase {
           // @todo fix validation error messages.
           $this->messenger()->addError('Validation failed, please check inputs. This feature will get better.');
           // $this->grantsFormNavigationHelper->validateAllPages(
-          //   $webform_submission,
-          //   $form_state,
-          //   $triggeringElement,
-          //   $form
+          // $webform_submission,
+          // $form_state,
+          // $triggeringElement,
+          // $form
           // );
         }
       }

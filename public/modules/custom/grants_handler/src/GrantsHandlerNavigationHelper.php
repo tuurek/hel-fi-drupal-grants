@@ -665,12 +665,12 @@ class GrantsHandlerNavigationHelper {
 
     // Loop through fieldnames and validate fields.
     // foreach (AttachmentHandler::getAttachmentFieldNames() as $fieldName) {
-    //   AttachmentHandler::validateAttachmentField(
-    //     $fieldName,
-    //     $form_state,
-    //     $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
-    //     $triggeringElement
-    //   );
+    // AttachmentHandler::validateAttachmentField(
+    // $fieldName,
+    // $form_state,
+    // $form["elements"]["lisatiedot_ja_liitteet"]["liitteet"][$fieldName]["#title"],
+    // $triggeringElement
+    // );
     // }.
     // $errors = $form_state->getErrors();
     // $webform->setState('current_errors', $errors);
@@ -738,7 +738,7 @@ class GrantsHandlerNavigationHelper {
 
     // Merge saved errors with ones from this page.
     // foreach ($paged_errors as $page => $errors) {
-    //   $form_errors = array_merge($form_errors, $errors);
+    // $form_errors = array_merge($form_errors, $errors);
     // }.
     $current_page = $webform_submission->getCurrentPage();
 

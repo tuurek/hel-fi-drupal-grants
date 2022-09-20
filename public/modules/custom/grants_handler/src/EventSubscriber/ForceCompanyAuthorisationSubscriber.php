@@ -3,6 +3,8 @@
 namespace Drupal\grants_handler\EventSubscriber;
 
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -51,59 +53,77 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
     MessengerInterface $messenger,
     GrantsProfileService $grantsProfileService,
     AccountProxyInterface $currentUser
-    ) {
+  ) {
     $this->messenger = $messenger;
     $this->grantsProfileService = $grantsProfileService;
     $this->currentUser = $currentUser;
   }
 
   /**
-   * Check if user needs to be redirected to login page.
+   * Check if user login is required.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * We do not want to redirect to mandate page if so.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   Event from request.
+   *   str_replace('/' . $lang, '', $requestUri)
    *
    * @return bool
    *   If needs redirect or not.
    */
   public function needsRedirectToLogin(GetResponseEvent $event) {
-    $uri = $event->getRequest()->getRequestUri();
-    $currentUserRoles = $this->currentUser->getRoles();
+    $requestUri = $event->getRequest()->getRequestUri();
+    $urlObject = Url::fromUserInput($requestUri);
     if (
-      !in_array('helsinkiprofiili', $currentUserRoles) &&
-      !str_contains($uri, '/asiointirooli-valtuutus') &&
-      !str_contains($uri, '/user/login') &&
-      !str_contains($uri, '/user/reset') &&
-      !str_contains($uri, '/openid-connect/tunnistamo')
-      ) {
+      $urlObject->access(User::getAnonymousUser()) === FALSE &&
+      $urlObject->access(\Drupal::currentUser()) === FALSE
+    ) {
       return TRUE;
     }
-
     return FALSE;
   }
 
   /**
    * If user needs to be redirected to mandate page.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   Event from request.
    *
    * @return bool
    *   If needs redirect or not.
    */
   public function needsRedirectToMandate(GetResponseEvent $event) {
-    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
-    $uri = $event->getRequest()->getRequestUri();
+
     $currentUserRoles = $this->currentUser->getRoles();
-    if (
-      in_array('helsinkiprofiili', $currentUserRoles) &&
-      $selectedCompany == NULL &&
-      !str_contains($uri, '/asiointirooli-valtuutus') &&
-      !str_contains($uri, '/user/login') &&
-      !str_contains($uri, '/user/reset') &&
-      !str_contains($uri, '/openid-connect/tunnistamo')
-      ) {
-      return TRUE;
+
+    // We need to redirect to mandate page if user is authenticated
+    // & has helsinkiprofiili role.
+    if ($this->currentUser->isAuthenticated() &&
+      in_array('helsinkiprofiili', $currentUserRoles)) {
+      $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+      // If no selected company.
+      if ($selectedCompany == NULL) {
+        $urlObject = Url::fromUserInput($event->getRequest()->getRequestUri());
+        $routeName = $urlObject->getRouteName();
+
+        $nodeType = '';
+        if ($routeName == 'entity.node.canonical') {
+          $node = Node::load($urlObject->getRouteParameters()['node']);
+          $nodeType = $node->getType();
+        }
+        // & we are on form page.
+        if ($nodeType == 'form_page') {
+          return TRUE;
+        }
+        // If not on form_page, we want to allow mandate routes.
+        if (str_contains($routeName, 'grants_mandate')) {
+          return FALSE;
+        }
+        // But require mandate in all other grants routes.
+        if (str_contains($routeName, 'grants_')) {
+          return TRUE;
+        }
+      }
     }
 
     return FALSE;
@@ -122,15 +142,8 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Anonymous or missing user role.
-    if ($this->needsRedirectToLogin($event)) {
-      $redirect = new TrustedRedirectResponse('/user/login');
-      $event->setResponse(
-        $redirect
-      );
-      $this->messenger->addError('You must login first.');
-    }
-    elseif ($this->needsRedirectToMandate($event)) {
+    if (!$this->needsRedirectToLogin($event) &&
+      $this->needsRedirectToMandate($event)) {
       $redirectUrl = Url::fromRoute('grants_mandate.mandateform');
       $redirect = new TrustedRedirectResponse($redirectUrl->toString());
       $event->setResponse(
