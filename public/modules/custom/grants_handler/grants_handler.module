@@ -12,6 +12,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\EventsService;
@@ -175,7 +176,8 @@ function grants_handler_entity_type_alter(array &$entity_types) {
  */
 function grants_handler_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'grants_handler/application-status-check';
-  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()->getSchemeAndHttpHost();;
+  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()->getSchemeAndHttpHost();
+
 }
 
 /**
@@ -457,7 +459,7 @@ function _grants_handler_missing_data(
         <span>' . $str1 . '</span>
       </div>
       <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-    ->toString() . ' ' . $str3 . '</div>
+  ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -912,7 +914,7 @@ function grants_handler_preprocess_webform_submission_handler_details(&$variable
   });
 
   foreach ($handlerEvents as $handlerEvent) {
-    $variables['handler_strings'] = explode(";",$handlerEvent['eventDescription']);
+    $variables['handler_strings'] = explode(";", $handlerEvent['eventDescription']);
   }
   $variables['handlers'] = $handlerEvents;
 
@@ -1002,8 +1004,8 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  $editApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
-  $viewApplicationLinkText = Markup::create(t('View application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLinkText = Markup::create(t('Edit application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $viewApplicationLinkText = Markup::create(t('View application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
 
   $variables['viewApplicationLink'] = Link::fromTextAndUrl($viewApplicationLinkText, $viewApplicationUrl);
   $variables['editApplicationLink'] = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
@@ -1121,7 +1123,7 @@ function grants_handler_preprocess_message_notification_item(&$variables) {
   $message = $variables['message'];
 
   $message_url = Url::fromRoute('grants_handler.view_application', [
-    'submission_id' => $message['caseId']
+    'submission_id' => $message['caseId'],
   ]);
 
   $message_link = Link::fromTextAndUrl($message['caseId'], $message_url);
@@ -1157,12 +1159,12 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hds-button-complimentary']
+        'class' => ['hds-button', 'hds-button-complimentary'],
       ],
     ]
   );
 
-  $printApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--printer hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Print application'));
+  $printApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--printer hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;' . t('Print application'));
   $printApplicationLink = Link::fromTextAndUrl($printApplicationLinkText, $printApplicationUrl);
   $editApplicationUrl = Url::fromRoute(
     'grants_handler.edit_application',
@@ -1177,7 +1179,7 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
       ],
     ]
   );
-  $editApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLinkText = Markup::create(t('Edit application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
   $editApplicationLink = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
 
   $copyApplicationUrl = Url::fromRoute(
@@ -1188,11 +1190,11 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hds-button-complimentary']
+        'class' => ['hds-button', 'hds-button-complimentary'],
       ],
     ]
   );
-  $copyApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--copy hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Copy application'));
+  $copyApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--copy hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;' . t('Copy application'));
   $copyApplicationLink = Link::fromTextAndUrl($copyApplicationLinkText, $copyApplicationUrl);
 
   $variables['printApplicationLink'] = $printApplicationLink;
