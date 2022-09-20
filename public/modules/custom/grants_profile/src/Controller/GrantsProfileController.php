@@ -95,11 +95,11 @@ class GrantsProfileController extends ControllerBase {
       [
         'attributes' => [
           'data-drupal-selector' => 'application-edit-link',
-          'class' => ['hds-button', 'hds-button--primary']
+          'class' => ['hds-button', 'hds-button--primary'],
         ],
       ]
     );
-    $editProfileText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span><span class="hds-button__label">'.$this->t('Edit profile').'</span>');
+    $editProfileText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span><span class="hds-button__label">' . $this->t('Edit profile') . '</span>');
     $build['#editProfileLink'] = Link::fromTextAndUrl($editProfileText, $editProfileUrl);
 
     $build['#attached']['library'][] = 'grants_profile/tabs';
