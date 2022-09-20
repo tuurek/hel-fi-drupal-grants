@@ -244,8 +244,18 @@ elements: |-
       '#type': webform_section
       '#title': 'Muut samaan tarkoitukseen myönnetyt avustukset'
       info_muut_samaan_tarkoitukseen_myonnetty:
-        '#type': webform_markup
-        '#markup': 'Ilmoita t&auml;h&auml;n ainoastaan avustukset, jotka on my&ouml;nnetty muualta kuin Helsingin kaupungilta kuluvana tai kahtena edellisen&auml; verovuotena.'
+        '#type': processed_text
+        '#text': |
+          Ilmoita t&auml;h&auml;n ainoastaan avustukset, jotka on my&ouml;nnetty muualta kuin Helsingin kaupungilta kuluvana tai kahtena edellisen&auml; verovuotena.
+          <div class="hds-notification hds-notification--info">
+            <div class="hds-notification__content">
+              <div class="hds-notification__label" role="heading" aria-level="2">
+                <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+                <span>Myöntävä vastaus avaa lisäkysymyksen</span>
+              </div>
+            </div>
+          </div>
+        '#format': full_html
       olemme_saaneet_muita_avustuksia:
         '#type': radios
         '#title': 'Olemme saaneet muita avustuksia'
@@ -258,6 +268,13 @@ elements: |-
         '#type': webform_custom_composite
         '#title': 'Myönnetty avustus'
         '#title_display': before
+        '#states':
+          visible:
+            ':input[name="olemme_saaneet_muita_avustuksia"]':
+              value: Kyllä
+          required:
+            ':input[name="olemme_saaneet_muita_avustuksia"]':
+              value: Kyllä
         '#multiple__header': false
         '#multiple__item_label': 'myönnetty avustus'
         '#multiple__no_items_message': 'Ei sy&ouml;tettyj&auml; arvoja. Lis&auml;&auml; uusi my&ouml;nnetty avustus alta.'
@@ -307,8 +324,18 @@ elements: |-
       '#type': webform_section
       '#title': 'Muut samaan tarkoitukseen haetut avustukset'
       info_muut_samaan_tarkoitukseen_haettu:
-        '#type': webform_markup
-        '#markup': 'Ilmoita t&auml;h&auml;n ainoastaan avustukset, jotka on haettu muualta kuin Helsingin kaupungilta, eik&auml; p&auml;&auml;t&ouml;st&auml; ole viel&auml; tehty.'
+        '#type': processed_text
+        '#text': |
+          Ilmoita t&auml;h&auml;n ainoastaan avustukset, jotka on haettu muualta kuin Helsingin kaupungilta, eik&auml; p&auml;&auml;t&ouml;st&auml; ole viel&auml; tehty.
+          <div class="hds-notification hds-notification--info">
+            <div class="hds-notification__content">
+              <div class="hds-notification__label" role="heading" aria-level="2">
+                <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+                <span>Myöntävä vastaus avaa lisäkysymyksen</span>
+              </div>
+            </div>
+          </div>
+        '#format': full_html
       olemme_hakeneet_avustuksia_muualta_kuin_helsingin_kaupungilta:
         '#type': radios
         '#title': 'Olemme hakeneet avustuksia muualta kuin Helsingin kaupungilta'
@@ -329,6 +356,13 @@ elements: |-
         '#multiple__add': false
         '#multiple__add_more_input': false
         '#multiple__add_more_button_label': 'Lisää haettu avustus'
+        '#states':
+          visible:
+            ':input[name="olemme_hakeneet_avustuksia_muualta_kuin_helsingin_kaupungilta"]':
+              value: Kyllä
+          required:
+            ':input[name="olemme_hakeneet_avustuksia_muualta_kuin_helsingin_kaupungilta"]':
+              value: Kyllä
         '#element':
           issuer:
             '#type': select
@@ -398,14 +432,31 @@ elements: |-
     edellisen_avustuksen_kayttoselvitys:
       '#type': webform_section
       '#title': 'Edellisen avustuksen käyttöselvitys'
+      compensation_boolean_info:
+        '#type': processed_text
+        '#text': |
+          <div class="hds-notification hds-notification--info">
+            <div class="hds-notification__content">
+              <div class="hds-notification__label" role="heading" aria-level="2">
+                <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+                <span>Myöntävä vastaus avaa lisäkysymyksen</span>
+              </div>
+            </div>
+          </div>
+        '#format': full_html
       compensation_boolean:
         '#type': radios
         '#title': 'Käyttöselvitys edellisenä vuonna saamastani avustuksesta'
+        '#required': true
         '#options':
           'false': 'En ole saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
           'true': 'Olen saanut Helsingin kaupungilta avustusta samaan käyttötarkoitukseen edellisenä vuonna.'
       markup:
         '#type': webform_markup
+        '#states':
+          visible:
+            ':input[name="compensation_boolean"]':
+              value: 'true'
         '#markup': 'Anna k&auml;ytt&ouml;selvitys Helsingin kaupungilta saadusta avustuksesta. Avustuksen k&auml;ytt&ouml;selvitys tehd&auml;&auml;n avustuksesta, joka koskee viimeisint&auml; p&auml;&auml;ttynytt&auml; tilikautta. K&auml;ytt&ouml;selvityst&auml; ei tehd&auml; k&auml;ynniss&auml; olevalta tilikaudelta. K&auml;ytt&ouml;selvityksen antaminen on seuraavan avustuksen saamisen ehtona. Mik&auml;li k&auml;ytt&ouml;selvityst&auml; ei tehd&auml;, avustusta ei my&ouml;nnet&auml; eik&auml; makseta. My&ouml;nnetty avustus voidaan peri&auml; takaisin, jos edellisen avustuksen k&auml;ytt&ouml;&auml; ei ole hyv&auml;ksytt&auml;v&auml;sti selvitetty.'
       compensation_explanation:
         '#type': textarea
@@ -415,6 +466,13 @@ elements: |-
         '#counter_minimum': 1
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
+        '#states':
+          visible:
+            ':input[name="compensation_boolean"]':
+              value: 'true'
+          required:
+            ':input[name="compensation_boolean"]':
+              value: 'true'
         '#cols': 63
   3_yhteison_tiedot:
     '#type': webform_wizard_page
@@ -427,8 +485,13 @@ elements: |-
       community_purpose:
         '#type': textfield
         '#title': 'Toiminnan kuvaus'
-        '#required': true
-        '#readonly': true
+        '#states':
+          visible:
+            ':input[name="community_practices_business"]':
+              value: 1
+          required:
+            ':input[name="community_practices_business"]':
+              value: 1
         '#help': 'Tieto haetaan omat tiedot -osiosta'
       community_practices_business:
         '#type': radios
@@ -532,7 +595,7 @@ elements: |-
       notification_attachments:
         '#type': processed_text
         '#text': |
-          <div class="hds-notification hds-notification--alert">
+          <div class="hds-notification hds-notification--info">
           <div class="hds-notification__content">
           <div class="hds-notification__label"><span>Liitteiden sisältöä ei voi tarkastella jälkikäteen</span></div>
 

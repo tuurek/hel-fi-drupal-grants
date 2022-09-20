@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\Core\Render\Markup;
 
 /**
  * Returns responses for Grants Profile routes.
@@ -90,13 +91,16 @@ class GrantsProfileController extends ControllerBase {
 
     $editProfileUrl = Url::fromRoute(
       'grants_profile.edit',
+      [],
       [
         'attributes' => [
           'data-drupal-selector' => 'application-edit-link',
+          'class' => ['hds-button', 'hds-button--primary']
         ],
       ]
     );
-    $build['#editProfileLink'] = Link::fromTextAndUrl($this->t('Edit profile <i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>'), $editProfileUrl);
+    $editProfileText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span><span class="hds-button__label">'.$this->t('Edit profile').'</span>');
+    $build['#editProfileLink'] = Link::fromTextAndUrl($editProfileText, $editProfileUrl);
 
     $build['#attached']['library'][] = 'grants_profile/tabs';
     return $build;

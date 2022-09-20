@@ -683,7 +683,7 @@ class GrantsHandler extends WebformHandlerBase {
     // if ($triggeringElement == '::submitForm') {
     // }.
     if ($triggeringElement == '::submit') {
-      if (self::emptyRecursive($current_errors)) {
+      if ($current_errors === null || self::emptyRecursive($current_errors)) {
         $applicationData = $this->applicationHandler->webformToTypedData(
           $this->submittedFormData,
           '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',

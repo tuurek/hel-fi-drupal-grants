@@ -2,7 +2,8 @@
   <div class="grants-profile">
     <div class="grants-profile--basicinfo">
       <div class="container">
-        <h3>{{ "Company information"|t }}</h3>
+
+      <h3>{{ "Company information"|t }}</h3>
         <p class="grants-profile--infotext">{{ "Avustusten hakeminen edellyttää yhteisön tietojen täydentämistä. Tehdessäsi avustushakemuksia antamasi tiedot täytetää niihin automaattisesti."|t }}</p>
         <h4>{{ "Basic Information"|t }}</h4>
         <hr />
@@ -36,21 +37,130 @@
           </div>
         </div>
         <hr/>
-
         <div class="grants-profile-prh-info">
           <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> {{ "Marked fields habe been retreived from PRH and cannot be edited."|t }}
         </div>
       </div>
     </div>
     <div class="grants-profile--extrainfo">
-      <div class="container">
-        Form removed from here, details can be parsed from profile.
-
-        {{ editProfileLink }}
-
-        <p>{{ dump(profile) }}</p>
-
-      </div>
+        <section data-drupal-selector="edit-foundingyearwrapper" id="edit-foundingyearwrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="perustamisvuosi">{{ "Founding year"|t }}</h2>
+            <div class="webform-section-wrapper">
+              <div class="js-form-item form-item js-form-type-textfield form-item-foundingyear js-form-item-foundingyear hds-text-input">
+                <h3 class="hds-text-input__label">{{ "Founding year"|t }}</h3>
+                <div>
+                  {{ profile.foundingYear }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section data-drupal-selector="edit-companynameshortwrapper" id="edit-companynameshortwrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="yhteison-lyhenne">{{ "Short name"|t }}</h2>
+            <div class="webform-section-wrapper">
+              <div class="js-form-item form-item js-form-type-textfield form-item-companynameshort js-form-item-companynameshort hds-text-input">
+                <h3 class="hds-text-input__label">{{ "Short name"|t }}</h3>
+                <div>
+                  {{ profile.companyNameShort }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section data-drupal-selector="edit-companyhomepagewrapper" id="edit-companyhomepagewrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="verkkosivujen-osoite">{{ "Home page address"|t }}</h2>
+            <div class="webform-section-wrapper">
+              <div class="js-form-item form-item js-form-type-textfield form-item-companyhomepage js-form-item-companyhomepage hds-text-input">
+                <h3  class="hds-text-input__label">{{ "Home page address"|t }}</h3>
+                <div>
+                  {{ profile.companyHomePage }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section data-drupal-selector="edit-businesspurposewrapper" id="edit-businesspurposewrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="toiminna-tarkoitus">{{ "Business purpose"|t }}</h2>
+            <div class="webform-section-wrapper">
+              <div class="webform-element-help-container--title webform-element-help-container--title-after js-form-item form-item js-form-type-textarea form-item-businesspurpose js-form-item-businesspurpose hds-text-input">
+                <h3 class="hds-text-input__label">{{ "Description of the business purpose of the registered community" }}</h3>
+                <div>
+                  {{ profile.businessPurpose }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section data-drupal-selector="edit-addresswrapper" id="edit-addresswrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="addresses">{{ 'Addresses'|t }}</h2>
+            <div class="webform-section-wrapper">
+              <h3 class="hds-text-input__label"><strong>{{ 'Addresses'|t }}</strong></h3>
+              <ul class="grants-profile--officials">
+                {% for address in profile.addresses %}
+                  <li class="grants-profile--officials-item">
+                    <div class="grants-profile--officials-item-wrapper">
+                      <div class="grants-profile--officials-item--name">
+                        {{ address.street }}, {{ address.postCode }} {{ address.city }}
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </section>
+        <section data-drupal-selector="edit-officialwrapper" id="edit-officialwrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="officials">{{ 'Officials'|t }}</h2>
+            <div class="webform-section-wrapper">
+              <h3 class="hds-text-input__label"><strong>{{ 'Officials'|t }}</strong></h3>
+              <ul class="grants-profile--officials">
+                {% for official in profile.officials %}
+                  <li class="grants-profile--officials-item">
+                    <div class="grants-profile--officials-item-wrapper">
+                      <h4 class="grants-profile--officials-item--position">
+                        {{ official.officialRole }}
+                      </h4>
+                      <div class="grants-profile--officials-item--name">
+                        {{ official.name }}
+                      </div>
+                      <div class="grants-profile--officials-item--phone">
+                        {{ official.phone }}
+                      </div>
+                      <div class="grants-profile--officials-item--email">
+                        {{ official.email }}
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </section>
+        <section data-drupal-selector="edit-bankaccountwrapper" id="edit-bankaccountwrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
+          <div class="webform-section-flex-wrapper">
+            <h2 class="webform-section-title" id="officials-3">{{ 'Bank accounts'|t }}</h2>
+            <div class="webform-section-wrapper">
+              <h3 class="hds-text-input__label"><strong>{{ 'Bank accounts'|t }}</strong></h3>
+              <ul class="grants-profile--officials">
+                {% for bankaccount in profile.bankAccounts %}
+                  <li class="grants-profile--officials-item">
+                    <div class="grants-profile--officials-item--name">
+                      {{ bankaccount.bankAccount }}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </section>
     </div>
+    {{ editProfileLink }}
+
   </div>
 </div>
