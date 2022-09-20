@@ -5151,12 +5151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv.git",
-                "reference": "81f912e9bf1341b24f8eb987d79b70077f241c2b"
+                "reference": "4f5031cd5da08eb1dee2db533060c40072f190cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/81f912e9bf1341b24f8eb987d79b70077f241c2b",
-                "reference": "81f912e9bf1341b24f8eb987d79b70077f241c2b",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/4f5031cd5da08eb1dee2db533060c40072f190cd",
+                "reference": "4f5031cd5da08eb1dee2db533060c40072f190cd",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -5173,7 +5173,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/issues"
             },
-            "time": "2022-09-19T09:51:54+00:00"
+            "time": "2022-09-20T18:12:17+00:00"
         },
         {
             "name": "drupal/helfi_azure_fs",
@@ -5304,12 +5304,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git",
-                "reference": "17d6148977926f39f85654da00b609b820b82013"
+                "reference": "f6f8246d399c1c79ed1c94fe0b60c0de8ccd9013"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/zipball/17d6148977926f39f85654da00b609b820b82013",
-                "reference": "17d6148977926f39f85654da00b609b820b82013",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/zipball/f6f8246d399c1c79ed1c94fe0b60c0de8ccd9013",
+                "reference": "f6f8246d399c1c79ed1c94fe0b60c0de8ccd9013",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -5325,7 +5325,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/issues"
             },
-            "time": "2022-09-20T16:42:09+00:00"
+            "time": "2022-09-20T18:14:38+00:00"
         },
         {
             "name": "drupal/helfi_media_formtool",
@@ -19271,5 +19271,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
