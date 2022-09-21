@@ -23,3 +23,6 @@ public/sites/default/local.settings.php
 
 !*.gitkeep
 !*.keepme
+
+# ignore simpletest site
+public/sites/simpletest/
