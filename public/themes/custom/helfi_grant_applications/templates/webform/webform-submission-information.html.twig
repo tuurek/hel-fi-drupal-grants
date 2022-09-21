@@ -34,7 +34,9 @@
 <p>{{ 'Summary about your application and processing details.'|t }}</p>
   <div class="webform-submission-information">
     <div class="webform-submission-information__row webform-submission-information__row-top">
-      <h4>TODO: Headline</h4>
+      <h4>
+        {{ webform.text }}
+      </h4>
       <div class="webform-submission-information__supportlinks">
         {{ printApplicationLink }}
         {{ copyApplicationLink }}
@@ -63,7 +65,11 @@
       </div>
 
     </div>
-    {{ editApplicationLink }}
+    {% if isEditable and not isEditPage %}
+    <div class="webform-submission-information__row webform-submission-information__row-edit">
+      {{ editApplicationLink }}
+    </div>
+    {% endif %}
 
 
 
