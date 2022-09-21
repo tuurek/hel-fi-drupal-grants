@@ -48,11 +48,6 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
  */
 function grants_metadata_preprocess_block(&$variables) {
 
-  // invalidate cache for profile menu items when user changes
-  if ($variables["elements"]["#id"] == 'menuitemsforprofile') {
-    $variables["elements"]["#cache"]["contexts"][] = 'user';
-    $variables["content"]["#cache"]["contexts"][] = 'user';
-  }
   // also invalidate breadcrumb cache.
   if ($variables["plugin_id"] == 'system_breadcrumb_block') {
     $variables["elements"]["#cache"]["contexts"][] = 'user';
