@@ -36,6 +36,10 @@
 .hds-button--secondary:not(:disabled), .hds-button--primary:not(:disabled) {
   border-color: var(--color-black, transparent);
 }
+.hds-button--complementary:not(:disabled) {
+  border-color: transparent;
+  background: transparent;
+}
 .webform-button--delete-draft {
   margin-bottom: var(--spacing-s);
 }

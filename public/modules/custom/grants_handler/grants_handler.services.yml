@@ -46,3 +46,8 @@ services:
     arguments: ['@messenger','@grants_profile.service', '@current_user']
     tags:
       - { name: event_subscriber }
+
+  grants_handler.redirect_after_logout:
+    class: Drupal\grants_handler\EventSubscriber\RedirectAfterLogoutSubscriber
+    tags:
+      - { name: event_subscriber }

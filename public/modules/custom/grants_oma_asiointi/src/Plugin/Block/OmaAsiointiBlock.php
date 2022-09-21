@@ -10,7 +10,6 @@ use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvService;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\grants_mandate\CompanySelectException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -135,10 +134,18 @@ class OmaAsiointiBlock extends BlockBase implements ContainerFactoryPluginInterf
   public function build() {
 
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    $currentUser = \Drupal::currentUser();
 
     // If no company selected, no mandates no access.
-    if ($selectedCompany == NULL) {
-      throw new CompanySelectException('User not authorised');
+    $roles = $currentUser->getRoles();
+    if (
+      in_array('helsinkiprofiili', $roles) &&
+      $selectedCompany == NULL) {
+      $build = [
+        '#markup' => 'No company',
+      ];
+      return $build;
+      // Throw new CompanySelectException('User not authorised');.
     }
 
     $helsinkiProfileData = $this->helfiHelsinkiProfiiliUserdata->getUserProfileData();

@@ -6,13 +6,16 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_handler\ApplicationHandler;
+use Drupal\grants_handler\Event\UserLogoutEvent;
 use Drupal\grants_handler\Plugin\WebformElement\CompensationsComposite;
 use Drupal\grants_handler\EventsService;
 use Drupal\webform\WebformInterface;
@@ -175,7 +178,8 @@ function grants_handler_entity_type_alter(array &$entity_types) {
  */
 function grants_handler_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'grants_handler/application-status-check';
-  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()->getSchemeAndHttpHost();;
+  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()->getSchemeAndHttpHost();
+
 }
 
 /**
@@ -478,6 +482,9 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   $webform_submission = $form_state->getFormObject()->getEntity();
   $formData = $webform_submission->getData();
 
+  $webform = $webform_submission->getWebform();
+  $isClosed = $webform->isClosed();
+
   $form['#attached']['library'][] = 'grants_handler/webform-additions';
 
   if ($selectedCompany != NULL) {
@@ -541,7 +548,8 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
   ',
       ],
     ];
-    if (array_key_exists('1_hakijan_tiedot', $form['elements']) && is_array($form['elements']['1_hakijan_tiedot'])) {
+
+    if (!$isClosed && array_key_exists('1_hakijan_tiedot', $form['elements']) && is_array($form['elements']['1_hakijan_tiedot'])) {
       $form['elements']['1_hakijan_tiedot'] = array_merge($required_fields_info_element, $form['elements']['1_hakijan_tiedot']);
       $form['elements']['1_hakijan_tiedot'] = array_merge($infoelement, $form['elements']['1_hakijan_tiedot']);
 
@@ -563,14 +571,14 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
       _grants_handler_imported_handler($form["elements"]["1_hakijan_tiedot"]["verkkosivut"]["homepage"], $grantsProfile["companyHomePage"], FALSE);
 
     }
-    if (array_key_exists('2_avustustiedot', $form['elements']) && is_array($form['elements']['2_avustustiedot'])) {
+    if (!$isClosed && array_key_exists('2_avustustiedot', $form['elements']) && is_array($form['elements']['2_avustustiedot'])) {
       $form['elements']['2_avustustiedot'] = array_merge($required_fields_info_element, $form['elements']['2_avustustiedot']);
     }
-    if (array_key_exists('3_yhteison_tiedot', $form['elements']) && is_array($form['elements']['3_yhteison_tiedot'])) {
+    if (!$isClosed && array_key_exists('3_yhteison_tiedot', $form['elements']) && is_array($form['elements']['3_yhteison_tiedot'])) {
       $form['elements']['3_yhteison_tiedot'] = array_merge($required_fields_info_element, $form['elements']['3_yhteison_tiedot']);
       $form['elements']['3_yhteison_tiedot'] = array_merge($infoelement, $form['elements']['3_yhteison_tiedot']);
     }
-    if (array_key_exists('lisatiedot_ja_liitteet', $form['elements']) && is_array($form['elements']['lisatiedot_ja_liitteet'])) {
+    if (!$isClosed && array_key_exists('lisatiedot_ja_liitteet', $form['elements']) && is_array($form['elements']['lisatiedot_ja_liitteet'])) {
       $form['elements']['lisatiedot_ja_liitteet'] = array_merge($required_fields_info_element, $form['elements']['lisatiedot_ja_liitteet']);
     }
 
@@ -912,7 +920,7 @@ function grants_handler_preprocess_webform_submission_handler_details(&$variable
   });
 
   foreach ($handlerEvents as $handlerEvent) {
-    $variables['handler_strings'] = explode(";",$handlerEvent['eventDescription']);
+    $variables['handler_strings'] = explode(";", $handlerEvent['eventDescription']);
   }
   $variables['handlers'] = $handlerEvents;
 
@@ -1002,8 +1010,8 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  $editApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
-  $viewApplicationLinkText = Markup::create(t('View application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLinkText = Markup::create(t('Edit application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $viewApplicationLinkText = Markup::create(t('View application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
 
   $variables['viewApplicationLink'] = Link::fromTextAndUrl($viewApplicationLinkText, $viewApplicationUrl);
   $variables['editApplicationLink'] = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
@@ -1121,7 +1129,7 @@ function grants_handler_preprocess_message_notification_item(&$variables) {
   $message = $variables['message'];
 
   $message_url = Url::fromRoute('grants_handler.view_application', [
-    'submission_id' => $message['caseId']
+    'submission_id' => $message['caseId'],
   ]);
 
   $message_link = Link::fromTextAndUrl($message['caseId'], $message_url);
@@ -1156,13 +1164,13 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     ],
     [
       'attributes' => [
-        'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hds-button-complimentary']
+        'data-drupal-selector' => 'application-print-link',
+        'class' => ['hds-button', 'hds-button--complementary'],
       ],
     ]
   );
 
-  $printApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--printer hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Print application'));
+  $printApplicationLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--printer"></span><span class="hds-button__label">'.t('Print application').'</span>');
   $printApplicationLink = Link::fromTextAndUrl($printApplicationLinkText, $printApplicationUrl);
   $editApplicationUrl = Url::fromRoute(
     'grants_handler.edit_application',
@@ -1173,11 +1181,11 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hds-button--complementary'],
+        'class' => ['hds-button', 'hds-button--primary'],
       ],
     ]
   );
-  $editApplicationLinkText = Markup::create(t('Edit application').'&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLinkText = Markup::create('<span class="hds-button__label">'.t('Edit application').'</span><span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>');
   $editApplicationLink = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
 
   $copyApplicationUrl = Url::fromRoute(
@@ -1188,11 +1196,11 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'class' => ['hds-button', 'hds-button-complimentary']
+        'class' => ['hds-button', 'hds-button--complementary'],
       ],
     ]
   );
-  $copyApplicationLinkText = Markup::create('<i class="hds-icon icon hds-icon--copy hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>&nbsp;'.t('Copy application'));
+  $copyApplicationLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--copy"></span><span class="hds-button__label">'.t('Copy application').'</span>');
   $copyApplicationLink = Link::fromTextAndUrl($copyApplicationLinkText, $copyApplicationUrl);
 
   $variables['printApplicationLink'] = $printApplicationLink;
@@ -1201,11 +1209,15 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
 
   $variables['formTitle'] = $webform->label();
 
+
   $variables['printLink'] = '';
 
   $variables['copyLink'] = '';
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
+  $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
+
   $variables['applicationSent'] = $submissionData['form_timestamp'];
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',
@@ -1221,5 +1233,33 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     '#theme' => 'webform_submission_attachment_list',
     '#submission' => $submission,
   ];
+
+}
+
+/**
+ * Implements hook_user_logout().
+ */
+function grants_handler_user_logout(AccountInterface $account) {
+
+  // Instantiate our event.
+  $event = new UserLogoutEvent($account);
+
+  // Get the event_dispatcher service and dispatch the event.
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch($event, UserLogoutEvent::EVENT_NAME);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function grants_handler_node_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  $result = AccessResult::neutral();
+  $type = $entity->bundle();
+  if ( $type == 'form_page') {
+    if ($account->isAnonymous()) {
+      $result = AccessResult::forbidden();
+    }
+  }
+  return $result;
 
 }
