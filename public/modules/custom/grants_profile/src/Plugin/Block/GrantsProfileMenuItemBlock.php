@@ -47,13 +47,23 @@ class GrantsProfileMenuItemBlock extends BlockBase {
     $build['initials'] = $initials;
     $build['loggedin'] = $logged_in;
 
-    $build['#cache'] = [
-      'contexts' => [
-        'user',
-      ],
-    ];
+    // $build['#cache'] = [
+    // 'contexts' => [
+    // 'user',
+    // ],
+    // 'tags' => [
+    // 'tags' => ['user:' . \Drupal::currentUser()->id()],
+    // ],
+    // ];
 
     return $build;
+  }
+
+  /**
+   * @return int
+   */
+  public function getCacheMaxAge(): int {
+    return 0;
   }
 
 }
