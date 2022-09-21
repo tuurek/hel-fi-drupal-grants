@@ -46,6 +46,13 @@ class GrantsProfileMenuItemBlock extends BlockBase {
     $build['colorscheme'] = 0;
     $build['initials'] = $initials;
     $build['loggedin'] = $logged_in;
+
+    $build['#cache'] = [
+      'contexts' => [
+        'user',
+      ],
+    ];
+
     return $build;
   }
 
