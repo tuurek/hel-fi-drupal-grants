@@ -1,8 +1,8 @@
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.GrantsHandlerApplicatiosSearchBehavior = {
     attach: function (context, settings) {
-      var fullListOptions = NULL;
-      var fullList = NULL;
+      var fullListOptions = null;
+      var fullList = null;
       if ($("#applications__list")[0]) {
         fullListOptions = {
           valueNames: ['application-list__item--name', 'application-list__item--status', 'application-list__item--number', 'application-list__item--submitted']

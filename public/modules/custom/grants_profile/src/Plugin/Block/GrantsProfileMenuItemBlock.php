@@ -65,5 +65,4 @@ class GrantsProfileMenuItemBlock extends BlockBase {
   public function getCacheMaxAge(): int {
     return 0;
   }
-
 }
