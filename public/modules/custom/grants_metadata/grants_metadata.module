@@ -52,5 +52,8 @@ function grants_metadata_preprocess_block(&$variables) {
   if ($variables["plugin_id"] == 'system_breadcrumb_block') {
     $variables["elements"]["#cache"]["contexts"][] = 'user';
     $variables["content"]["#cache"]["contexts"][] = 'user';
+
+    $variables["content"]["#cache"]["max-age"] = 0;
+    $variables["elements"]["#cache"]["max-age"] = 0;
   }
 }

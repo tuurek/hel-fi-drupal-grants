@@ -197,7 +197,7 @@
   function determineDeletable(event) {
     var target = event.target;
 
-    if (target.getAttribute('data-deletable') !== NULL) {
+    if (target.getAttribute('data-deletable') !== null) {
       // Delete target tab
       deleteTab(event, target);
 
