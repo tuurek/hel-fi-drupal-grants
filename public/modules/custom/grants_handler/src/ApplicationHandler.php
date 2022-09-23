@@ -426,7 +426,7 @@ class ApplicationHandler {
     }
 
     if (in_array($submissionStatus, [
-    // self::$applicationStatuses['DRAFT'],.
+      // self::$applicationStatuses['DRAFT'],.
       self::$applicationStatuses['SUBMITTED'],
       self::$applicationStatuses['SENT'],
       self::$applicationStatuses['RECEIVED'],
@@ -796,10 +796,8 @@ class ApplicationHandler {
       $headers['X-hki-appEnv'] = self::getAppEnv();
       // Set application number to meta as well to enable better searches.
       $headers['X-hki-applicationNumber'] = $applicationNumber;
-      // Set application number to meta as well to enable better searches.
-      $headers['X-hki-saveId'] = Uuid::uuid4()->toString();
-
-      $this->logSubmissionSaveid(NULL, $applicationNumber, $headers['X-hki-saveId']);
+      // Set new saveid and save it to db.
+      $headers['X-hki-saveId'] = $this->logSubmissionSaveid(NULL, $applicationNumber);
 
       $res = $this->httpClient->post($this->endpoint, [
         'auth' => [
@@ -994,7 +992,7 @@ class ApplicationHandler {
     string $appEnv,
     bool $sortByFinished = FALSE,
     bool $sortByStatus = FALSE,
-  string $themeHook = '') {
+    string $themeHook = '') {
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
     $atvService = \Drupal::service('helfi_atv.atv_service');
@@ -1090,8 +1088,12 @@ class ApplicationHandler {
   public function logSubmissionSaveid(
     ?WebformSubmissionInterface $webform_submission,
     string $applicationNumber,
-    string $saveId
-  ) {
+    string $saveId = ''
+  ): string {
+
+    if (empty($saveId)) {
+      $saveId = Uuid::uuid4()->toString();
+    }
 
     if ($webform_submission == NULL) {
       $webform_submission = ApplicationHandler::submissionObjectFromApplicationNumber($applicationNumber);
@@ -1099,7 +1101,8 @@ class ApplicationHandler {
 
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
     $fields = [
-      'webform_id' => ($webform_submission) ? $webform_submission->getWebform()->id() : '',
+      'webform_id' => ($webform_submission) ? $webform_submission->getWebform()
+        ->id() : '',
       'sid' => ($webform_submission) ? $webform_submission->id() : 0,
       'handler_id' => self::HANDLER_ID,
       'application_number' => $applicationNumber,
@@ -1111,6 +1114,8 @@ class ApplicationHandler {
 
     $query = $this->database->insert(self::TABLE, $fields);
     $query->fields($fields)->execute();
+
+    return $saveId;
 
   }
 
@@ -1150,7 +1155,10 @@ class ApplicationHandler {
       $submissionData = $webform_submission->getData();
     }
     if ($submissionData == NULL || empty($submissionData)) {
-      $this->logger->error('No submissiondata when trying to validate saveid: @saveid', ['@saveid' => $saveIdToValidate]);
+      $this->logger->log('info', 'No submissiondata when trying to validate saveid: %application_number @saveid', [
+        '%application_number' => $applicationNumber,
+        '@saveid' => $saveIdToValidate,
+      ]);
       return 'NO_SUBMISSION_DATA';
     }
 
@@ -1167,6 +1175,11 @@ class ApplicationHandler {
     $latestSaveid = !empty($saveid_log->saveid) ? $saveid_log->saveid : '';
 
     if ($saveIdToValidate !== $latestSaveid) {
+      $this->logger->log('info', 'Save ids not matching  %application_number ATV:@saveid, Local: %local_save_id', [
+        '%application_number' => $applicationNumber,
+        '%local_save_id' => $latestSaveid,
+        '@saveid' => $saveIdToValidate,
+      ]);
       return 'DATA_NOT_SAVED_ATV';
     }
 
@@ -1174,6 +1187,11 @@ class ApplicationHandler {
 
     if (!in_array($saveIdToValidate, $applicationEvents['event_targets'])) {
       if (isset($submissionData['status']) && $submissionData['status'] != 'DRAFT') {
+        $this->logger->log('info', 'Data not saved to Avus. %application_number ATV:@saveid, Local: %local_save_id', [
+          '%application_number' => $applicationNumber,
+          '%local_save_id' => $latestSaveid,
+          '@saveid' => $saveIdToValidate,
+        ]);
         return 'DATA_NOT_SAVED_AVUS2';
       }
     }
@@ -1208,6 +1226,11 @@ class ApplicationHandler {
     }
 
     if ($nonUploaded !== 0) {
+      $this->logger->log('File upload not finished.  %application_number ATV:@saveid, Local: %local_save_id', [
+        '%application_number' => $applicationNumber,
+        '%local_save_id' => $latestSaveid,
+        '@saveid' => $saveIdToValidate,
+      ]);
       return 'FILE_UPLOAD_PENDING';
     }
 

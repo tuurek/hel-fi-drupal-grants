@@ -55,14 +55,14 @@ class GrantsProfileMenuItemBlock extends BlockBase {
     // 'tags' => ['user:' . \Drupal::currentUser()->id()],
     // ],
     // ];
-
     return $build;
   }
 
   /**
-   * @return int
+   * {@inheritdoc}
    */
   public function getCacheMaxAge(): int {
     return 0;
   }
+
 }
