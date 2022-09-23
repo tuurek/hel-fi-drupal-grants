@@ -2,19 +2,14 @@
 
 namespace Drupal\grants_oma_asiointi\Controller;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TempStore\TempStoreException;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\GrantsProfileService;
-use Drupal\helfi_atv\AtvDocumentNotFoundException;
-use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use GuzzleHttp\Exception\GuzzleException;
@@ -168,51 +163,22 @@ class ApplicationsListController extends ControllerBase {
     try {
       $appEnv = ApplicationHandler::getAppEnv();
 
-      $applicationDocuments = $this->helfiAtvAtvService->searchDocuments([
-        'service' => 'AvustushakemusIntegraatio',
-        'business_id' => $selectedCompany['identifier'],
-        'lookfor' => 'appenv:' . $appEnv,
-      ]);
+      $applications = ApplicationHandler::getCompanyApplications(
+        $selectedCompany,
+        $appEnv,
+        FALSE,
+        FALSE,
+        'application_list_item'
+      );
 
-      $items = [];
-
-      /**
-       * Create rows for table.
-       *
-       * @var integer $key
-       * @var  \Drupal\helfi_atv\AtvDocument $document
-       */
-      foreach ($applicationDocuments as $document) {
-        try {
-          $submission = ApplicationHandler::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
-
-          $items[] = [
-            '#theme' => 'application_list_item',
-            '#document' => $document,
-            '#submission' => $submission,
-          ];
-
-        }
-        catch (AtvDocumentNotFoundException $e) {
-        }
-      }
     }
-    catch (
-      TempStoreException |
-      AtvFailedToConnectException |
-      GuzzleException $e) {
+    catch (GuzzleException $e) {
       throw new NotFoundHttpException('No documents found');
-    }
-    catch (AtvDocumentNotFoundException $e) {
-    }
-    catch (InvalidPluginDefinitionException $e) {
-    }
-    catch (PluginNotFoundException $e) {
     }
 
     $build = [
       '#theme' => 'application_list',
-      '#items' => $items,
+      '#items' => $applications,
       '#type' => 'all',
       '#header' => $this->t('My applications'),
       '#id' => 'applications__list',
