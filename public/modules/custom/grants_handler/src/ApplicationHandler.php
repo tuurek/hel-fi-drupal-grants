@@ -1226,7 +1226,7 @@ class ApplicationHandler {
     }
 
     if ($nonUploaded !== 0) {
-      $this->logger->log('info','File upload not finished.  %application_number ATV:@saveid, Local: %local_save_id', [
+      $this->logger->log('info', 'File upload not finished.  %application_number ATV:@saveid, Local: %local_save_id', [
         '%application_number' => $applicationNumber,
         '%local_save_id' => $latestSaveid,
         '@saveid' => $saveIdToValidate,

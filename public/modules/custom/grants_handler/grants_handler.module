@@ -178,7 +178,8 @@ function grants_handler_entity_type_alter(array &$entity_types) {
  */
 function grants_handler_page_attachments(array &$attachments) {
   $attachments['#attached']['library'][] = 'grants_handler/application-status-check';
-  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()->getSchemeAndHttpHost();
+  $attachments['#attached']['drupalSettings']['grants_handler']['site_url'] = \Drupal::request()
+    ->getSchemeAndHttpHost();
 
 }
 
@@ -410,7 +411,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
 function _grants_handler_imported_handler(
   mixed &$array,
         $value,
-  bool $show_checkmark = TRUE) {
+  bool  $show_checkmark = TRUE) {
 
   if (!is_array($array)) {
     return;
@@ -461,7 +462,7 @@ function _grants_handler_missing_data(
         <span>' . $str1 . '</span>
       </div>
       <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-    ->toString() . ' ' . $str3 . '</div>
+      ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -633,11 +634,11 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     '#submission' => $submission,
   ];
 
-  // // parse events
-  //  $variables['events'] = [
-  //    '#theme' => 'webform_submission_events',
-  //    '#submission' => $submission,
-  //  ];
+  $variables['statusTag'] = [
+    '#theme' => 'application_status_tag',
+    '#applicationID' => $data["application_number"],
+  ];
+
   // Parse history
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',
@@ -716,7 +717,10 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
       $eventDate = new \DateTime($event['timeCreated']);
       $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $history[] = t('%status: %date', ['%status' => $event['citizenCaseStatus'], '%date' => $eventDate->format('d.m.Y H:i')]);
+      $history[] = t('%status: %date', [
+        '%status' => $event['citizenCaseStatus'],
+        '%date' => $eventDate->format('d.m.Y H:i'),
+      ]);
     }
   }
 
@@ -968,11 +972,15 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $variables['applicationNumber'] = $submissionData["application_number"];
 
   try {
-    $dt = new DateTime($variables['document']->getCreatedAt());
-    $dt->setTimezone(new DateTimeZone('Europe/Helsinki'));
+    if ($submissionData['status'] == 'DRAFT') {
+      $dt = new DateTime($submissionData["form_timestamp"], new DateTimeZone('Europe/Helsinki'));
+    }
+    else {
+      $dt = new DateTime($submissionData["form_timestamp_created"], new DateTimeZone('Europe/Helsinki'));
+    }
+
     $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
-  }
-  catch (Exception $e) {
+  } catch (\Exception $e) {
   }
 
   $viewApplicationUrl = Url::fromRoute(
@@ -1026,8 +1034,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
           '%number' => $submissionData["application_number"],
         ]);
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['statusString'] = '';
   }
 
@@ -1055,8 +1062,7 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
           '%appno' => $submissionData["application_number"],
         ]);
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['statusStringHumanReadable'] = '';
     $variables['statusString'] = '';
   }
@@ -1070,10 +1076,12 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     '#theme' => 'application_status_tag',
     '#applicationID' => $variables["submissionId"],
   ];
-  $variables['ownApplicationsLink'] = Link::createFromRoute(t('My Applications'), 'grants_oma_asiointi.applications_list')->toRenderable();
+  $variables['ownApplicationsLink'] = Link::createFromRoute(t('My Applications'), 'grants_oma_asiointi.applications_list')
+    ->toRenderable();
   $variables['ownApplicationsLink']['#title'] = ['#markup' => '<span class="hds-button__label">' . $variables['ownApplicationsLink']['#title'] . '</span><span aria-hidden="true" class="hds-icon hds-icon--arrow-right"></span>'];
   $variables['ownApplicationsLink']['#attributes'] = ['class' => 'hds-button hds-button--primary'];
-  $variables['viewApplicationLink'] = Link::createFromRoute(t('View Application'), 'grants_handler.view_application', ['submission_id' => $variables["submissionId"]])->toRenderable();
+  $variables['viewApplicationLink'] = Link::createFromRoute(t('View Application'), 'grants_handler.view_application', ['submission_id' => $variables["submissionId"]])
+    ->toRenderable();
   $variables['viewApplicationLink']['#title'] = ['#markup' => '<span class="hds-button__label">' . $variables['viewApplicationLink']['#title'] . '</span><span aria-hidden="true" class="hds-icon hds-icon--eye"></span>'];
   $variables['viewApplicationLink']['#attributes'] = ['class' => 'hds-button hds-button--secondary'];
 
@@ -1081,8 +1089,7 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     $submissionObject = $variables['submissionObject'];
     $submissionData = $submissionObject->getData();
     $variables['applicationTimestamp'] = $submissionData['form_timestamp_created'];
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['applicationTimestamp'] = '';
   }
 }
@@ -1170,7 +1177,7 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
     ]
   );
 
-  $printApplicationLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--printer"></span><span class="hds-button__label">'.t('Print application').'</span>');
+  $printApplicationLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--printer"></span><span class="hds-button__label">' . t('Print application') . '</span>');
   $printApplicationLink = Link::fromTextAndUrl($printApplicationLinkText, $printApplicationUrl);
   $editApplicationUrl = Url::fromRoute(
     'grants_handler.edit_application',
@@ -1185,7 +1192,7 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
       ],
     ]
   );
-  $editApplicationLinkText = Markup::create('<span class="hds-button__label">'.t('Edit application').'</span><span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>');
+  $editApplicationLinkText = Markup::create('<span class="hds-button__label">' . t('Edit application') . '</span><span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>');
   $editApplicationLink = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
 
   $copyApplicationUrl = Url::fromRoute(
@@ -1200,7 +1207,7 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
       ],
     ]
   );
-  $copyApplicationLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--copy"></span><span class="hds-button__label">'.t('Copy application').'</span>');
+  $copyApplicationLinkText = Markup::create('<span aria-hidden="true" class="hds-icon hds-icon--copy"></span><span class="hds-button__label">' . t('Copy application') . '</span>');
   $copyApplicationLink = Link::fromTextAndUrl($copyApplicationLinkText, $copyApplicationUrl);
 
   $variables['printApplicationLink'] = $printApplicationLink;
@@ -1216,9 +1223,13 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
   $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
-  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
+      ->getRouteName();
 
-  $variables['applicationSent'] = $submissionData['form_timestamp'];
+  $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
+
+  $variables['applicationSent'] = $dt->format('Y-m-d H:i');
+
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',
     '#submission' => $submission,
@@ -1255,7 +1266,7 @@ function grants_handler_user_logout(AccountInterface $account) {
 function grants_handler_node_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
   $result = AccessResult::neutral();
   $type = $entity->bundle();
-  if ( $type == 'form_page') {
+  if ($type == 'form_page') {
     if ($account->isAnonymous()) {
       $result = AccessResult::forbidden();
     }

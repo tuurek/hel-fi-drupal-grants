@@ -423,14 +423,15 @@ class GrantsHandler extends WebformHandlerBase {
 
     if ($this->applicationNumber) {
       $dataIntegrityStatus = $this->applicationHandler->validateDataIntegrity(
-      NULL,
-      $submissionData,
-      $this->applicationNumber,
-      $submissionData['metadata']['saveid'] ?? '');
+        NULL,
+        $submissionData,
+        $this->applicationNumber,
+        $submissionData['metadata']['saveid'] ?? '');
 
       if ($dataIntegrityStatus != 'OK') {
         $form['#disabled'] = TRUE;
-        $this->messenger()->addWarning($this->t('Application data is not yet fully saved, please refresh page in few moments.'));
+        $this->messenger()
+          ->addWarning($this->t('Application data is not yet fully saved, please refresh page in few moments.'));
       }
     }
 
@@ -490,7 +491,8 @@ class GrantsHandler extends WebformHandlerBase {
       // If there's errors on the form (any page), disable form submit.
       $current_errors = $webform->getState('current_errors');
       if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
-        $this->messenger()->addStatus('Form validation failed within Drupal. No need to worry, this is does not work properly and is debug print.');
+        $this->messenger()
+          ->addStatus('Form validation failed within Drupal. No need to worry, this is does not work properly and is debug print.');
         // $form["actions"]["submit"]['#disabled'] = TRUE;
       }
     }
@@ -670,8 +672,10 @@ class GrantsHandler extends WebformHandlerBase {
     // $form_state,
     // $triggeringElement,
     // $form
-    // );.
-    $current_errors = $webform->getState('current_errors');
+    // );
+    //
+    // $current_errors = $webform->getState('current_errors');.
+    $current_errors = $form_state->getErrors();
 
     // If ($triggeringElement == '::next') {
     // // parent::validateForm($form, $form_state, $webform_submission);.
@@ -683,10 +687,8 @@ class GrantsHandler extends WebformHandlerBase {
     if ($triggeringElement == '::submit') {
       if ($current_errors === NULL || self::emptyRecursive($current_errors)) {
         $applicationData = $this->applicationHandler->webformToTypedData(
-          $this->submittedFormData,
-          '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
-          'grants_metadata_yleisavustushakemus'
-        );
+          $this->submittedFormData);
+
         $violations = $this->applicationHandler->validateApplication(
           $applicationData,
           $form,
@@ -702,7 +704,8 @@ class GrantsHandler extends WebformHandlerBase {
         else {
           // If we HAVE errors, then refresh them from the.
           // @todo fix validation error messages.
-          $this->messenger()->addError('Validation failed, please check inputs. This feature will get better.');
+          $this->messenger()
+            ->addError('Validation failed, please check inputs. This feature will get better.');
           // $this->grantsFormNavigationHelper->validateAllPages(
           // $webform_submission,
           // $form_state,
@@ -846,10 +849,7 @@ class GrantsHandler extends WebformHandlerBase {
 
       try {
         $applicationData = $this->applicationHandler->webformToTypedData(
-          $this->submittedFormData,
-          '\Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition',
-          'grants_metadata_yleisavustushakemus'
-        );
+          $this->submittedFormData);
       }
       catch (ReadOnlyException $e) {
         // @todo log errors here.
@@ -873,8 +873,7 @@ class GrantsHandler extends WebformHandlerBase {
               [
                 '@number' => $this->applicationNumber,
               ]
-            ),
-            TRUE
+            )
           );
 
         // Try to give integration time to do it's
@@ -979,14 +978,14 @@ class GrantsHandler extends WebformHandlerBase {
           );
 
         $form_state->setRedirect(
-                  'grants_handler.completion',
-                  ['submission_id' => $this->applicationNumber],
-                  [
-                    'attributes' => [
-                      'data-drupal-selector' => 'application-saved-successfully-link',
-                    ],
-                  ]
-                );
+          'grants_handler.completion',
+          ['submission_id' => $this->applicationNumber],
+          [
+            'attributes' => [
+              'data-drupal-selector' => 'application-saved-successfully-link',
+            ],
+          ]
+        );
       }
       else {
         $this->messenger()
@@ -1000,17 +999,18 @@ class GrantsHandler extends WebformHandlerBase {
           );
       }
       $form_state->setRedirect(
-                'grants_handler.completion',
-                ['submission_id' => $this->applicationNumber],
-                [
-                  'attributes' => [
-                    'data-drupal-selector' => 'application-saved-successfully-link',
-                  ],
-                ]
-              );
+        'grants_handler.completion',
+        ['submission_id' => $this->applicationNumber],
+        [
+          'attributes' => [
+            'data-drupal-selector' => 'application-saved-successfully-link',
+          ],
+        ]
+      );
     }
     catch (\Exception $e) {
-      $this->getLogger('grants_handler')->error('Error: %error', ['%error' => $e->getMessage()]);
+      $this->getLogger('grants_handler')
+        ->error('Error: %error', ['%error' => $e->getMessage()]);
 
     }
   }

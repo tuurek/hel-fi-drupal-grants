@@ -32,45 +32,44 @@
 #}
 <h3>{{ 'Application info'|t }}</h3>
 <p>{{ 'Summary about your application and processing details.'|t }}</p>
-  <div class="webform-submission-information">
+<div class="webform-submission-information">
     <div class="webform-submission-information__row webform-submission-information__row-top">
-      <h4>
-        {{ webform.text }}
-      </h4>
-      <div class="webform-submission-information__supportlinks">
-        {{ printApplicationLink }}
-        {{ copyApplicationLink }}
-      </div>
+        <h4>
+            {{ webform.text }}
+        </h4>
+        <div class="webform-submission-information__supportlinks">
+            {{ printApplicationLink }}
+            {{ copyApplicationLink }}
+        </div>
     </div>
     <div class="webform-submission-information__row webform-submission-information__row-main">
 
-      <div>
-        <h5>{{ "Application number"|t }}</h5>
-        {{ applicationNumber }}
-        <h5>{{ 'Sent date'|t }}</h5>
-        lähetetty
-        <h5>{{ 'Handler information'|t }}</h5>
-        {{ handler }}
-      </div>
-      <div>
-        <h5>{{ "Application statuses"|t }}</h5>
-        {{ history }}
+        <div>
+            <h5>{{ "Application number"|t }}</h5>
+            {{ applicationNumber }}
+            <h5>{{ 'Sent date'|t }}</h5>
+            {{ applicationSent }}
+            <h5>{{ 'Handler information'|t }}</h5>
+            {{ handler }}
+        </div>
+        <div>
+            <h5>{{ "Application statuses"|t }}</h5>
+            {{ history }}
 
-      </div>
-      <div>
-        <h5>{{ "Application attachments"|t }}</h5>
+        </div>
+        <div>
+            <h5>{{ "Application attachments"|t }}</h5>
 
-        {{ attachments }}
+            {{ attachments }}
 
-      </div>
+        </div>
 
     </div>
     {% if isEditable and not isEditPage %}
-    <div class="webform-submission-information__row webform-submission-information__row-edit">
-      {{ editApplicationLink }}
-    </div>
+        <div class="webform-submission-information__row webform-submission-information__row-edit">
+            {{ editApplicationLink }}
+        </div>
     {% endif %}
 
 
-
-  </div>
+</div>
