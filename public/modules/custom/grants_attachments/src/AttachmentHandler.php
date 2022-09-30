@@ -651,8 +651,9 @@ class AttachmentHandler {
       if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
         $retval['integrationID'] = $field["integrationID"];
         $retval['isNewAttachment'] = FALSE;
+        $retval['isDeliveredLater'] = FALSE;
+        $retval['isIncludedInOtherFile'] = FALSE;
       }
-
     }
     return [
       'attachment' => $retval,
