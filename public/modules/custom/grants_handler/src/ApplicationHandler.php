@@ -11,20 +11,18 @@ use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
-use Drupal\helfi_atv\AtvFailedToConnectException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use Drupal\webform\Entity\Webform;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Drupal\grants_mandate\CompanySelectException;
@@ -441,6 +439,9 @@ class ApplicationHandler {
   /**
    * Return Application environment shortcode.
    *
+   * If environment is one of the set ones, use those. But if not, use one in
+   * .env file.
+   *
    * @return string
    *   Shortcode from current environment.
    */
@@ -463,7 +464,7 @@ class ApplicationHandler {
             $appParam = 'STAGE';
           }
           else {
-            $appParam = 'LOCAL';
+            $appParam = strtoupper($appEnv);
           }
         }
       }
@@ -558,20 +559,14 @@ class ApplicationHandler {
     }
 
     if ($document == NULL) {
-      try {
-        $document = $atvService->searchDocuments(
-          [
-            'transaction_id' => $applicationNumber,
-          ],
-          $refetch
-        );
-        /** @var \Drupal\helfi_atv\AtvDocument $document */
-        $document = reset($document);
-
-      }
-      catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
-        return NULL;
-      }
+      $document = $atvService->searchDocuments(
+        [
+          'transaction_id' => $applicationNumber,
+        ],
+        $refetch
+      );
+      /** @var \Drupal\helfi_atv\AtvDocument $document */
+      $document = reset($document);
     }
 
     // If there's no local submission with given serial
@@ -752,9 +747,129 @@ class ApplicationHandler {
   }
 
   /**
+   * Method to initialise application document in ATV.
+   *
+   * @param string $webform_id
+   *   Id of a webform of created application.
+   *
+   * @return \Drupal\webform\Entity\WebformSubmission
+   *   Newly created application content.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  public function initApplication(string $webform_id): WebformSubmission {
+
+    $webform = Webform::load($webform_id);
+    $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+
+    $submissionData = [];
+
+    $submissionData['application_type_id'] = $webform->getThirdPartySetting('grants_metadata', 'applicationTypeID');
+    $submissionData['application_type'] = $webform->getThirdPartySetting('grants_metadata', 'applicationType');
+    $submissionData['applicant_type'] = $this->grantsProfileService->getApplicantType();
+    $submissionData['status'] = self::$applicationStatuses['DRAFT'];
+    $submissionData['company_number'] = $selectedCompany['identifier'];
+
+    // Set form timestamp to current time.
+    // apparently this is always set to latest submission.
+    $dt = new \DateTime();
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+    $submissionData['form_timestamp'] = $dt->format('Y-m-d\TH:i:s');
+    $submissionData['form_timestamp_created'] = $dt->format('Y-m-d\TH:i:s');
+
+    $submissionObject = WebformSubmission::create([
+      'webform_id' => $webform->id(),
+      'draft' => TRUE,
+    ]);
+    $submissionObject->set('in_draft', TRUE);
+    $submissionObject->save();
+
+    $applicationNumber = ApplicationHandler::createApplicationNumber($submissionObject);
+    $submissionData['application_number'] = $applicationNumber;
+
+    $atvDocument = AtvDocument::create([]);
+    $atvDocument->setTransactionId($applicationNumber);
+    $atvDocument->setStatus(self::$applicationStatuses['DRAFT']);
+    $atvDocument->setType($submissionData['application_type']);
+    $atvDocument->setService(getenv('ATV_SERVICE'));
+    $atvDocument->setUserId($userData['sub']);
+    $atvDocument->setTosFunctionId(getenv('ATV_TOS_FUNCTION_ID'));
+    $atvDocument->setTosRecordId(getenv('ATV_TOS_RECORD_ID'));
+    $atvDocument->setBusinessId($selectedCompany['identifier']);
+    $atvDocument->setDraft(TRUE);
+
+    $atvDocument->setMetadata([
+      'appenv' => self::getAppEnv(),
+      // Hmm, maybe no save id at this point?
+      'saveid' => 'initialSave',
+      'applicationnumber' => $applicationNumber,
+    ]);
+
+    $typeData = $this->webformToTypedData($submissionData);
+
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $applicationData */
+    $appDocumentContent = $this->atvSchema->typedDataToDocumentContent($typeData);
+
+    $atvDocument->setContent($appDocumentContent);
+
+    $newDocument = $this->atvService->postDocument($atvDocument);
+
+    $dataDefinitionKeys = self::getDataDefinitionClass($submissionData['application_type']);
+    $dataDefinition = $dataDefinitionKeys['definitionClass']::create($dataDefinitionKeys['definitionId']);
+
+    $submissionObject->setData($this->atvSchema->documentContentToTypedData($newDocument->getContent(), $dataDefinition));
+
+    return $submissionObject;
+  }
+
+  /**
+   * Handle application upload directly to ATV.
+   *
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   */
+  public function handleApplicationUploadToAtv(
+    TypedDataInterface $applicationData,
+    string $applicationNumber
+  ) {
+
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $applicationData */
+    $appDocumentContent = $this->atvSchema->typedDataToDocumentContent($applicationData);
+
+    $atvDocument = $this->getAtvDocument($applicationNumber);
+    $atvDocument->addMetadata(
+      'saveid',
+      $this->logSubmissionSaveid(NULL, $applicationNumber)
+    );
+
+    $atvDocument->setContent($appDocumentContent);
+
+    if ($this->newStatusHeader && $this->newStatusHeader != '') {
+      $atvDocument->setStatus($this->newStatusHeader);
+    }
+
+    $updatedDocument = $this->atvService->patchDocument(
+      $atvDocument->getId(),
+      $atvDocument->toArray()
+    );
+
+    return $updatedDocument;
+
+  }
+
+  // 50bfa7ed-d102-481d-b156-9fdb4545871c
+  // 50bfa7ed-d102-481d-b156-9fdb4545871c
+
+  /**
    * Take in typed data object, export to Avus2 document structure & upload.
    *
-   * @param Drupal\Core\TypedData\TypedDataInterface $applicationData
+   * @param \Drupal\Core\TypedData\TypedDataInterface $applicationData
    *   Typed data object.
    * @param string $applicationNumber
    *   Used application number.
@@ -762,7 +877,7 @@ class ApplicationHandler {
    * @return bool
    *   Result.
    */
-  public function handleApplicationUpload(
+  public function handleApplicationUploadViaIntegration(
     TypedDataInterface $applicationData,
     string $applicationNumber
   ): bool {
@@ -1051,12 +1166,14 @@ class ApplicationHandler {
               $applications[$ts] = $submission;
             }
           }
-          catch (AtvDocumentNotFoundException $e) {
+          catch (\Exception $e) {
+            $d = 'adsf';
           }
         }
       }
     }
     catch (\Exception $e) {
+      $d = 'adsf';
     }
 
     if ($sortByFinished == TRUE) {
@@ -1174,6 +1291,11 @@ class ApplicationHandler {
     $saveid_log = $query->execute()->fetch();
     $latestSaveid = !empty($saveid_log->saveid) ? $saveid_log->saveid : '';
 
+    // initialSave no datavalidation.
+    if ($saveIdToValidate == 'initialSave') {
+      return 'OK';
+    }
+
     if ($saveIdToValidate !== $latestSaveid) {
       $this->logger->log('info', 'Save ids not matching  %application_number ATV:@saveid, Local: %local_save_id', [
         '%application_number' => $applicationNumber,
@@ -1196,7 +1318,7 @@ class ApplicationHandler {
       }
     }
 
-    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_ATT_OK');
+    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'HANDLER_ATT_OK');
 
     $fileFieldNames = AttachmentHandler::getAttachmentFieldNames();
 

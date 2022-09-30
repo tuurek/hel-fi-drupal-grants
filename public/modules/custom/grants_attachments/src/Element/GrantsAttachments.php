@@ -2,9 +2,14 @@
 
 namespace Drupal\grants_attachments\Element;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\file\Entity\File;
 use Drupal\grants_handler\EventsService;
 use Drupal\webform\Element\WebformCompositeBase;
+use Drupal\webform\Utility\WebformElementHelper;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Provides a 'grants_attachments'.
@@ -169,7 +174,7 @@ class GrantsAttachments extends WebformCompositeBase {
       ],
       '#upload_location' => 'private://grants_attachments',
       '#sanitize' => TRUE,
-      // '#value_callback' => [self::class, 'valueMFCallback'],
+      '#element_validate' => ['\Drupal\grants_attachments\Element\GrantsAttachments::validateUpload'],
     ];
 
     $elements['attachmentName'] = [
@@ -206,6 +211,123 @@ class GrantsAttachments extends WebformCompositeBase {
     ];
 
     return $elements;
+  }
+
+  /**
+   * Validate & upload file attachment.
+   *
+   * @param array $element
+   *   Element tobe validated.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   * @param array $form
+   *   The form.
+   */
+  public static function validateUpload(array &$element, FormStateInterface $form_state, array &$form) {
+    $webformKey = $element["#parents"][0];
+    $value = $form_state->getValue($webformKey);
+
+    // Skip empty unique fields or arrays (aka #multiple).
+    if ($value === '' || (is_array($value) && empty($value))) {
+      return;
+    }
+
+    if (!isset($value['attachment'])) {
+      return;
+    }
+
+    /** @var \Drupal\webform\WebformSubmissionForm $form_object */
+    $form_object = $form_state->getFormObject();
+    /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
+    $webformSubmission = $form_object->getEntity();
+    // Get data from webform.
+    $webformData = $webformSubmission->getData();
+    $webformDataElement = $webformData[$webformKey];
+
+    // If we already have uploaded this file now, lets not do it again.
+    if (isset($webformDataElement["fileStatus"]) && $webformDataElement["fileStatus"] == 'justUploaded') {
+      $form_state->setValue($webformKey, $webformDataElement);
+      return;
+    }
+
+    // If no application number, we cannot validate.
+    // We should ALWAYS have it though at this point.
+    if (!isset($webformData['application_number'])) {
+      return;
+    }
+
+    $integrationIdValue = [
+      $webformKey,
+      'integrationID',
+    ];
+    $fileStatusIdValue = [
+      $webformKey,
+      'fileStatus',
+    ];
+
+    $application_number = $webformData['application_number'];
+
+    /** @var \Drupal\grants_handler\ApplicationHandler $applicationHandler */
+    $applicationHandler = \Drupal::service('grants_handler.application_handler');
+    /** @var \Drupal\helfi_atv\AtvService $atvService */
+    $atvService = \Drupal::service('helfi_atv.atv_service');
+
+    try {
+      // Get Document for this application.
+      $atvDocument = $applicationHandler->getAtvDocument($application_number);
+      // Load file.
+      $file = File::load($value["attachment"]);
+      // Upload attachment to document.
+      $attachmentResponse = $atvService->uploadAttachment($atvDocument->getId(), $file->getFilename(), $file);
+      // Remove server url from integrationID.
+      $integrationId = str_replace(getenv('ATV_BASE_URL'), '', $attachmentResponse['href']);
+      // Set values to form.
+      $form_state->setValue($integrationIdValue, $integrationId);
+      $form_state->setValue($fileStatusIdValue, 'justUploaded');
+    }
+    catch (\Exception $e) {
+      // Set error to form.
+      $form_state->setError($element, 'File upload failed, error has been logged.');
+      // Log error.
+      \Drupal::logger('grants_attachments')->error($e->getMessage());
+    }
+    catch (GuzzleException $e) {
+      // Set error to form.
+      $form_state->setError($element, 'File upload failed, error has been logged.');
+      // Log error.
+      \Drupal::logger('grants_attachments')->error($e->getMessage());
+    }
+  }
+
+  /**
+   * Validates a composite element.
+   */
+  public static function validateWebformComposite(&$element, FormStateInterface $form_state, &$complete_form) {
+    // IMPORTANT: Must get values from the $form_states since sub-elements
+    // may call $form_state->setValueForElement() via their validation hook.
+    // @see \Drupal\webform\Element\WebformEmailConfirm::validateWebformEmailConfirm
+    // @see \Drupal\webform\Element\WebformOtherBase::validateWebformOther
+    $value = NestedArray::getValue($form_state->getValues(), $element['#parents']);
+
+    // Only validate composite elements that are visible.
+    if (Element::isVisibleElement($element)) {
+      // Validate required composite elements.
+      $composite_elements = static::getCompositeElements($element);
+      $composite_elements = WebformElementHelper::getFlattened($composite_elements);
+      foreach ($composite_elements as $composite_key => $composite_element) {
+        $is_required = !empty($element[$composite_key]['#required']);
+        $is_empty = (isset($value[$composite_key]) && $value[$composite_key] === '');
+        if ($is_required && $is_empty) {
+          WebformElementHelper::setRequiredError($element[$composite_key], $form_state);
+        }
+      }
+    }
+
+    // Clear empty composites value.
+    if (is_array($value) && empty(array_filter($value))) {
+      $element['#value'] = NULL;
+      $form_state->setValueForElement($element, NULL);
+    }
   }
 
   /**

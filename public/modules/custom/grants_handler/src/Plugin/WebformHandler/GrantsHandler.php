@@ -366,13 +366,31 @@ class GrantsHandler extends WebformHandlerBase {
 
   /**
    * {@inheritdoc}
+   */
+  public function prepareForm(WebformSubmissionInterface $webform_submission, $operation, FormStateInterface $form_state) {
+
+    // If we're coming here with ADD operator, then we redirect user to
+    // new application endpoint and from there they're redirected back ehre
+    // with newly initialized application. And edit operator.
+    if ($operation == 'add') {
+      $webform_id = $webform_submission->getWebform()->id();
+      $url = Url::fromRoute('grants_handler.new_application', [
+        'webform_id' => $webform_id,
+      ]);
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    parent::prepareForm($webform_submission, $operation, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @throws \Exception
    */
   public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
 
-    // \Drupal::messenger()->addMessage
-    // ('Message in GrantsHandler::alterForm()');
     $this->alterFormNavigation($form, $form_state, $webform_submission);
 
     $form['#webform_submission'] = $webform_submission;
@@ -841,7 +859,7 @@ class GrantsHandler extends WebformHandlerBase {
 
       // submitForm is triggering element when saving as draft.
       // Parse attachments to data structure.
-      $this->submittedFormData['attachments'] = $this->attachmentHandler->parseAttachments(
+      $this->attachmentHandler->parseAttachments(
         $this->formTemp,
         $this->submittedFormData,
         $this->applicationNumber
@@ -855,17 +873,12 @@ class GrantsHandler extends WebformHandlerBase {
         // @todo log errors here.
       }
 
-      $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
+      $applicationUploadStatus = $this->applicationHandler->handleApplicationUploadToAtv(
         $applicationData,
         $this->applicationNumber
       );
 
       if ($applicationUploadStatus) {
-        $this->attachmentHandler->handleApplicationAttachments(
-          $this->applicationNumber,
-          $webform_submission
-        );
-
         $this->messenger()
           ->addStatus(
             $this->t(
@@ -914,11 +927,16 @@ class GrantsHandler extends WebformHandlerBase {
     if ($this->triggeringElement == '::submit') {
       // Submit is trigger when exiting from confirmation page.
       // Parse attachments to data structure.
-      $this->submittedFormData['attachments'] = $this->attachmentHandler->parseAttachments(
-        $this->formTemp,
-        $this->submittedFormData,
-        $this->applicationNumber
-      );
+      try {
+        $this->attachmentHandler->parseAttachments(
+          $this->formTemp,
+          $this->submittedFormData,
+          $this->applicationNumber
+        );
+      }
+      catch (\Exception $e) {
+        $this->getLogger('grants_handler')->error($e->getMessage());
+      }
 
       // Try to update status only if it's allowed.
       if (ApplicationHandler::canSubmissionBeSubmitted($webform_submission, NULL)) {
@@ -952,21 +970,12 @@ class GrantsHandler extends WebformHandlerBase {
         'grants_metadata_yleisavustushakemus'
       );
 
-      $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
+      $applicationUploadStatus = $this->applicationHandler->handleApplicationUploadViaIntegration(
         $applicationData,
         $this->applicationNumber
       );
 
       if ($applicationUploadStatus) {
-        $this->attachmentHandler->handleApplicationAttachments(
-          $this->applicationNumber,
-          $webform_submission
-        );
-
-        $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
-          'submission_id' => $this->applicationNumber,
-        ]);
-
         $this->messenger()
           ->addStatus(
             $this->t(

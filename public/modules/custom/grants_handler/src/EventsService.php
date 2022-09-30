@@ -60,10 +60,11 @@ class EventsService {
     'MESSAGE_AVUS2' => 'MESSAGE_AVUS2',
     'MESSAGE_APP' => 'MESSAGE_APP',
     'MESSAGE_READ' => 'MESSAGE_READ',
+    'HANDLER_ATT_OK' => 'HANDLER_ATT_OK',
     'INTEGRATION_INFO_ATT_OK' => 'INTEGRATION_INFO_ATT_OK',
     'INTEGRATION_INFO_APP_OK' => 'INTEGRATION_INFO_APP_OK',
     'EVENT_INFO' => 'EVENT_INFO',
-    'APP_INFO_ATT_DELETED' => 'APP_INFO_ATT_DELETED',
+    'HANDLER_ATT_DELETED' => 'HANDLER_ATT_DELETED',
   ];
 
   /**
@@ -114,8 +115,10 @@ class EventsService {
    *   Free message to be added.
    * @param string $eventTarget
    *   Target ID for event.
+   * @param array $eventData
+   *   If we have already built-up event data, use this.
    *
-   * @return string|null
+   * @return array|null
    *   EventID if success, otherways NULL
    *
    * @throws \Drupal\grants_handler\EventException
@@ -124,31 +127,13 @@ class EventsService {
     string $applicationNumber,
     string $eventType,
     string $eventDescription,
-    string $eventTarget
-  ): ?string {
+    string $eventTarget,
+    array $eventData = []
+  ): ?array {
 
-    $eventData = [];
-
-    if (!in_array($eventType, self::$eventTypes)) {
-      throw new EventException('Not valid event type: ' . $eventType);
+    if (empty($eventData)) {
+      $eventData = self::getEventData($eventType, $applicationNumber, $eventDescription, $eventTarget);
     }
-    else {
-      $eventData['eventType'] = $eventType;
-    }
-
-    $eventData['eventID'] = Uuid::uuid4()->toString();
-    $eventData['caseId'] = $applicationNumber;
-    $eventData['eventDescription'] = AtvSchema::sanitizeInput($eventDescription);
-    $eventData['eventTarget'] = $eventTarget;
-
-    if (!isset($eventData['eventSource'])) {
-      $eventData['eventSource'] = getenv('EVENTS_SOURCE');
-    }
-
-    $dt = new \DateTime();
-    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-
-    $eventData['timeCreated'] = $eventData['timeUpdated'] = $dt->format('Y-m-d\TH:i:s');
 
     $eventDataJson = Json::encode($eventData);
 
@@ -170,7 +155,7 @@ class EventsService {
 
       if ($res->getStatusCode() == 201) {
         $this->logger->info('Event logged: %eventId, message sent.', ['%eventId' => $eventData['eventID']]);
-        return $eventData['eventID'];
+        return $eventData;
       }
 
     }
@@ -205,6 +190,49 @@ class EventsService {
       'event_targets' => array_column($messageEvents, 'eventTarget'),
       'event_ids' => array_column($messageEvents, 'eventID'),
     ];
+  }
+
+  /**
+   * Build event object/array from given data.
+   *
+   * @param string $eventType
+   *   Type of event, must be in self::$eventTypes.
+   * @param string $applicationNumber
+   *   Application number for event.
+   * @param string $eventDescription
+   *   Event description.
+   * @param string $eventTarget
+   *   Eent target.
+   *
+   * @return array
+   *   Event data in array.
+   *
+   * @throws \Drupal\grants_handler\EventException
+   */
+  public static function getEventData(string $eventType, string $applicationNumber, string $eventDescription, string $eventTarget): array {
+    $eventData = [];
+
+    if (!in_array($eventType, self::$eventTypes)) {
+      throw new EventException('Not valid event type: ' . $eventType);
+    }
+    else {
+      $eventData['eventType'] = $eventType;
+    }
+
+    $eventData['eventID'] = Uuid::uuid4()->toString();
+    $eventData['caseId'] = $applicationNumber;
+    $eventData['eventDescription'] = AtvSchema::sanitizeInput($eventDescription);
+    $eventData['eventTarget'] = $eventTarget;
+
+    if (!isset($eventData['eventSource'])) {
+      $eventData['eventSource'] = getenv('EVENTS_SOURCE');
+    }
+
+    $dt = new \DateTime();
+    $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+
+    $eventData['timeCreated'] = $eventData['timeUpdated'] = $dt->format('Y-m-d\TH:i:s');
+    return $eventData;
   }
 
 }

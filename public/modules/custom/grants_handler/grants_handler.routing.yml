@@ -30,6 +30,13 @@ grants_handler.edit_application:
   requirements:
     _custom_access: '\Drupal\grants_handler\Controller\ApplicationController::access'
 
+grants_handler.new_application:
+  path: '/uusi-hakemus/{webform_id}'
+  defaults:
+    _controller: '\Drupal\grants_handler\Controller\ApplicationController::newApplication'
+  requirements:
+    _permission: 'access grants_oma_asiointi'
+
 grants_handler.message_read:
   path: '/hakemus/{application_number}/viesti/{message_id}/luettu'
   defaults:

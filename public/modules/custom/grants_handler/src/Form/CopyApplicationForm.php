@@ -135,7 +135,7 @@ class CopyApplicationForm extends FormBase {
     $applicationData = $this->applicationHandler->webformToTypedData(
       $clearedData);
 
-    $uploadResults = $this->applicationHandler->handleApplicationUpload($applicationData, $newAppNumber);
+    $uploadResults = $this->applicationHandler->handleApplicationUploadViaIntegration($applicationData, $newAppNumber);
 
     if ($uploadResults == TRUE) {
       $this->messenger()

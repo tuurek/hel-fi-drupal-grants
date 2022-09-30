@@ -10,6 +10,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
+use Drupal\grants_handler\EventsService;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -88,6 +89,13 @@ class AttachmentHandler {
    * @var array
    */
   protected array $attachmentFileIds;
+
+  /**
+   * Events generated from file uploads.
+   *
+   * @var array
+   */
+  protected array $eventsFromUploads;
 
   /**
    * Debug status.
@@ -236,26 +244,31 @@ class AttachmentHandler {
   }
 
   /**
-   * Parse attachments from POST.
+   * Parse attachments from submitted data and create schema structured data.
    *
    * @param array $form
    *   Form in question.
    * @param array $submittedFormData
-   *   Submitted form data.
+   *   Submitted form data. Passed as reference so both events & attachments
+   *   can be added.
    * @param string $applicationNumber
    *   Generated application number.
    *
    * @return array[]
    *   Parsed attachments.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\grants_handler\EventException
    */
   public function parseAttachments(
     array $form,
-    array $submittedFormData,
+    array &$submittedFormData,
     string $applicationNumber): array {
 
     $attachmentsArray = [];
     $attachmentHeaders = GrantsAttachments::$fileTypes;
     $filenames = [];
+    $integrationIds = [];
     $attachmentFields = self::getAttachmentFieldNames(TRUE);
     foreach ($attachmentFields as $attachmentFieldName => $descriptionKey) {
       $field = $submittedFormData[$attachmentFieldName];
@@ -290,16 +303,52 @@ class AttachmentHandler {
             }
           }
 
-          $parsedArray = $this->getAttachmentByFieldValue(
-            $fieldElement, $descriptionValue, $fileType);
+          // Get attachment structure & possible event.
+          $attachment = $this->getAttachmentByFieldValue(
+            $fieldElement, $descriptionValue, $fileType, $applicationNumber);
 
-          if (!empty($parsedArray)) {
-            if (!isset($parsedArray['fileName']) || !in_array($parsedArray['fileName'], $filenames)) {
-              $attachmentsArray[] = $parsedArray;
-              if (isset($parsedArray['fileName'])) {
-                $filenames[] = $parsedArray['fileName'];
+          if (!empty($attachment['attachment'])) {
+            $attachmentExists = array_filter(
+              $submittedFormData['attachments'],
+              function ($item) use ($attachment) {
+                // If we have integration ID, we have uploaded attachment
+                // and we want to compare that.
+                if (isset($item['integrationID']) && isset($attachment['attachment']['integrationID'])) {
+                  if ($item['integrationID'] == $attachment['attachment']['integrationID']) {
+                    return TRUE;
+                  }
+                }
+                // If no upload, then compare descriptions.
+                else {
+                  if (isset($item['description']) && isset($attachment['attachment']['description'])) {
+                    if ($item['description'] == $attachment['attachment']['description']) {
+                      return TRUE;
+                    }
+                  }
+                }
+                // If no match.
+                return FALSE;
+              });
+            // No attachment at all.
+            if (empty($attachmentExists)) {
+              $submittedFormData['attachments'][] = $attachment['attachment'];
+            }
+            else {
+              // We had existing attachment, but we need to update it with
+              // the data from this form.
+              foreach ($submittedFormData['attachments'] as $key => $att) {
+                if (isset($att['description']) && isset($attachment['attachment']['description'])) {
+                  if ($att['description'] == $attachment['attachment']['description']) {
+                    $submittedFormData['attachments'][$key] = $attachment['attachment'];
+                  }
+                }
               }
             }
+          }
+          // Also set event.
+          // There is no event if attachment is uploaded.
+          if (!empty($attachment['event'])) {
+            $submittedFormData['events'][] = $attachment['event'];
           }
         }
       }
@@ -499,15 +548,23 @@ class AttachmentHandler {
    *   The field description from form element title.
    * @param string $fileType
    *   Filetype id from element configuration.
+   * @param string $applicationNumber
+   *   Application number for attachment.
    *
    * @return \stdClass[]
    *   Data for JSON.
+   *
+   * @throws \Drupal\grants_handler\EventException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function getAttachmentByFieldValue(
     array $field,
     string $fieldDescription,
-    string $fileType): array {
+    string $fileType,
+    string $applicationNumber
+  ): array {
 
+    $event = NULL;
     $retval = [
       'description' => (isset($field['description']) && $field['description'] !== "") ? $field['description'] : $fieldDescription,
     ];
@@ -520,10 +577,26 @@ class AttachmentHandler {
         // Add file id for easier usage in future.
         $this->attachmentFileIds[] = $field['attachment'];
 
+        // Maybe delete file here also?
         $retval['fileName'] = $file->getFilename();
         $retval['isNewAttachment'] = TRUE;
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
+
+        if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
+          $retval['integrationID'] = $field["integrationID"];
+        }
+
+        $event = EventsService::getEventData(
+          'HANDLER_ATT_OK',
+          $applicationNumber,
+          'Attachment uploaded.',
+          $retval['fileName']
+        );
+
+        // Delete file entity from Drupal.
+        $file->delete();
+
       }
     }
     else {
@@ -581,7 +654,10 @@ class AttachmentHandler {
       }
 
     }
-    return $retval;
+    return [
+      'attachment' => $retval,
+      'event' => $event,
+    ];
   }
 
   /**
@@ -622,7 +698,7 @@ class AttachmentHandler {
                 '@filename' => $attResult['filename'],
                 '@msg' => $attResult['msg'],
               ])
-            );
+          );
       }
     }
 

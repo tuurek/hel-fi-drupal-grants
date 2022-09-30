@@ -319,6 +319,31 @@ class ApplicationController extends ControllerBase {
   }
 
   /**
+   * Create new application and redirect to edit page.
+   *
+   * @param string $webform_id
+   *   Webform to be added.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirect to edit form.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function newApplication(string $webform_id) {
+
+    $newSubmission = $this->applicationHandler->initApplication($webform_id);
+    $webform = $newSubmission->getWebform();
+
+    return $this->redirect(
+      'grants_handler.edit_application',
+      [
+        'webform' => $webform->id(),
+        'webform_submission' => $newSubmission->id(),
+      ]
+    );
+  }
+
+  /**
    * Returns a page title.
    */
   public function getEditTitle($webform_submission): string {

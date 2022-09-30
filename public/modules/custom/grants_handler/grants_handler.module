@@ -221,6 +221,10 @@ function grants_handler_page_attachments(array &$attachments) {
  * @see hook_webform_element_ELEMENT_TYPE_alter()
  */
 function grants_handler_webform_element_alter(array &$element, FormStateInterface $form_state, array $context) {
+
+
+  $values = $form_state->getValues();
+
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
   $form_object = $form_state->getFormObject();
@@ -1004,7 +1008,6 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'target' => '_blank',
       ],
     ]
   );
