@@ -961,15 +961,28 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
   try {
     if ($submissionData['status'] == 'DRAFT') {
-      $dt = new DateTime($submissionData["form_timestamp"], new DateTimeZone('Europe/Helsinki'));
+      if (isset($submissionData["form_timestamp"]) && !empty($submissionData["form_timestamp"])) {
+        $dt = new DateTime($submissionData["form_timestamp"], new DateTimeZone('Europe/Helsinki'));
+        $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+      }
     }
     else {
-      $dt = new DateTime($submissionData["form_timestamp_created"], new DateTimeZone('Europe/Helsinki'));
+      if (isset($submissionData["form_timestamp_created"]) && !empty($submissionData["form_timestamp_created"])) {
+        $dt = new DateTime($submissionData["form_timestamp_created"], new DateTimeZone('Europe/Helsinki'));
+        $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+      }
     }
-
-    $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
   } catch (\Exception $e) {
   }
+
+
+  $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
+    'submission_id' => $submission->id(),
+  ]);
+
+  $printAppUrl = Url::fromRoute('grants_webform_print.submission_print', [
+    'submission_id' => $submission->id(),
+  ]);
 
   $viewApplicationUrl = Url::fromRoute(
     'grants_handler.view_application',
@@ -1010,6 +1023,9 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
   $variables['viewApplicationLink'] = Link::fromTextAndUrl($viewApplicationLinkText, $viewApplicationUrl);
   $variables['editApplicationLink'] = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
+
+  $variables['deleteApplicationUrl'] = $deleteAppUrl->toString();
+  $variables['printApplicationUrl'] = $printAppUrl->toString();
 
   try {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {

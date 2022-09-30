@@ -142,7 +142,7 @@ class GrantsAttachments extends WebformCompositeBase {
       }
 
       if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '6') {
-        if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== ""){
+        if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== "") {
           $element["fileStatus"]["#value"] = 'uploaded';
         }
       }
@@ -264,6 +264,14 @@ class GrantsAttachments extends WebformCompositeBase {
       $webformKey,
       'fileStatus',
     ];
+    $deliveredLaterValue = [
+      $webformKey,
+      'isDeliveredLater',
+    ];
+    $anotherFileValue = [
+      $webformKey,
+      'isIncludedInOtherFile',
+    ];
 
     $application_number = $webformData['application_number'];
 
@@ -284,6 +292,8 @@ class GrantsAttachments extends WebformCompositeBase {
       // Set values to form.
       $form_state->setValue($integrationIdValue, $integrationId);
       $form_state->setValue($fileStatusIdValue, 'justUploaded');
+      $form_state->setValue($deliveredLaterValue, '0');
+      $form_state->setValue($anotherFileValue, '0');
     }
     catch (\Exception $e) {
       // Set error to form.
@@ -353,11 +363,16 @@ class GrantsAttachments extends WebformCompositeBase {
       $element["#parents"][0],
       'isDeliveredLater',
     ]);
+    $integrationID = $form_state->getValue([
+      $element["#parents"][0],
+      'integrationID',
+    ]);
 
     if ($file !== NULL && $isDeliveredLaterCheckboxValue === '1') {
-      $form_state->setError($element, t('You cannot send file and have it delivered later'));
+      if (empty($integrationID)) {
+        $form_state->setError($element, t('You cannot send file and have it delivered later'));
+      }
     }
-
   }
 
   /**
@@ -384,8 +399,15 @@ class GrantsAttachments extends WebformCompositeBase {
       'isIncludedInOtherFile',
     ]);
 
+    $integrationID = $form_state->getValue([
+      $element["#parents"][0],
+      'integrationID',
+    ]);
+
     if ($file !== NULL && $checkboxValue === '1') {
-      $form_state->setError($element, t('You cannot send file and have it in another file'));
+      if (empty($integrationID)) {
+        $form_state->setError($element, t('You cannot send file and have it in another file'));
+      }
     }
   }
 
