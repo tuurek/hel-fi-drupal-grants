@@ -153,7 +153,7 @@
         "post-update-cmd": [
             "@copy-commit-message-script"
         ],
-        "phpcs": "vendor/bin/phpcs public/modules/custom --standard=Drupal --ignore=*.js,*.css",
-        "phpcbf": "vendor/bin/phpcbf public/modules/custom --standard=Drupal --ignore=*.js,*.css"
+        "phpcs": "vendor/bin/phpcs public/modules/custom --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
+        "phpcbf": "vendor/bin/phpcbf public/modules/custom --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install"
     }
 }

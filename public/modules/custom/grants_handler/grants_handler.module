@@ -23,30 +23,12 @@ use Drupal\webform\WebformSubmissionStorageInterface;
 
 /**
  * Implements hook_theme().
- *
- * @return array
  */
 function grants_handler_theme(): array {
   return [
     'webform_handler_grants_summary' => [
       'variables' => ['settings' => NULL, 'handler' => []],
     ],
-    // @todo composite elements' custom themes.
-    //   'community_officials_composite' => [
-    //      'variables' => [],
-    //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
-    //      'template' => 'select'
-    //    ],
-    //    'bank_account_composite' => [
-    //      'variables' => [],
-    //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
-    //      'template' => 'select'
-    //    ],
-    //    'community_address_composite' => [
-    //      'variables' => [],
-    //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
-    //      'template' => 'select'
-    //    ],.
     'webform_submission_messages' => [
       'variables' => [
         'messages' => NULL,
@@ -99,11 +81,6 @@ function grants_handler_theme(): array {
         'editForm' => NULL,
       ],
     ],
-    // 'grants_handler_copy_application' => [
-    //      'variables' => [
-    //        'submission' => NULL,
-    //      ],
-    //    ],
     // Override the webform progress bar so we can add our page classes.
     'webform_progress_bar' => [
       'variables' => [
@@ -221,9 +198,6 @@ function grants_handler_page_attachments(array &$attachments) {
  * @see hook_webform_element_ELEMENT_TYPE_alter()
  */
 function grants_handler_webform_element_alter(array &$element, FormStateInterface $form_state, array $context) {
-
-
-  $values = $form_state->getValues();
 
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
@@ -370,7 +344,9 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
     // For some reason this selection cannot be done in official composite class.
     // so we'll need to hack this here.
     // @todo Can the composite default value be added here?
-    if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_officials')) {
+    if (
+      isset($element['#webform_key']) &&
+      $element['#webform_key'] == 'community_officials') {
 
       /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
       $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -405,6 +381,8 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
 }
 
 /**
+ * Add icons to some
+ *
  * @param $array
  *   Array being manipulated.
  * @param $value
@@ -421,15 +399,21 @@ function _grants_handler_imported_handler(
     return;
   }
 
+  $url = Url::fromRoute('grants_oma_asiointi.front');
+
   $array["#value"] = $value;
   $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
   $array['#description'] = FieldFilteredMarkup::create($show_checkmark ? $value .
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
   if ($show_checkmark === FALSE) {
-    $array['#field_prefix'] = '<a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . t('Edit') . '</span>
-          </a>';
+    $array['#field_prefix'] = '
+    <a class="hds-link hds-link--medium" style="display:inline-block;" 
+      href="' . $url->toString() . '">
+      <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s">
+      
+</span><span class="link-label">' . t('Edit') . '</span>
+    </a>';
   }
 
 }
@@ -445,7 +429,7 @@ function _grants_handler_imported_handler(
  *   Clarifying text.
  */
 function _grants_handler_missing_data(
-  array &$element,
+  array  &$element,
   string $str1 = 'Field is missing.',
   string $str2 = 'Go to grants profile',
   string $str3 = 'to fill out missing data.') {

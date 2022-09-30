@@ -9,8 +9,6 @@
  * @see https://www.drupal.org/node/2217931
  */
 
-use Drupal\views\ViewExecutable;
-
 /**
  * Implements hook_theme().
  */
@@ -62,6 +60,3 @@ function grants_oma_asiointi_preprocess_page_title(&$variables) {
   $variables['initials'] = 'AS';
   $variables['colorscheme'] = '0';
 }
-
-
-

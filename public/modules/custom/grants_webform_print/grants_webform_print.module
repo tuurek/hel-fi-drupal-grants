@@ -276,7 +276,6 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
   $all_errors = $webform->getState('current_errors', []);
 
   // $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
-
   $currentPageVariables = $variables["current_page"];
 
   // Iterate through the pages and set appropriate page classes.

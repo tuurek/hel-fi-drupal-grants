@@ -157,7 +157,7 @@ function grants_profile_user_logout(AccountInterface $account) {
 function grants_profile_preprocess_own_profile(&$variables) {
   foreach ($variables['profile']['officials'] as $key => $official) {
     $officialRole = ModalApplicationOfficialForm::getOfficialRoles();
-    $temprole = ''.$officialRole[(int)$official['role']];
+    $temprole = '' . $officialRole[(int) $official['role']];
     $variables['profile']['officials'][$key]['officialRole'] = $temprole;
   }
 }

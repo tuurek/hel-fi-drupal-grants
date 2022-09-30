@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\grants_handler\ApplicationHandler;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\webform\Entity\WebformSubmission;
@@ -52,9 +53,9 @@ function template_preprocess_grants_attachments(array &$variables) {
 
     $submission = WebformSubmission::load($variables["children"]["#webform_submission"]);
 
-    $applicationNumber = \Drupal\grants_handler\ApplicationHandler::createApplicationNumber($submission);
+    $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
 
-    $s2 = \Drupal\grants_handler\ApplicationHandler::submissionObjectFromApplicationNumber($applicationNumber);
+    $s2 = ApplicationHandler::submissionObjectFromApplicationNumber($applicationNumber);
 
     if ($submission != NULL) {
       $submissionData = $submission->getData();
