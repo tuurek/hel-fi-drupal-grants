@@ -17,8 +17,10 @@ dependencies:
     - content_translation
     - eu_cookie_compliance
     - file
+    - grants_oma_asiointi
     - grants_profile
     - helfi_api_base
+    - helfi_tpr
     - locale
     - media
     - menu_link_content
@@ -52,6 +54,7 @@ permissions:
   - 'administer entity print'
   - 'administer eu cookie compliance categories'
   - 'administer eu cookie compliance popup'
+  - 'administer grants_oma_asiointi configuration'
   - 'administer grants_profile configuration'
   - 'administer menu'
   - 'administer nodes'

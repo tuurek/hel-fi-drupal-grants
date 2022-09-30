@@ -15,6 +15,7 @@ dependencies:
   module:
     - content_translation
     - file
+    - grants_oma_asiointi
     - helfi_api_base
     - media
     - node
@@ -28,7 +29,7 @@ dependencies:
 _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
-label: 'Sisällöntuottaja suppea'
+label: 'Content producer'
 weight: 3
 is_admin: null
 permissions:
@@ -43,6 +44,7 @@ permissions:
   - 'access webform help'
   - 'access webform overview'
   - 'access webform submission user'
+  - 'administer grants_oma_asiointi configuration'
   - 'administer nodes'
   - 'administer webform element access'
   - 'cancel account'
