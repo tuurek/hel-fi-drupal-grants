@@ -2,7 +2,6 @@
 
 namespace Drupal\grants_handler;
 
-use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\Database\Connection;
@@ -12,7 +11,6 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
-use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\WebformSubmissionInterface;
 
@@ -24,41 +22,36 @@ class GrantsHandlerNavigationHelper {
   /**
    * Name of the table where log entries are stored.
    */
-  const TABLE = 'grants_handler_log';
+  protected const TABLE = 'grants_handler_log';
 
   /**
    * Name of the error operation.
    */
-  const ERROR_OPERATION = 'errors';
+  public const ERROR_OPERATION = 'errors';
 
   /**
    * Name of the page visited operation.
    */
-  const PAGE_VISITED_OPERATION = 'page visited';
+  protected const PAGE_VISITED_OPERATION = 'page visited';
 
   /**
    * Name of the navigation handler.
    */
-  const HANDLER_ID = 'webform_handler_navigation';
-
-  /**
-   * The temp_store key.
-   */
-  const TEMP_STORE_KEY = 'webform_handler_form_errors';
+  protected const HANDLER_ID = 'grants_handler_navigation';
 
   /**
    * The database service.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection $database;
 
   /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
-  protected $messenger;
+  protected MessengerInterface $messenger;
 
   /**
    * The entity type manager service.
@@ -144,36 +137,28 @@ class GrantsHandlerNavigationHelper {
   public function hasVisitedPage(WebformSubmissionInterface $webform_submission, $page): bool {
     // Get outta here if the submission hasn't been saved yet.
     if (empty($webform_submission->id()) || empty($page)) {
-
-      // Set the page to the current page if it is empty.
-      if (empty($page)) {
-        $page = $this->getCurrentPage($webform_submission);
-      }
-
-      if (!empty($page)) {
-        $webformId = $webform_submission->getWebform()->id();
-        $storedata = $this->getFromStore($webformId);
-        if (is_array($storedata)) {
-          $hasVisited = array_filter($storedata, function ($item) use ($page) {
-            if (($page != NULL) &&
-              ($item['operation'] == self::PAGE_VISITED_OPERATION &&
-                $item['data'] == $page)
-            ) {
-              return TRUE;
-            }
-            return FALSE;
-          });
-          return !empty($hasVisited);
-        }
-      }
       return FALSE;
+    }
+
+    $data = $webform_submission->getData();
+
+    // Set the page to the current page if it is empty.
+    if (empty($page)) {
+      $page = $this->getCurrentPage($webform_submission);
     }
 
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
-    $query->condition('sid', $webform_submission->id());
+
+    if (isset($data['application_number'])) {
+      $query->condition('application_number', $data['application_number']);
+    }
+    else {
+      $query->condition('sid', $webform_submission->id());
+    }
+
     $query->condition('operation', self::PAGE_VISITED_OPERATION);
-    $query->condition('data', $page);
+    $query->condition('page', $page);
     $query->fields('l', [
       'lid',
       'sid',
@@ -196,69 +181,44 @@ class GrantsHandlerNavigationHelper {
    */
   public function getErrors(
     WebformSubmissionInterface $webform_submission,
-    $page = NULL) {
-    $webformId = $webform_submission->getWebForm()->id();
-    $storedData = $this->getStoredData('ALL', $webform_submission);
-
-    $operation = self::ERROR_OPERATION;
+    string $page = NULL) {
 
     if (empty($webform_submission->id())) {
-      $errors = array_filter(
-              $this->getFromStore($webform_submission->getWebForm()->id()),
-              function ($item) use ($operation) {
-                if ($item['operation'] == $operation) {
-                  return TRUE;
-                }
-                return FALSE;
-              });
-      ksort($errors);
-      $latest = reset($errors);
-      return $latest['data'] ?? [];
+      return [];
     }
+
+    $data = $webform_submission->getData();
+
     $query = $this->database->select(self::TABLE, 'l');
     $query->condition('webform_id', $webform_submission->getWebform()->id());
-    $query->condition('sid', $webform_submission->id());
     $query->condition('operation', self::ERROR_OPERATION);
+
+    if (isset($data['application_number'])) {
+      $query->condition('application_number', $data['application_number']);
+    }
+    else {
+      $query->condition('sid', $webform_submission->id());
+    }
+
+    if (!empty($page)) {
+      $query->condition('page', $page);
+    }
+
     $query->fields('l', [
       'lid',
       'sid',
       'data',
     ]);
     $query->orderBy('l.lid', 'DESC');
-    $query->range(0, 1);
     $submission_log = $query->execute()->fetch();
-    $data = !empty($submission_log->data) ? unserialize($submission_log->data) : [];
 
-    if (!empty($storedData)) {
-
-      $errors = array_filter(
-        $this->getFromStore($webform_submission->getWebForm()->id()),
-        function ($item) use ($operation) {
-          if ($item['operation'] == $operation) {
-            return TRUE;
-          }
-          return FALSE;
-        });
-      ksort($errors);
-      $latest = reset($errors);
-
-      // In case we have stored errors in users' session,
-      // merge those with the ones from DB.
-      $data = array_merge($data, $latest['data'] ?? []);
-      try {
-        $this->store->delete($webformId);
-      }
-      catch (TempStoreException $e) {
-        \Drupal::logger('grants_handler_navigation_helper')
-          ->error('Deleting of store data failed. Submission serial @serial. @error',
-            [
-              '@serial' => $webform_submission->serial(),
-              '@error' => $e->getMessage(),
-            ]);
-      }
+    if ($submission_log === FALSE) {
+      return [];
     }
 
-    return (!empty($page) && !empty($data[$page])) ? $data[$page] : $data;
+    $data = unserialize($submission_log->data);
+
+    return $data[$page] ?? $data;
   }
 
   /**
@@ -274,56 +234,23 @@ class GrantsHandlerNavigationHelper {
     /** @var \Drupal\webform\Entity\Webform $webform */
     $webform = $webform_submission->getWebform();
 
+    // If called without saved submission, let's not even try to get errors.
     if (!$webform_submission->id()) {
-      $operation = 'add';
-    }
-    else {
-      $operation = 'edit';
+      return [];
     }
 
-    $pages = $webform->getPages($operation, $webform_submission);
+    // Get pages.
+    $pages = $webform->getPages('edit', $webform_submission);
 
-    $all_errors = $webform->getState('current_errors');
-    $err = $this->getErrors($webform_submission);
-
+    $all_errors = [];
     foreach ($pages as $name => $page) {
+      $err = $this->getErrors($webform_submission, $name);
       if (is_array($err)) {
-        if (!empty($err[$name])) {
-          $all_errors[$name] = array_merge($all_errors[$name] ?? [], $err[$name]);
-        }
+        $all_errors[$name] = $err[$name] ?? $err;
       }
     }
 
     return $all_errors;
-  }
-
-  /**
-   * Get data by operation.
-   *
-   * @param string $operation
-   *   Operation name.
-   * @param \Drupal\webform\Entity\WebformSubmission $submission
-   *   Submission object.
-   *
-   * @return array
-   *   Stored data with current key
-   */
-  private function getStoredData(
-    string $operation,
-    WebformSubmission $submission
-  ) {
-    return array_filter(
-      $this->getFromStore($submission->getWebForm()->id()) ?? [],
-      function ($item) use ($operation) {
-        if ($operation == 'ALL') {
-          return TRUE;
-        }
-        if ($item['operation'] == $operation) {
-          return TRUE;
-        }
-        return FALSE;
-      });
-
   }
 
   /**
@@ -336,23 +263,26 @@ class GrantsHandlerNavigationHelper {
    *   Stored page visits.
    */
   public function getPageVisits(WebformSubmissionInterface $webform_submission) {
-
-    $storedVisits = $this->getStoredData(self::PAGE_VISITED_OPERATION, $webform_submission);
-    ksort($storedVisits);
-    $storedVisits = reset($storedVisits);
-
     if ($webform_submission->id()) {
+      $data = $webform_submission->getData();
       $query = $this->database->select(self::TABLE, 'l');
+      if (isset($data['application_number'])) {
+        $query->condition('application_number', $data['application_number']);
+      }
+      else {
+        $query->condition('sid', $webform_submission->id());
+      }
       $query->condition('webform_id', $webform_submission->getWebform()->id());
-      $query->condition('sid', $webform_submission->id());
+
       $query->condition('operation', self::PAGE_VISITED_OPERATION);
       $query->fields('l', [
         'lid',
         'sid',
+        'page',
         'data',
       ]);
       $query->orderBy('l.lid', 'DESC');
-      $query->range(0, 1);
+      // $query->range(0, 1);
       $submission_log = $query->execute()->fetch();
 
     }
@@ -360,7 +290,7 @@ class GrantsHandlerNavigationHelper {
       $submission_log = [];
     }
 
-    return array_merge($storedVisits, $submission_log);
+    return $submission_log;
 
   }
 
@@ -382,15 +312,13 @@ class GrantsHandlerNavigationHelper {
     }
     $hasVisitedPage = $this->hasVisitedPage($webform_submission, $page);
 
-    // If submission is not saved, store information about visit to local store.
+    // If submission is not saved, jsut return with nothing.
     if (empty($webform_submission->id())) {
-      // Log visit only if user has not visited.
-      if (!$hasVisitedPage) {
-        $this->logDataToStore(self::PAGE_VISITED_OPERATION, $webform_submission, $page);
-      }
       // And return to stop execution.
       return;
     }
+
+    $data = $webform_submission->getData();
 
     // Only log the page if they haven't already visited it.
     if (!$hasVisitedPage) {
@@ -400,9 +328,11 @@ class GrantsHandlerNavigationHelper {
         'sid' => $webform_submission->id(),
         'operation' => self::PAGE_VISITED_OPERATION,
         'handler_id' => self::HANDLER_ID,
+        'application_number' => $data['application_number'] ?? '',
         'uid' => \Drupal::currentUser()->id(),
         'user_uuid' => $userData['sub'] ?? '',
         'data' => $page,
+        'page' => $page,
         'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
 
@@ -412,126 +342,9 @@ class GrantsHandlerNavigationHelper {
   }
 
   /**
-   * Log data about page visit or errors when submission is not yet saved.
-   *
-   * @param string $operation
-   *   Name of the operation to save.
-   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
-   *   Submission in question.
-   * @param mixed $dataToStore
-   *   Page name when logging page visit, errors when logging them.
-   *
-   * @return mixed
-   *   Updated data in store.
-   *
-   * @throws \Drupal\Core\TempStore\TempStoreException
-   */
-  protected function logDataToStore(
-    $operation,
-    WebformSubmissionInterface $webform_submission,
-    mixed $dataToStore
-  ): mixed {
-    // Get user data.
-    $userData = $this->helsinkiProfiiliUserData->getUserData();
-    // Webform id, store is keyed by it.
-    $webformId = $webform_submission->getWebform()->id();
-    // Get store data.
-    $storedata = $this->getFromStore($webformId);
-    // Request time.
-    $ts = \Drupal::time()->getRequestTime();
-    // Build data similar way to db saves.
-    $data = [
-      'webform_id' => $webformId,
-      'operation' => $operation,
-      'handler_id' => self::HANDLER_ID,
-      'uid' => \Drupal::currentUser()->id(),
-      'user_uuid' => $userData['sub'] ?? '',
-      'data' => $dataToStore,
-      'timestamp' => (string) $ts,
-    ];
-    // Set data & sort by key.
-    $storedata[$ts] = $data;
-    ksort($storedata);
-    // Save new page visit to store.
-    $this->setToStore($webformId, $storedata);
-    return $storedata;
-  }
-
-  /**
-   * Logs the stashed submission errors.
-   *
-   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
-   *   A webform submission entity.
-   *
-   * @throws \Exception
-   */
-  public function logStashedPageErrors(WebformSubmissionInterface $webform_submission) {
-
-    $webformId = $webform_submission->getWebform()->id();
-    $storedata = $this->store->get($webformId);
-    // Get outta here if there are not any stashed errors.
-    if (empty($storedata)) {
-      return;
-    }
-    $prev_errors = $this->getErrors($webform_submission);
-    $new_errors = array_merge($prev_errors, $storedata);
-    // Log the stashed errors.
-    $this->logErrors($webform_submission, $new_errors);
-    // Clear the stashed errors now that they are logged.
-    $this->store->delete($webformId);
-  }
-
-  /**
-   * Save value to store.
-   *
-   * @param string $key
-   *   Key of the value.
-   * @param array $data
-   *   And the value itself.
-   *
-   * @throws \Drupal\Core\TempStore\TempStoreException
-   */
-  public function setToStore(string $key, array $data) {
-    $this->store->set($key, $data);
-  }
-
-  /**
-   * Get item from store.
-   *
-   * @param string $key
-   *   Item to get.
-   *
-   * @return mixed
-   *   Store value.
-   */
-  public function getFromStore(string $key): mixed {
-    return $this->store->get($key);
-  }
-
-  /**
-   * Delete variable from store.
-   *
-   * @param string $key
-   *   Item to delete.
-   *
-   * @return bool
-   *   Deleted?
-   *
-   * @throws \Drupal\Core\TempStore\TempStoreException
-   */
-  public function deleteFromStore(string $key): bool {
-    return $this->store->delete($key);
-  }
-
-  /**
-   * Clear errors from users' session.
-   */
-  public function clearPageErrors() {
-    $this->store->delete(self::TEMP_STORE_KEY);
-  }
-
-  /**
    * Logs the current submission errors.
+   *
+   * And if no errors on current page, then remove item form database to mark.
    *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
    *   A webform submission entity.
@@ -541,9 +354,16 @@ class GrantsHandlerNavigationHelper {
    * @throws \Exception
    */
   public function logPageErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state) {
-    $paged_errors = $this->getPagedErrors($form_state, $webform_submission);
-    $this->logErrors($webform_submission, $paged_errors);
-    return $paged_errors;
+    // Get form errors for this page.
+    $form_errors = $form_state->getErrors();
+    $current_page = $webform_submission->getCurrentPage();
+    if (empty($form_errors)) {
+      $this->deleteSubmissionLogs($webform_submission, self::ERROR_OPERATION, $current_page);
+    }
+    else {
+      $this->logErrors($webform_submission, $form_errors, $current_page);
+    }
+    return $form_errors;
   }
 
   /**
@@ -553,26 +373,36 @@ class GrantsHandlerNavigationHelper {
    *   A webform submission entity.
    * @param array $errors
    *   Array of errors to log.
+   * @param string $page
+   *   Page for which errors are logged.
    *
    * @throws \Exception
    */
-  public function logErrors(WebformSubmissionInterface $webform_submission, array $errors) {
+  public function logErrors(WebformSubmissionInterface $webform_submission, array $errors, string $page) {
+
     $wfId = $webform_submission->id();
     // Get outta here if the submission hasn't been saved yet.
     if ($wfId == NULL) {
-      $this->logDataToStore(self::ERROR_OPERATION, $webform_submission, $errors);
       return;
     }
     if (!empty($errors)) {
+
+      if (empty($page)) {
+        $page = $webform_submission->getCurrentPage();
+      }
+
       $userData = $this->helsinkiProfiiliUserData->getUserData();
+      $data = $webform_submission->getData();
       $fields = [
         'webform_id' => $webform_submission->getWebform()->id(),
         'sid' => $webform_submission->id(),
         'operation' => self::ERROR_OPERATION,
         'handler_id' => self::HANDLER_ID,
+        'application_number' => $data['application_number'] ?? '',
         'uid' => \Drupal::currentUser()->id(),
         'user_uuid' => $userData['sub'] ?? '',
         'data' => serialize($errors),
+        'page' => $page,
         'timestamp' => (string) \Drupal::time()->getRequestTime(),
       ];
       $this->database->insert(self::TABLE)->fields($fields)->execute();
@@ -584,16 +414,37 @@ class GrantsHandlerNavigationHelper {
    *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
    *   A webform submission entity.
+   * @param string $page
+   *   Page we want to delete logs from.
+   *
+   * @return int
+   *   Num of rows
    */
-  public function deleteSubmissionLogs(WebformSubmissionInterface $webform_submission) {
+  public function deleteSubmissionLogs(
+    WebformSubmissionInterface $webform_submission,
+    string $operation = '',
+    string $page = ''
+  ): int {
     // Get outta here if the submission hasn't been saved yet.
     if (empty($webform_submission->id())) {
-      return;
+      return 0;
     }
+
+    $data = $webform_submission->getData();
+
     $query = $this->database->delete(self::TABLE);
     $query->condition('webform_id', $webform_submission->getWebform()->id());
-    $query->condition('sid', $webform_submission->id());
-    $query->execute();
+    $query->condition('application_number', $data['application_number']);
+
+    // If given page, delete only that, otherwise delete all related to
+    // this application.
+    if ($operation !== '') {
+      $query->condition('operation', $operation);
+    }
+    if ($page !== '') {
+      $query->condition('page', $page);
+    }
+    return $query->execute();
   }
 
   /**
@@ -631,7 +482,7 @@ class GrantsHandlerNavigationHelper {
     FormStateInterface $form_state,
     string $triggeringElement,
     array $form = []
-    ) {
+  ) {
     // Get outta here if we are already validating the form.
     if ($form_state->get('validating') == TRUE) {
       return;
@@ -718,7 +569,7 @@ class GrantsHandlerNavigationHelper {
   }
 
   /**
-   * Get all errors for webform submission.
+   * Get current page's validation errors parsed to paged error messages.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Form state.
@@ -731,16 +582,9 @@ class GrantsHandlerNavigationHelper {
   public function getPagedErrors(FormStateInterface $form_state, WebformSubmissionInterface $webform_submission): array {
     // Get form errors for this page.
     $form_errors = $form_state->getErrors();
-
-    // Get saved errors
-    // $paged_errors_1 = $this->getErrors($webform_submission);
-    $paged_errors = [];
-
-    // Merge saved errors with ones from this page.
-    // foreach ($paged_errors as $page => $errors) {
-    // $form_errors = array_merge($form_errors, $errors);
-    // }.
     $current_page = $webform_submission->getCurrentPage();
+
+    $paged_errors = [];
 
     foreach ($form_errors as $element => $error) {
       $base_element = explode('][', $element)[0];

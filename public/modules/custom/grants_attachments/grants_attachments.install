@@ -23,6 +23,7 @@ function grants_attachments_uninstall() {
  * Grants file schema.
  *
  * @return array[]
+ *   Schema structure.
  */
 function grants_attachments_schema(): array {
   $schema['grants_attachments'] = [

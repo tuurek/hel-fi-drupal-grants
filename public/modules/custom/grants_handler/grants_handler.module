@@ -890,9 +890,8 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
   $navigationHelper = \Drupal::service('grants_handler.navigation_helper');
   /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
   $webform_submission = $variables["form"]["#webform_submission"];
-
-  $variables['errors'] = $variables['form']['#errors'];
-
+  // get errors for printing.
+  $variables['errors'] = $navigationHelper->getAllErrors($webform_submission);
 }
 
 /**

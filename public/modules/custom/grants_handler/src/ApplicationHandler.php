@@ -749,8 +749,11 @@ class ApplicationHandler {
   /**
    * Method to initialise application document in ATV.
    *
+   * If data is given.
+   *
    * @param string $webform_id
    *   Id of a webform of created application.
+   * @param array $submissionData
    *
    * @return \Drupal\webform\Entity\WebformSubmission
    *   Newly created application content.
@@ -760,19 +763,35 @@ class ApplicationHandler {
    * @throws \Drupal\helfi_atv\AtvFailedToConnectException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function initApplication(string $webform_id): WebformSubmission {
+  public function initApplication(string $webform_id, array $submissionData = []): WebformSubmission {
 
     $webform = Webform::load($webform_id);
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
-    $submissionData = [];
+    // If we've given data to work with, clear it for copying.
+    if (empty($submissionData)) {
+      $copy = FALSE;
+    }
+    else {
+      $copy = TRUE;
+      $submissionData = self::clearDataForCopying($submissionData);
+    }
 
+    // Set.
     $submissionData['application_type_id'] = $webform->getThirdPartySetting('grants_metadata', 'applicationTypeID');
     $submissionData['application_type'] = $webform->getThirdPartySetting('grants_metadata', 'applicationType');
     $submissionData['applicant_type'] = $this->grantsProfileService->getApplicantType();
     $submissionData['status'] = self::$applicationStatuses['DRAFT'];
     $submissionData['company_number'] = $selectedCompany['identifier'];
+
+    try {
+      // Merge sender details to new stuff.
+      $submissionData = array_merge($submissionData, $this->parseSenderDetails());
+    }
+    catch (ApplicationException $e) {
+      $this->logger->error('Sender details parsing threw error: @error', ['@error' => $e->getMessage()]);
+    }
 
     // Set form timestamp to current time.
     // apparently this is always set to latest submission.
@@ -805,7 +824,7 @@ class ApplicationHandler {
     $atvDocument->setMetadata([
       'appenv' => self::getAppEnv(),
       // Hmm, maybe no save id at this point?
-      'saveid' => 'initialSave',
+      'saveid' => $copy ? 'copiedSave' : 'initialSave',
       'applicationnumber' => $applicationNumber,
     ]);
 
@@ -1020,6 +1039,11 @@ class ApplicationHandler {
 
   /**
    * Set up sender details from helsinkiprofiili data.
+   *
+   * @return array
+   *   Sender details.
+   *
+   * @throws \Drupal\grants_handler\ApplicationException
    */
   public function parseSenderDetails() {
     // Set sender information after save so no accidental saving of data.
@@ -1291,8 +1315,8 @@ class ApplicationHandler {
     $saveid_log = $query->execute()->fetch();
     $latestSaveid = !empty($saveid_log->saveid) ? $saveid_log->saveid : '';
 
-    // initialSave no datavalidation.
-    if ($saveIdToValidate == 'initialSave') {
+    // initialSave or copied save no datavalidation.
+    if ($saveIdToValidate == 'copiedSave' ||$saveIdToValidate == 'initialSave') {
       return 'OK';
     }
 

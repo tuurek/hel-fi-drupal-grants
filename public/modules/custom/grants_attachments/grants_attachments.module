@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Handle attachment hooks.
  */
 
 use Drupal\grants_handler\ApplicationHandler;

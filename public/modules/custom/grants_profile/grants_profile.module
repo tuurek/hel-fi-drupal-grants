@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\grants_profile\Form\ModalApplicationOfficialForm;
 
 /**
- *
+ * Implements hook_theme().
  */
 function grants_profile_theme(): array {
   $theme['view_application'] = [
@@ -83,9 +83,7 @@ function grants_profile_theme(): array {
  */
 function grants_profile_cron() {
 
-  /**
-   * Make sure no dangling files are left over from bank account confirmations.
-   */
+  // Make sure no dangling files are left over from bank account confirmations.
 
   /** @var \Drupal\Core\File\FileSystem $fileSystem */
   $fileSystem = \Drupal::service('file_system');
@@ -115,10 +113,7 @@ function grants_profile_cron() {
  */
 function grants_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
-  /**
-   * Hide fields from login forms without proper query strings.
-   */
-
+  // Hide fields from login forms without proper query strings.
   // If we're at user login.
   if ($form_id == 'user_login_form') {
     $qParams = \Drupal::request()->query->all();
@@ -130,13 +125,13 @@ function grants_profile_form_alter(&$form, FormStateInterface $form_state, $form
       unset($form['actions']);
     }
   }
-  // And from Tunnistamo, we want to allow only user logins without loginparameter.
+  // And from Tunnistamo, we want to allow only user logins
+  // without loginparameter.
   if ($form_id == 'openid_connect_login_form') {
     $qParams = \Drupal::request()->query->all();
 
     if (!isset($qParams['login']) || $qParams['login'] != 'admin') {
       unset($form["openid_connect_client_tunnistamoadmin_login"]);
-
     }
 
   }
@@ -175,7 +170,8 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
 
   $variables['profile'] = $grantsProfile;
 
-  // We need to replace ids for address / bank account / officials to make delete links work.
+  // We need to replace ids for address / bank account / officials to
+  // make delete links work.
   foreach ($variables["form"]["bankAccountWrapper"]["bankAccounts"] as $key => $value) {
     if (!str_starts_with($key, '#')) {
       if (isset($variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"])) {
@@ -187,7 +183,8 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
         $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["confirmationFileName"]["#access"] = FALSE;
       }
       else {
-        // If bank account value is set, then we are editing and want to hide things.
+        // If bank account value is set, then we are editing and
+        // want to hide things.
         if (isset($value["bankAccount"]) && $value["bankAccount"]["#value"] != '') {
           // Hide confirmation file name.
           $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["confirmationFile"]["#access"] = FALSE;
