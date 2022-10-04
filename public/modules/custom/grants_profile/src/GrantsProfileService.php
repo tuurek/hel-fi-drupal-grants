@@ -99,13 +99,13 @@ class GrantsProfileService {
    *   Logger service.
    */
   public function __construct(
-    AtvService $helfi_atv,
-    PrivateTempStoreFactory $tempstore,
-    MessengerInterface $messenger,
+    AtvService               $helfi_atv,
+    PrivateTempStoreFactory  $tempstore,
+    MessengerInterface       $messenger,
     HelsinkiProfiiliUserData $helsinkiProfiiliUserData,
-    AtvSchema $atv_schema,
-    YjdhClient $yjdhClient,
-    LoggerChannelFactory $loggerFactory
+    AtvSchema                $atv_schema,
+    YjdhClient               $yjdhClient,
+    LoggerChannelFactory     $loggerFactory
   ) {
     $this->atvService = $helfi_atv;
     $this->tempStore = $tempstore->get('grants_profile');
@@ -225,12 +225,22 @@ class GrantsProfileService {
 
       foreach ($documentContent['bankAccounts'] as $key => $bank_account) {
         unset($documentContent['bankAccounts'][$key]['confirmationFileName']);
+        // if we have account confirmation file uploaded
+        // which is denoted by having FID- in front of file id.
         if (isset($bank_account['confirmationFile']) && str_contains($bank_account['confirmationFile'], 'FID-')) {
+          // get file id
           $fileId = str_replace('FID-', '', $bank_account['confirmationFile']);
+          // load file
           $fileEntity = File::load((int) $fileId);
+          // if we have file
           if ($fileEntity) {
+            // generate file name for file.
+            // just md5 account number to avoid any confusions with different
+            // naming conventions
             $fileName = md5($bank_account['bankAccount']) . '.pdf';
+            // set filename
             $documentContent['bankAccounts'][$key]['confirmationFile'] = $fileName;
+            // upload the thing.
             $retval = $this->atvService->uploadAttachment($grantsProfileDocument->getId(), $fileName, $fileEntity);
 
             if ($retval) {
@@ -256,8 +266,7 @@ class GrantsProfileService {
                   '%id' => $fileEntity->id(),
                 ]
               );
-            }
-            catch (EntityStorageException $e) {
+            } catch (EntityStorageException $e) {
               $this->logger->error('File deleting failed: %id.',
                 [
                   '%id' => $fileEntity->id(),
@@ -287,7 +296,7 @@ class GrantsProfileService {
         'metadata' => $grantsProfileDocument->getMetadata(),
         'transaction_id' => $transactionId,
       ];
-      $this->logger->info('Grants profile POSTed, transactionID: %transactionId', ['%transactionId' => $transactionId]);
+      $this->logger->info('Grants profile PATCHed, transactionID: %transactionId', ['%transactionId' => $transactionId]);
       return $this->atvService->patchDocument($grantsProfileDocument->getId(), $payloadData);
     }
   }
@@ -552,8 +561,7 @@ class GrantsProfileService {
         // If not, get company details and use them.
         $companyDetails = $this->yjdhClient->getCompany($businessId);
 
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         $companyDetails = NULL;
       }
 
@@ -616,7 +624,7 @@ class GrantsProfileService {
    */
   public function getGrantsProfileContent(
     mixed $business,
-    bool $refetch = FALSE
+    bool  $refetch = FALSE
   ): array {
 
     if (is_array($business)) {
@@ -658,7 +666,7 @@ class GrantsProfileService {
    */
   public function getGrantsProfileAttachments(
     string $businessId,
-    bool $refetch = FALSE
+    bool   $refetch = FALSE
   ): array {
 
     if ($refetch === FALSE && $this->isCached($businessId)) {
@@ -686,7 +694,7 @@ class GrantsProfileService {
    */
   public function getGrantsProfile(
     string $businessId,
-    bool $refetch = FALSE
+    bool   $refetch = FALSE
   ): AtvDocument|null {
     if ($refetch === FALSE) {
       if ($this->isCached($businessId)) {
@@ -702,8 +710,7 @@ class GrantsProfileService {
         $this->setToCache($businessId, $profileDocument);
         return $profileDocument;
       }
-    }
-    catch (AtvDocumentNotFoundException $e) {
+    } catch (AtvDocumentNotFoundException $e) {
       return NULL;
     }
   }
@@ -731,8 +738,7 @@ class GrantsProfileService {
 
     try {
       $searchDocuments = $this->atvService->searchDocuments($searchParams, $refetch);
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       throw new AtvDocumentNotFoundException('Not found');
     }
 
@@ -813,8 +819,7 @@ class GrantsProfileService {
       }
 
       return TRUE;
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       return FALSE;
     }
   }
@@ -884,8 +889,7 @@ class GrantsProfileService {
         $this->tempStore->set($key, $grantsProfile);
         return TRUE;
       }
-    }
-    catch (TempStoreException $e) {
+    } catch (TempStoreException $e) {
       return FALSE;
     }
   }

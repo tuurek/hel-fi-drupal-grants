@@ -2,6 +2,8 @@
 
 namespace Drupal\grants_attachments;
 
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -254,21 +256,17 @@ class AttachmentHandler {
    * @param string $applicationNumber
    *   Generated application number.
    *
-   * @return array[]
-   *   Parsed attachments.
-   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Drupal\grants_handler\EventException
    */
   public function parseAttachments(
     array $form,
     array &$submittedFormData,
-    string $applicationNumber): array {
+    string $applicationNumber): void {
 
     $attachmentsArray = [];
     $attachmentHeaders = GrantsAttachments::$fileTypes;
     $filenames = [];
-    $integrationIds = [];
     $attachmentFields = self::getAttachmentFieldNames(TRUE);
     foreach ($attachmentFields as $attachmentFieldName => $descriptionKey) {
       $field = $submittedFormData[$attachmentFieldName];
@@ -360,7 +358,7 @@ class AttachmentHandler {
           $submittedFormData["account_number"],
           $applicationNumber,
           $filenames,
-          $attachmentsArray
+          $submittedFormData
         );
       }
       catch (TempStoreException | GuzzleException $e) {
@@ -369,8 +367,7 @@ class AttachmentHandler {
         ]);
       }
     }
-
-    return $attachmentsArray;
+    $d = 'adsf';
   }
 
   /**
@@ -385,7 +382,7 @@ class AttachmentHandler {
    *   This application.
    * @param array $filenames
    *   Already added filenames.
-   * @param array $attachmentsArray
+   * @param array $submittedFormData
    *   Full array of attachment information.
    *
    * @throws \Drupal\Core\TempStore\TempStoreException
@@ -395,7 +392,7 @@ class AttachmentHandler {
     string $accountNumber,
     string $applicationNumber,
     array $filenames,
-    array &$attachmentsArray
+    array &$submittedFormData
   ) {
 
     // If no accountNumber is selected, do nothing.
@@ -407,13 +404,14 @@ class AttachmentHandler {
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
     $profileContent = $grantsProfileDocument->getContent();
-
     $applicationDocument = FALSE;
+    $fileArray = [];
     try {
       // Search application document from ATV.
       $applicationDocumentResults = $this->atvService->searchDocuments([
         'transaction_id' => $applicationNumber,
       ]);
+      /** @var AtvDocument $applicationDocument */
       $applicationDocument = reset($applicationDocumentResults);
     }
     catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
@@ -444,7 +442,7 @@ class AttachmentHandler {
       }
 
       if (!$accountConfirmationExists) {
-        $found = array_filter($attachmentsArray, function ($fn) use ($filename) {
+        $found = array_filter($submittedFormData, function ($fn) use ($filename) {
           if (!isset($fn['fileName'])) {
             return FALSE;
           }
@@ -477,10 +475,27 @@ class AttachmentHandler {
         try {
           // Get file.
           $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
-          // Add file to attachments for uploading.
-          $this->attachmentFileIds[] = $file->id();
+          // upload file
+          $uploadResult = $this->atvService->uploadAttachment($applicationDocument->getId(), $selectedAccountConfirmation["filename"], $file);
+          // if succeeded
+          if ($uploadResult !== FALSE) {
+            // create proper integrationID
+            $integrationID = str_replace(getenv('ATV_BASE_URL'), '', $uploadResult['href']);
+
+            // if upload is ok, then add event.
+            $submittedFormData['events'][] = EventsService::getEventData(
+              'HANDLER_ATT_OK',
+              $applicationNumber,
+              'Attachment uploaded.',
+              $file->getFilename()
+            );
+
+          }
+          // and delete file in any case
+          // we don't want to keep any files.
+          $file->delete();
         }
-        catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+        catch (\Exception $e) {
           $this->logger->error('Error: %msg', [
             '%msg' => $e->getMessage(),
           ]);
@@ -488,10 +503,10 @@ class AttachmentHandler {
             ->addError(t('Bank account confirmation file attachment failed.'));
         }
         // Add account confirmation to attachment array.
-        $attachmentsArray[] = [
+        $fileArray = [
           'description' => t('Confirmation for account @accountNumber', ['@accountNumber' => $selectedAccount["bankAccount"]])->render(),
           'fileName' => $selectedAccount["confirmationFile"],
-          'isNewAttachment' => TRUE,
+          'isNewAttachment' => FALSE,
           'fileType' => 6,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
@@ -503,7 +518,7 @@ class AttachmentHandler {
       // make sure it's not added again
       // and also make sure if the attachment is uploaded to add integrationID
       // sometimes this does not work in integration.
-      $existingConfirmationForSelectedAccountExists = array_filter($attachmentsArray, function ($fn) use ($selectedAccount, $accountConfirmationFile) {
+      $existingConfirmationForSelectedAccountExists = array_filter($submittedFormData, function ($fn) use ($selectedAccount, $accountConfirmationFile) {
         if (
           isset($fn['fileName']) &&
           (($fn['fileName'] == $selectedAccount['confirmationFile']) ||
@@ -530,13 +545,33 @@ class AttachmentHandler {
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
-
-        if (!empty($integrationID)) {
-          $fileArray['integrationID'] = $integrationID;
-        }
-        $attachmentsArray[] = $fileArray;
       }
     }
+    // if we have generated file array for this
+    if (!empty($fileArray)) {
+      // and if we have integration id set
+      if (!empty($integrationID)) {
+        // add that
+        $fileArray['integrationID'] = $integrationID;
+      }
+      $extraAttachments = [];
+      // first clean all account confirmation files.
+      // this should handle account number updates as well.
+      foreach ($submittedFormData['attachments'] as $key => $value) {
+        if((int)$value['fileType'] == 6){
+          // is this the one we want to use
+//          if (str_contains($value['fileName'], $filename)) {
+//            $d = 'adfs';
+//          } else {
+//            $d = 'asdf';
+//          }
+          unset($submittedFormData['attachments'][$key]);
+        }
+      }
+      // and then add this one to attachments.
+      $submittedFormData['attachments'][] = $fileArray;
+    }
+
   }
 
   /**

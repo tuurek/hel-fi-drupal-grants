@@ -54,10 +54,6 @@ function template_preprocess_grants_attachments(array &$variables) {
 
     $submission = WebformSubmission::load($variables["children"]["#webform_submission"]);
 
-    $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
-
-    $s2 = ApplicationHandler::submissionObjectFromApplicationNumber($applicationNumber);
-
     if ($submission != NULL) {
       $submissionData = $submission->getData();
     }
@@ -98,13 +94,6 @@ function grants_attachments_cron() {
   $resultParsed = [];
   foreach ($result as $item) {
     $resultParsed[$item->grants_application_number]['fid'][] = $item->fid;
-  }
-
-  /** @var \Drupal\grants_attachments\AttachmentUploader $attachmentUploader */
-  $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
-  foreach ($resultParsed as $applicationNumber => $item) {
-    // Try to upload again with added data.
-    $attachmentUploader->uploadAttachments($item['fid'], $applicationNumber);
   }
 
   /**

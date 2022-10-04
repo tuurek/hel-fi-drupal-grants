@@ -53,7 +53,9 @@ class GrantsAttachments extends WebformCompositeBase {
     $submission = $form_state->getFormObject()->getEntity();
     $submissionData = $submission->getData();
 
-    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_ATT_OK');
+    if ($element["#webform_key"] == 'muu_liite') {
+      $d = 'asdf';
+    }
 
     if (isset($submissionData[$element['#webform_key']]) && is_array($submissionData[$element['#webform_key']])) {
 
@@ -272,6 +274,14 @@ class GrantsAttachments extends WebformCompositeBase {
       $webformKey,
       'isIncludedInOtherFile',
     ];
+    $nameFileValue = [
+      $webformKey,
+      'fileName',
+    ];
+    $attachmenNameFileValue = [
+      $webformKey,
+      'attachmentName',
+    ];
 
     $application_number = $webformData['application_number'];
 
@@ -294,6 +304,8 @@ class GrantsAttachments extends WebformCompositeBase {
       $form_state->setValue($fileStatusIdValue, 'justUploaded');
       $form_state->setValue($deliveredLaterValue, '0');
       $form_state->setValue($anotherFileValue, '0');
+      $form_state->setValue($nameFileValue, $file->getFilename());
+      $form_state->setValue($attachmenNameFileValue, $file->getFilename());
     }
     catch (\Exception $e) {
       // Set error to form.

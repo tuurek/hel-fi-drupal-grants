@@ -1362,7 +1362,10 @@ class ApplicationHandler {
         }
       }
       else {
-        if (isset($fileField['fileName'])) {
+        if (
+          isset($fileField['fileName']) &&
+          (isset($fileField['fileStatus']) && $fileField['fileStatus'] !== 'justUploaded')
+        ) {
           if (!in_array($fileField['fileName'], $attachmentEvents["event_targets"])) {
             $nonUploaded++;
           }
