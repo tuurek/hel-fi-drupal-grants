@@ -306,7 +306,7 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
     if ($currentPageVariables == $key) {
       $variables['page_classes'][$key][] = 'is-active';
     }
-    if (is_array($all_errors)) {
+    elseif (is_array($all_errors)) {
       if ($hasVisitedThisPage && isset($all_errors[$key]) && empty($all_errors[$key])) {
         $variables['page_classes'][$key][] = 'is-complete';
       }
