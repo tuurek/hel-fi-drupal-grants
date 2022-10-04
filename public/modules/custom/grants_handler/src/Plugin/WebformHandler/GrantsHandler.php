@@ -455,7 +455,10 @@ class GrantsHandler extends WebformHandlerBase {
     }
     // This will remove rebuild action
     // in practice this will allow redirect after processing DRAFT statuses.
-    WebformArrayHelper::removeValue($form['actions']['draft']['#submit'], '::rebuild');
+    if (isset($form['actions']['draft']['#submit']) && is_array($form['actions']['draft']['#submit'])) {
+      WebformArrayHelper::removeValue($form['actions']['draft']['#submit'], '::rebuild');
+    }
+
   }
 
   /**
