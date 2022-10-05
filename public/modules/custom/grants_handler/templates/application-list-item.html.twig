@@ -7,7 +7,7 @@
     {{ statusTag }}
     {% if (statusString == 'DRAFT') %}
     <div class="application-list__item--delete">
-      <a class="hds-link hds-link--medium" href="{{ deleteApplicationUrl }}">{# TODO: Link #}
+      <a class="hds-link hds-link--medium" href="{{ deleteApplicationUrl }}">
         <span aria-hidden="true" class="hds-icon hds-icon--trash hds-icon--size-s"></span><span class="link-label">
           {{ "Delete application"|t }}
         </span>
@@ -15,7 +15,7 @@
     </div>
     {% else %}
       <div class="application-list__item--print">
-        <a class="hds-link hds-link--medium" href="{{ printApplicationUrl }}">{# TODO: Link #}
+        <a class="hds-link hds-link--medium" href="{{ printApplicationUrl }}">
           <span aria-hidden="true" class="hds-icon hds-icon--printer hds-icon--size-s"></span><span class="link-label">
           {{ "Print application"|t }}
         </span>

@@ -312,7 +312,7 @@ class GrantsHandlerNavigationHelper {
     }
     $hasVisitedPage = $this->hasVisitedPage($webform_submission, $page);
 
-    // If submission is not saved, jsut return with nothing.
+    // If submission is not saved, just return with nothing.
     if (empty($webform_submission->id())) {
       // And return to stop execution.
       return;

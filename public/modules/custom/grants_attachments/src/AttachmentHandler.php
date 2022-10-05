@@ -361,7 +361,6 @@ class AttachmentHandler {
         ]);
       }
     }
-    $d = 'adsf';
   }
 
   /**
