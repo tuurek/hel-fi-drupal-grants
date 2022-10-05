@@ -524,10 +524,14 @@ class ApplicationHandler {
    *
    * @return \Drupal\webform\Entity\WebformSubmission|null
    *   Webform submission.
-   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   * @throws \Drupal\grants_mandate\CompanySelectException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public static function submissionObjectFromApplicationNumber(
     string $applicationNumber,
