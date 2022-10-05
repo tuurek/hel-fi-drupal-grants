@@ -9,7 +9,6 @@ use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\EventsService;
-use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -103,6 +102,7 @@ class GrantsAttachmentsController extends ControllerBase {
     $submissionData = $submission->getData();
     // Rebuild integration id from url.
     $integrationId = str_replace('_', '/', $integration_id);
+    $destination = $this->request->getMainRequest()->get('destination');
 
     if ($submissionData['status'] != ApplicationHandler::$applicationStatuses['DRAFT']) {
       throw new AccessException('Only application in DRAFT status allows attachments to be deleted.');
@@ -111,63 +111,57 @@ class GrantsAttachmentsController extends ControllerBase {
     try {
       // Try to delete attachment directly.
       $attachmentDeleteResult = $this->helfiAtv->deleteAttachmentViaIntegrationId($integrationId);
-
+      // If attachment got deleted.
       if ($attachmentDeleteResult) {
-        $this->messenger()->addStatus($this->t('Document file attachment deleted.'));
+        $this->messenger()
+          ->addStatus($this->t('Document file attachment deleted.'));
+
+        // Remove given attachment from application.
+        foreach ($submissionData['attachments'] as $key => $attachment) {
+          if (
+            (isset($attachment["integrationID"]) &&
+              $attachment["integrationID"] != NULL) &&
+            $attachment["integrationID"] == $integrationId) {
+            unset($submissionData['attachments'][$key]);
+          }
+        }
+        // Create event for deletion.
+        $event = EventsService::getEventData(
+          'HANDLER_ATT_DELETED',
+          $submission_id,
+          'Attachment deleted.',
+          $integrationId
+        );
+        // Add event.
+        $submissionData['events'][] = $event;
+
+        // Build data -> should validate ok, since we're
+        // only deleting attachments & adding events..
+        $applicationData = $this->applicationHandler->webformToTypedData(
+          $submissionData);
+
+        // Update in ATV.
+        $applicationUploadStatus = $this->applicationHandler->handleApplicationUploadToAtv(
+          $applicationData,
+          $submission_id
+        );
+
+        if ($applicationUploadStatus) {
+          $this->messenger()->addStatus($this->t('Application updated.'));
+
+        }
+
       }
       else {
         $this->messenger()->addError('Attachment deletion failed.');
       }
     }
-    catch (AtvDocumentNotFoundException $e) {
-      $this->getLogger('grants_attachments')->error('Document attachment not found. IntegrationID: %inteId', ['%inteId' => $integrationId]);
-    }
     catch (\Exception $e) {
       $this->messenger()->addError($e->getMessage());
+      $this->getLogger('grants_attachments')
+        ->error('Document attachment not found. IntegrationID: %inteId', ['%inteId' => $integrationId]);
     }
 
-    // No matter what, we want to remove file from content.
-    try {
-      // Remove given attachment from application.
-      $updatedAttachments = [];
-      foreach ($submissionData['attachments'] as $key => $attachment) {
-        if (
-          (isset($attachment["integrationID"]) &&
-            $attachment["integrationID"] != NULL) &&
-          $attachment["integrationID"] == $integrationId) {
-          unset($submissionData['attachments'][$key]);
-        }
-      }
-
-      // Build data -> should validate ok, since we're
-      // only deleting attachments.
-      $applicationData = $this->applicationHandler->webformToTypedData(
-        $submissionData);
-
-      // Update in ATV.
-      $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
-        $applicationData,
-        $submission_id
-      );
-
-      if ($applicationUploadStatus) {
-        $this->messenger()->addStatus($this->t('Application updated.'));
-
-        $eventId = $this->eventsService->logEvent(
-          $submission_id,
-          'APP_INFO_ATT_DELETED',
-          'Attachment deleted.',
-          $integrationId
-        );
-      }
-    }
-    catch (\Exception $e) {
-      $this->getLogger('grants_attachments')->error('Error: %msg', [
-        '%msg' => $e->getMessage(),
-      ]);
-    }
-
-    $destination = $this->request->getMainRequest()->get('destination');
     return new RedirectResponse($destination);
   }
 

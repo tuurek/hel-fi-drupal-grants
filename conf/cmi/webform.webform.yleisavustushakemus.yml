@@ -58,6 +58,7 @@ elements: |-
           '#type': textfield
           '#title': Rekisteröimispäivä
           '#readonly': true
+          '#required': true
         community_status:
           '#type': textfield
           '#title': 'Yhdistyksen tila'
@@ -133,6 +134,7 @@ elements: |-
     osoite:
       '#type': webform_section
       '#title': Osoite
+      '#required': true
       community_address:
         '#type': community_address_composite
         '#title': 'Yhteisön osoite'
@@ -143,12 +145,13 @@ elements: |-
       address_markup:
         '#type': webform_markup
         '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
+          <a class="hds-link hds-link--medium" href="/oma-asiointi/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa osoitteita</span>
           </a>
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
+      '#required': true
       bank_account:
         '#type': bank_account_composite
         '#title': Tilinumero
@@ -159,12 +162,13 @@ elements: |-
       account_markup:
         '#type': webform_markup
         '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
+          <a class="hds-link hds-link--medium" href="/oma-asiointi/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
           </a>
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
+      '#required': true
       community_officials:
         '#type': community_officials_composite
         '#title': 'Yhteisön vastaavat henkilöt'
@@ -184,7 +188,7 @@ elements: |-
       officials_markup:
         '#type': webform_markup
         '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
+          <a class="hds-link hds-link--medium" href="/oma-asiointi/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa henkilöitä</span>
           </a>
   2_avustustiedot:
@@ -263,7 +267,6 @@ elements: |-
         '#options':
           Kyllä: Kyllä
           Ei: Ei
-        '#required': true
       myonnetty_avustus:
         '#type': webform_custom_composite
         '#title': 'Myönnetty avustus'
@@ -342,7 +345,6 @@ elements: |-
         '#options':
           Kyllä: Kyllä
           Ei: Ei
-        '#required': true
       haettu_avustus_tieto:
         '#type': webform_custom_composite
         '#title': 'Lisää uusi haettu avustus'
@@ -413,7 +415,6 @@ elements: |-
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
         '#cols': 63
-        '#required': true
     kaupungilta_saatu_tiloihin_liittyva_tuki:
       '#type': webform_section
       '#title': 'Kaupungilta saatu tiloihin liittyvä tuki'
@@ -428,7 +429,6 @@ elements: |-
         '#counter_maximum': 500
         '#counter_maximum_message': '%d/500 merkkiä jäljellä'
         '#cols': 63
-        '#required': true
     edellisen_avustuksen_kayttoselvitys:
       '#type': webform_section
       '#title': 'Edellisen avustuksen käyttöselvitys'
@@ -505,14 +505,12 @@ elements: |-
     ensimmainen_otsikko:
       '#type': webform_section
       '#title': Jäsenmaksut
-      '#required': true
       fee_person:
         '#type': textfield
         '#title': 'Henkilöjäsenen jäsenmaksu (€ / vuosi)'
         '#maxlength': 50
         '#input_mask': '''alias'': ''currency'', ''prefix'': '''', ''suffix'': ''€'',''groupSeparator'': '' '',''radixPoint'':'','''
         '#size': 16
-        '#required': true
       fee_community:
         '#type': textfield
         '#title': 'Yhteisöjäsen (€ / vuosi)'
@@ -522,7 +520,6 @@ elements: |-
     jasenmaara:
       '#type': webform_section
       '#title': Jäsenmäärä
-      '#required': true
       members_applicant_person_local:
         '#type': textfield
         '#title': 'Helsinkiläisiä henkilöjäseniä yhteensä'
@@ -531,7 +528,6 @@ elements: |-
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
         '#size': 16
-        '#required': true
       members_applicant_person_global:
         '#type': textfield
         '#title': 'Henkilöjäseniä yhteensä'
@@ -540,7 +536,6 @@ elements: |-
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
         '#size': 16
-        '#required': true
       members_applicant_community_local:
         '#type': textfield
         '#title': 'Helsinkiläisiä yhteisöjäseniä yhteensä'
@@ -549,7 +544,6 @@ elements: |-
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
         '#size': 16
-        '#required': true
       members_applicant_community_global:
         '#type': textfield
         '#title': Yhteisöjäseniä
@@ -558,7 +552,6 @@ elements: |-
         '#pattern': '^[0-9]*$'
         '#pattern_error': 'Vain numeroita'
         '#size': 16
-        '#required': true
   lisatiedot_ja_liitteet:
     '#type': webform_wizard_page
     '#title': '4. Lisätiedot ja liitteet'
@@ -723,7 +716,7 @@ settings:
   form_prepopulate_source_entity: false
   form_prepopulate_source_entity_required: false
   form_prepopulate_source_entity_type: ''
-  form_unsaved: true
+  form_unsaved: false
   form_disable_back: false
   form_submit_back: true
   form_disable_autocomplete: false

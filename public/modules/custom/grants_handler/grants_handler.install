@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Database schema.
  */
 
 /**
@@ -110,6 +111,18 @@ function grants_handler_schema(): array {
         'length' => 64,
         'not null' => FALSE,
       ],
+      'application_number' => [
+        'description' => 'Application number.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+      ],
+      'page' => [
+        'description' => 'Webform page name',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => FALSE,
+      ],
       'uid' => [
         'type' => 'int',
         'unsigned' => TRUE,
@@ -187,4 +200,32 @@ function grants_handler_update_9002(&$sandbox) {
   ];
   $schema = Database::getConnection()->schema();
   $schema->addField('grants_handler_log', 's_uuid', $spec);
+}
+
+/**
+ * Add application number column for handler log.
+ */
+function grants_handler_update_9003(&$sandbox) {
+  $spec = [
+    'description' => 'Application number.',
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => FALSE,
+  ];
+  $schema = Database::getConnection()->schema();
+  $schema->addField('grants_handler_log', 'application_number', $spec);
+}
+
+/**
+ * Add application number column for handler log.
+ */
+function grants_handler_update_9004(&$sandbox) {
+  $spec = [
+    'description' => 'Webform page name',
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => FALSE,
+  ];
+  $schema = Database::getConnection()->schema();
+  $schema->addField('grants_handler_log', 'page', $spec);
 }

@@ -348,14 +348,18 @@ class GrantsProfileForm extends FormBase {
               unset($values[$key][$key2]);
             }
             else {
+              // Parse existing confirmation file to values array.
               if (isset($value2["confirmationFileName"]) && !empty($value2["confirmationFileName"])) {
                 $values[$key][$key2]['confirmationFile'] = $value2["confirmationFileName"];
               }
+              // If we have just uploaded file.
               if (
                 isset($value2["confirmationFile"]) &&
                 is_array($value2["confirmationFile"]) &&
                 !empty($value2["confirmationFile"])
               ) {
+                // Prepend file id with FID- to tell profile service that we
+                // need to upload this file as well.
                 $values[$key][$key2]['confirmationFile'] = 'FID-' . $value2["confirmationFile"][0] ?? '';
               }
             }
@@ -421,7 +425,12 @@ class GrantsProfileForm extends FormBase {
 
     $profileDataArray = $grantsProfileData->toArray();
 
-    $success = $grantsProfileService->saveGrantsProfile($profileDataArray);
+    try {
+      $success = $grantsProfileService->saveGrantsProfile($profileDataArray);
+    }
+    catch (\Exception $e) {
+      $this->logger('grants_profile')->error('Grants profile saving failed.');
+    }
     $grantsProfileService->clearCache($selectedCompany);
 
     if ($success != FALSE) {

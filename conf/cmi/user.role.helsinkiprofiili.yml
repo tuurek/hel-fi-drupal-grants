@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - grants_mandate
+    - grants_oma_asiointi
     - grants_profile
     - webform
 id: helsinkiprofiili
@@ -11,6 +12,7 @@ label: HelsinkiProfiili
 weight: 5
 is_admin: null
 permissions:
+  - 'access grants_oma_asiointi'
   - 'administer own grants_profile'
   - 'edit own webform submission'
   - 'get mandates from dvv'

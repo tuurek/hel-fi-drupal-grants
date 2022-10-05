@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Handle attachment hooks.
  */
 
 use Drupal\Core\Link;
@@ -51,6 +52,7 @@ function template_preprocess_grants_attachments(array &$variables) {
     $currentDestination = str_replace($currentHost, '', $currentUri);
 
     $submission = WebformSubmission::load($variables["children"]["#webform_submission"]);
+
     if ($submission != NULL) {
       $submissionData = $submission->getData();
     }
@@ -59,19 +61,21 @@ function template_preprocess_grants_attachments(array &$variables) {
     if (is_array($submissionData) && isset($submissionData['status']) && $submissionData['status'] == 'DRAFT') {
       $integrationId = str_replace('/', '_', $variables["children"]["#default_value"]["integrationID"]);
 
-      $deleteUrl = Url::fromRoute(
-        'grants_attachments.delete_attachment',
-        [
-          'submission_id' => $submissionData['application_number'] ?? 'not-saved',
-          'integration_id' => $integrationId,
-        ],
-        [
-          'query' => [
-            'destination' => $currentDestination,
+      if (!empty($integrationId)) {
+        $deleteUrl = Url::fromRoute(
+          'grants_attachments.delete_attachment',
+          [
+            'submission_id' => $submissionData['application_number'] ?? 'not-saved',
+            'integration_id' => $integrationId,
           ],
-        ]
-      );
-      $variables['attachmentDeleteLink'] = Link::fromTextAndUrl(t('Delete attachment'), $deleteUrl);
+          [
+            'query' => [
+              'destination' => $currentDestination,
+            ],
+          ]
+        );
+        $variables['attachmentDeleteLink'] = Link::fromTextAndUrl(t('Delete attachment'), $deleteUrl);
+      }
     }
   }
 }
@@ -89,13 +93,6 @@ function grants_attachments_cron() {
   $resultParsed = [];
   foreach ($result as $item) {
     $resultParsed[$item->grants_application_number]['fid'][] = $item->fid;
-  }
-
-  /** @var \Drupal\grants_attachments\AttachmentUploader $attachmentUploader */
-  $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
-  foreach ($resultParsed as $applicationNumber => $item) {
-    // Try to upload again with added data.
-    $attachmentUploader->uploadAttachments($item['fid'], $applicationNumber);
   }
 
   /**

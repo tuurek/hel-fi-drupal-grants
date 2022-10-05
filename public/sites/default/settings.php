@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- */
-
 use Symfony\Component\HttpFoundation\Request;
 
 if (PHP_SAPI === 'cli') {
@@ -33,20 +29,6 @@ $databases['default']['default'] = [
 
 $settings['hash_salt'] = getenv('DRUPAL_HASH_SALT') ?: '000';
 
-if ($ssl_ca_path = getenv('AZURE_SQL_SSL_CA_PATH')) {
-  $databases['default']['default']['pdo'] = [
-    PDO::MYSQL_ATTR_SSL_CA => $ssl_ca_path,
-    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => FALSE,
-  ];
-  // Azure specific filesystem fixes.
-  $settings['php_storage']['twig']['directory'] = '/tmp';
-  $settings['php_storage']['twig']['secret'] = $settings['hash_salt'];
-  $settings['file_chmod_directory'] = 16895;
-  $settings['file_chmod_file'] = 16895;
-
-  $config['system.performance']['cache']['page']['max_age'] = 86400;
-}
-
 // Only in Wodby environment.
 // @see https://wodby.com/docs/stacks/drupal/#overriding-settings-from-wodbysettingsphp
 if (isset($_SERVER['WODBY_APP_NAME'])) {
@@ -57,15 +39,8 @@ if (isset($_SERVER['WODBY_APP_NAME'])) {
 $config['openid_connect.client.tunnistamo']['settings']['client_id'] = getenv('TUNNISTAMO_CLIENT_ID');
 $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = getenv('TUNNISTAMO_CLIENT_SECRET');
 
-if (getenv('APP_ENV') == 'production') {
-  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = TRUE;
-  $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://api.hel.fi/sso';
-}
-else {
-  if (getenv('APP_ENV') == 'development') {
-    $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = 'https://tunnistamo.test.hel.ninja';
-  }
-  $config['openid_connect.client.tunnistamo']['settings']['is_production'] = FALSE;
+if ($tunnistamo_environment_url = getenv('TUNNISTAMO_ENVIRONMENT_URL')) {
+  $config['openid_connect.client.tunnistamo']['settings']['environment_url'] = $tunnistamo_environment_url;
 }
 
 $config['siteimprove.settings']['prepublish_enabled'] = TRUE;
@@ -77,9 +52,10 @@ $settings['siteimprove_id'] = getenv('SITEIMPROVE_ID');
 
 // Drupal route(s).
 $routes = (getenv('DRUPAL_ROUTES')) ? explode(',', getenv('DRUPAL_ROUTES')) : [];
+$routes[] = 'http://127.0.0.1';
 
 foreach ($routes as $route) {
-  $hosts[] = $host = parse_url($route)['host'];
+  $host = parse_url($route)['host'];
   $trusted_host = str_replace('.', '\.', $host);
   $settings['trusted_host_patterns'][] = '^' . $trusted_host . '$';
 }
@@ -96,16 +72,6 @@ $settings['file_public_path'] = getenv('DRUPAL_FILES_PUBLIC') ?: 'sites/default/
 $settings['file_private_path'] = getenv('DRUPAL_FILES_PRIVATE');
 $settings['file_temp_path'] = getenv('DRUPAL_TMP_PATH') ?: '/tmp';
 
-set_error_handler(['Drupal\error_page\ErrorPageErrorHandler', 'handleError']);
-set_exception_handler([
-  'Drupal\error_page\ErrorPageErrorHandler',
-  'handleException',
-]);
-// Log the UUID in the Drupal logs.
-$settings['error_page']['uuid'] = TRUE;
-// Your templates are located in path/to/templates, one level above the webroot.
-$settings['error_page']['template_dir'] = DRUPAL_ROOT . '/../error_templates';
-
 if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
   $reverse_proxy_address = explode(',', $reverse_proxy_address);
 
@@ -118,28 +84,6 @@ if ($reverse_proxy_address = getenv('DRUPAL_REVERSE_PROXY_ADDRESS')) {
   $settings['reverse_proxy_host_header'] = 'X_FORWARDED_HOST';
 }
 
-if (file_exists(__DIR__ . '/all.settings.php')) {
-  include __DIR__ . '/all.settings.php';
-}
-
-if ($env = getenv('APP_ENV')) {
-  if (file_exists(__DIR__ . '/' . $env . '.settings.php')) {
-    include __DIR__ . '/' . $env . '.settings.php';
-  }
-
-  if (file_exists(__DIR__ . '/' . $env . '.services.yml')) {
-    $settings['container_yamls'][] = __DIR__ . '/' . $env . '.services.yml';
-  }
-
-  if (file_exists(__DIR__ . '/local.services.yml')) {
-    $settings['container_yamls'][] = __DIR__ . '/local.services.yml';
-  }
-
-  if (file_exists(__DIR__ . '/local.settings.php')) {
-    include __DIR__ . '/local.settings.php';
-  }
-}
-
 if ($blob_storage_name = getenv('AZURE_BLOB_STORAGE_NAME')) {
   $schemes = [
     'azure' => [
@@ -147,6 +91,7 @@ if ($blob_storage_name = getenv('AZURE_BLOB_STORAGE_NAME')) {
       'config' => [
         'name' => $blob_storage_name,
         'key' => getenv('AZURE_BLOB_STORAGE_KEY'),
+        'token' => getenv('AZURE_BLOB_STORAGE_SAS_TOKEN'),
         'container' => getenv('AZURE_BLOB_STORAGE_CONTAINER'),
         'endpointSuffix' => 'core.windows.net',
         'protocol' => 'https',
@@ -173,6 +118,18 @@ if ($varnish_port = getenv('DRUPAL_VARNISH_PORT')) {
   $config['varnish_purger.settings.varnish_purge_all']['port'] = $varnish_port;
 }
 
+if ($navigation_authentication_key = getenv('DRUPAL_NAVIGATION_API_KEY')) {
+  $config['helfi_navigation.api']['key'] = $navigation_authentication_key;
+}
+
+$config['helfi_api_base.environment_resolver.settings']['environment_name'] = getenv('APP_ENV');
+$config['helfi_api_base.environment_resolver.settings']['project_name'] = getenv('PROJECT_NAME');
+
+// settings.php doesn't know about existing configuration yet so we can't
+// just append new headers to an already existing headers array here.
+// If you have configured any extra headers in your purge settings
+// you must add them in your all.settings.php as well.
+// @todo Replace this with config override service?
 $config['varnish_purger.settings.default']['headers'] = [
   [
     'field' => 'Cache-Tags',
@@ -188,11 +145,6 @@ $config['varnish_purger.settings.varnish_purge_all']['headers'] = [
 ];
 
 if ($varnish_purge_key = getenv('VARNISH_PURGE_KEY')) {
-  // Configuration doesn't know about existing config yet so we can't
-  // just append new headers to an already existing headers array here.
-  // If you have configured any extra headers in your purge settings
-  // you must add them here as well.
-  // @todo Replace this with config override service?
   $config['varnish_purger.settings.default']['headers'][] = [
     'field' => 'X-VC-Purge-Key',
     'value' => $varnish_purge_key,
@@ -210,9 +162,20 @@ if ($stage_file_proxy_origin = getenv('STAGE_FILE_PROXY_ORIGIN')) {
   $config['stage_file_proxy.settings']['use_imagecache_root'] = FALSE;
 }
 
+// Override session suffix when present.
+if ($session_suffix = getenv('DRUPAL_SESSION_SUFFIX')) {
+  $config['helfi_proxy.settings']['session_suffix'] = $session_suffix;
+}
+
+if ($robots_header_enabled = getenv('DRUPAL_X_ROBOTS_TAG_HEADER')) {
+  $config['helfi_proxy.settings']['robots_header_enabled'] = (bool) $robots_header_enabled;
+}
+
+$config['filelog.settings']['rotation']['schedule'] = 'never';
+
 if (
   ($redis_host = getenv('REDIS_HOST')) &&
-  file_exists('modules/contrib/redis/example.services.yml') &&
+  file_exists('modules/contrib/redis/redis.services.yml') &&
   extension_loaded('redis')
 ) {
   // Redis namespace is not available until redis module is enabled, so
@@ -220,11 +183,6 @@ if (
   // this configuration when the module is installed, but not yet enabled.
   $class_loader->addPsr4('Drupal\\redis\\', 'modules/contrib/redis/src');
   $redis_port = getenv('REDIS_PORT') ?: 6379;
-
-  // Force SSL on azure.
-  if (getenv('AZURE_SQL_SSL_CA_PATH')) {
-    $redis_host = 'tls://' . $redis_host;
-  }
 
   if ($redis_prefix = getenv('REDIS_PREFIX')) {
     $settings['cache_prefix']['default'] = $redis_prefix;
@@ -234,21 +192,40 @@ if (
     $settings['redis.connection']['password'] = $redis_password;
   }
   $settings['redis.connection']['interface'] = 'PhpRedis';
-  $settings['redis.connection']['host'] = $redis_host;
   $settings['redis.connection']['port'] = $redis_port;
 
   // REDIS_INSTANCE environment variable is used to support Redis sentinel.
-  // REDIS_HOST value should contain host and port, like 'sentinel-external:5000'
+  // REDIS_HOST value should contain host and port, like 'sentinel:5000'
   // when using Sentinel.
   if ($redis_instance = getenv('REDIS_INSTANCE')) {
     $settings['redis.connection']['instance'] = $redis_instance;
     // Sentinel expects redis host to be an array.
     $redis_host = explode(',', $redis_host);
   }
+  $settings['redis.connection']['host'] = $redis_host;
 
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
   // Register redis services to make sure we don't get a non-existent service
   // error while trying to enable the module.
   $settings['container_yamls'][] = 'modules/contrib/redis/redis.services.yml';
+}
+
+// Environment specific overrides.
+if (file_exists(__DIR__ . '/all.settings.php')) {
+  include __DIR__ . '/all.settings.php';
+}
+
+if ($env = getenv('APP_ENV')) {
+  if (file_exists(__DIR__ . '/' . $env . '.settings.php')) {
+    include __DIR__ . '/' . $env . '.settings.php';
+  }
+
+  if (file_exists(__DIR__ . '/' . $env . '.services.yml')) {
+    $settings['container_yamls'][] = __DIR__ . '/' . $env . '.services.yml';
+  }
+
+  if (getenv('OPENSHIFT_BUILD_NAMESPACE') && file_exists(__DIR__ . '/azure.settings.php')) {
+    include __DIR__ . '/azure.settings.php';
+  }
 }

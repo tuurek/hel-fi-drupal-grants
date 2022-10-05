@@ -5,7 +5,6 @@ namespace Drupal\grants_handler\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\grants_handler\ApplicationHandler;
-use Drupal\webform\Entity\WebformSubmission;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -123,34 +122,25 @@ class CopyApplicationForm extends FormBase {
     $webform_submission = $storage['submission'];
     $webform = $webform_submission->getWebForm();
 
-    $clearedData = ApplicationHandler::clearDataForCopying($webform_submission->getData());
-    $clearedData['status'] = 'DRAFT';
+    // Init new application with copied data.
+    $newSubmission = $this->applicationHandler->initApplication($webform->id(), $webform_submission->getData());
 
-    $newSubmission = WebformSubmission::create(['webform_id' => $webform->id()]);
-    $newSubmission->save();
-    $newAppNumber = ApplicationHandler::createApplicationNumber($newSubmission);
+    $newData = $newSubmission->getData();
 
-    $clearedData['application_number'] = $newAppNumber;
-
-    $applicationData = $this->applicationHandler->webformToTypedData(
-      $clearedData);
-
-    $uploadResults = $this->applicationHandler->handleApplicationUpload($applicationData, $newAppNumber);
-
-    if ($uploadResults == TRUE) {
+    if ($newSubmission) {
       $this->messenger()
         ->addStatus(
           $this->t(
             'Grant application copied(<span id="saved-application-number">@number</span>)',
             [
-              '@number' => $clearedData['application_number'],
+              '@number' => $newData['application_number'],
             ]
           )
         );
 
       $form_state->setRedirect(
         'grants_handler.completion',
-        ['submission_id' => $newAppNumber],
+        ['submission_id' => $newData['application_number']],
         [
           'attributes' => [
             'data-drupal-selector' => 'application-saved-successfully-link',

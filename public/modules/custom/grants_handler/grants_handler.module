@@ -23,30 +23,12 @@ use Drupal\webform\WebformSubmissionStorageInterface;
 
 /**
  * Implements hook_theme().
- *
- * @return array
  */
 function grants_handler_theme(): array {
   return [
     'webform_handler_grants_summary' => [
       'variables' => ['settings' => NULL, 'handler' => []],
     ],
-    // @todo composite elements' custom themes.
-    //   'community_officials_composite' => [
-    //      'variables' => [],
-    //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
-    //      'template' => 'select'
-    //    ],
-    //    'bank_account_composite' => [
-    //      'variables' => [],
-    //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
-    //      'template' => 'select'
-    //    ],
-    //    'community_address_composite' => [
-    //      'variables' => [],
-    //      'path' => 'themes/custom/helfi_grant_applications/templates/form/select',
-    //      'template' => 'select'
-    //    ],.
     'webform_submission_messages' => [
       'variables' => [
         'messages' => NULL,
@@ -99,11 +81,6 @@ function grants_handler_theme(): array {
         'editForm' => NULL,
       ],
     ],
-    // 'grants_handler_copy_application' => [
-    //      'variables' => [
-    //        'submission' => NULL,
-    //      ],
-    //    ],
     // Override the webform progress bar so we can add our page classes.
     'webform_progress_bar' => [
       'variables' => [
@@ -221,6 +198,7 @@ function grants_handler_page_attachments(array &$attachments) {
  * @see hook_webform_element_ELEMENT_TYPE_alter()
  */
 function grants_handler_webform_element_alter(array &$element, FormStateInterface $form_state, array $context) {
+
   // Code here acts on all elements included in a webform.
   /** @var \Drupal\webform\WebformSubmissionForm $form_object */
   $form_object = $form_state->getFormObject();
@@ -363,10 +341,13 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
       }
     }
 
-    // For some reason this selection cannot be done in official composite class.
+    // For some reason this selection cannot be done in official
+    // composite class.
     // so we'll need to hack this here.
     // @todo Can the composite default value be added here?
-    if (isset($element['#webform_key']) && ($element['#webform_key'] == 'community_officials')) {
+    if (
+      isset($element['#webform_key']) &&
+      $element['#webform_key'] == 'community_officials') {
 
       /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
       $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -401,21 +382,25 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
 }
 
 /**
- * @param $array
+ * Add icons to some
+ *
+ * @param mixed $array
  *   Array being manipulated.
- * @param $value
+ * @param mixed $value
  *   Imported value for the array.
  * @param bool $show_checkmark
  *   Is the checkmark visible.
  */
 function _grants_handler_imported_handler(
   mixed &$array,
-        $value,
+  mixed $value,
   bool  $show_checkmark = TRUE) {
 
   if (!is_array($array)) {
     return;
   }
+
+  $url = Url::fromRoute('grants_oma_asiointi.front');
 
   $array["#value"] = $value;
   $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
@@ -423,14 +408,22 @@ function _grants_handler_imported_handler(
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
   if ($show_checkmark === FALSE) {
-    $array['#field_prefix'] = '<a class="hds-link hds-link--medium" style="display:inline-block;" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">' . t('Edit') . '</span>
-          </a>';
+    $array['#field_prefix'] = '
+    <a class="hds-link hds-link--medium" style="display:inline-block;" 
+      href="' . $url->toString() . '">
+      <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s">
+      
+</span><span class="link-label">' . t('Edit') . '</span>
+    </a>';
   }
 
 }
 
 /**
+ * Missing data prints.
+ *
+ * @todo Must be fixed with proper template & things.
+ *
  * @param array $element
  *   The element in question.
  * @param string $str1
@@ -441,7 +434,7 @@ function _grants_handler_imported_handler(
  *   Clarifying text.
  */
 function _grants_handler_missing_data(
-  array &$element,
+  array  &$element,
   string $str1 = 'Field is missing.',
   string $str2 = 'Go to grants profile',
   string $str3 = 'to fill out missing data.') {
@@ -787,70 +780,14 @@ function grants_handler_preprocess_webform_submission_message_attachments(&$vari
         'description' => $attachment['description'],
       ];
     }
-
   }
 
   $table = [
     '#type' => 'table',
-    // '#header' => [
-    //      'fileName' => t('File name'),
-    //      'description' => t('Description'),
-    //    ],
     '#rows' => $events,
-    // '#empty' => t('No attachments has been found.'),
   ];
 
   $variables['attachments_to_print'] = $table;
-}
-
-/**
- * Programmatically validate a webform submission.
- *
- * @param array $form
- *   An associative array containing the structure of the form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
- *
- * @throws \Exception
- */
-function grants_handler_submission_validation(array &$form, FormStateInterface $form_state) {
-  // /** @var \Drupal\grants_formnavigation\grants_formnavigationHelper $grants_formnavigation_helper */
-  //  $grants_formnavigation_helper = \Drupal::service('grants_formnavigation.helper');
-  //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  //  $webform_submission = $form_state->getFormObject()->getEntity();
-  //  $webform = $webform_submission->getWebform();
-  //  $has_errors = FALSE;
-  //  // Ensure each page has been validated.
-  //  $grants_formnavigation_helper->validateAllPages($webform_submission, $form_state);
-  //  // Log the form errors.
-  //  $grants_formnavigation_helper->logPageErrors($webform_submission, $form_state);
-  //  // Clear errors and place the submission errors above them.
-  //  $form_state->clearErrors();
-  //  // Validate our submission values.
-  //  $logged_errors = $grants_formnavigation_helper->getErrors($webform_submission);
-  // // Set form errors if the values are in-valid.
-  //  foreach ($webform_submission->getWebform()
-  //             ->getPages('edit', $webform_submission) as $page_key => $page) {
-  //    $page_errors = !empty($logged_errors[$page_key]) ? $logged_errors[$page_key] : [];
-  //    if (!empty($page_errors)) {
-  //      $has_errors = TRUE;
-  //      // Set an error on the page to create separation in the error message.
-  //      $page_message = t('<p class="grants_formnavigation-page-title"><strong>@title Page</strong></p>', ['@title' => $page['#title']]);
-  //      $form_state->setErrorByName($page_key, $page_message);
-  //      // Parse through the errors and set a form error for each.
-  //      foreach ($page_errors as $field => $error) {
-  //        $message = t('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• @message', ['@message' => $error]);
-  //        $form_state->setErrorByName($field, $message);
-  //      }
-  //    }
-  //  }
-  //  // Add additional error message if defined in the settings.
-  //  if ($has_errors && !empty($webform->getThirdPartySetting('grants_formnavigation', 'additional_error_message'))) {
-  //    $keys = array_keys($webform->getElementsInitializedAndFlattened());
-  //    $additional_error_message = $webform->getThirdPartySetting('grants_formnavigation', 'additional_error_message');
-  //    $message = t('<br><p class="grants_formnavigation-additional-message">@message</p>', ['@message' => $additional_error_message]);
-  //    $form_state->setErrorByName($keys[1], $message);
-  //  }
 }
 
 /**
@@ -902,9 +839,8 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
   $navigationHelper = \Drupal::service('grants_handler.navigation_helper');
   /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
   $webform_submission = $variables["form"]["#webform_submission"];
-
-  $variables['errors'] = $variables['form']['#errors'];
-
+  // get errors for printing.
+  $variables['errors'] = $navigationHelper->getAllErrors($webform_submission);
 }
 
 /**
@@ -973,15 +909,28 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
   try {
     if ($submissionData['status'] == 'DRAFT') {
-      $dt = new DateTime($submissionData["form_timestamp"], new DateTimeZone('Europe/Helsinki'));
+      if (isset($submissionData["form_timestamp"]) && !empty($submissionData["form_timestamp"])) {
+        $dt = new DateTime($submissionData["form_timestamp"], new DateTimeZone('Europe/Helsinki'));
+        $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+      }
     }
     else {
-      $dt = new DateTime($submissionData["form_timestamp_created"], new DateTimeZone('Europe/Helsinki'));
+      if (isset($submissionData["form_timestamp_created"]) && !empty($submissionData["form_timestamp_created"])) {
+        $dt = new DateTime($submissionData["form_timestamp_created"], new DateTimeZone('Europe/Helsinki'));
+        $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+      }
     }
-
-    $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
   } catch (\Exception $e) {
   }
+
+
+  $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
+    'submission_id' => $submission->id(),
+  ]);
+
+  $printAppUrl = Url::fromRoute('grants_webform_print.submission_print', [
+    'submission_id' => $submission->id(),
+  ]);
 
   $viewApplicationUrl = Url::fromRoute(
     'grants_handler.view_application',
@@ -1004,7 +953,6 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     [
       'attributes' => [
         'data-drupal-selector' => 'application-edit-link',
-        'target' => '_blank',
       ],
     ]
   );
@@ -1018,11 +966,14 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  $editApplicationLinkText = Markup::create(t('Edit application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
-  $viewApplicationLinkText = Markup::create(t('View application') . '&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>');
+  $editApplicationLinkText = Markup::create(t('Edit application') );
+  $viewApplicationLinkText = Markup::create(t('View application'));
 
   $variables['viewApplicationLink'] = Link::fromTextAndUrl($viewApplicationLinkText, $viewApplicationUrl);
   $variables['editApplicationLink'] = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
+
+  $variables['deleteApplicationUrl'] = $deleteAppUrl->toString();
+  $variables['printApplicationUrl'] = $printAppUrl->toString();
 
   try {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
@@ -1152,11 +1103,12 @@ function grants_handler_preprocess_message_list(&$variables) {
 }
 
 /**
- * @param $variables
+ * Process information box.
  *
- * @return void
+ * @param array $variables
+ *  Variables for template.
  */
-function grants_handler_preprocess_webform_submission_information(&$variables) {
+function grants_handler_preprocess_webform_submission_information(array &$variables) {
 
   /** @var \Drupal\webform\Entity\WebformSubmission $submission */
   $submission = $variables["webform_submission"];
@@ -1226,9 +1178,11 @@ function grants_handler_preprocess_webform_submission_information(&$variables) {
   $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
       ->getRouteName();
 
-  $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
-
-  $variables['applicationSent'] = $dt->format('Y-m-d H:i');
+  try {
+    $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
+    $variables['applicationSent'] = $dt->format('Y-m-d H:i');
+  } catch (Exception $e) {
+  }
 
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',

@@ -184,7 +184,7 @@ class GrantsAttachments extends WebformCompositeBase {
     $lines = [];
 
     $submissionData = $webform_submission->getData();
-    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'INTEGRATION_INFO_ATT_OK');
+    $attachmentEvents = EventsService::filterEvents($submissionData['events'] ?? [], 'HANDLER_ATT_OK');
 
     if (!is_array($value)) {
       return [];
@@ -203,12 +203,14 @@ class GrantsAttachments extends WebformCompositeBase {
       }
     }
 
-    // Add filename if it has been uploaded earlier.
-    if (isset($value["fileName"])) {
-      $lines[] = $value["fileName"];
-    }
-    elseif (isset($value["attachmentName"])) {
-      $lines[] = $value["attachmentName"];
+    if (isset($value["integrationID"]) && !empty($value["integrationID"])) {
+      // Add filename if it has been uploaded earlier.
+      if (isset($value["fileName"]) && !empty($value["fileName"])) {
+        $lines[] = $value["fileName"];
+      }
+      elseif (isset($value["attachmentName"]) && !empty($value["attachmentName"])) {
+        $lines[] = $value["attachmentName"];
+      }
     }
 
     // And if not, then show other fields, which cannot be selected
@@ -232,7 +234,7 @@ class GrantsAttachments extends WebformCompositeBase {
     if ((isset($value["fileName"]) && !empty($value["fileName"])) || (isset($value["attachmentName"]) &&
     !empty($value["attachmentName"]))) {
       if (isset($value["attachmentName"]) && in_array($value["attachmentName"], $attachmentEvents["event_targets"])) {
-        $lines[] = '<span class="ikoniluokka">Upload OK</span>';
+        $lines[] = '<span class="upload-ok-icon">Upload OK</span>';
       }
       elseif (isset($value["fileName"]) && in_array($value["fileName"], $attachmentEvents["event_targets"])) {
         $lines[] = '<span class="upload-ok-icon">Upload OK</span>';

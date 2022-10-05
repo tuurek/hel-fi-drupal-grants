@@ -2,6 +2,7 @@
 
 namespace Drupal\grants_handler\Plugin\WebformHandler;
 
+use Drupal\webform\Utility\WebformArrayHelper;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -366,17 +367,34 @@ class GrantsHandler extends WebformHandlerBase {
 
   /**
    * {@inheritdoc}
+   */
+  public function prepareForm(WebformSubmissionInterface $webform_submission, $operation, FormStateInterface $form_state) {
+
+    // If we're coming here with ADD operator, then we redirect user to
+    // new application endpoint and from there they're redirected back ehre
+    // with newly initialized application. And edit operator.
+    if ($operation == 'add') {
+      $webform_id = $webform_submission->getWebform()->id();
+      $url = Url::fromRoute('grants_handler.new_application', [
+        'webform_id' => $webform_id,
+      ]);
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    parent::prepareForm($webform_submission, $operation, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @throws \Exception
    */
   public function alterForm(array &$form, FormStateInterface $form_state, WebformSubmissionInterface $webform_submission) {
 
-    // \Drupal::messenger()->addMessage
-    // ('Message in GrantsHandler::alterForm()');
     $this->alterFormNavigation($form, $form_state, $webform_submission);
 
     $form['#webform_submission'] = $webform_submission;
-    $webform = $webform_submission->getWebform();
     $form['#form_state'] = $form_state;
 
     $this->setFromThirdPartySettings($webform_submission->getWebform());
@@ -434,8 +452,11 @@ class GrantsHandler extends WebformHandlerBase {
           ->addWarning($this->t('Application data is not yet fully saved, please refresh page in few moments.'));
       }
     }
-
-    $form['#errors'] = $webform->getState('current_errors');
+    // This will remove rebuild action
+    // in practice this will allow redirect after processing DRAFT statuses.
+    if (isset($form['actions']['draft']['#submit']) && is_array($form['actions']['draft']['#submit'])) {
+      WebformArrayHelper::removeValue($form['actions']['draft']['#submit'], '::rebuild');
+    }
   }
 
   /**
@@ -479,21 +500,18 @@ class GrantsHandler extends WebformHandlerBase {
         $form['actions']['wizard_prev']['#validate'] = $validations;
       }
       // Add a custom validator to the final submit.
-      $form['actions']['submit']['#validate'][] = 'grants_handler_submission_validation';
+      //      $form['actions']['submit']['#validate'][] = 'grants_handler_submission_validation';
       // Log the page visit.
       $visited = $this->grantsFormNavigationHelper->hasVisitedPage($webform_submission, $current_page);
       // Log the page if it has not been visited before.
       if (!$visited) {
-
         $this->grantsFormNavigationHelper->logPageVisit($webform_submission, $current_page);
       }
 
       // If there's errors on the form (any page), disable form submit.
-      $current_errors = $webform->getState('current_errors');
-      if (is_array($current_errors) && !GrantsHandler::emptyRecursive($current_errors)) {
-        $this->messenger()
-          ->addStatus('Form validation failed within Drupal. No need to worry, this is does not work properly and is debug print.');
-        // $form["actions"]["submit"]['#disabled'] = TRUE;
+      $all_current_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
+      if (is_array($all_current_errors) && !GrantsHandler::emptyRecursive($all_current_errors)) {
+        $form["actions"]["submit"]['#disabled'] = TRUE;
       }
     }
   }
@@ -578,6 +596,33 @@ class GrantsHandler extends WebformHandlerBase {
   }
 
   /**
+   * Save logged errors to webform state.
+   *
+   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
+   *   Submission object.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state.
+   * @param array $form
+   *   Form render array.
+   *
+   * @return array|null
+   *   All current errors.
+   */
+  public function validate(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state, array &$form): ?array {
+    try {
+      // Validate form.
+      parent::validateForm($form, $form_state, $webform_submission);
+      // Log current errors.
+      $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
+    }
+    catch (\Exception $e) {
+      $current_errors = [];
+      // @todo add logger
+    }
+    return $current_errors;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validateForm(
@@ -585,8 +630,6 @@ class GrantsHandler extends WebformHandlerBase {
     FormStateInterface $form_state,
     WebformSubmissionInterface $webform_submission
   ) {
-
-    parent::validateForm($form, $form_state, $webform_submission);
 
     // These need to be set here to the handler object, bc we do the saving to
     // ATV in postSave and in that method these are not available.
@@ -599,14 +642,7 @@ class GrantsHandler extends WebformHandlerBase {
     // maybe the submittedData is even not required?
     $this->submittedFormData = $this->massageFormValuesFromWebform($webform_submission);
 
-    $webform = $webform_submission->getWebform();
-
-    // If all page validation is in progress, skip further
-    // execution of this hook to avoid loops
-    // if ($webform->getState('validateAllPages') == TRUE) {
-    // // parent::validateForm($form, $form_state, $webform_submission);
-    // return;
-    // }.
+    // Calculate totals for checking.
     $this->setTotals();
 
     // Merge form sender data from handler.
@@ -663,19 +699,9 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    // Validate all pages in separate function
-    // we don't want page by page validation bc we need all errors always.
-    // saving them to db does not solve issue when we're
-    // interested of current errors also.
-    // $this->grantsFormNavigationHelper->validateAllPages(
-    // $webform_submission,
-    // $form_state,
-    // $triggeringElement,
-    // $form
-    // );
-    //
-    // $current_errors = $webform->getState('current_errors');.
-    $current_errors = $form_state->getErrors();
+    $current_errors = $this->validate($webform_submission, $form_state, $form);
+
+    $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
 
     // If ($triggeringElement == '::next') {
     // // parent::validateForm($form, $form_state, $webform_submission);.
@@ -685,7 +711,7 @@ class GrantsHandler extends WebformHandlerBase {
     // if ($triggeringElement == '::submitForm') {
     // }.
     if ($triggeringElement == '::submit') {
-      if ($current_errors === NULL || self::emptyRecursive($current_errors)) {
+      if ($all_errors === NULL || self::emptyRecursive($all_errors)) {
         $applicationData = $this->applicationHandler->webformToTypedData(
           $this->submittedFormData);
 
@@ -699,7 +725,7 @@ class GrantsHandler extends WebformHandlerBase {
         if ($violations->count() === 0) {
           // If we have no violations clear all errors.
           $form_state->clearErrors();
-          // So we well proceed to confirmForm.
+          $deleted = $this->grantsFormNavigationHelper->deleteSubmissionLogs($webform_submission, GrantsHandlerNavigationHelper::ERROR_OPERATION);
         }
         else {
           // If we HAVE errors, then refresh them from the.
@@ -841,7 +867,7 @@ class GrantsHandler extends WebformHandlerBase {
 
       // submitForm is triggering element when saving as draft.
       // Parse attachments to data structure.
-      $this->submittedFormData['attachments'] = $this->attachmentHandler->parseAttachments(
+      $this->attachmentHandler->parseAttachments(
         $this->formTemp,
         $this->submittedFormData,
         $this->applicationNumber
@@ -854,57 +880,62 @@ class GrantsHandler extends WebformHandlerBase {
       catch (ReadOnlyException $e) {
         // @todo log errors here.
       }
-
-      $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
-        $applicationData,
-        $this->applicationNumber
-      );
-
-      if ($applicationUploadStatus) {
-        $this->attachmentHandler->handleApplicationAttachments(
-          $this->applicationNumber,
-          $webform_submission
+      $applicationUploadStatus = FALSE;
+      try {
+        $applicationUploadStatus = $this->applicationHandler->handleApplicationUploadToAtv(
+          $applicationData,
+          $this->applicationNumber
         );
+        if ($applicationUploadStatus) {
+          $this->messenger()
+            ->addStatus(
+              $this->t(
+                'Grant application (<span id="saved-application-number">@number</span>) saved as DRAFT',
+                [
+                  '@number' => $this->applicationNumber,
+                ]
+              )
+            );
 
-        $this->messenger()
-          ->addStatus(
-            $this->t(
-              'Grant application (<span id="saved-application-number">@number</span>) saved as DRAFT',
-              [
-                '@number' => $this->applicationNumber,
-              ]
-            )
+          // Try to give integration time to do it's
+          // thing before we try to go there.
+          sleep(4);
+
+          $redirectUrl = Url::fromRoute('grants_handler.view_application', [
+            'submission_id' => $this->applicationNumber,
+          ]);
+        }
+        else {
+          $redirectUrl = Url::fromRoute(
+            '<front>',
+            [
+              'attributes' => [
+                'data-drupal-selector' => 'application-saving-failed-link',
+              ],
+            ]
           );
 
-        // Try to give integration time to do it's
-        // thing before we try to go there.
-        sleep(4);
-
-        $redirectUrl = Url::fromRoute('grants_handler.view_application', [
-          'submission_id' => $this->applicationNumber,
-        ]);
+          $this->messenger()
+            ->addError(
+              $this->t(
+                'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support.',
+                [
+                  '@number' => $this->applicationNumber,
+                ]
+              ),
+              TRUE
+            );
+        }
       }
-      else {
-        $redirectUrl = Url::fromRoute(
-          '<front>',
-          [
-            'attributes' => [
-              'data-drupal-selector' => 'application-saving-failed-link',
-            ],
-          ]
-        );
-
-        $this->messenger()
-          ->addError(
-            $this->t(
-              'Grant application (<span id="saved-application-number">@number</span>) saving failed. Please contact support.',
-              [
-                '@number' => $this->applicationNumber,
-              ]
-            ),
-            TRUE
-          );
+      catch (\Exception $e) {
+        $this->getLogger('grants_handler')
+          ->error('Error uploadind application: @error', ['@error' => $e->getMessage()]);
       }
+      catch (GuzzleException $e) {
+        $this->getLogger('grants_handler')
+          ->error('Error uploadind application: @error', ['@error' => $e->getMessage()]);
+      }
+
       $redirectResponse = new RedirectResponse($redirectUrl->toString());
       $this->applicationHandler->clearCache($this->applicationNumber);
       $redirectResponse->send();
@@ -914,11 +945,16 @@ class GrantsHandler extends WebformHandlerBase {
     if ($this->triggeringElement == '::submit') {
       // Submit is trigger when exiting from confirmation page.
       // Parse attachments to data structure.
-      $this->submittedFormData['attachments'] = $this->attachmentHandler->parseAttachments(
-        $this->formTemp,
-        $this->submittedFormData,
-        $this->applicationNumber
-      );
+      try {
+        $this->attachmentHandler->parseAttachments(
+          $this->formTemp,
+          $this->submittedFormData,
+          $this->applicationNumber
+        );
+      }
+      catch (\Exception $e) {
+        $this->getLogger('grants_handler')->error($e->getMessage());
+      }
 
       // Try to update status only if it's allowed.
       if (ApplicationHandler::canSubmissionBeSubmitted($webform_submission, NULL)) {
@@ -952,21 +988,12 @@ class GrantsHandler extends WebformHandlerBase {
         'grants_metadata_yleisavustushakemus'
       );
 
-      $applicationUploadStatus = $this->applicationHandler->handleApplicationUpload(
+      $applicationUploadStatus = $this->applicationHandler->handleApplicationUploadViaIntegration(
         $applicationData,
         $this->applicationNumber
       );
 
       if ($applicationUploadStatus) {
-        $this->attachmentHandler->handleApplicationAttachments(
-          $this->applicationNumber,
-          $webform_submission
-        );
-
-        $viewApplicationUrl = Url::fromRoute('grants_handler.view_application', [
-          'submission_id' => $this->applicationNumber,
-        ]);
-
         $this->messenger()
           ->addStatus(
             $this->t(
@@ -1077,36 +1104,6 @@ class GrantsHandler extends WebformHandlerBase {
       }
     }
     return $retval;
-  }
-
-  /**
-   * Save logged errors to webform state.
-   *
-   * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
-   *   Submission object.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Form state.
-   *
-   * @return array
-   *   All current errors.
-   */
-  public function logErrors(WebformSubmissionInterface $webform_submission, FormStateInterface $form_state): array {
-    try {
-
-      $page = $webform_submission->getCurrentPage();
-
-      // Log current errors.
-      $current_errors = $this->grantsFormNavigationHelper->logPageErrors($webform_submission, $form_state);
-
-      // And add existing ones to form state to be processed in theme files.
-      $webform = $webform_submission->getWebform();
-      $webform->setState('current_errors', $current_errors);
-    }
-    catch (\Exception $e) {
-      $current_errors = [];
-      // @todo add logger
-    }
-    return $current_errors;
   }
 
   /**

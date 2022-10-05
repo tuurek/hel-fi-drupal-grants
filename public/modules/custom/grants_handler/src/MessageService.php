@@ -174,7 +174,7 @@ class MessageService {
       if ($res->getStatusCode() == 201) {
         try {
           $this->atvService->clearCache($messageData['caseId']);
-          $eventId = $this->eventsService->logEvent(
+          $event = $this->eventsService->logEvent(
             $submissionData["application_number"],
             'MESSAGE_APP',
             t('New message for @applicationNumber.',
@@ -187,7 +187,7 @@ class MessageService {
             'MSG id: %nextId, message sent. Event logged: %eventId',
             [
               '%nextId' => $nextMessageId,
-              '%eventId' => $eventId,
+              '%eventId' => $event['eventID'],
             ]);
 
         }

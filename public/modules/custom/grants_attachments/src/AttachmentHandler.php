@@ -10,6 +10,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
+use Drupal\grants_handler\EventsService;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -132,7 +133,7 @@ class AttachmentHandler {
 
     $this->attachmentFileIds = [];
 
-    $this->debug = FALSE;
+    $this->debug = getenv('debug') ?? FALSE;
 
   }
 
@@ -143,7 +144,10 @@ class AttachmentHandler {
    *   TRue or false depending on if debug is on or not.
    */
   public function isDebug(): bool {
-    return $this->debug;
+    if ($this->debug === TRUE) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
@@ -236,22 +240,23 @@ class AttachmentHandler {
   }
 
   /**
-   * Parse attachments from POST.
+   * Parse attachments from submitted data and create schema structured data.
    *
    * @param array $form
    *   Form in question.
    * @param array $submittedFormData
-   *   Submitted form data.
+   *   Submitted form data. Passed as reference so both events & attachments
+   *   can be added.
    * @param string $applicationNumber
    *   Generated application number.
    *
-   * @return array[]
-   *   Parsed attachments.
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\grants_handler\EventException
    */
   public function parseAttachments(
     array $form,
-    array $submittedFormData,
-    string $applicationNumber): array {
+    array &$submittedFormData,
+    string $applicationNumber): void {
 
     $attachmentsArray = [];
     $attachmentHeaders = GrantsAttachments::$fileTypes;
@@ -290,16 +295,52 @@ class AttachmentHandler {
             }
           }
 
-          $parsedArray = $this->getAttachmentByFieldValue(
-            $fieldElement, $descriptionValue, $fileType);
+          // Get attachment structure & possible event.
+          $attachment = $this->getAttachmentByFieldValue(
+            $fieldElement, $descriptionValue, $fileType, $applicationNumber);
 
-          if (!empty($parsedArray)) {
-            if (!isset($parsedArray['fileName']) || !in_array($parsedArray['fileName'], $filenames)) {
-              $attachmentsArray[] = $parsedArray;
-              if (isset($parsedArray['fileName'])) {
-                $filenames[] = $parsedArray['fileName'];
+          if (!empty($attachment['attachment'])) {
+            $attachmentExists = array_filter(
+              $submittedFormData['attachments'],
+              function ($item) use ($attachment) {
+                // If we have integration ID, we have uploaded attachment
+                // and we want to compare that.
+                if (isset($item['integrationID']) && isset($attachment['attachment']['integrationID'])) {
+                  if ($item['integrationID'] == $attachment['attachment']['integrationID']) {
+                    return TRUE;
+                  }
+                }
+                // If no upload, then compare descriptions.
+                else {
+                  if (isset($item['description']) && isset($attachment['attachment']['description'])) {
+                    if ($item['description'] == $attachment['attachment']['description']) {
+                      return TRUE;
+                    }
+                  }
+                }
+                // If no match.
+                return FALSE;
+              });
+            // No attachment at all.
+            if (empty($attachmentExists)) {
+              $submittedFormData['attachments'][] = $attachment['attachment'];
+            }
+            else {
+              // We had existing attachment, but we need to update it with
+              // the data from this form.
+              foreach ($submittedFormData['attachments'] as $key => $att) {
+                if (isset($att['description']) && isset($attachment['attachment']['description'])) {
+                  if ($att['description'] == $attachment['attachment']['description']) {
+                    $submittedFormData['attachments'][$key] = $attachment['attachment'];
+                  }
+                }
               }
             }
+          }
+          // Also set event.
+          // There is no event if attachment is uploaded.
+          if (!empty($attachment['event'])) {
+            $submittedFormData['events'][] = $attachment['event'];
           }
         }
       }
@@ -311,7 +352,7 @@ class AttachmentHandler {
           $submittedFormData["account_number"],
           $applicationNumber,
           $filenames,
-          $attachmentsArray
+          $submittedFormData
         );
       }
       catch (TempStoreException | GuzzleException $e) {
@@ -320,8 +361,6 @@ class AttachmentHandler {
         ]);
       }
     }
-
-    return $attachmentsArray;
   }
 
   /**
@@ -336,7 +375,7 @@ class AttachmentHandler {
    *   This application.
    * @param array $filenames
    *   Already added filenames.
-   * @param array $attachmentsArray
+   * @param array $submittedFormData
    *   Full array of attachment information.
    *
    * @throws \Drupal\Core\TempStore\TempStoreException
@@ -346,7 +385,7 @@ class AttachmentHandler {
     string $accountNumber,
     string $applicationNumber,
     array $filenames,
-    array &$attachmentsArray
+    array &$submittedFormData
   ) {
 
     // If no accountNumber is selected, do nothing.
@@ -358,13 +397,14 @@ class AttachmentHandler {
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
     $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
     $profileContent = $grantsProfileDocument->getContent();
-
     $applicationDocument = FALSE;
+    $fileArray = [];
     try {
       // Search application document from ATV.
       $applicationDocumentResults = $this->atvService->searchDocuments([
         'transaction_id' => $applicationNumber,
       ]);
+      /** @var \Drupal\helfi_atv\AtvDocument $applicationDocument */
       $applicationDocument = reset($applicationDocumentResults);
     }
     catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
@@ -395,7 +435,7 @@ class AttachmentHandler {
       }
 
       if (!$accountConfirmationExists) {
-        $found = array_filter($attachmentsArray, function ($fn) use ($filename) {
+        $found = array_filter($submittedFormData, function ($fn) use ($filename) {
           if (!isset($fn['fileName'])) {
             return FALSE;
           }
@@ -428,10 +468,27 @@ class AttachmentHandler {
         try {
           // Get file.
           $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
-          // Add file to attachments for uploading.
-          $this->attachmentFileIds[] = $file->id();
+          // Upload file.
+          $uploadResult = $this->atvService->uploadAttachment($applicationDocument->getId(), $selectedAccountConfirmation["filename"], $file);
+          // If succeeded.
+          if ($uploadResult !== FALSE) {
+            // Create proper integrationID.
+            $integrationID = str_replace(getenv('ATV_BASE_URL'), '', $uploadResult['href']);
+
+            // If upload is ok, then add event.
+            $submittedFormData['events'][] = EventsService::getEventData(
+              'HANDLER_ATT_OK',
+              $applicationNumber,
+              'Attachment uploaded.',
+              $file->getFilename()
+            );
+
+          }
+          // And delete file in any case
+          // we don't want to keep any files.
+          $file->delete();
         }
-        catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
+        catch (\Exception $e) {
           $this->logger->error('Error: %msg', [
             '%msg' => $e->getMessage(),
           ]);
@@ -439,10 +496,10 @@ class AttachmentHandler {
             ->addError(t('Bank account confirmation file attachment failed.'));
         }
         // Add account confirmation to attachment array.
-        $attachmentsArray[] = [
+        $fileArray = [
           'description' => t('Confirmation for account @accountNumber', ['@accountNumber' => $selectedAccount["bankAccount"]])->render(),
           'fileName' => $selectedAccount["confirmationFile"],
-          'isNewAttachment' => TRUE,
+          'isNewAttachment' => FALSE,
           'fileType' => 6,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
@@ -454,7 +511,7 @@ class AttachmentHandler {
       // make sure it's not added again
       // and also make sure if the attachment is uploaded to add integrationID
       // sometimes this does not work in integration.
-      $existingConfirmationForSelectedAccountExists = array_filter($attachmentsArray, function ($fn) use ($selectedAccount, $accountConfirmationFile) {
+      $existingConfirmationForSelectedAccountExists = array_filter($submittedFormData, function ($fn) use ($selectedAccount, $accountConfirmationFile) {
         if (
           isset($fn['fileName']) &&
           (($fn['fileName'] == $selectedAccount['confirmationFile']) ||
@@ -481,13 +538,29 @@ class AttachmentHandler {
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
-
-        if (!empty($integrationID)) {
-          $fileArray['integrationID'] = $integrationID;
-        }
-        $attachmentsArray[] = $fileArray;
       }
     }
+    // If we have generated file array for this.
+    if (!empty($fileArray)) {
+      // And if we have integration id set.
+      if (!empty($integrationID)) {
+        // Add that.
+        $fileArray['integrationID'] = $integrationID;
+      }
+      $extraAttachments = [];
+      // First clean all account confirmation files.
+      // this should handle account number updates as well.
+      foreach ($submittedFormData['attachments'] as $key => $value) {
+        if ((int) $value['fileType'] == 6) {
+          unset($submittedFormData['attachments'][$key]);
+        }
+      }
+      // And then add this one to attachments.
+      $submittedFormData['attachments'][] = $fileArray;
+      // Make keys sequential.
+      $submittedFormData['attachments'] = array_values($submittedFormData['attachments']);
+    }
+
   }
 
   /**
@@ -499,15 +572,23 @@ class AttachmentHandler {
    *   The field description from form element title.
    * @param string $fileType
    *   Filetype id from element configuration.
+   * @param string $applicationNumber
+   *   Application number for attachment.
    *
    * @return \stdClass[]
    *   Data for JSON.
+   *
+   * @throws \Drupal\grants_handler\EventException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function getAttachmentByFieldValue(
     array $field,
     string $fieldDescription,
-    string $fileType): array {
+    string $fileType,
+    string $applicationNumber
+  ): array {
 
+    $event = NULL;
     $retval = [
       'description' => (isset($field['description']) && $field['description'] !== "") ? $field['description'] : $fieldDescription,
     ];
@@ -520,10 +601,26 @@ class AttachmentHandler {
         // Add file id for easier usage in future.
         $this->attachmentFileIds[] = $field['attachment'];
 
+        // Maybe delete file here also?
         $retval['fileName'] = $file->getFilename();
         $retval['isNewAttachment'] = TRUE;
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
+
+        if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
+          $retval['integrationID'] = $field["integrationID"];
+        }
+
+        $event = EventsService::getEventData(
+          'HANDLER_ATT_OK',
+          $applicationNumber,
+          'Attachment uploaded.',
+          $retval['fileName']
+        );
+
+        // Delete file entity from Drupal.
+        $file->delete();
+
       }
     }
     else {
@@ -578,10 +675,14 @@ class AttachmentHandler {
       if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
         $retval['integrationID'] = $field["integrationID"];
         $retval['isNewAttachment'] = FALSE;
+        $retval['isDeliveredLater'] = FALSE;
+        $retval['isIncludedInOtherFile'] = FALSE;
       }
-
     }
-    return $retval;
+    return [
+      'attachment' => $retval,
+      'event' => $event,
+    ];
   }
 
   /**
@@ -622,7 +723,7 @@ class AttachmentHandler {
                 '@filename' => $attResult['filename'],
                 '@msg' => $attResult['msg'],
               ])
-            );
+          );
       }
     }
 

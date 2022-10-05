@@ -225,12 +225,22 @@ class GrantsProfileService {
 
       foreach ($documentContent['bankAccounts'] as $key => $bank_account) {
         unset($documentContent['bankAccounts'][$key]['confirmationFileName']);
+        // If we have account confirmation file uploaded
+        // which is denoted by having FID- in front of file id.
         if (isset($bank_account['confirmationFile']) && str_contains($bank_account['confirmationFile'], 'FID-')) {
+          // Get file id.
           $fileId = str_replace('FID-', '', $bank_account['confirmationFile']);
+          // Load file.
           $fileEntity = File::load((int) $fileId);
+          // If we have file.
           if ($fileEntity) {
+            // Generate file name for file.
+            // just md5 account number to avoid any confusions with different
+            // naming conventions.
             $fileName = md5($bank_account['bankAccount']) . '.pdf';
+            // Set filename.
             $documentContent['bankAccounts'][$key]['confirmationFile'] = $fileName;
+            // Upload the thing.
             $retval = $this->atvService->uploadAttachment($grantsProfileDocument->getId(), $fileName, $fileEntity);
 
             if ($retval) {
@@ -262,7 +272,7 @@ class GrantsProfileService {
                 [
                   '%id' => $fileEntity->id(),
                 ]
-              );
+                          );
             }
           }
           else {
@@ -287,7 +297,7 @@ class GrantsProfileService {
         'metadata' => $grantsProfileDocument->getMetadata(),
         'transaction_id' => $transactionId,
       ];
-      $this->logger->info('Grants profile POSTed, transactionID: %transactionId', ['%transactionId' => $transactionId]);
+      $this->logger->info('Grants profile PATCHed, transactionID: %transactionId', ['%transactionId' => $transactionId]);
       return $this->atvService->patchDocument($grantsProfileDocument->getId(), $payloadData);
     }
   }
