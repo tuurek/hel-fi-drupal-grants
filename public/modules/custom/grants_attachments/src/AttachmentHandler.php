@@ -2,8 +2,6 @@
 
 namespace Drupal\grants_attachments;
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelFactory;
@@ -411,7 +409,7 @@ class AttachmentHandler {
       $applicationDocumentResults = $this->atvService->searchDocuments([
         'transaction_id' => $applicationNumber,
       ]);
-      /** @var AtvDocument $applicationDocument */
+      /** @var \Drupal\helfi_atv\AtvDocument $applicationDocument */
       $applicationDocument = reset($applicationDocumentResults);
     }
     catch (AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
@@ -475,14 +473,14 @@ class AttachmentHandler {
         try {
           // Get file.
           $file = $this->atvService->getAttachment($selectedAccountConfirmation['href']);
-          // upload file
+          // Upload file.
           $uploadResult = $this->atvService->uploadAttachment($applicationDocument->getId(), $selectedAccountConfirmation["filename"], $file);
-          // if succeeded
+          // If succeeded.
           if ($uploadResult !== FALSE) {
-            // create proper integrationID
+            // Create proper integrationID.
             $integrationID = str_replace(getenv('ATV_BASE_URL'), '', $uploadResult['href']);
 
-            // if upload is ok, then add event.
+            // If upload is ok, then add event.
             $submittedFormData['events'][] = EventsService::getEventData(
               'HANDLER_ATT_OK',
               $applicationNumber,
@@ -491,7 +489,7 @@ class AttachmentHandler {
             );
 
           }
-          // and delete file in any case
+          // And delete file in any case
           // we don't want to keep any files.
           $file->delete();
         }
@@ -547,24 +545,24 @@ class AttachmentHandler {
         ];
       }
     }
-    // if we have generated file array for this
+    // If we have generated file array for this.
     if (!empty($fileArray)) {
-      // and if we have integration id set
+      // And if we have integration id set.
       if (!empty($integrationID)) {
-        // add that
+        // Add that.
         $fileArray['integrationID'] = $integrationID;
       }
       $extraAttachments = [];
-      // first clean all account confirmation files.
+      // First clean all account confirmation files.
       // this should handle account number updates as well.
       foreach ($submittedFormData['attachments'] as $key => $value) {
-        if((int)$value['fileType'] == 6){
+        if ((int) $value['fileType'] == 6) {
           unset($submittedFormData['attachments'][$key]);
         }
       }
-      // and then add this one to attachments.
+      // And then add this one to attachments.
       $submittedFormData['attachments'][] = $fileArray;
-      // make keys sequential.
+      // Make keys sequential.
       $submittedFormData['attachments'] = array_values($submittedFormData['attachments']);
     }
 

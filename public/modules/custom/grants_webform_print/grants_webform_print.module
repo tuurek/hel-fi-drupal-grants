@@ -13,7 +13,7 @@ use Drupal\grants_webform_print\GrantsWebformPrintPreRender;
 use Drupal\grants_webform_print\GrantsWebformPrintHelper;
 
 /**
- * Implements hook_preprocess_webform_container_base_html()
+ * Implements hook_preprocess_webform_container_base_html().
  */
 function grants_webform_print_preprocess_webform_container_base_html(&$variables) {
   if ($variables['element']['#type'] == 'webform_section') {
@@ -63,9 +63,7 @@ function grants_webform_print_page_top(array &$page_top) {
   unset($page_top['toolbar']);
 }
 
-/******************************************************************************/
 // Theme functions.
-/******************************************************************************/
 
 /**
  * Implements hook_theme().
@@ -273,9 +271,9 @@ function grants_webform_print_preprocess_webform_progress_tracker(&$variables) {
   /** @var \Drupal\grants_handler\GrantsHandlerNavigationHelper $grants_formnavigation_helper */
   $grants_formnavigation_helper = \Drupal::service('grants_handler.navigation_helper');
 
+  // Get all errors.
   $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
 
-  // $all_errors = $grants_formnavigation_helper->getAllErrors($webform_submission);
   $currentPageVariables = $variables["current_page"];
 
   // Iterate through the pages and set appropriate page classes.

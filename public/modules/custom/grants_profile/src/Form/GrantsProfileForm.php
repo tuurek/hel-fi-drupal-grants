@@ -5,9 +5,6 @@ namespace Drupal\grants_profile\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\helfi_atv\AtvDocumentNotFoundException;
-use Drupal\helfi_atv\AtvFailedToConnectException;
-use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Drupal\helfi_yjdh\Exception\YjdhException;
@@ -351,17 +348,17 @@ class GrantsProfileForm extends FormBase {
               unset($values[$key][$key2]);
             }
             else {
-              // parse existing confirmation file to values array
+              // Parse existing confirmation file to values array.
               if (isset($value2["confirmationFileName"]) && !empty($value2["confirmationFileName"])) {
                 $values[$key][$key2]['confirmationFile'] = $value2["confirmationFileName"];
               }
-              // if we have just uploaded file
+              // If we have just uploaded file.
               if (
                 isset($value2["confirmationFile"]) &&
                 is_array($value2["confirmationFile"]) &&
                 !empty($value2["confirmationFile"])
               ) {
-                // prepend file id with FID- to tell profile service that we
+                // Prepend file id with FID- to tell profile service that we
                 // need to upload this file as well.
                 $values[$key][$key2]['confirmationFile'] = 'FID-' . $value2["confirmationFile"][0] ?? '';
               }
@@ -430,7 +427,8 @@ class GrantsProfileForm extends FormBase {
 
     try {
       $success = $grantsProfileService->saveGrantsProfile($profileDataArray);
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $this->logger('grants_profile')->error('Grants profile saving failed.');
     }
     $grantsProfileService->clearCache($selectedCompany);

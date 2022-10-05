@@ -754,6 +754,8 @@ class ApplicationHandler {
    * @param string $webform_id
    *   Id of a webform of created application.
    * @param array $submissionData
+   *   If we want to pass any initial data for new application, do it with this.
+   *   Must be like webform data.
    *
    * @return \Drupal\webform\Entity\WebformSubmission
    *   Newly created application content.
@@ -1316,7 +1318,7 @@ class ApplicationHandler {
     $latestSaveid = !empty($saveid_log->saveid) ? $saveid_log->saveid : '';
 
     // initialSave or copied save no datavalidation.
-    if ($saveIdToValidate == 'copiedSave' ||$saveIdToValidate == 'initialSave') {
+    if ($saveIdToValidate == 'copiedSave' || $saveIdToValidate == 'initialSave') {
       return 'OK';
     }
 

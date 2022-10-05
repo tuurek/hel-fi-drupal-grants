@@ -414,6 +414,9 @@ class GrantsHandlerNavigationHelper {
    *
    * @param \Drupal\webform\WebformSubmissionInterface $webform_submission
    *   A webform submission entity.
+   * @param string $operation
+   *   Operation to be deleted. Either errors or page visits. If omitted, both
+   *   will be deleted.
    * @param string $page
    *   Page we want to delete logs from.
    *

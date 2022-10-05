@@ -122,56 +122,6 @@ function grants_formnavigation_webform_submission_form_alter(array &$form, FormS
 }
 
 /**
- * Programmatically validate a webform submission.
- *
- * @param array $form
- *   An associative array containing the structure of the form.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The current state of the form.
- *
- * @throws \Exception
- */
-function grants_formnavigation_submission_validation(array &$form, FormStateInterface $form_state) {
-  // /** @var \Drupal\grants_formnavigation\grants_formnavigationHelper $grants_formnavigation_helper */
-  //  $grants_formnavigation_helper = Drupal::service('grants_formnavigation.helper');
-  //  /** @var \Drupal\webform\WebformSubmissionInterface $webform_submission */
-  //  $webform_submission = $form_state->getFormObject()->getEntity();
-  //  $webform = $webform_submission->getWebform();
-  //  $has_errors = FALSE;
-  //  // Ensure each page has been validated.
-  //  $grants_formnavigation_helper->validateAllPages($webform_submission, $form_state);
-  //  // Log the form errors.
-  //  $grants_formnavigation_helper->logPageErrors($webform_submission, $form_state);
-  //  // Clear errors and place the submission errors above them.
-  //  $form_state->clearErrors();
-  //  // Validate our submission values.
-  //  $logged_errors = $grants_formnavigation_helper->getErrors($webform_submission);
-  // // Set form errors if the values are in-valid.
-  //  foreach ($webform_submission->getWebform()
-  //             ->getPages('edit', $webform_submission) as $page_key => $page) {
-  //    $page_errors = !empty($logged_errors[$page_key]) ? $logged_errors[$page_key] : [];
-  //    if (!empty($page_errors)) {
-  //      $has_errors = TRUE;
-  //      // Set an error on the page to create separation in the error message.
-  //      $page_message = t('<p class="grants_formnavigation-page-title"><strong>@title Page</strong></p>', ['@title' => $page['#title']]);
-  //      $form_state->setErrorByName($page_key, $page_message);
-  //      // Parse through the errors and set a form error for each.
-  //      foreach ($page_errors as $field => $error) {
-  //        $message = t('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• @message', ['@message' => $error]);
-  //        $form_state->setErrorByName($field, $message);
-  //      }
-  //    }
-  //  }
-  //  // Add additional error message if defined in the settings.
-  //  if ($has_errors && !empty($webform->getThirdPartySetting('grants_formnavigation', 'additional_error_message'))) {
-  //    $keys = array_keys($webform->getElementsInitializedAndFlattened());
-  //    $additional_error_message = $webform->getThirdPartySetting('grants_formnavigation', 'additional_error_message');
-  //    $message = t('<br><p class="grants_formnavigation-additional-message">@message</p>', ['@message' => $additional_error_message]);
-  //    $form_state->setErrorByName($keys[1], $message);
-  //  }
-}
-
-/**
  * Implements hook_entity_update().
  */
 function grants_formnavigation_webform_presave(WebformInterface $webform) {
