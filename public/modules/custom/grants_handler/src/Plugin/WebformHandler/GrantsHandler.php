@@ -457,7 +457,6 @@ class GrantsHandler extends WebformHandlerBase {
     if (isset($form['actions']['draft']['#submit']) && is_array($form['actions']['draft']['#submit'])) {
       WebformArrayHelper::removeValue($form['actions']['draft']['#submit'], '::rebuild');
     }
-
   }
 
   /**

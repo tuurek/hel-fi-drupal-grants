@@ -53,9 +53,7 @@ class GrantsAttachments extends WebformCompositeBase {
     $submission = $form_state->getFormObject()->getEntity();
     $submissionData = $submission->getData();
 
-    if ($element["#webform_key"] == 'muu_liite') {
-      $d = 'asdf';
-    }
+
 
     if (isset($submissionData[$element['#webform_key']]) && is_array($submissionData[$element['#webform_key']])) {
 

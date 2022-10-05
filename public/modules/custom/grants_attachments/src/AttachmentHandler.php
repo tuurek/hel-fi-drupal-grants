@@ -559,17 +559,13 @@ class AttachmentHandler {
       // this should handle account number updates as well.
       foreach ($submittedFormData['attachments'] as $key => $value) {
         if((int)$value['fileType'] == 6){
-          // is this the one we want to use
-//          if (str_contains($value['fileName'], $filename)) {
-//            $d = 'adfs';
-//          } else {
-//            $d = 'asdf';
-//          }
           unset($submittedFormData['attachments'][$key]);
         }
       }
       // and then add this one to attachments.
       $submittedFormData['attachments'][] = $fileArray;
+      // make keys sequential.
+      $submittedFormData['attachments'] = array_values($submittedFormData['attachments']);
     }
 
   }
