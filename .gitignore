@@ -10,6 +10,7 @@ public/sites/default/files
 vendor
 helfi-test-automation-python/
 public/sites/simpletest/
+dumps
 
 # Ignore the folder created by PhpStorm
 .idea/*

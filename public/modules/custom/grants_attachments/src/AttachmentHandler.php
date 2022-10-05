@@ -91,13 +91,6 @@ class AttachmentHandler {
   protected array $attachmentFileIds;
 
   /**
-   * Events generated from file uploads.
-   *
-   * @var array
-   */
-  protected array $eventsFromUploads;
-
-  /**
    * Debug status.
    *
    * @var bool
@@ -140,7 +133,7 @@ class AttachmentHandler {
 
     $this->attachmentFileIds = [];
 
-    $this->debug = FALSE;
+    $this->debug = getenv('debug') ?? FALSE;
 
   }
 
@@ -151,7 +144,10 @@ class AttachmentHandler {
    *   TRue or false depending on if debug is on or not.
    */
   public function isDebug(): bool {
-    return $this->debug;
+    if ($this->debug === TRUE) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
