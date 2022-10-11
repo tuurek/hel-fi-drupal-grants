@@ -44,7 +44,7 @@ msgid "Use valtuutuspalvelu"
 msgstr ""
 
 #: modules/custom/grants_mandate/grants_mandate.routing.yml:0;0;0;0
-msgid "Applicant type / Mandate"
+msgid "Select Applicant Type"
 msgstr ""
 
 #: modules/custom/grants_mandate/src/GrantsMandateService.php:287
