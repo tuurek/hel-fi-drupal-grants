@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94ad51a40cc9db2ea443c733a1ed1677",
+    "content-hash": "75b111b09e2cf9a03e02b7256627536d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5151,12 +5151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv.git",
-                "reference": "5c7c9863a047f62916e3070793f9d98e82d731da"
+                "reference": "6d9ba725d2bb64f69120e813a540e30d0f0e730d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/5c7c9863a047f62916e3070793f9d98e82d731da",
-                "reference": "5c7c9863a047f62916e3070793f9d98e82d731da",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-atv/zipball/6d9ba725d2bb64f69120e813a540e30d0f0e730d",
+                "reference": "6d9ba725d2bb64f69120e813a540e30d0f0e730d",
                 "shasum": ""
             },
             "require": {
@@ -5176,7 +5176,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-atv/issues"
             },
-            "time": "2022-10-12T08:45:08+00:00"
+            "time": "2022-10-12T19:57:46+00:00"
         },
         {
             "name": "drupal/helfi_azure_fs",
