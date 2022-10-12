@@ -1,4 +1,4 @@
-# Finnish translation of City of Helsinki Grants Metadata module
+# Finnish translation of City of Helsinki Grants My Profile module
 #
 msgid ""
 msgstr ""
@@ -12,14 +12,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Application details"
-msgstr "Hakemuksen kuvaus"
+msgid "Applications in progress"
+msgstr "Keskeneräiset hakemukset"
 
-msgid "Application Type"
-msgstr "Hakemustyyppi"
+msgid "Sent applications"
+msgstr "Lähetetyt hakemukset"
 
-msgid "Application Type ID"
-msgstr "Hakemuksen tyypin koodi"
+msgid "My applications"
+msgstr "Omat hakemukset"
+
+
 
 
 

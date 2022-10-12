@@ -409,10 +409,10 @@ function _grants_handler_imported_handler(
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
   if ($show_checkmark === FALSE) {
     $array['#field_prefix'] = '
-    <a class="hds-link hds-link--medium" style="display:inline-block;" 
+    <a class="hds-link hds-link--medium" style="display:inline-block;"
       href="' . $url->toString() . '">
       <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s">
-      
+
 </span><span class="link-label">' . t('Edit') . '</span>
     </a>';
   }
@@ -503,8 +503,8 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     }
     else {
       _grants_handler_missing_data($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"],
-        t('Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'), t('Lisää toiminnan kuvaus'),
-        t('Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'));
+        t('You need a description of the community purpose for the application.'), t('Add description of purpose'),
+        t('to My Services > My Information so it can be used on the application.'));
     }
 
     if (isset($form["elements"]["1_hakijan_tiedot"]["tilinumero"]["account_number"]["#default_value"])) {
@@ -757,7 +757,7 @@ function grants_handler_preprocess_webform_submission_events(&$variables) {
       'eventDescription' => t('Description'),
     ],
     '#rows' => $events,
-    '#empty' => t('No events has been found.'),
+    '#empty' => t('No events have been found.'),
   ];
 
   $variables['events'] = $table;

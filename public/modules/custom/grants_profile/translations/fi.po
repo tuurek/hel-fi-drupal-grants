@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "POT-Creation-Date: 2022-02-14 11:00+0300\n"
-"PO-Revision-Date: 2022-02-14 11:00+0300\n"
+"PO-Revision-Date: 2022-10-12 11:00+0300\n"
 "Last-Translator: Petri Leinonen <petri.leinonen@siili.com>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,9 @@ msgid "No profile data available, select company"
 msgstr "Profiilidataa ei saatavilla, valitse yhteisö"
 
 msgid "Street"
+msgstr "Katuosoite"
+
+msgid "Street address"
 msgstr "Katuosoite"
 
 msgid "City"
@@ -127,6 +130,18 @@ msgstr "Yhteisön sähköpostiosoite"
 msgid "Business Purpose"
 msgstr "Toiminna tarkoitus"
 
+msgid "Community short name"
+msgstr "Yhteisön lyhenne"
+
+msgid "Community www address"
+msgstr "Verkkosivujen osoite"
+
+msgid "Community email"
+msgstr "Yhteisön sähköpostiosoite"
+
+msgid "Community Purpose"
+msgstr "Toiminna tarkoitus"
+
 msgid "Description of business purpose (max. 500 characters)"
 msgstr "Kuvaus yhteisön toiminnan tarkoituksesta (500 merkkiä)"
 
@@ -147,3 +162,120 @@ msgstr "Lisää vähintään yksi tilinumero"
 
 msgid "Briefly describe the purpose for which the community is working and how the community is fulfilling its purpose. For example, you can use the text \"Community purpose and forms of action\" in the Community rules. Please do not describe the purpose of the grant here, it will be asked later when completing the grant application."
 msgstr "Kerro lyhyesti tarkoitus, jonka edistämiseksi yhteisö toimii ja millä tavoin yhteisö toteuttaa tarkoitustaan. Voit hyödyntää esimerkiksi yhteisön säännöistä löytyvää \"Yhteisön tarkoitus ja toimintamuodot\" -tekstikappaletta. Älä kuvaile avustuksen käyttötarkoitusta tässä, sitä kysytään myöhemmin avustushakemuksen täyttämisen yhteydessä."
+
+msgid "Chairperson"
+msgstr "Puheenjohtaja"
+
+msgid "Contact person"
+msgstr "Yhteyshenkilö"
+
+msgid "Other"
+msgstr "Muu"
+
+msgid "Financial officer"
+msgstr "Taloudenhoitaja"
+
+msgid "Auditor"
+msgstr "Tilintarkastaja"
+
+msgid "Secretary"
+msgstr "Sihteeri"
+
+msgid "Vice Chairperson"
+msgstr "Varapuheenjohtaja"
+
+msgid 'In order to show a modal dialog by clicking on a link, that link has to have class <code>use-ajax</code> and <code>data-dialog-type="modal"</code>. This link has those attributes.'
+msgstr 'Näyttääksesi modaali-ikkunan linkkiä klikkaamalla, linkillä tulee olla <code>use-ajax</code> -luokka ja <code>data-dialog-type="modal"</code>. Tällä linkillä on nuo ominaisuudet.'
+
+msgid "See this form as a modal."
+msgstr "Näe tämä lomake modaali-ikkunassa"
+
+msgid "Email"
+msgstr "Sähköpostiosoite"
+
+msgid "Delete"
+msgstr "Poista"
+
+msgid "Officials"
+msgstr "Vastuuhenkilöt"
+
+msgid "Select"
+msgstr "Valitse"
+
+msgid "Save official"
+msgstr "Tallenna vastuuhenkilö"
+
+msgid "applicationOfficialData not found!"
+msgstr "applicationOfficialData ei löytynyt!"
+
+msgid "Official has been saved."
+msgstr "Vastuuhenkilö tallennettu."
+
+msgid "Errors"
+msgstr "Virheet"
+
+msgid "Edit profile"
+msgstr "Muokkaa omia tietoja"
+
+msgid "Bank account confirmation successfully deleted"
+msgstr "Pankkitilin varmistustiedosto onnistuneesti poistettu"
+
+msgid "Bank account confirmation deleting failed. Issue has been logged."
+msgstr "Pankkitilin varmistustustiedoston poisto epäonnistui. Ongelma on kirjattu."
+
+msgid "Address deleted."
+msgstr "Osoite poistetu."
+
+msgid "Address deleting failed."
+msgstr "Osoitteen poisto epäonnistui."
+
+msgid "Official deleted."
+msgstr "Vastuuhenkilö poistettu."
+
+msgid "Official deleted & profile saved."
+msgstr "Vastuuhenkilö poistettu & omat tiedot tallennettu"
+
+msgid "Bank account deleted"
+msgstr "Pankkitili poistettu"
+
+msgid "Bank account deletion failed, and error has been logged."
+msgstr "Pankkitilin poisto epäonnistu ja virhe on kirjattu."
+
+msgid "Company details not found in registries. Please contact customer service"
+msgstr "Yhteisön tietoja ei löytynyt järjestelmistä. Ota yhteyttä asiakaspalveluun"
+
+msgid "Addresses"
+msgstr "Osoitteet"
+
+msgid "Bank accounts"
+msgstr "Tilinumerot"
+
+msgid "Bank account"
+msgstr "Tilinumero"
+
+msgid "Saved confirmation file"
+msgstr "Tallennettu varmistustiedosto"
+
+msgid "Confirmation file"
+msgstr "Varmistustiedosto"
+
+msgid "Confirm this bank account."
+msgstr "Varmista tämä pankkitili"
+
+msgid "Save profile"
+msgstr "Tallenna omat tiedot"
+
+msgid "grantsProfileContent not found!"
+msgstr "grantsProfileContentia ei löydy!"
+
+msgid "grantsProfileData not found!"
+msgstr "grantsProfileDataa ei löytnyt!"
+
+msgid "Grantsprofile for %c (%s) saved."
+msgstr "Grantsprofile tallennettu kohteelle %c (%s)"
+
+msgid "Confirmation file saved for account %account. You can now use this account as receipient of grants."
+msgstr "Varmistustiedosto tallennettu tilille %account. Voit käyttää nyt tätä tilinnumeroa avustusten vastaanottamiseen."
+
+msgid "Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file."
+msgstr "Varmistustiedoston tallentaminen epäonnistui tilille %account. Tätä tiliä ei voi käyttää avustusten vastaanottamiseen ilman ajantasaista varmistustiedostoa."

@@ -125,7 +125,7 @@ class ModalAddressForm extends FormBase {
 
     $form['street'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Street'),
+      '#title' => $this->t('Street address'),
       '#required' => TRUE,
       '#default_value' => $selectedAddress['street'],
     ];
