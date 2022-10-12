@@ -145,7 +145,7 @@ elements: |-
       address_markup:
         '#type': webform_markup
         '#markup': |-
-          <a class="hds-link hds-link--medium" href="/oma-asiointi/">
+          <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa osoitteita</span>
           </a>
     tilinumero:
@@ -162,7 +162,7 @@ elements: |-
       account_markup:
         '#type': webform_markup
         '#markup': |-
-          <a class="hds-link hds-link--medium" href="/oma-asiointi/">
+          <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
           </a>
     toiminnasta_vastaavat_henkilot:
@@ -188,7 +188,7 @@ elements: |-
       officials_markup:
         '#type': webform_markup
         '#markup': |-
-          <a class="hds-link hds-link--medium" href="/oma-asiointi/">
+          <a class="hds-link hds-link--medium" href="/grants-profile/">
             <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa henkilöitä</span>
           </a>
   2_avustustiedot:
