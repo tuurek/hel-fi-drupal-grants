@@ -500,7 +500,8 @@ class GrantsHandler extends WebformHandlerBase {
         $form['actions']['wizard_prev']['#validate'] = $validations;
       }
       // Add a custom validator to the final submit.
-      //      $form['actions']['submit']['#validate'][] = 'grants_handler_submission_validation';
+      // $form['actions']['submit']['#validate'][] =
+      // 'grants_handler_submission_validation';
       // Log the page visit.
       $visited = $this->grantsFormNavigationHelper->hasVisitedPage($webform_submission, $current_page);
       // Log the page if it has not been visited before.

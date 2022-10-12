@@ -105,6 +105,8 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
 
   /**
    * Builds the response.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function build() {
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
