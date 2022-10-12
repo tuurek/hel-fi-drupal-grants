@@ -24,4 +24,16 @@ msgstr "Omat hakemukset"
 msgid "New message"
 msgstr "Uusi viesti"
 
+msgid "My Services"
+msgstr "Oma asiointi"
+
+msgid "Grants profile"
+msgstr "Omat tiedot"
+
+msgid "Company applications"
+msgstr "Yhheisön hakemukset"
+
+
+
+
 

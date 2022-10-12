@@ -259,3 +259,5 @@ msgstr "Voit lähettää viestin hakemuksen käsittelijälle tai toimittaa puutt
 msgid "Sent messages"
 msgstr "Lähetetyt viestit"
 
+msgid "You don't have company selected, no fields are prepopulated"
+msgstr "Sinulla ei ole yhteisöä valittuna, joten kenttiä ei täytetä automaattisesti"

@@ -157,6 +157,9 @@ msgstr "Yhteisön sähköpostiosoite"
 msgid "Business Purpose"
 msgstr "Toiminna tarkoitus"
 
+msgid "Business purpose"
+msgstr "Toiminna tarkoitus"
+
 msgid "Community purpose"
 msgstr "Toiminna tarkoitus"
 
