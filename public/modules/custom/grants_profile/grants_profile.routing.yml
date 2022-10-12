@@ -10,7 +10,7 @@ grants_profile.edit:
   path: '/oma-asiointi/hakuprofiili/muokkaa'
   defaults:
     _form: '\Drupal\grants_profile\Form\GrantsProfileForm'
-    _title: 'Edit Application profile.'
+    _title: 'Edit Grants profile.'
   requirements:
     _permission: 'administer own grants_profile'
 
