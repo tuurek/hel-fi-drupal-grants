@@ -87,7 +87,7 @@ class CompensationsComposite extends WebformCompositeBase {
     $form['element']['subventionType'] = [
       '#type' => 'select',
       '#multiple' => TRUE,
-      '#title' => $this->t('Grants type'),
+      '#title' => $this->t('Subvention type'),
       '#options' => self::$optionsForTypes,
     ];
 

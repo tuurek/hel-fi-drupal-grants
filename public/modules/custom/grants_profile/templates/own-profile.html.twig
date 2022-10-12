@@ -3,13 +3,13 @@
     <div class="grants-profile--basicinfo">
       <div class="container">
 
-      <h3>{{ "Company information"|t }}</h3>
-        <p class="grants-profile--infotext">{{ "Avustusten hakeminen edellyttää yhteisön tietojen täydentämistä. Tehdessäsi avustushakemuksia antamasi tiedot täytetää niihin automaattisesti."|t }}</p>
+      <h3>{{ "Community information"|t }}</h3>
+        <p class="grants-profile--infotext">{{ "Applying for a grant requires filling out community information. When making a grant application the information will be filled automatically."|t }}</p>
         <h4>{{ "Basic Information"|t }}</h4>
         <hr />
         <div class="grants-profile--wrapper">
           <div class="grants-profile--wrapper-item">
-            <h5>{{ "Company name"|t }}</h5>
+            <h5>{{ "Community name"|t }}</h5>
             <div class="grants-profile--item grants-profile-company-name">{{ profile.companyName }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
           </div>
         </div>
@@ -20,15 +20,15 @@
             <div class="grants-profile-item">{{ profile.businessId }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
           </div>
           <div class="grants-profile--wrapper-item">
-            <h5>{{ "Company Location"|t }}</h5>
+            <h5>{{ "Community location"|t }}</h5>
             <div class="grants-profile-item">{{ profile.companyHome }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
           </div>
           <div class="grants-profile--wrapper-item">
-            <h5>{{ "Registration Date"|t }}</h5>
+            <h5>{{ "Registration date"|t }}</h5>
             <div class="grants-profile-item">{{ profile.registrationDate|date('d.m.Y') }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
           </div>
           <div class="grants-profile--wrapper-item">
-            <h5>{{ "Company Status"|t }}</h5>
+            <h5>{{ "Community status"|t }}</h5>
             <div class="grants-profile-item">{{ profile.companyStatus }} <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span></div>
           </div>
           <div class="grants-profile--wrapper-item">
@@ -38,7 +38,7 @@
         </div>
         <hr/>
         <div class="grants-profile-prh-info">
-          <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> {{ "Marked fields habe been retreived from PRH and cannot be edited."|t }}
+          <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span> {{ "Marked fields have been retreived from PRH and cannot be edited."|t }}
         </div>
       </div>
     </div>
@@ -84,10 +84,10 @@
         </section>
         <section data-drupal-selector="edit-businesspurposewrapper" id="edit-businesspurposewrapper" class="js-form-item form-item js-form-wrapper form-wrapper webform-section">
           <div class="webform-section-flex-wrapper">
-            <h2 class="webform-section-title" id="toiminna-tarkoitus">{{ "Business purpose"|t }}</h2>
+            <h2 class="webform-section-title" id="toiminna-tarkoitus">{{ "Community purpose"|t }}</h2>
             <div class="webform-section-wrapper">
               <div class="webform-element-help-container--title webform-element-help-container--title-after js-form-item form-item js-form-type-textarea form-item-businesspurpose js-form-item-businesspurpose hds-text-input">
-                <h3 class="hds-text-input__label">{{ "Description of the business purpose of the registered community" }}</h3>
+                <h3 class="hds-text-input__label">{{ "Description of the business purpose of the registered community"|t }}</h3>
                 <div>
                   {{ profile.businessPurpose }}
                 </div>

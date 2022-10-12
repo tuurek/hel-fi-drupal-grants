@@ -1,0 +1,42 @@
+# Finnish translation of City of Helsinki Grants Mandate Module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-10-12 08:58+0300\n"
+"PO-Revision-Date: 2022-10-12 08:58+0300\n"
+"Last-Translator: Petri Leinonen <ext.petri.leinonen@hel.fi>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Select applicant type"
+msgstr "Valitse hakijarooli"
+
+msgid "Registered community"
+msgstr "Rekisteröity yhteisö"
+
+msgid "Unregistered community"
+msgstr "Rekisteröimätön yhteisö"
+
+msgid "Private person"
+msgstr "Yksityishenkilö"
+
+msgid "Select role & authorize mandate"
+msgstr "Valitse käyttäjärooli & hyväksy valtuutus"
+
+msgid "Code exchange error. @error: @error_desc. State: @state, Error URI: @error_uri"
+msgstr "Koodin vaihtovirhe. @error: @error_desc. Tila: @state, Virhe URI: @error_uri"
+
+msgid "Choose the applicant role you want to use for the application"
+msgstr "Valitse asiointirooli, jota haluat käyttää hakemuksella"
+
+msgid "This is a short description of the applicant role."
+msgstr "Lyhyt kuvaus hakijaroolista."
+
+msgid "Select Applicant Type"
+msgstr "Valitse asiointiroolin tyyppi"
+
+

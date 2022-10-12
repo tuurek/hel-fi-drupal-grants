@@ -105,11 +105,8 @@ class ApplicationStatusCheckController extends ControllerBase {
 
     $config = \Drupal::config('grants_handler.settings');
     $statusStrings = $config->get('statusStrings');
-
-    $statusArray['statusStringHumanReadable'] = strip_tags(
-      $this->t('%status',
-      ['%status' => $statusStrings[$statusArray['value']]])
-        ->render());
+    $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $statusArray['statusStringHumanReadable'] = $statusStrings[$langCode][$statusArray['value']];
 
     return $statusArray;
   }

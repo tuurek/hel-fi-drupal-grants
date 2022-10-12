@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2022-01-17 16:58+0300\n"
-"PO-Revision-Date: 2022-01-17 16:58+0300\n"
+"PO-Revision-Date: 2022-10-12 10:58+0300\n"
 "Last-Translator: Petri Leinonen <ext.petri.leinonen@hel.fi>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -30,3 +30,39 @@ msgstr "Et voi lähettää tiedostoa ja ilmoittaa toimittavasi sen myöhemmin"
 
 msgid "You cannot send file and have it in another file"
 msgstr "Et voi lähettää tiedostoa ja ilmoittaa sen olevan jo toimitettu"
+
+msgid "Delete attachment"
+msgstr "Poista liite"
+
+msgid "grants_attachments status"
+msgstr "grants_attachmentsin tila"
+
+msgid "grants_attachments value: @value"
+msgstr "grants attachmentsin arvo: @value"
+
+msgid "@fieldname field is required"
+msgstr "@fieldname on pakollinen"
+
+msgid "@fieldname has file added, it cannot be added later."
+msgstr "@fieldname sisältää liitetiedoston, sitä ei voi ilmoittaa toimitettavaksi myöhemmin."
+
+msgid "@fieldname has file added, it cannot belong to other file."
+msgstr "@fieldname sisältää liitetiedoston, sitä ei voi ilmoittaa jo toimitetuksi."
+
+msgid "@fieldname has no file uploaded, it must be either delivered later or be included in other file."
+msgstr "@fieldname ei sisällä liitettyä tiedostoa, se täytyy toimittaa joko myöhemmin tai olla jo toimitettu."
+
+msgid "Bank account confirmation file attachment failed."
+msgstr "Pankkitilin varmistusliitteen liittäminen epäonnistui."
+
+msgid "Confirmation for account @accountNumber"
+msgstr "Varmistus tilinumerolle @accountNumber"
+
+msgid "Document file attachment deleted."
+msgstr "Dokumentin tiedostoliite poistettu."
+
+msgid "Application updated."
+msgstr "Hakemus päivitetty."
+
+msgid "Attachment filetype"
+msgstr "Liitteen tiedostotyyppi"
