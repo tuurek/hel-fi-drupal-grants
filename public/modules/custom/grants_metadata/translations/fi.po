@@ -1,10 +1,10 @@
-# Finnish translation of City of Helsinki
+# Finnish translation of City of Helsinki Grants Metadata module
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2021-05-31 11:00+0300\n"
-"PO-Revision-Date: 2021-05-31 11:00+0300\n"
+"PO-Revision-Date: 2022-10-12 11:00+0300\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -12,16 +12,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Application details"
+msgstr "Hakemuksen kuvaus"
 
-msgid "Person responsible (Owner)"
-msgstr "Lomakkeen vastuuhenkilö (omistaja)"
+msgid "Application Type"
+msgstr "Hakemustyyppi"
 
-msgid "The sector that handles the form data"
-msgstr "Toimiala, joka käsittelee lomakkeen tiedot"
+msgid "Application Type ID"
+msgstr "Hakemuksen tyypin koodi"
 
-msgid "Does the form contain sensitive information"
-msgstr "Käsitelläänkö lomakkeella arkaluonteista henkilötietoa"
+msgid "Check application status"
+msgstr "Tarkista hakemuksen tila"
 
-msgid "Form Pre-Information"
-msgstr "Lomakkeen esitiedot"
+
 

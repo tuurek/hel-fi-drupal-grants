@@ -80,7 +80,7 @@ class ApplicantMandateForm extends FormBase {
     // 'registered_community' => $this
     // ->t('Registered community'),
     // 'unregistered_community' => $this
-    // ->t('UNregistered community'),
+    // ->t('Unregistered community'),
     // 'private_person' => $this
     // ->t('Private person'),
     // ],

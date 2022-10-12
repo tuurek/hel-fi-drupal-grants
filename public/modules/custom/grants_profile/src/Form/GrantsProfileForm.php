@@ -85,9 +85,9 @@ class GrantsProfileForm extends FormBase {
       }
       catch (YjdhException $e) {
         // If no company data is found, we cannot continue.
-        $this->messenger()->addError($this->t('Company details not found in registries. Please contact customer service'));
+        $this->messenger()->addError($this->t('Community details not found in registries. Please contact customer service'));
         $this->logger(
-          'grants_profile')->error('Error fetching company data. Error: %error', [
+          'grants_profile')->error('Error fetching community data. Error: %error', [
             '%error' => $e->getMessage(),
           ]
         );
@@ -119,27 +119,27 @@ class GrantsProfileForm extends FormBase {
 
     $form['companyNameShortWrapper'] = [
       '#type' => 'webform_section',
-      '#title' => $this->t('Company short name'),
+      '#title' => $this->t('Community short name'),
     ];
     $form['companyNameShortWrapper']['companyNameShort'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Company short name'),
+      '#title' => $this->t('Community short name'),
       '#default_value' => $grantsProfileContent['companyNameShort'],
     ];
     $form['companyNameShortWrapper']['companyNameShort']['#attributes']['class'][] = 'webform--large';
     $form['companyHomePageWrapper'] = [
       '#type' => 'webform_section',
-      '#title' => $this->t('Company www address'),
+      '#title' => $this->t('Community www address'),
     ];
     $form['companyHomePageWrapper']['companyHomePage'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Company www address'),
+      '#title' => $this->t('Community www address'),
       '#default_value' => $grantsProfileContent['companyHomePage'],
     ];
 
     $form['businessPurposeWrapper'] = [
       '#type' => 'webform_section',
-      '#title' => $this->t('Business Purpose'),
+      '#title' => $this->t('Community Purpose'),
     ];
     $form['businessPurposeWrapper']['businessPurpose'] = [
       '#type' => 'textarea',
@@ -171,7 +171,7 @@ class GrantsProfileForm extends FormBase {
       '#required' => TRUE,
       'street' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Street'),
+        '#title' => $this->t('Street Address'),
       ],
       'city' => [
         '#type' => 'textfield',
@@ -192,7 +192,7 @@ class GrantsProfileForm extends FormBase {
       // Address delta is replaced with alter hook in module file.
       'deleteButton' => [
         '#type' => 'markup',
-        '#markup' => '<a href="/oma-asiointi/hakuprofiili/address/{address_delta}/delete">Poista</a>',
+        '#markup' => '<a href="/oma-asiointi/hakuprofiili/address/{address_delta}/delete">'.t('Delete').'</a>',
       ],
       '#default_value' => $addressValues,
     ];
@@ -238,7 +238,7 @@ class GrantsProfileForm extends FormBase {
       ],
       'deleteButton' => [
         '#type' => 'markup',
-        '#markup' => '<a href="/oma-asiointi/hakuprofiili/application-officials/{official_delta}/delete">Poista</a>',
+        '#markup' => '<a href="/oma-asiointi/hakuprofiili/application-officials/{official_delta}/delete">'.t('Delete').'/a>',
       ],
       '#default_value' => $officialValues,
     ];
@@ -246,7 +246,7 @@ class GrantsProfileForm extends FormBase {
 
     $form['bankAccountWrapper'] = [
       '#type' => 'webform_section',
-      '#title' => $this->t('Officials'),
+      '#title' => $this->t('Bank accounts'),
     ];
 
     $bankAccountValues = [];
@@ -266,12 +266,12 @@ class GrantsProfileForm extends FormBase {
       ],
       'confirmationFileName' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Saved confirmation File'),
+        '#title' => $this->t('Saved confirmation file'),
         '#attributes' => ['readonly' => 'readonly'],
       ],
       'confirmationFile' => [
         '#type' => 'managed_file',
-        '#title' => $this->t('Confirmation File'),
+        '#title' => $this->t('Confirmation file'),
         '#multiple' => FALSE,
         '#required' => TRUE,
         '#uri_scheme' => 'private',

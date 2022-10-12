@@ -1,0 +1,42 @@
+# Finnish translation of City of Helsinki Grants My Profile module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2021-05-31 11:00+0300\n"
+"PO-Revision-Date: 2022-10-12 11:00+0300\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Applications in progress"
+msgstr "Keskeneräiset hakemukset"
+
+msgid "Sent applications"
+msgstr "Lähetetyt hakemukset"
+
+msgid "My applications"
+msgstr "Omat hakemukset"
+
+msgid "New message"
+msgstr "Uusi viesti"
+
+msgid "My Services"
+msgstr "Oma asiointi"
+
+msgid "Grants profile"
+msgstr "Omat tiedot"
+
+msgid "Company applications"
+msgstr "Yhheisön hakemukset"
+
+msgid "Community applications"
+msgstr "Yhheisön hakemukset"
+
+
+
+
+

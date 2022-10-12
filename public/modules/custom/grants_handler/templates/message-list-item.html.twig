@@ -1,7 +1,7 @@
   {% if (message.messageStatus == 'UNREAD' and message.sentBy == 'Avustusten kasittelyjarjestelma') %}
     <div class="webform-submission-messages__new-message">
       <i class="hds-icon icon hds-icon--alert-circle hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>
-      <span>{{ "New Message"|t }}</span>
+      <span>{{ "New message"|t }}</span>
     </div>
   {% endif %}
   <h5 class="webform-submission-messages__message-sender"><strong>{{ sender }}</strong> - {{ message.sendDateTime|date('d.m.Y H:i:s') }}</h5>

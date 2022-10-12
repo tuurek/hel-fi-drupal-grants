@@ -1,0 +1,19 @@
+# Finnish translation of City of Helsinki Grants Webform Print module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"POT-Creation-Date: 2022-02-14 11:00+0300\n"
+"PO-Revision-Date: 2022-10-12 11:00+0300\n"
+"Last-Translator: Petri Leinonen <petri.leinonen@siili.com>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Here we print submission data when coming NOT from form."
+msgstr "Tähän tulostamme hakemusdatan kun se EI tule lomakkeelta."
+
+msgid "Print Application"
+msgstr "Tulosta hakemus"
