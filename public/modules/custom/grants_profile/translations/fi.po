@@ -277,7 +277,7 @@ msgstr "Pankkitili poistettu"
 msgid "Bank account deletion failed, and error has been logged."
 msgstr "Pankkitilin poisto epäonnistu ja virhe on kirjattu."
 
-msgid "Company details not found in registries. Please contact customer service"
+msgid "Community details not found in registries. Please contact customer service"
 msgstr "Yhteisön tietoja ei löytynyt järjestelmistä. Ota yhteyttä asiakaspalveluun"
 
 msgid "Addresses"
@@ -324,3 +324,39 @@ msgstr "Kirjaudu ulos"
 
 msgid "Sign in"
 msgstr "Kirjaudu sisään"
+
+msgid "Grants Profile"
+msgstr "Oma asiointiprofiili"
+
+msgid "Edit Grants Profile"
+msgstr "Muokkaa asiointiprofiilia"
+
+msgid "Saved addresses"
+msgstr "Tallennetut osoitteet"
+
+msgid "Delete address"
+msgstr "Poista osoite"
+
+msgid "Edit address"
+msgstr "Muokkaa osoitetta"
+
+msgid "Saved officials"
+msgstr "Tallennetut vastuuhenkilöt"
+
+msgid "Edit official"
+msgstr "Muokkaa vastuuhenkilöä"
+
+msgid "Delete official"
+msgstr "Poista vastuuhenkilö"
+
+msgid "Saved bank accounts"
+msgstr "Tallennetut pankkitilit"
+
+msgid "Edit bank account"
+msgstr "Muokkaa pankkitiliä"
+
+msgid "Delete bank account"
+msgstr "Poista pankkitili"
+
+msgid "Delete confirmation"
+msgstr "Poista varmistustiedosto"

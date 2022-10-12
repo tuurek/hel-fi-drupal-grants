@@ -14,3 +14,6 @@ msgstr ""
 
 msgid "Here we print submission data when coming NOT from form."
 msgstr "Tähän tulostamme hakemusdatan kun se EI tule lomakkeelta."
+
+msgid "Print Application"
+msgstr "Tulosta hakemus"

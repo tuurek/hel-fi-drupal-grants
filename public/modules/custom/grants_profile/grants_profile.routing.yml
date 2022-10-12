@@ -1,7 +1,7 @@
 grants_profile.show:
   path: '/oma-asiointi/hakuprofiili'
   defaults:
-    _title: 'Show Grants profile'
+    _title: 'Grants Profile'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::ownProfile'
   requirements:
     _permission: 'view own grants_profile'
@@ -10,7 +10,7 @@ grants_profile.edit:
   path: '/oma-asiointi/hakuprofiili/muokkaa'
   defaults:
     _form: '\Drupal\grants_profile\Form\GrantsProfileForm'
-    _title: 'Edit Application profile.'
+    _title: 'Edit Grants Profile'
   requirements:
     _permission: 'administer own grants_profile'
 
@@ -25,7 +25,7 @@ grants_profile.company_addresses:
 grants_profile.company_addresses.remove:
   path: '/oma-asiointi/hakuprofiili/address/{address_id}/delete'
   defaults:
-    _title: 'Delete addresses'
+    _title: 'Delete address'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::deleteAddress'
   requirements:
     _permission: 'administer own grants_profile'
@@ -41,7 +41,7 @@ grants_profile.company_address_modal_form:
 grants_profile.application_official:
   path: '/oma-asiointi/hakuprofiili/application-officials'
   defaults:
-    _title: 'Address'
+    _title: 'Saved officials'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::applicationOfficials'
   requirements:
     _permission: 'administer own grants_profile'
@@ -65,7 +65,7 @@ grants_profile.application_official.remove:
 grants_profile.bank_account:
   path: '/oma-asiointi/hakuprofiili/bank-accounts'
   defaults:
-    _title: 'Bank account'
+    _title: 'Saved bank accounts'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::bankAccounts'
   requirements:
     _permission: 'administer own grants_profile'

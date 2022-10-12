@@ -261,3 +261,13 @@ msgstr "Lähetetyt viestit"
 
 msgid "You don't have company selected, no fields are prepopulated"
 msgstr "Sinulla ei ole yhteisöä valittuna, joten kenttiä ei täytetä automaattisesti"
+
+msgid "Clear navigations"
+msgstr "Tyhjennä navigaatiot"
+
+msgid "Mark message read"
+msgstr "Merkitse viesti luetuksi"
+
+msgid "Copy application"
+msgstr "Kopioi hakemus"
+

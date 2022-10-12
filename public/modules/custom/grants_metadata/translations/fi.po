@@ -21,5 +21,8 @@ msgstr "Hakemustyyppi"
 msgid "Application Type ID"
 msgstr "Hakemuksen tyypin koodi"
 
+msgid "Check application status"
+msgstr "Tarkista hakemuksen tila"
+
 
 

@@ -33,6 +33,9 @@ msgstr "Omat tiedot"
 msgid "Company applications"
 msgstr "Yhheisön hakemukset"
 
+msgid "Community applications"
+msgstr "Yhheisön hakemukset"
+
 
 
 

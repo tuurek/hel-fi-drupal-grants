@@ -36,3 +36,7 @@ msgstr "Valitse asiointirooli, jota haluat käyttää hakemuksella"
 msgid "This is a short description of the applicant role."
 msgstr "Lyhyt kuvaus hakijaroolista."
 
+msgid "Select Applicant Type"
+msgstr "Valitse asiointiroolin tyyppi"
+
+
