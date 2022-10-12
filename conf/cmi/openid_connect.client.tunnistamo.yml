@@ -13,10 +13,10 @@ settings:
   is_production: 0
   auto_login: 0
   environment_url: 'https://tunnistamo.test.hel.ninja'
-  client_scopes: 'openid,profile,email,https://api.hel.fi/auth/helsinkiprofile,https://api.hel.fi/avustusasiointi,https://api.hel.fi/auth/lomaketyokaluapidev,https://api.hel.fi/auth/atvapidev'
+  client_scopes: ''
   client_roles:
-    helsinkiprofiili: helsinkiprofiili
     authenticated: '0'
     admin: '0'
     content_producer: '0'
     read_only: '0'
+    helsinkiprofiili: '0'

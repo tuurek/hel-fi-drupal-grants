@@ -5,6 +5,9 @@ dependencies:
   config:
     - block_content.type.terms_block
     - field.field.block_content.terms_block.body
+    - field.field.block_content.terms_block.field_form
+    - field.field.block_content.terms_block.field_link_title
+    - field.field.block_content.terms_block.field_show_on_all_forms
   module:
     - text
 id: block_content.terms_block.default
@@ -20,4 +23,7 @@ content:
     weight: 0
     region: content
 hidden:
+  field_form: true
+  field_link_title: true
+  field_show_on_all_forms: true
   langcode: true

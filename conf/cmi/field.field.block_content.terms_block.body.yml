@@ -19,7 +19,7 @@ entity_type: block_content
 bundle: terms_block
 label: Body
 description: ''
-required: false
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''

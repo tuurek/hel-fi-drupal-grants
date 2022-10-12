@@ -5,8 +5,12 @@ dependencies:
   config:
     - block_content.type.terms_block
     - field.field.block_content.terms_block.body
+    - field.field.block_content.terms_block.field_form
+    - field.field.block_content.terms_block.field_link_title
+    - field.field.block_content.terms_block.field_show_on_all_forms
   module:
     - text
+    - webform
 id: block_content.terms_block.default
 targetEntityType: block_content
 bundle: terms_block
@@ -21,6 +25,29 @@ content:
       summary_rows: 3
       placeholder: ''
       show_summary: false
+    third_party_settings: {  }
+  field_form:
+    type: webform_entity_reference_select
+    weight: 27
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
+    third_party_settings: {  }
+  field_link_title:
+    type: string_textfield
+    weight: 29
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_show_on_all_forms:
+    type: boolean_checkbox
+    weight: 28
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   info:
     type: string_textfield
