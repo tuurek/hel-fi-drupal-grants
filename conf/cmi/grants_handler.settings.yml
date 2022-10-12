@@ -1,14 +1,44 @@
 statusStrings:
-  DRAFT: Draft
-  SENT: Sent
-  SUBMITTED: Submitted
-  RECEIVED: Received
-  PENDING: Pending
-  PROCESSING: Processing
-  READY: Ready
-  DONE: Done
-  REJECTED: Rejected
-  DELETED: Deleted
-  CANCELED: Canceled
-  CANCELLED: Canceled
-  CLOSED: Closed
+  en:
+    DRAFT: Draft
+    SENT: Sent
+    SUBMITTED: Submitted
+    RECEIVED: Received
+    PENDING: Pending
+    PROCESSING: Processing
+    READY: Ready
+    DONE: Done
+    REJECTED: Rejected
+    DELETED: Deleted
+    CANCELED: Canceled
+    CANCELLED: Canceled
+    CLOSED: Closed
+  fi:
+    DRAFT: Luonnos
+    SENT: Lähetetty
+    SUBMITTED: Toimitettu
+    RECEIVED: Vastaanotettu
+    PENDING: Odottaa
+    PROCESSING: Käsittelyssä
+    READY: Valmiina
+    DONE: Käsitelty
+    REJECTED: Hylätty
+    DELETED: Poistettu
+    CANCELED: Keskeytetty
+    CANCELLED: Keskeytetty
+    CLOSED: Suljettu
+  sv:
+    DRAFT: Draft
+    SENT: Sent
+    SUBMITTED: Submitted
+    RECEIVED: Received
+    PENDING: Pending
+    PROCESSING: Processing
+    READY: Ready
+    DONE: Done
+    REJECTED: Rejected
+    DELETED: Deleted
+    CANCELED: Canceled
+    CANCELLED: Canceled
+    CLOSED: Closed
+
