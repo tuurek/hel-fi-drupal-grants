@@ -186,3 +186,76 @@ msgstr 'Lisää toiminnan kuvaus'
 
 msgid 'to My Services > My Information so it can be used on the application.'
 msgstr 'Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'
+
+msgid "Current"
+msgstr "Tämä sivu"
+
+msgid "Completed"
+msgstr "Valmis"
+
+msgid "Delete application"
+msgstr "Poista hakemus"
+
+msgid "Print application"
+msgstr "Tulosta hakemus"
+
+msgid "Draft saved time"
+msgstr "Luonnoksen tallennusaika"
+
+msgid "Submission date"
+msgstr "Lähetyspäiväys"
+
+msgid "Application number"
+msgstr "Hakemuksen numero"
+
+msgid "Search for an application"
+msgstr "Etsi hakemusta"
+
+msgid "Search for application"
+msgstr "Etsi hakemusta"
+
+msgid "Show only applications being processed"
+msgstr "Näytä vain käsittelyssä olevat hakemukset"
+
+msgid "Applications"
+msgstr "Hakemukset"
+
+msgid "Sort"
+msgstr "Järjestä"
+
+msgid "Sort by"
+msgstr "Järjestys"
+
+msgid "Submitted time"
+msgstr "Lähetysajankohta"
+
+msgid "Status"
+msgstr "Hakemuksen tila"
+
+msgid "Name (a-z)"
+msgstr "Hakemuksen nimi (a-ö)"
+
+msgid "Application number"
+msgstr "Hakemusnumero"
+
+msgid "Grant application sent successfully"
+msgstr "Avustushakemus lähetetty onnistuneesti"
+
+msgid "Submission date"
+msgstr "Lähetyspäiväys"
+
+msgid "Debugging is enabled"
+msgstr "Debuggaus on päällä"
+
+msgid "New message"
+msgstr "Uusi viesti"
+
+msgid "Messages"
+msgstr "Viestit"
+
+msgid "You can send a message to the handler of the application or provide a missing attachment"
+msgstr "Voit lähettää viestin hakemuksen käsittelijälle tai toimittaa puuttuvan liitteen"
+
+msgid "Sent messages"
+msgstr "Lähetetyt viestit"
+

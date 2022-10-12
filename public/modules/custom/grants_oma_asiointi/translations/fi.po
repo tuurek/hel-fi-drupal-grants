@@ -21,7 +21,7 @@ msgstr "Lähetetyt hakemukset"
 msgid "My applications"
 msgstr "Omat hakemukset"
 
-
-
+msgid "New message"
+msgstr "Uusi viesti"
 
 

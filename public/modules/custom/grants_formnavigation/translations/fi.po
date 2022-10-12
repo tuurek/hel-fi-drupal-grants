@@ -30,3 +30,10 @@ msgstr "Jos merkattu, jokainen handlerin menetelmä, jota kutsutaan, näytetää
 
 msgid "Invoked @id: @class_name:@method_name @context1"
 msgstr "Kutsuttu @id: @class_name:@method_name @context1"
+
+msgid "Current"
+msgstr "Tämä sivu"
+
+msgid "Completed"
+msgstr "Valmis"
+

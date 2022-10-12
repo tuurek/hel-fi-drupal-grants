@@ -16,7 +16,13 @@ msgstr ""
 msgid "Company information"
 msgstr "Yhteisön tiedot"
 
+msgid "Community information"
+msgstr "Yhteisön tiedot"
+
 msgid "Company applications"
+msgstr "Yhteisön hakemukset"
+
+msgid "Community applications"
 msgstr "Yhteisön hakemukset"
 
 msgid "Basic Information"
@@ -25,22 +31,37 @@ msgstr "Perustiedot"
 msgid "Company name"
 msgstr "Yhteisön nimi"
 
+msgid "Community name"
+msgstr "Yhteisön nimi"
+
 msgid "Business ID"
 msgstr "Y-tunnus"
 
 msgid "Company Location"
 msgstr "Kotipaikka"
 
+msgid "Community location"
+msgstr "Kotipaikka"
+
 msgid "Registration Date"
+msgstr "Rekisteröimispäivä"
+
+msgid "Registration date"
 msgstr "Rekisteröimispäivä"
 
 msgid "Company Status"
 msgstr "Yhdistyksen tila"
 
+msgid "Community status"
+msgstr "Yhdistyksen tila"
+
 msgid "Special Status"
 msgstr "Erityistila"
 
-msgid "Marked fields habe been retreived from PRH and cannot be edited."
+msgid "Special status"
+msgstr "Erityistila"
+
+msgid "Marked fields have been retreived from PRH and cannot be edited."
 msgstr "Merkityt tiedot on haettu Patentti- ja rekisterihallinnon rekisteristä (PRH), eikä niitä voi tämän takia muokata."
 
 msgid "User %s added & assign them a HelsinkiProfiili Role"
@@ -121,13 +142,22 @@ msgstr "Perustamisvuosi"
 msgid "Company short name"
 msgstr "Yhteisön lyhenne"
 
+msgid "Short name"
+msgstr "Yhteisön lyhenne"
+
 msgid "Company www address"
+msgstr "Verkkosivujen osoite"
+
+msgid "Home page address"
 msgstr "Verkkosivujen osoite"
 
 msgid "Company email"
 msgstr "Yhteisön sähköpostiosoite"
 
 msgid "Business Purpose"
+msgstr "Toiminna tarkoitus"
+
+msgid "Community purpose"
 msgstr "Toiminna tarkoitus"
 
 msgid "Community short name"
@@ -144,6 +174,9 @@ msgstr "Toiminna tarkoitus"
 
 msgid "Description of business purpose (max. 500 characters)"
 msgstr "Kuvaus yhteisön toiminnan tarkoituksesta (500 merkkiä)"
+
+msgid "Description of the business purpose of the registered community"
+msgstr "Kuvaus rekisteröidyn yhteisön toiminnan tarkoituksesta."
 
 msgid "Company Addresses"
 msgstr "Yhteisön osoitteet"
@@ -279,3 +312,12 @@ msgstr "Varmistustiedosto tallennettu tilille %account. Voit käyttää nyt tät
 
 msgid "Confirmation file saving failed for %account. This account cannot be used with applications without valid confirmation file."
 msgstr "Varmistustiedoston tallentaminen epäonnistui tilille %account. Tätä tiliä ei voi käyttää avustusten vastaanottamiseen ilman ajantasaista varmistustiedostoa."
+
+msgid "Switch role"
+msgstr "Vaihda käsittelijäroolia"
+
+msgid "Signout"
+msgstr "Kirjaudu ulos"
+
+msgid "Sign in"
+msgstr "Kirjaudu sisään"
