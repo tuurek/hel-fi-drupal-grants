@@ -497,7 +497,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
     $form['#attached']['drupalSettings']['grants_handler']['selectedCompany'] = $selectedCompany;
     $form['#attached']['drupalSettings']['grants_handler']['formData'] = $formData;
-    $form['#attached']['drupalSettings']['grants_handler']['submissionId'] = $webform_submission->id();
+    $form['#attached']['drupalSettings']['grants_handler']['submissionId'] = $formData["application_number"] ?? '';
 
     if ($grantsProfile["businessPurpose"]) {
       _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"], $grantsProfile["businessPurpose"], FALSE);
@@ -945,7 +945,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
 
   $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
-    'submission_id' => $submission->id(),
+    'submission_id' => $submissionData["application_number"],
   ]);
 
   $printAppUrl = Url::fromRoute('grants_webform_print.submission_print', [

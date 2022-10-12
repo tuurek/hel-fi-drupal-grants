@@ -10,6 +10,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\file\Entity\File;
 use Drupal\grants_attachments\Plugin\WebformElement\GrantsAttachments;
+use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\EventsService;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
@@ -403,6 +404,7 @@ class AttachmentHandler {
       // Search application document from ATV.
       $applicationDocumentResults = $this->atvService->searchDocuments([
         'transaction_id' => $applicationNumber,
+        'lookfor' => 'appenv:' . ApplicationHandler::getAppEnv(),
       ]);
       /** @var \Drupal\helfi_atv\AtvDocument $applicationDocument */
       $applicationDocument = reset($applicationDocumentResults);

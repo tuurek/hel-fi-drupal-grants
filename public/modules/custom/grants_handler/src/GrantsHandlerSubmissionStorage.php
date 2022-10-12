@@ -50,6 +50,13 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
   protected HelsinkiProfiiliUserData $helsinkiProfiiliUserData;
 
   /**
+   * If same data is requested multiple times, it's cached here.
+   *
+   * @var array
+   */
+  protected array $data;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(
@@ -70,6 +77,8 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
     /** @var \Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData helsinkiProfiiliUserData */
     $instance->helsinkiProfiiliUserData = \Drupal::service('helfi_helsinki_profiili.userdata');
+
+    $instance->data = [];
 
     return $instance;
   }
@@ -98,9 +107,7 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
     parent::loadData($webform_submissions);
 
     $userRoles = $this->account->getRoles();
-
     $userAuthLevel = $this->helsinkiProfiiliUserData->getAuthenticationLevel();
-
     $dataDefinition = YleisavustusHakemusDefinition::create('grants_metadata_yleisavustushakemus');
 
     // if...
@@ -113,33 +120,45 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
 
       /** @var \Drupal\webform\Entity\WebformSubmission $submission */
       foreach ($webform_submissions as $submission) {
-        $applicationNumber = '';
-        try {
-          $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
-          $results = $this->atvService->searchDocuments(['transaction_id' => $applicationNumber]);
-          /** @var \Drupal\helfi_atv\AtvDocument $document */
-          $document = reset($results);
-          $appData = $this->atvSchema->documentContentToTypedData(
-            $document->getContent(),
-            $dataDefinition,
-            $document->getMetadata()
-          );
-          $submission->setData($appData);
-
-          // Try to invalidate caches for this submission so that updated data
-          // is updated in UI as well.
-          \Drupal::cache()
-            ->invalidate('webform_submission:' . $submission->id());
+        if (!empty($this->data[$submission->id()])) {
+          $submission->setData($this->data[$submission->id()]);
         }
-        catch (\Exception $exception) {
-          $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
-            ->error('Document %appno not found when loading WebformSubmission: %submission. Error: %msg',
-            [
-              '%appno' => $applicationNumber,
-              '%submission' => $submission->uuid(),
-              '%msg' => $exception->getMessage(),
-            ]);
-          $submission->setData([]);
+        else {
+          $applicationNumber = '';
+          try {
+            $applicationNumber = ApplicationHandler::createApplicationNumber($submission);
+            $results = $this->atvService->searchDocuments(
+              [
+                'transaction_id' => $applicationNumber,
+                'lookfor' => 'appenv:' . ApplicationHandler::getAppEnv(),
+              ]
+            );
+            /** @var \Drupal\helfi_atv\AtvDocument $document */
+            $document = reset($results);
+            $appData = $this->atvSchema->documentContentToTypedData(
+              $document->getContent(),
+              $dataDefinition,
+              $document->getMetadata()
+            );
+            $submission->setData($appData);
+            $this->data[$submission->id()] = $appData;
+
+            // Try to invalidate caches for this submission so that updated data
+            // is updated in UI as well.
+            // \Drupal::cache()
+            // ->invalidate('webform_submission:' . $submission->id());
+          }
+          catch (\Exception $exception) {
+            $this->loggerFactory->get('GrantsHandlerSubmissionStorage')
+              ->error('Document %appno not found when loading WebformSubmission: %submission. Error: %msg',
+                [
+                  '%appno' => $applicationNumber,
+                  '%submission' => $submission->uuid(),
+                  '%msg' => $exception->getMessage(),
+                ]);
+            $submission->setData([]);
+          }
+
         }
       }
     }

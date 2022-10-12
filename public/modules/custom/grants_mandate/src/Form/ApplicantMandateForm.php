@@ -87,23 +87,23 @@ class ApplicantMandateForm extends FormBase {
     // '#required' => TRUE,
     // ];
     $form['info'] = [
-      '#markup' => '<p>'.$this->t('Choose the applicant role you want to use for the application').'</p>',
+      '#markup' => '<p>' . $this->t('Choose the applicant role you want to use for the application') . '</p>',
     ];
     $form['actions'] = [
       '#type' => 'actions',
     ];
-    $form['actions']['registered'] = array(
+    $form['actions']['registered'] = [
       '#type' => 'container',
-      '#attributes' => array('class' => array('hds-card__body')),
+      '#attributes' => ['class' => ['hds-card__body']],
       '#prefix' => '<div class="hds-card hds-card--applicant-role">',
       '#suffix' => '</div>',
-    );
+    ];
     $form['actions']['registered']['info'] = [
       '#markup' => '
       <span aria-hidden="true" class="hds-icon hds-icon--group hds-icon--size-m"></span>
-      <h2 class="hds-card__heading-m heading-m" role="heading" aria-level="2">'.$this->t('Registered community').'</h2>
+      <h2 class="hds-card__heading-m heading-m" role="heading" aria-level="2">' . $this->t('Registered community') . '</h2>
       <div class="hds-card__text">
-        '.$this->t('This is a short description of the applicant role.').'
+        ' . $this->t('This is a short description of the applicant role.') . '
       </div>',
     ];
     $form['actions']['registered']['submit'] = [

@@ -16,7 +16,6 @@ use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
-use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
 use Drupal\helfi_helsinki_profiili\ProfileDataException;
@@ -493,6 +492,9 @@ class ApplicationHandler {
 
     $typeCode = self::$applicationTypes[$applicationType]['code'] ?? '';
 
+    if ($appParam == 'PROD') {
+      return 'GRANTS-' . $typeCode . '-' . sprintf('%08d', $serial);
+    }
     return 'GRANTS-' . $appParam . '-' . $typeCode . '-' . sprintf('%08d', $serial);
   }
 
@@ -568,6 +570,7 @@ class ApplicationHandler {
       $document = $atvService->searchDocuments(
         [
           'transaction_id' => $applicationNumber,
+          'lookfor' => 'appenv:' . ApplicationHandler::getAppEnv(),
         ],
         $refetch
       );
@@ -578,14 +581,9 @@ class ApplicationHandler {
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-      if (self::getAppEnv() == 'LOCAL') {
-        $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
-        $submissionObject->set('serial', $submissionSerial);
-        $submissionObject->save();
-      }
-      else {
-        throw new AtvDocumentNotFoundException('Submission not found.');
-      }
+      $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
+      $submissionObject->set('serial', $submissionSerial);
+      $submissionObject->save();
     }
     else {
       $submissionObject = reset($result);
@@ -633,6 +631,7 @@ class ApplicationHandler {
     if (!isset($this->atvDocument)) {
       $res = $this->atvService->searchDocuments([
         'transaction_id' => $transactionId,
+        'lookfor' => 'appenv:' . self::getAppEnv(),
       ]);
       $this->atvDocument = reset($res);
     }
@@ -1173,13 +1172,8 @@ class ApplicationHandler {
      * @var  \Drupal\helfi_atv\AtvDocument $document
      */
     foreach ($applicationDocuments as $document) {
-      // Make sure we only use submissions from this env and the type is
-      // acceptable one.
-      if (
-        str_contains($document->getTransactionId(), $appEnv) &&
-        array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
-      ) {
-
+      // Make sure the type is acceptable one.
+      if (array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)) {
         $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
         $submissionData = $submissionObject->getData();
         $ts = strtotime($submissionData['form_timestamp_created']);
