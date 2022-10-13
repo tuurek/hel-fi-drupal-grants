@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Theme File.
  * @file
+ * Theme File.
  */
 
 use Drupal\Component\Utility\NestedArray;
