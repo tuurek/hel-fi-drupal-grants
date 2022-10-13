@@ -172,8 +172,8 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
   $element = &$variables['element'];
   $type = $element['#type'] ?? '';
 
-  // This stuff is done already with webform forms,
-  // so we're skipping it for them.
+  // This stuff is done already with webform forms.
+  // So we're skipping it for them.
   if (array_key_exists('#webform', $element)) {
     return;
   }
