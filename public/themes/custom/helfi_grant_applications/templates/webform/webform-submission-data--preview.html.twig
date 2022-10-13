@@ -37,7 +37,6 @@
         <div{{ attributes.addClass(classes) }}>
           {{ elements }}
           {% if confirm_texts %}
-            <h4>{{ 'Accept terms' }}</h4>
             {% for confirm_text in confirm_texts %}
               {{ confirm_text|raw }}
               <hr />
