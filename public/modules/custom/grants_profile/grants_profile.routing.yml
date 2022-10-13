@@ -1,7 +1,7 @@
 grants_profile.show:
   path: '/oma-asiointi/hakuprofiili'
   defaults:
-    _title: 'Grants Profile'
+    _title: 'Show Application profile'
     _controller: '\Drupal\grants_profile\Controller\GrantsProfileController::ownProfile'
   requirements:
     _permission: 'view own grants_profile'
@@ -10,7 +10,7 @@ grants_profile.edit:
   path: '/oma-asiointi/hakuprofiili/muokkaa'
   defaults:
     _form: '\Drupal\grants_profile\Form\GrantsProfileForm'
-    _title: 'Edit Grants Profile'
+    _title: 'Edit Application profile.'
   requirements:
     _permission: 'administer own grants_profile'
 

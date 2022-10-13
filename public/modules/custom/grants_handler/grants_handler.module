@@ -422,8 +422,6 @@ function _grants_handler_imported_handler(
 /**
  * Missing data prints.
  *
- * @todo Must be fixed with proper template & things.
- *
  * @param array $element
  *   The element in question.
  * @param string $str1
@@ -432,6 +430,9 @@ function _grants_handler_imported_handler(
  *   Link text.
  * @param string $str3
  *   Clarifying text.
+ *
+ * @todo Must be fixed with proper template & things.
+ *
  */
 function _grants_handler_missing_data(
   array  &$element,
@@ -496,7 +497,7 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
     $form['#attached']['drupalSettings']['grants_handler']['grantsProfile'] = $grantsProfile;
     $form['#attached']['drupalSettings']['grants_handler']['selectedCompany'] = $selectedCompany;
     $form['#attached']['drupalSettings']['grants_handler']['formData'] = $formData;
-    $form['#attached']['drupalSettings']['grants_handler']['submissionId'] = $webform_submission->id();
+    $form['#attached']['drupalSettings']['grants_handler']['submissionId'] = $formData["application_number"] ?? '';
 
     if ($grantsProfile["businessPurpose"]) {
       _grants_handler_imported_handler($form["elements"]["3_yhteison_tiedot"]["business_info"]["community_purpose"], $grantsProfile["businessPurpose"], FALSE);
@@ -588,19 +589,38 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
  */
 function grants_handler_preprocess_webform_submission_data(&$variables) {
 
-  $block = BlockContent::load(1);
+  // create query + type condition
+  $query = \Drupal::entityQuery('block_content')
+    ->condition('type', 'terms_block');
 
-  if ($block !== NULL) {
+  // get blocks for ALL forms and this form.
+  $orGroup = $query
+    ->orConditionGroup()
+    ->condition('field_form', $variables['webform']->id())
+    ->condition('field_show_on_all_forms', TRUE);
+  $query->condition($orGroup);
+  $results = $query->execute();
+
+  // load blocks.
+  $blocks = BlockContent::loadMultiple(array_values($results));
+  // add term acceptance things for every block loaded.
+  foreach ($blocks as $block) {
+    // render content.
+    // see admin/structure/block/block-content/manage/terms_block/display
+    // only body field is wanted to render.
     $output = \Drupal::entityTypeManager()
       ->getViewBuilder('block_content')
       ->view($block);
     $render = \Drupal::service('renderer')->render($output);
-
-    $variables['confirm_text'] = '<div>' . $render . '</div><div class="hds-checkbox">
-      <input type="checkbox" id="checkbox" required="required" class="hds-checkbox__input" />
-      <label for="checkbox"  class="hds-checkbox__label">' . t('I have read the terms and accept them') . '</label>
+    // id for element.
+    $htmlId = 'accept_terms_' . $block->id();
+    // add html for checkbox.
+    $variables['confirm_texts'][] = '<div>' . $render . '</div><div class="hds-checkbox">
+      <input type="checkbox" id="'.$htmlId.'" required="required" class="hds-checkbox__input" />
+      <label for="'.$htmlId.'"  class="hds-checkbox__label">' . $block->get('field_link_title')->value . '</label>
     </div>';
   }
+
 
 }
 
@@ -925,7 +945,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
 
   $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
-    'submission_id' => $submission->id(),
+    'submission_id' => $submissionData["application_number"],
   ]);
 
   $printAppUrl = Url::fromRoute('grants_webform_print.submission_print', [
@@ -966,7 +986,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
     strtolower($submissionData["application_number"]),
   ];
 
-  $editApplicationLinkText = Markup::create(t('Edit application') );
+  $editApplicationLinkText = Markup::create(t('Edit application'));
   $viewApplicationLinkText = Markup::create(t('View application'));
 
   $variables['viewApplicationLink'] = Link::fromTextAndUrl($viewApplicationLinkText, $viewApplicationUrl);

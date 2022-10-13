@@ -16,9 +16,9 @@ use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_metadata\AtvSchema;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocument;
-use Drupal\helfi_atv\AtvDocumentNotFoundException;
 use Drupal\helfi_atv\AtvService;
 use Drupal\helfi_helsinki_profiili\HelsinkiProfiiliUserData;
+use Drupal\helfi_helsinki_profiili\ProfileDataException;
 use Drupal\webform\Entity\Webform;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformSubmissionInterface;
@@ -492,6 +492,9 @@ class ApplicationHandler {
 
     $typeCode = self::$applicationTypes[$applicationType]['code'] ?? '';
 
+    if ($appParam == 'PROD') {
+      return 'GRANTS-' . $typeCode . '-' . sprintf('%08d', $serial);
+    }
     return 'GRANTS-' . $appParam . '-' . $typeCode . '-' . sprintf('%08d', $serial);
   }
 
@@ -524,6 +527,7 @@ class ApplicationHandler {
    *
    * @return \Drupal\webform\Entity\WebformSubmission|null
    *   Webform submission.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -566,6 +570,7 @@ class ApplicationHandler {
       $document = $atvService->searchDocuments(
         [
           'transaction_id' => $applicationNumber,
+          'lookfor' => 'appenv:' . ApplicationHandler::getAppEnv(),
         ],
         $refetch
       );
@@ -576,14 +581,9 @@ class ApplicationHandler {
     // If there's no local submission with given serial
     // we can actually create that object on the fly and use that for editing.
     if (empty($result)) {
-      if (self::getAppEnv() == 'LOCAL') {
-        $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
-        $submissionObject->set('serial', $submissionSerial);
-        $submissionObject->save();
-      }
-      else {
-        throw new AtvDocumentNotFoundException('Submission not found.');
-      }
+      $submissionObject = WebformSubmission::create(['webform_id' => 'yleisavustushakemus']);
+      $submissionObject->set('serial', $submissionSerial);
+      $submissionObject->save();
     }
     else {
       $submissionObject = reset($result);
@@ -631,6 +631,7 @@ class ApplicationHandler {
     if (!isset($this->atvDocument)) {
       $res = $this->atvService->searchDocuments([
         'transaction_id' => $transactionId,
+        'lookfor' => 'appenv:' . self::getAppEnv(),
       ]);
       $this->atvDocument = reset($res);
     }
@@ -773,6 +774,12 @@ class ApplicationHandler {
 
     $webform = Webform::load($webform_id);
     $userData = $this->helfiHelsinkiProfiiliUserdata->getUserData();
+
+    if ($userData == NULL) {
+      // We absolutely cannot create new application without user data.
+      throw new ProfileDataException('No Helsinki profile data found');
+    }
+
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
     // If we've given data to work with, clear it for copying.
@@ -1130,6 +1137,13 @@ class ApplicationHandler {
    * @return array
    *   Submissions in array.
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\TempStore\TempStoreException
+   * @throws \Drupal\grants_mandate\CompanySelectException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public static function getCompanyApplications(
@@ -1137,7 +1151,7 @@ class ApplicationHandler {
     string $appEnv,
     bool $sortByFinished = FALSE,
     bool $sortByStatus = FALSE,
-    string $themeHook = '') {
+    string $themeHook = ''): array {
 
     /** @var \Drupal\helfi_atv\AtvService $atvService */
     $atvService = \Drupal::service('helfi_atv.atv_service');
@@ -1146,64 +1160,48 @@ class ApplicationHandler {
     $finished = [];
     $unfinished = [];
 
-    try {
-      $applicationDocuments = $atvService->searchDocuments([
-        'service' => 'AvustushakemusIntegraatio',
-        'business_id' => $selectedCompany['identifier'],
-        'lookfor' => 'appenv:' . $appEnv,
-      ]);
+    $applicationDocuments = $atvService->searchDocuments([
+      'service' => 'AvustushakemusIntegraatio',
+      'business_id' => $selectedCompany['identifier'],
+      'lookfor' => 'appenv:' . $appEnv,
+    ]);
 
-      /**
-       * Create rows for table.
-       *
-       * @var integer $key
-       * @var  \Drupal\helfi_atv\AtvDocument $document
-       */
-      foreach ($applicationDocuments as $document) {
-        // Make sure we only use submissions from this env and the type is
-        // acceptable one.
-        if (
-          str_contains($document->getTransactionId(), $appEnv) &&
-          array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)
-        ) {
-
-          try {
-            $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
-            $submissionData = $submissionObject->getData();
-            $ts = strtotime($submissionData['form_timestamp_created']);
-            if ($themeHook !== '') {
-              $submission = [
-                '#theme' => $themeHook,
-                '#submission' => $submissionObject,
-                '#document' => $document,
-              ];
-            }
-            else {
-              $submission = $submissionObject;
-            }
-            if ($sortByFinished == TRUE) {
-              if (self::isSubmissionFinished($submission)) {
-                $finished[$ts] = $submission;
-              }
-              else {
-                $unfinished[$ts] = $submission;
-              }
-            }
-            elseif ($sortByStatus == TRUE) {
-              $applications[$submissionData['status']][] = $submission;
-            }
-            else {
-              $applications[$ts] = $submission;
-            }
+    /**
+     * Create rows for table.
+     *
+     * @var  \Drupal\helfi_atv\AtvDocument $document
+     */
+    foreach ($applicationDocuments as $document) {
+      // Make sure the type is acceptable one.
+      if (array_key_exists($document->getType(), ApplicationHandler::$applicationTypes)) {
+        $submissionObject = self::submissionObjectFromApplicationNumber($document->getTransactionId(), $document);
+        $submissionData = $submissionObject->getData();
+        $ts = strtotime($submissionData['form_timestamp_created']);
+        if ($themeHook !== '') {
+          $submission = [
+            '#theme' => $themeHook,
+            '#submission' => $submissionObject,
+            '#document' => $document,
+          ];
+        }
+        else {
+          $submission = $submissionObject;
+        }
+        if ($sortByFinished == TRUE) {
+          if (self::isSubmissionFinished($submission)) {
+            $finished[$ts] = $submission;
           }
-          catch (\Exception $e) {
-            $d = 'adsf';
+          else {
+            $unfinished[$ts] = $submission;
           }
         }
+        elseif ($sortByStatus == TRUE) {
+          $applications[$submissionData['status']][] = $submission;
+        }
+        else {
+          $applications[$ts] = $submission;
+        }
       }
-    }
-    catch (\Exception $e) {
-      $d = 'adsf';
     }
 
     if ($sortByFinished == TRUE) {

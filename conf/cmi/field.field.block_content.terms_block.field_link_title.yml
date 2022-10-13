@@ -1,0 +1,19 @@
+uuid: 7d549e50-fedd-47ee-a9d5-88ce7bc09f78
+langcode: fi
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_block
+    - field.storage.block_content.field_link_title
+id: block_content.terms_block.field_link_title
+field_name: field_link_title
+entity_type: block_content
+bundle: terms_block
+label: 'Link title'
+description: 'Text that will be shown on agree link.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

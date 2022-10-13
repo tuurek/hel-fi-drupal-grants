@@ -51,3 +51,15 @@ services:
     class: Drupal\grants_handler\EventSubscriber\RedirectAfterLogoutSubscriber
     tags:
       - { name: event_subscriber }
+
+  grants_handler.breadcrumbs_webforms:
+    class: Drupal\grants_handler\Breadcrumb\GrantsHandlerWebformBreadcrumbsBuilder
+    arguments: ['@helfi_helsinki_profiili.userdata','@grants_profile.service']
+    tags:
+      - { name: breadcrumb_builder, priority: 10001 }
+
+  grants_handler.breadcrumbs_submissions:
+    class: Drupal\grants_handler\Breadcrumb\GrantsHandlerSubmissionBreadcrumbsBuilder
+    arguments: ['@helfi_helsinki_profiili.userdata','@grants_profile.service']
+    tags:
+      - { name: breadcrumb_builder, priority: 10001 }

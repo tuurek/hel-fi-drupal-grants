@@ -1,0 +1,18 @@
+uuid: 87288db1-2bf8-42ec-986c-798c1b9a28f6
+langcode: fi
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_show_on_all_forms
+field_name: field_show_on_all_forms
+entity_type: block_content
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

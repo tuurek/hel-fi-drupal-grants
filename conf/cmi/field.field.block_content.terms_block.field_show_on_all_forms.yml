@@ -1,0 +1,23 @@
+uuid: 52c3f1e7-8868-46e2-bd5a-18a3bfec8ccb
+langcode: fi
+status: true
+dependencies:
+  config:
+    - block_content.type.terms_block
+    - field.storage.block_content.field_show_on_all_forms
+id: block_content.terms_block.field_show_on_all_forms
+field_name: field_show_on_all_forms
+entity_type: block_content
+bundle: terms_block
+label: 'Show on all forms'
+description: 'Show this block on ALL forms.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

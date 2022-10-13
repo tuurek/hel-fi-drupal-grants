@@ -9,7 +9,9 @@
  * @see https://www.drupal.org/node/2217931
  */
 
-
+/**
+ * Implements hook_preprocess_html().
+ */
 function grants_mandate_preprocess_html(&$variables) {
   if ('grants_mandate.mandateform' === \Drupal::routeMatch()->getRouteName()) {
     $variables['html_attributes']['class'] = 'page--select-applicant-role';
