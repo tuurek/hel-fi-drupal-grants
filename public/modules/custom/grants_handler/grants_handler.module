@@ -8,6 +8,7 @@
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -382,7 +383,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
 }
 
 /**
- * Add icons to some
+ * Add icons to some.
  *
  * @param mixed $array
  *   Array being manipulated.
@@ -394,7 +395,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
 function _grants_handler_imported_handler(
   mixed &$array,
   mixed $value,
-  bool  $show_checkmark = TRUE) {
+  bool $show_checkmark = TRUE) {
 
   if (!is_array($array)) {
     return;
@@ -432,10 +433,9 @@ function _grants_handler_imported_handler(
  *   Clarifying text.
  *
  * @todo Must be fixed with proper template & things.
- *
  */
 function _grants_handler_missing_data(
-  array  &$element,
+  array &$element,
   string $str1 = 'Field is missing.',
   string $str2 = 'Go to grants profile',
   string $str3 = 'to fill out missing data.') {
@@ -455,8 +455,7 @@ function _grants_handler_missing_data(
         <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
         <span>' . $str1 . '</span>
       </div>
-      <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
-      ->toString() . ' ' . $str3 . '</div>
+      <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -589,11 +588,11 @@ function grants_handler_webform_submission_form_alter(&$form, FormStateInterface
  */
 function grants_handler_preprocess_webform_submission_data(&$variables) {
 
-  // create query + type condition
+  // Create query + type condition.
   $query = \Drupal::entityQuery('block_content')
     ->condition('type', 'terms_block');
 
-  // get blocks for ALL forms and this form.
+  // Get blocks for ALL forms and this form.
   $orGroup = $query
     ->orConditionGroup()
     ->condition('field_form', $variables['webform']->id())
@@ -601,27 +600,25 @@ function grants_handler_preprocess_webform_submission_data(&$variables) {
   $query->condition($orGroup);
   $results = $query->execute();
 
-  // load blocks.
+  // Load blocks.
   $blocks = BlockContent::loadMultiple(array_values($results));
-  // add term acceptance things for every block loaded.
+  // Add term acceptance things for every block loaded.
   foreach ($blocks as $block) {
-    // render content.
-    // see admin/structure/block/block-content/manage/terms_block/display
-    // only body field is wanted to render.
+    // Render content.
+    // See admin/structure/block/block-content/manage/terms_block/display.
+    // Only body field is wanted to render.
     $output = \Drupal::entityTypeManager()
       ->getViewBuilder('block_content')
       ->view($block);
     $render = \Drupal::service('renderer')->render($output);
-    // id for element.
+    // Id for element.
     $htmlId = 'accept_terms_' . $block->id();
-    // add html for checkbox.
+    // Add html for checkbox.
     $variables['confirm_texts'][] = '<div>' . $render . '</div><div class="hds-checkbox">
-      <input type="checkbox" id="'.$htmlId.'" required="required" class="hds-checkbox__input" />
-      <label for="'.$htmlId.'"  class="hds-checkbox__label">' . $block->get('field_link_title')->value . '</label>
+      <input type="checkbox" id="' . $htmlId . '" required="required" class="hds-checkbox__input" />
+      <label for="' . $htmlId . '"  class="hds-checkbox__label">' . $block->get('field_link_title')->value . '</label>
     </div>';
   }
-
-
 }
 
 /**
@@ -652,7 +649,7 @@ function grants_handler_preprocess_webform_submission(&$variables) {
     '#applicationID' => $data["application_number"],
   ];
 
-  // Parse history
+  // Parse history.
   $variables['history'] = [
     '#theme' => 'webform_submission_status_history',
     '#submission' => $submission,
@@ -859,7 +856,7 @@ function grants_handler_preprocess_webform_submission_form(&$variables) {
   $navigationHelper = \Drupal::service('grants_handler.navigation_helper');
   /** @var \Drupal\webform\Entity\WebformSubmission $webform_submission */
   $webform_submission = $variables["form"]["#webform_submission"];
-  // get errors for printing.
+  // Get errors for printing.
   $variables['errors'] = $navigationHelper->getAllErrors($webform_submission);
 }
 
@@ -940,9 +937,9 @@ function grants_handler_preprocess_application_list_item(&$variables) {
         $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
       }
     }
-  } catch (\Exception $e) {
   }
-
+  catch (\Exception $e) {
+  }
 
   $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
     'submission_id' => $submissionData["application_number"],
@@ -1005,7 +1002,8 @@ function grants_handler_preprocess_application_list_item(&$variables) {
           '%number' => $submissionData["application_number"],
         ]);
     }
-  } catch (\Exception $e) {
+  }
+  catch (\Exception $e) {
     $variables['statusString'] = '';
   }
 
@@ -1035,7 +1033,8 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
           '%appno' => $submissionData["application_number"],
         ]);
     }
-  } catch (\Exception $e) {
+  }
+  catch (\Exception $e) {
     $variables['statusStringHumanReadable'] = '';
     $variables['statusString'] = '';
   }
@@ -1062,7 +1061,8 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     $submissionObject = $variables['submissionObject'];
     $submissionData = $submissionObject->getData();
     $variables['applicationTimestamp'] = $submissionData['form_timestamp_created'];
-  } catch (\Exception $e) {
+  }
+  catch (\Exception $e) {
     $variables['applicationTimestamp'] = '';
   }
 }
@@ -1128,7 +1128,7 @@ function grants_handler_preprocess_message_list(&$variables) {
  * Process information box.
  *
  * @param array $variables
- *  Variables for template.
+ *   Variables for template.
  */
 function grants_handler_preprocess_webform_submission_information(array &$variables) {
 
@@ -1189,21 +1189,18 @@ function grants_handler_preprocess_webform_submission_information(array &$variab
   $variables['copyApplicationLink'] = $copyApplicationLink;
 
   $variables['formTitle'] = $webform->label();
-
-
   $variables['printLink'] = '';
-
   $variables['copyLink'] = '';
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
   $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
-  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
-      ->getRouteName();
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
 
   try {
     $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
     $variables['applicationSent'] = $dt->format('Y-m-d H:i');
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
   }
 
   $variables['history'] = [
@@ -1239,7 +1236,7 @@ function grants_handler_user_logout(AccountInterface $account) {
 /**
  * Implements hook_ENTITY_TYPE_access().
  */
-function grants_handler_node_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function grants_handler_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
   $result = AccessResult::neutral();
   $type = $entity->bundle();
   if ($type == 'form_page') {
