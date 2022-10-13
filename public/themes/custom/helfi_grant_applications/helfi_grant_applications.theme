@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Theme File.
  * @file
  */
 
@@ -41,7 +42,7 @@ function helfi_grant_applications_preprocess(&$variables) {
 }
 
 /**
- *
+ * Implements hook_field_widget_paragraphs_form_alter().
  */
 function helfi_grant_applications_field_widget_paragraphs_form_alter(&$element, FormStateInterface &$form_state, $context) {
   switch ($element['#paragraph_type']) {
@@ -53,7 +54,8 @@ function helfi_grant_applications_field_widget_paragraphs_form_alter(&$element, 
         $voc = $term->bundle();
         // Check if it is the desired voc.
         if ($voc == 'my_voc') {
-          // unset($element['subform']['field_to_be hidded']); //to hide only one field.
+          // To hide only one field.
+          // unset($element['subform']['field_to_be hidded']);
           // To hide all the form.
           $element = [];
         }
@@ -170,7 +172,8 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
   $element = &$variables['element'];
   $type = $element['#type'] ?? '';
 
-  // This stuff is done already with webform forms, so we're skipping it for them.
+  // This stuff is done already with webform forms,
+  // so we're skipping it for them.
   if (array_key_exists('#webform', $element)) {
     return;
   }
