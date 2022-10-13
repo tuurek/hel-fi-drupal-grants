@@ -55,13 +55,8 @@ $config['openid_connect.client.tunnistamo']['settings']['client_secret'] = geten
 $config['openid_connect.client.tunnistamoadmin']['settings']['client_id'] = getenv('TUNNISTAMOADMIN_CLIENT_ID');
 $config['openid_connect.client.tunnistamoadmin']['settings']['client_secret'] = getenv('TUNNISTAMOADMIN_CLIENT_SECRET');
 
-if ($tunnistamo_scopes = getenv('TUNNISTAMO_CLIENT_SCOPES')) {
-  $config['openid_connect.client.tunnistamo']['settings']['client_scopes'] = $tunnistamo_scopes;
-}
-
-if ($tunnistamoadmin_scopes = getenv('TUNNISTAMOADMIN_CLIENT_SCOPES')) {
-  $config['openid_connect.client.tunnistamoadmin']['settings']['client_scopes'] = $tunnistamoadmin_scopes;
-}
+$config['openid_connect.client.tunnistamo']['settings']['client_scopes'] = getenv('TUNNISTAMO_CLIENT_SCOPES');
+$config['openid_connect.client.tunnistamoadmin']['settings']['client_scopes'] = getenv('TUNNISTAMOADMIN_CLIENT_SCOPES');
 
 
 $config['siteimprove.settings']['prepublish_enabled'] = TRUE;

@@ -21,6 +21,9 @@ COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
 # TODO: Remove in production
 RUN chgrp -R 0 /var/www/html/public/modules && chmod g+w -R /var/www/html/public/modules
 RUN chgrp -R 0 /var/www/html/public/core/modules && chmod g+w -R /var/www/html/public/core/modules
+RUN chgrp -R 0 /var/www/html/public/sites/default/settings.php && chmod g+w -R /var/www/html/public/sites/default/settings.php
+
+
 
 # Helper to run commands
 # RUN alias ll='ls -lah'
