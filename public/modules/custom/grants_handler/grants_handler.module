@@ -455,7 +455,8 @@ function _grants_handler_missing_data(
         <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
         <span>' . $str1 . '</span>
       </div>
-      <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')->toString() . ' ' . $str3 . '</div>
+      <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
+      ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -724,13 +725,14 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
 
   $history = [];
   if (isset($submissionData["status_updates"]) && is_array($submissionData["status_updates"])) {
+    $config = \Drupal::config('grants_handler.settings');
+    $statusStrings = $config->get('statusStrings');
+    $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
       $eventDate = new \DateTime($event['timeCreated']);
       $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $history[] = t('%status: %date', [
-        '%status' => $event['citizenCaseStatus'],
-        '%date' => $eventDate->format('d.m.Y H:i'),
-      ]);
+      $translatedStatus = $statusStrings[$langCode][$event['citizenCaseStatus']];
+      $history[] = $translatedStatus . ': ' . $eventDate->format('d.m.Y H:i');
     }
   }
 
@@ -937,8 +939,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
         $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
       }
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
   }
 
   $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
@@ -1002,8 +1003,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
           '%number' => $submissionData["application_number"],
         ]);
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['statusString'] = '';
   }
 
@@ -1033,8 +1033,7 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
           '%appno' => $submissionData["application_number"],
         ]);
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['statusStringHumanReadable'] = '';
     $variables['statusString'] = '';
   }
@@ -1061,8 +1060,7 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     $submissionObject = $variables['submissionObject'];
     $submissionData = $submissionObject->getData();
     $variables['applicationTimestamp'] = $submissionData['form_timestamp_created'];
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['applicationTimestamp'] = '';
   }
 }
@@ -1194,13 +1192,13 @@ function grants_handler_preprocess_webform_submission_information(array &$variab
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
   $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
-  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
+      ->getRouteName();
 
   try {
     $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
     $variables['applicationSent'] = $dt->format('Y-m-d H:i');
-  }
-  catch (Exception $e) {
+  } catch (Exception $e) {
   }
 
   $variables['history'] = [
