@@ -86,12 +86,14 @@ class GrantsProfileForm extends FormBase {
       }
       catch (YjdhException $e) {
         // If no company data is found, we cannot continue.
-        $this->messenger()->addError($this->t('Community details not found in registries. Please contact customer service'));
+        $this->messenger()
+          ->addError($this->t('Community details not found in registries. Please contact customer service'));
         $this->logger(
-          'grants_profile')->error('Error fetching community data. Error: %error', [
+          'grants_profile')
+          ->error('Error fetching community data. Error: %error', [
             '%error' => $e->getMessage(),
           ]
-        );
+                );
         $form['#disabled'] = TRUE;
         return $form;
       }

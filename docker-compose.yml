@@ -19,7 +19,7 @@ services:
       # To enable xdebug, run `export XDEBUG_ENABLE=true` before (re)starting your project.
       # Optionally, you can add this to your default environments variables to enable or disable
       # xdebug by default (like /etc/environments, ~/.bashrc, or ~/.zshrc).
-      XDEBUG_ENABLE: "${XDEBUG_ENABLE:-true}"
+      XDEBUG_ENABLE: "${XDEBUG_ENABLE:-false}"
       # DOCKERHOST: host.docker.internal
       # Use drush server to run functional tests so we don't have to care about
       # permission issues.
