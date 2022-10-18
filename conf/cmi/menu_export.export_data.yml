@@ -1,0 +1,360 @@
+21:
+  id:
+    value: '21'
+  uuid:
+    value: 9ed40eb1-765f-448a-b849-3e68ae98ebf8
+  revision_id:
+    value: '19'
+  langcode:
+    value: fi
+  bundle:
+    value: menu_link_content
+  revision_created:
+    value: '1661414499'
+  revision_user:
+    target_id: '0'
+  revision_log_message: false
+  enabled:
+    value: '1'
+  title:
+    value: 'Tietoa avustuksisista'
+  description: false
+  menu_name:
+    value: main
+  link:
+    uri: 'route:<nolink>'
+    title: ''
+    options:
+      attributes:
+        class: {  }
+  external:
+    value: '0'
+  rediscover:
+    value: '0'
+  weight:
+    value: '-46'
+  expanded:
+    value: '0'
+  parent: false
+  changed:
+    value: '1666088904'
+  default_langcode:
+    value: '1'
+  revision_default:
+    value: '1'
+  revision_translation_affected:
+    value: '1'
+  metatag: false
+  link_override:
+    uri: null
+    title: null
+    options: null
+  content_translation_source:
+    value: und
+  content_translation_outdated:
+    value: '0'
+  content_translation_uid:
+    target_id: '1'
+  content_translation_status:
+    value: '1'
+  content_translation_created:
+    value: '1661414499'
+22:
+  id:
+    value: '22'
+  uuid:
+    value: 57e47570-ffa4-457a-add1-c81cf87fa7c9
+  revision_id:
+    value: '20'
+  langcode:
+    value: fi
+  bundle:
+    value: menu_link_content
+  revision_created:
+    value: '1661414515'
+  revision_user:
+    target_id: '0'
+  revision_log_message: false
+  enabled:
+    value: '1'
+  title:
+    value: 'Ohjeita hakijalle'
+  description: false
+  menu_name:
+    value: main
+  link:
+    uri: 'route:<nolink>'
+    title: ''
+    options:
+      attributes:
+        class: {  }
+  external:
+    value: '0'
+  rediscover:
+    value: '0'
+  weight:
+    value: '-48'
+  expanded:
+    value: '0'
+  parent: false
+  changed:
+    value: '1666088904'
+  default_langcode:
+    value: '1'
+  revision_default:
+    value: '1'
+  revision_translation_affected:
+    value: '1'
+  metatag: false
+  link_override:
+    uri: null
+    title: null
+    options: null
+  content_translation_source:
+    value: und
+  content_translation_outdated:
+    value: '0'
+  content_translation_uid:
+    target_id: '1'
+  content_translation_status:
+    value: '1'
+  content_translation_created:
+    value: '1661414515'
+23:
+  id:
+    value: '23'
+  uuid:
+    value: fa651b2c-e219-487f-a3e8-380b7b684d1e
+  revision_id:
+    value: '21'
+  langcode:
+    value: fi
+  bundle:
+    value: menu_link_content
+  revision_created:
+    value: '1661414530'
+  revision_user:
+    target_id: '0'
+  revision_log_message: false
+  enabled:
+    value: '1'
+  title:
+    value: 'Oma asiointi'
+  description: false
+  menu_name:
+    value: main
+  link:
+    uri: 'internal:/oma-asiointi'
+    title: ''
+    options:
+      attributes:
+        class: {  }
+  external:
+    value: '0'
+  rediscover:
+    value: '1'
+  weight:
+    value: '-47'
+  expanded:
+    value: '0'
+  parent: false
+  changed:
+    value: '1666088904'
+  default_langcode:
+    value: '1'
+  revision_default:
+    value: '1'
+  revision_translation_affected:
+    value: '1'
+  metatag: false
+  link_override:
+    uri: null
+    title: null
+    options: null
+  content_translation_source:
+    value: und
+  content_translation_outdated:
+    value: '0'
+  content_translation_uid:
+    target_id: '1'
+  content_translation_status:
+    value: '1'
+  content_translation_created:
+    value: '1661414530'
+25:
+  id:
+    value: '25'
+  uuid:
+    value: a4453833-e798-4ba7-bf43-5fa22010be84
+  revision_id:
+    value: '23'
+  langcode:
+    value: fi
+  bundle:
+    value: menu_link_content
+  revision_created:
+    value: '1665751436'
+  revision_user: false
+  revision_log_message: false
+  enabled:
+    value: '1'
+  title:
+    value: 'Avustukset ja apurahat'
+  description: false
+  menu_name:
+    value: main
+  link:
+    uri: 'entity:node/17'
+    title: null
+    options: {  }
+  external:
+    value: '0'
+  rediscover:
+    value: '0'
+  weight:
+    value: '-49'
+  expanded:
+    value: '0'
+  parent: false
+  changed:
+    value: '1666088904'
+  default_langcode:
+    value: '1'
+  revision_default:
+    value: '1'
+  revision_translation_affected:
+    value: '1'
+  metatag: false
+  link_override:
+    uri: null
+    title: null
+    options: null
+  content_translation_source:
+    value: und
+  content_translation_outdated:
+    value: '0'
+  content_translation_uid:
+    target_id: '1'
+  content_translation_status:
+    value: '1'
+  content_translation_created:
+    value: '1665751436'
+26:
+  id:
+    value: '26'
+  uuid:
+    value: 321a4464-8d0f-4d19-9485-7018cc6da342
+  revision_id:
+    value: '24'
+  langcode:
+    value: fi
+  bundle:
+    value: menu_link_content
+  revision_created:
+    value: '1666076247'
+  revision_user: false
+  revision_log_message: false
+  enabled:
+    value: '1'
+  title:
+    value: Palvelut
+  description: false
+  menu_name:
+    value: main
+  link:
+    uri: 'route:<nolink>'
+    title: ''
+    options:
+      attributes:
+        class: {  }
+  external:
+    value: '0'
+  rediscover:
+    value: '0'
+  weight:
+    value: '-45'
+  expanded:
+    value: '0'
+  parent: false
+  changed:
+    value: '1666088904'
+  default_langcode:
+    value: '1'
+  revision_default:
+    value: '1'
+  revision_translation_affected:
+    value: '1'
+  metatag: false
+  link_override:
+    uri: null
+    title: null
+    options: null
+  content_translation_source:
+    value: und
+  content_translation_outdated:
+    value: '0'
+  content_translation_uid:
+    target_id: '1'
+  content_translation_status:
+    value: '1'
+  content_translation_created:
+    value: '1666076247'
+27:
+  id:
+    value: '27'
+  uuid:
+    value: 9cb39bf4-01d8-4094-b710-644ae19785bb
+  revision_id:
+    value: '25'
+  langcode:
+    value: fi
+  bundle:
+    value: menu_link_content
+  revision_created:
+    value: '1666076364'
+  revision_user: false
+  revision_log_message: false
+  enabled:
+    value: '1'
+  title:
+    value: 'Kaupunginhallitus, yleisavustushakemus'
+  description: false
+  menu_name:
+    value: main
+  link:
+    uri: 'entity:node/18'
+    title: null
+    options: {  }
+  external:
+    value: '0'
+  rediscover:
+    value: '0'
+  weight:
+    value: '0'
+  expanded:
+    value: '0'
+  parent:
+    value: 'menu_link_content:321a4464-8d0f-4d19-9485-7018cc6da342'
+  changed:
+    value: '1666076364'
+  default_langcode:
+    value: '1'
+  revision_default:
+    value: '1'
+  revision_translation_affected:
+    value: '1'
+  metatag: false
+  link_override:
+    uri: null
+    title: null
+    options: null
+  content_translation_source:
+    value: und
+  content_translation_outdated:
+    value: '0'
+  content_translation_uid:
+    target_id: '1'
+  content_translation_status:
+    value: '1'
+  content_translation_created:
+    value: '1666076364'
