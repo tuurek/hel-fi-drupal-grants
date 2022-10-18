@@ -495,7 +495,7 @@ class ApplicationHandler {
     if ($appParam == 'PROD') {
       return 'GRANTS-' . $typeCode . '-' . sprintf('%08d', $serial);
     }
-    return  'GRANTS-' . $appParam . '-' .$typeCode . '-' . sprintf('%08d', $serial);
+    return 'GRANTS-' . $appParam . '-' . $typeCode . '-' . sprintf('%08d', $serial);
   }
 
   /**

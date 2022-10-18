@@ -5,7 +5,112 @@
  * Module hooks.
  */
 
+use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\webform\Entity\Webform;
+
+/**
+ * Update 3rd party settings so that they can be saved to data.
+ *
+ * Does not accept date objects.
+ *
+ * @param array $form
+ *   Form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ */
+function grants_metadata__validate_third_party_settings(array &$form, FormStateInterface $form_state) {
+  // Get values from form to get 3rd party settings.
+  $formValues = $form_state->getValues();
+  /** @var \Drupal\Core\Datetime\DrupalDateTime $applicationOpen */
+  // Get application open time.
+  $applicationOpen = $formValues["third_party_settings"]["grants_metadata"]["applicationOpen"];
+  if ($applicationOpen != NULL) {
+    // Transform it to datetime value.
+    $formValues["third_party_settings"]["grants_metadata"]["applicationOpen"] = $applicationOpen->format('Y-m-d\TH:i:s');
+  }
+
+  $applicationClose = $formValues["third_party_settings"]["grants_metadata"]["applicationClose"];
+  if ($applicationClose != NULL) {
+    $formValues["third_party_settings"]["grants_metadata"]["applicationClose"] = $applicationClose->format('Y-m-d\TH:i:s');
+  }
+
+  // Set values back to form state.
+  $form_state->setValues($formValues);
+}
+
+/**
+ * Implements hook_webform_presave().
+ */
+function grants_metadata_webform_presave(Webform $entity) {
+
+  // Get third aprty settings.
+  $thirdPartySettings = $entity->getThirdPartySettings('grants_metadata');
+
+  // Get nodes that have attached this webform.
+  $entityQuery = \Drupal::entityQuery('node')
+    ->condition('type', 'service')
+    ->condition('field_webform', $entity->id());
+  $results = $entityQuery->execute();
+
+  // Get entity status.
+  $status = $entity->isOpen();
+  // Load nodes.
+  $servicePages = Node::loadMultiple($results);
+
+  foreach ($servicePages as $page) {
+    // Set application open boolean from form open status.
+    $page->set('field_application_open', $status);
+    // Applicant types.
+    if (!empty($thirdPartySettings["applicantTypes"])) {
+      $page->set('field_hakijatyyppi', $thirdPartySettings["applicantTypes"]);
+    }
+    // Type terms.
+    if (!empty($thirdPartySettings["applicationTypeTerms"])) {
+      $tids = array_values($thirdPartySettings["applicationTypeTerms"]);
+      $terms = Term::loadMultiple($tids);
+      $page->set('field_avustuslaji', $terms);
+    }
+    // If we have open time, assume that end time is added as well and
+    // use them as is.
+    if (!empty($thirdPartySettings["applicationOpen"])) {
+      $page->set('field_application_period',
+        [
+          'value' => $thirdPartySettings["applicationOpen"],
+          'end_value' => $thirdPartySettings["applicationClose"],
+        ]);
+    }
+    // If application is set to be continuous, mark it to node as well.
+    if ($thirdPartySettings["applicationContinuous"] == 1) {
+      $page->set('field_application_continuous', '1');
+    }
+    else {
+      // If not, set it false.
+      $page->set('field_application_continuous', '0');
+    }
+    // Set target group.
+    if (!empty($thirdPartySettings["applicationTargetGroup"])) {
+      $term = Term::load($thirdPartySettings["applicationTargetGroup"]);
+      $page->set('field_target_group', $term);
+    }
+    try {
+      // Save node.
+      $page->save();
+      \Drupal::messenger()
+        ->addStatus(t('Service page @nodetitle updated', ['@nodetitle' => $page->label()]));
+    }
+    catch (EntityStorageException $e) {
+      \Drupal::messenger()
+        ->addStatus(t('Service page @nodetitle update failed.', ['@nodetitle' => $page->label()]));
+      \Drupal::messenger()
+        ->addStatus(t('Service page @nodetitle updated', ['@nodetitle' => $page->label()]));
+      \Drupal::logger('grants_metadata')->error($e->getMessage());
+    }
+  }
+}
 
 /**
  * Alter form.
@@ -13,6 +118,9 @@ use Drupal\Core\Form\FormStateInterface;
 function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_id == 'webform_settings_form' || $form_id == 'webform_add_form' || $form_id == 'webform_duplicate_form') {
     $bundle = $form_state->getFormObject()->getEntity();
+
+    $form["#validate"][] = 'grants_metadata__validate_third_party_settings';
+
     // Because hidden by default.
     $form["third_party_settings"]["#access"] = TRUE;
     $form['third_party_settings']['#tree'] = TRUE;
@@ -52,9 +160,11 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
     ];
 
     // Load the taxonomy terms.
-    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
-      'vid' => 'avustuslaji',
-    ]);
+    $terms = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'avustuslaji',
+      ]);
     // Build options list.
     $termOptions = [];
     foreach ($terms as $term) {
@@ -66,28 +176,62 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
       '#title' => t('Application Type terms'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeTerms'),
       '#options' => $termOptions,
+      '#multiple' => TRUE,
       '#required' => TRUE,
     ];
+
+    // Load the taxonomy terms.
+    $terms = \Drupal::entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->loadByProperties([
+        'vid' => 'target_group',
+      ]);
+    // Build options list.
+    $termOptions = [];
+    foreach ($terms as $term) {
+      $termOptions[$term->id()] = $term->label();
+    }
+
+    $form['third_party_settings']['grants_metadata']['applicationTargetGroup'] = [
+      '#type' => 'select',
+      '#title' => t('Application target group'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTargetGroup'),
+      '#options' => $termOptions,
+      '#required' => TRUE,
+    ];
+
+    $openValue = $bundle->getThirdPartySetting('grants_metadata', 'applicationOpen');
+    if ($openValue != NULL) {
+      $applicationOpenDate = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $openValue, 'Europe/Helsinki');
+    }
+    else {
+      $applicationOpenDate = '';
+    }
 
     $form['third_party_settings']['grants_metadata']['applicationOpen'] = [
       '#type' => 'datetime',
       '#title' => t('Application opens'),
-      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationOpen'),
-//      '#required' => TRUE,
+      '#default_value' => $applicationOpenDate,
     ];
+
+    $closeValue = $bundle->getThirdPartySetting('grants_metadata', 'applicationClose');
+    if ($closeValue != NULL) {
+      $applicationCloseDate = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $closeValue, 'Europe/Helsinki');
+    }
+    else {
+      $applicationCloseDate = '';
+    }
+
     $form['third_party_settings']['grants_metadata']['applicationClose'] = [
       '#type' => 'datetime',
       '#title' => t('Application closes'),
-      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationClose'),
-//      '#required' => TRUE,
+      '#default_value' => $applicationCloseDate,
     ];
     $form['third_party_settings']['grants_metadata']['applicationContinuous'] = [
       '#type' => 'checkbox',
       '#title' => t('Is application continuous'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationContinuous'),
     ];
-
-
   }
 }
 
