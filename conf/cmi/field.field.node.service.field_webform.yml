@@ -1,19 +1,19 @@
-uuid: c8190aec-3486-4a9d-a99a-7305951e6124
+uuid: 20514d59-839f-4499-99ab-b17d4df10477
 langcode: fi
 status: true
 dependencies:
   config:
-    - field.storage.node.field_lomakeupotus
-    - node.type.form_page
+    - field.storage.node.field_webform
+    - node.type.service
   module:
     - webform
-id: node.form_page.field_lomakeupotus
-field_name: field_lomakeupotus
+id: node.service.field_webform
+field_name: field_webform
 entity_type: node
-bundle: form_page
-label: Lomakeupotus
+bundle: service
+label: Webform
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''

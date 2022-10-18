@@ -1,0 +1,23 @@
+uuid: ddf60ca1-b3c1-4ae0-81ae-4c7d692b8377
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_continuous
+    - node.type.form_page
+id: node.form_page.field_application_continuous
+field_name: field_application_continuous
+entity_type: node
+bundle: form_page
+label: 'Application continuous'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

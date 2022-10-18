@@ -1,0 +1,25 @@
+uuid: 8733a784-04db-4e92-9fad-eb50daf73bb8
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_asiointipalvelut
+    - paragraphs.paragraphs_type.asiointipalvelu
+id: paragraph.asiointipalvelu.field_asiointipalvelut
+field_name: field_asiointipalvelut
+entity_type: paragraph
+bundle: asiointipalvelu
+label: Asiointipalvelut
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: tpr_errand_service_list
+      display_name: entity_reference_1
+      arguments: {  }
+field_type: entity_reference

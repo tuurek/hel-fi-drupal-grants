@@ -1,17 +1,17 @@
-uuid: 3e800301-68a0-4fea-8039-8454b8a0ce48
+uuid: 58d15f38-8a8f-4301-9b5a-d8d90722bc4d
 langcode: fi
 status: true
 dependencies:
   module:
+    - datetime_range
     - node
-    - webform
-id: node.field_lomakeupotus
-field_name: field_lomakeupotus
+id: node.field_application_period
+field_name: field_application_period
 entity_type: node
-type: webform
+type: daterange
 settings:
-  target_type: webform
-module: webform
+  datetime_type: datetime
+module: datetime_range
 locked: false
 cardinality: 1
 translatable: true

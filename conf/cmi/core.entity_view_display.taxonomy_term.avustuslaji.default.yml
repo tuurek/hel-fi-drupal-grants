@@ -3,8 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.avustuslaji.field_avustuslajikoodi
-    - field.field.taxonomy_term.avustuslaji.field_avustuslajiumero
     - taxonomy.vocabulary.avustuslaji
   module:
     - text
@@ -19,23 +17,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 0
-    region: content
-  field_avustuslajikoodi:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_avustuslajiumero:
-    type: number_integer
-    label: above
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    weight: 2
     region: content
 hidden:
   langcode: true

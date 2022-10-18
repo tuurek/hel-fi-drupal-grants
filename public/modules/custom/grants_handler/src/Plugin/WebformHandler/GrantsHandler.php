@@ -365,6 +365,7 @@ class GrantsHandler extends WebformHandlerBase {
 
   }
 
+
   /**
    * {@inheritdoc}
    */

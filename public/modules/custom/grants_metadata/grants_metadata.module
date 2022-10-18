@@ -37,6 +37,57 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeID'),
       '#required' => TRUE,
     ];
+
+    $applicantTypes = [
+      'registered_community' => 'Rekisteröity yhdistys',
+      'unregistered_community' => 'Rekisteröimätön yhdistys',
+      'private_person' => 'Yksityishenkilö',
+    ];
+    $form['third_party_settings']['grants_metadata']['applicantTypes'] = [
+      '#type' => 'select',
+      '#title' => t('Applicant types'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicantTypes'),
+      '#options' => $applicantTypes,
+      '#required' => TRUE,
+    ];
+
+    // Load the taxonomy terms.
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'vid' => 'avustuslaji',
+    ]);
+    // Build options list.
+    $termOptions = [];
+    foreach ($terms as $term) {
+      $termOptions[$term->id()] = $term->label();
+    }
+
+    $form['third_party_settings']['grants_metadata']['applicationTypeTerms'] = [
+      '#type' => 'select',
+      '#title' => t('Application Type terms'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeTerms'),
+      '#options' => $termOptions,
+      '#required' => TRUE,
+    ];
+
+    $form['third_party_settings']['grants_metadata']['applicationOpen'] = [
+      '#type' => 'datetime',
+      '#title' => t('Application opens'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationOpen'),
+//      '#required' => TRUE,
+    ];
+    $form['third_party_settings']['grants_metadata']['applicationClose'] = [
+      '#type' => 'datetime',
+      '#title' => t('Application closes'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationClose'),
+//      '#required' => TRUE,
+    ];
+    $form['third_party_settings']['grants_metadata']['applicationContinuous'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Is application continuous'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationContinuous'),
+    ];
+
+
   }
 }
 

@@ -1,0 +1,10 @@
+uuid: 1cd69323-f5ce-49c9-92ff-93ab38301d23
+langcode: fi
+status: true
+dependencies: {  }
+id: services_sitemap
+label: 'Services sitemap'
+description: ''
+sitemap_generator: index
+url_generators:
+  entity: entity

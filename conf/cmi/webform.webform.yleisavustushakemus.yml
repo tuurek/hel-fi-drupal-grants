@@ -9,6 +9,11 @@ third_party_settings:
   grants_metadata:
     applicationType: ECONOMICGRANTAPPLICATION
     applicationTypeID: '29'
+    applicantTypes: registered_community
+    applicationTypeTerms: '2'
+    applicationOpen: null
+    applicationClose: null
+    applicationContinuous: 1
 weight: 0
 open: null
 close: null
@@ -16,7 +21,7 @@ uid: 1
 template: false
 archive: false
 id: yleisavustushakemus
-title: Yleisavustushakemus
+title: 'Kaupunginhallitus, yleisavustushakemus'
 description: MVP-lomake
 category: ''
 elements: |-
@@ -698,8 +703,8 @@ settings:
   ajax_progress_type: ''
   ajax_effect: ''
   ajax_speed: null
-  page: false
-  page_submit_path: ''
+  page: true
+  page_submit_path: /hakemus/yleisavustushakemus
   page_confirm_path: ''
   page_theme_name: ''
   form_title: source_entity_webform

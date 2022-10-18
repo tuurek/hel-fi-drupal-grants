@@ -1,0 +1,8 @@
+uuid: 6431d926-e55d-444d-adf9-583b6ea17784
+langcode: fi
+status: true
+dependencies: {  }
+name: 'Target group'
+vid: target_group
+description: 'Target group of the application'
+weight: 0

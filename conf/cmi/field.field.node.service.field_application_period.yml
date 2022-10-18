@@ -1,0 +1,21 @@
+uuid: 6c19f6ca-746b-445d-9adc-38849fc67197
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_period
+    - node.type.service
+  module:
+    - datetime_range
+id: node.service.field_application_period
+field_name: field_application_period
+entity_type: node
+bundle: service
+label: 'Application period'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

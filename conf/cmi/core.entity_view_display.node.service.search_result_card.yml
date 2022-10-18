@@ -1,0 +1,89 @@
+uuid: f2e25376-a0c3-415f-a2af-ba712af65dfb
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result_card
+    - field.field.node.service.field_application_continuous
+    - field.field.node.service.field_application_open
+    - field.field.node.service.field_application_period
+    - field.field.node.service.field_avustuslaji
+    - field.field.node.service.field_content
+    - field.field.node.service.field_errand_service
+    - field.field.node.service.field_hakijatyyppi
+    - field.field.node.service.field_has_hero
+    - field.field.node.service.field_hero
+    - field.field.node.service.field_liftup_image
+    - field.field.node.service.field_lower_content
+    - field.field.node.service.field_metatags
+    - field.field.node.service.field_service_channel
+    - field.field.node.service.field_target_group
+    - field.field.node.service.field_webform
+    - node.type.service
+  module:
+    - entity_reference_revisions
+    - metatag
+    - options
+    - user
+id: node.service.search_result_card
+targetEntityType: node
+bundle: service
+mode: search_result_card
+content:
+  field_avustuslaji:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_errand_service:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_hakijatyyppi:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_metatags:
+    type: metatag_empty_formatter
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_service_channel:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  field_application_continuous: true
+  field_application_open: true
+  field_application_period: true
+  field_content: true
+  field_has_hero: true
+  field_hero: true
+  field_liftup_image: true
+  field_lower_content: true
+  field_target_group: true
+  field_webform: true
+  langcode: true
+  toc_enabled: true

@@ -1,0 +1,25 @@
+uuid: 4fac0174-7a88-430a-9265-1000ef068ff4
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.asiointipalvelu.field_asiointipalvelut
+    - paragraphs.paragraphs_type.asiointipalvelu
+id: paragraph.asiointipalvelu.default
+targetEntityType: paragraph
+bundle: asiointipalvelu
+mode: default
+content:
+  field_asiointipalvelut:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

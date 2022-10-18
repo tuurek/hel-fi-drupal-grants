@@ -1,0 +1,15 @@
+uuid: 5bcb513b-0535-4c6f-aa9e-6d618ab9549c
+langcode: fi
+status: true
+dependencies:
+  module:
+    - paragraphs_library
+third_party_settings:
+  paragraphs_library:
+    allow_library_conversion: true
+id: asiointipalvelu
+label: Asiointipalvelu
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

@@ -135,6 +135,9 @@ class GrantsHandlerSubmissionStorage extends WebformSubmissionStorage {
             );
             /** @var \Drupal\helfi_atv\AtvDocument $document */
             $document = reset($results);
+            if (!$document) {
+              throw new \Exception('Submission data load failed.');
+            }
             $appData = $this->atvSchema->documentContentToTypedData(
               $document->getContent(),
               $dataDefinition,

@@ -22,7 +22,9 @@ module:
   content_lock_timeout: 0
   crop: 0
   ctools: 0
+  date_range_formatter: 0
   datetime: 0
+  datetime_range: 0
   dblog: 0
   default_content: 0
   diff: 0
@@ -86,7 +88,6 @@ module:
   media_entity_soundcloud: 0
   media_library: 0
   menu_block_current_language: 0
-  menu_export: 0
   menu_link_attributes: 0
   menu_link_content: 0
   menu_ui: 0

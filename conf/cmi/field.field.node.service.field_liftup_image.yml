@@ -1,0 +1,31 @@
+uuid: f1d3b0f9-b090-40fb-9839-65ce46715fe7
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_liftup_image
+    - media.type.image
+    - node.type.service
+_core:
+  default_config_hash: F6wBhij8loESl_c6bpPWHJSiCOWOkwkSj4uEiolmzdY
+id: node.service.field_liftup_image
+field_name: field_liftup_image
+entity_type: node
+bundle: service
+label: 'Liftup image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference
