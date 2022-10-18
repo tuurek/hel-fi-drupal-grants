@@ -175,7 +175,8 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
   foreach ($variables["form"]["bankAccountWrapper"]["bankAccounts"] as $key => $value) {
     if (!str_starts_with($key, '#')) {
       if (isset($variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"])) {
-        $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"]["#markup"] = str_replace('{bank_account_delta}', $value["bank_account_id"]["#value"], $value["deleteButton"]["#markup"]);
+        $link = $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"]["#markup"];
+        $variables["form"]["bankAccountWrapper"]["bankAccounts"][$key]["deleteButton"]["#markup"] = str_replace('%7Bbank_account_delta%7D', $value["bank_account_id"]["#value"], $link->getGeneratedLink());
       }
 
       // If bank account id is no set, a new account.
@@ -198,7 +199,10 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
   foreach ($variables["form"]["addressWrapper"]["addresses"] as $key => $value) {
     if (!str_starts_with($key, '#')) {
       if (isset($variables["form"]["addressWrapper"]["addresses"][$key]["deleteButton"])) {
-        $variables["form"]["addressWrapper"]["addresses"][$key]["deleteButton"]["#markup"] = str_replace('{address_delta}', $value["address_id"]["#value"], $value["deleteButton"]["#markup"]);
+
+        /** @var \Drupal\Core\GeneratedLink $link */
+        $link = $variables["form"]["addressWrapper"]["addresses"][$key]["deleteButton"]["#markup"];
+        $variables["form"]["addressWrapper"]["addresses"][$key]["deleteButton"]["#markup"] = str_replace('%7Baddress_delta%7D', $value["address_id"]["#value"], $link->getGeneratedLink());
       }
     }
   }
@@ -206,7 +210,9 @@ function grants_profile_preprocess_own_profile_form(&$variables) {
   foreach ($variables["form"]["officialWrapper"]["officials"] as $key => $value) {
     if (!str_starts_with($key, '#')) {
       if (isset($variables["form"]["officialWrapper"]["officials"][$key]["deleteButton"])) {
-        $variables["form"]["officialWrapper"]["officials"][$key]["deleteButton"]["#markup"] = str_replace('{official_delta}', $value["official_id"]["#value"], $value["deleteButton"]["#markup"]);
+        /** @var \Drupal\Core\GeneratedLink $link */
+        $link = $variables["form"]["officialWrapper"]["officials"][$key]["deleteButton"]["#markup"];
+        $variables["form"]["officialWrapper"]["officials"][$key]["deleteButton"]["#markup"] = str_replace('%7Bofficial_delta%7D', $value["official_id"]["#value"], $link->getGeneratedLink());
       }
     }
   }

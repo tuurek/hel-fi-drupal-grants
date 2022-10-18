@@ -4,6 +4,7 @@ namespace Drupal\grants_profile\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\TypedData\TypedDataManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
@@ -165,6 +166,10 @@ class GrantsProfileForm extends FormBase {
       $addressValues[$delta]['address_id'] = $delta;
     }
 
+    $deleteAddressLink = Link::createFromRoute(t('Delete'), 'grants_profile.company_addresses.remove', [
+      'address_id' => '{address_delta}',
+    ]);
+
     $form['addressWrapper']['addresses'] = [
       '#type' => 'multivalue',
       '#title' => $this->t('Addresses'),
@@ -192,7 +197,7 @@ class GrantsProfileForm extends FormBase {
       // Address delta is replaced with alter hook in module file.
       'deleteButton' => [
         '#type' => 'markup',
-        '#markup' => '<a href="/oma-asiointi/hakuprofiili/address/{address_delta}/delete">'.t('Delete').'</a>',
+        '#markup' => $deleteAddressLink->toString(),
       ],
       '#default_value' => $addressValues,
     ];
@@ -212,6 +217,10 @@ class GrantsProfileForm extends FormBase {
       $officialValues[$delta] = $official;
       $officialValues[$delta]['official_id'] = $delta;
     }
+
+    $deleteOfficialLink = Link::createFromRoute(t('Delete'), 'grants_profile.application_official.remove', [
+      'official_id' => '{official_delta}',
+    ]);
 
     $form['officialWrapper']['officials'] = [
       '#type' => 'multivalue',
@@ -238,7 +247,7 @@ class GrantsProfileForm extends FormBase {
       ],
       'deleteButton' => [
         '#type' => 'markup',
-        '#markup' => '<a href="/oma-asiointi/hakuprofiili/application-officials/{official_delta}/delete">'.t('Delete').'/a>',
+        '#markup' => $deleteOfficialLink->toString(),
       ],
       '#default_value' => $officialValues,
     ];
@@ -255,6 +264,10 @@ class GrantsProfileForm extends FormBase {
       $bankAccountValues[$k]['confirmationFileName'] = $v['confirmationFile'];
       $bankAccountValues[$k]['bank_account_id'] = $k;
     }
+
+    $deleteBankAccountLink = Link::createFromRoute(t('Delete'), 'grants_profile.bank_account.remove', [
+      'bank_account_id' => '{bank_account_delta}',
+    ]);
 
     $form['bankAccountWrapper']['bankAccounts'] = [
       '#type' => 'multivalue',
@@ -288,7 +301,7 @@ class GrantsProfileForm extends FormBase {
       ],
       'deleteButton' => [
         '#type' => 'markup',
-        '#markup' => '<a href="/oma-asiointi/hakuprofiili/bank-accounts/{bank_account_delta}/delete">Poista</a>',
+        '#markup' => $deleteBankAccountLink->toString(),
       ],
       '#default_value' => $bankAccountValues,
     ];

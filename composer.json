@@ -155,6 +155,8 @@
         ],
         "phpcs": "vendor/bin/phpcs public/modules/custom --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
         "phpcbf": "vendor/bin/phpcbf public/modules/custom --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
+        "phpcs-theme": "vendor/bin/phpcs public/themes/custom --standard=Drupal --ignore=*.js,*.css --extensions=php,theme",
+        "phpcbf-theme": "vendor/bin/phpcbf public/themes/custom --standard=Drupal --ignore=*.js,*.css --extensions=php,theme",
         "phpcs-atv": "vendor/bin/phpcs public/modules/contrib/helfi_atv --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
         "phpcbf-atv": "vendor/bin/phpcbf public/modules/contrib/helfi_atv --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
         "phpcs-hp": "vendor/bin/phpcs public/modules/contrib/helfi_helsinki_profiili --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
