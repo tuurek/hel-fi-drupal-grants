@@ -31,4 +31,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_content_cards_content: true
   status: true

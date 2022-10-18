@@ -10,10 +10,12 @@ third_party_settings:
     applicationType: ECONOMICGRANTAPPLICATION
     applicationTypeID: '29'
     applicantTypes: registered_community
-    applicationTypeTerms: '2'
-    applicationOpen: null
-    applicationClose: null
-    applicationContinuous: 1
+    applicationTypeTerms:
+      1: '1'
+    applicationOpen: '2022-10-03T11:08:26'
+    applicationClose: '2022-12-19T11:19:00'
+    applicationContinuous: 0
+    applicationTargetGroup: '2'
 weight: 0
 open: null
 close: null

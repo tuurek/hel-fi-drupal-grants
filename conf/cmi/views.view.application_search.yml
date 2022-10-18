@@ -1,6 +1,6 @@
 uuid: d708ebee-16e4-480d-8692-c578ad034c88
 langcode: fi
-status: false
+status: true
 dependencies:
   config:
     - field.storage.node.field_application_continuous
