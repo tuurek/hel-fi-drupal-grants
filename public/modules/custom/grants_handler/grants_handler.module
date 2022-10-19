@@ -327,18 +327,24 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
           $formValues['community_city'] . ', ' .
           $formValues['community_country'];
 
-        $defaultDelta = '0';
+        // set initial defaultvalue to false to avoid unwanted selections
+        // in unfilled form
+        $defaultDelta = FALSE;
 
+        // loop addresses to figure out which address is actually selected.
         foreach ($profileData['addresses'] as $delta => $address) {
           $deltaString = (string) $delta;
           $optionSelection = $address['street'] . ', ' . $address['postCode'] .
             ', ' . $address['city'] . ', ' . $address['country'];
 
+          // if this value is same than the one on form, then set default value
           if ($formSelection == $optionSelection) {
             $defaultDelta = $deltaString;
           }
         }
-        $element["#default_value"]["community_address_select"] = $defaultDelta;
+        if ($defaultDelta) {
+          $element["#default_value"]["community_address_select"] = $defaultDelta;
+        }
       }
     }
 
@@ -395,7 +401,7 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
 function _grants_handler_imported_handler(
   mixed &$array,
   mixed $value,
-  bool $show_checkmark = TRUE) {
+  bool  $show_checkmark = TRUE) {
 
   if (!is_array($array)) {
     return;
@@ -435,7 +441,7 @@ function _grants_handler_imported_handler(
  * @todo Must be fixed with proper template & things.
  */
 function _grants_handler_missing_data(
-  array &$element,
+  array  &$element,
   string $str1 = 'Field is missing.',
   string $str2 = 'Go to grants profile',
   string $str3 = 'to fill out missing data.') {
@@ -455,7 +461,8 @@ function _grants_handler_missing_data(
         <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
         <span>' . $str1 . '</span>
       </div>
-      <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')->toString() . ' ' . $str3 . '</div>
+      <div class="hds-notification__body">' . Link::createFromRoute($str2, 'grants_profile.show')
+      ->toString() . ' ' . $str3 . '</div>
     </div>
   </section>
   ';
@@ -937,8 +944,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
         $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
       }
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
   }
 
   $deleteAppUrl = Url::fromRoute('grants_handler.clear-navigations', [
@@ -1002,8 +1008,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
           '%number' => $submissionData["application_number"],
         ]);
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['statusString'] = '';
   }
 
@@ -1033,8 +1038,7 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
           '%appno' => $submissionData["application_number"],
         ]);
     }
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['statusStringHumanReadable'] = '';
     $variables['statusString'] = '';
   }
@@ -1061,8 +1065,7 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     $submissionObject = $variables['submissionObject'];
     $submissionData = $submissionObject->getData();
     $variables['applicationTimestamp'] = $submissionData['form_timestamp_created'];
-  }
-  catch (\Exception $e) {
+  } catch (\Exception $e) {
     $variables['applicationTimestamp'] = '';
   }
 }
@@ -1194,13 +1197,13 @@ function grants_handler_preprocess_webform_submission_information(array &$variab
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
   $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
-  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
+      ->getRouteName();
 
   try {
     $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
     $variables['applicationSent'] = $dt->format('Y-m-d H:i');
-  }
-  catch (Exception $e) {
+  } catch (Exception $e) {
   }
 
   $variables['history'] = [
