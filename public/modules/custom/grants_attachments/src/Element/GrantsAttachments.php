@@ -279,6 +279,10 @@ class GrantsAttachments extends WebformCompositeBase {
       $webformKey,
       'attachmentName',
     ];
+    $attachmenIsNewFileValue = [
+      $webformKey,
+      'attachmentIsNew',
+    ];
 
     $application_number = $webformData['application_number'];
 
@@ -303,6 +307,7 @@ class GrantsAttachments extends WebformCompositeBase {
       $form_state->setValue($anotherFileValue, '0');
       $form_state->setValue($nameFileValue, $file->getFilename());
       $form_state->setValue($attachmenNameFileValue, $file->getFilename());
+      $form_state->setValue($attachmenIsNewFileValue, TRUE);
     }
     catch (\Exception $e) {
       // Set error to form.
