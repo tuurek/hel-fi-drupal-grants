@@ -501,7 +501,9 @@ class AttachmentHandler {
         $fileArray = [
           'description' => t('Confirmation for account @accountNumber', ['@accountNumber' => $selectedAccount["bankAccount"]])->render(),
           'fileName' => $selectedAccount["confirmationFile"],
-          'isNewAttachment' => FALSE,
+          // IsNewAttachment controls upload to Avus2.
+          // If this is false, file will not go to Avus2.
+          'isNewAttachment' => TRUE,
           'fileType' => 6,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
@@ -535,6 +537,8 @@ class AttachmentHandler {
         $fileArray = [
           'description' => t('Confirmation for account @accountNumber', ['@accountNumber' => $selectedAccount["bankAccount"]])->render(),
           'fileName' => $selectedAccount["confirmationFile"],
+          // Since we're not adding/changing bank account, set this to false so
+          // the file is not fetched again.
           'isNewAttachment' => FALSE,
           'fileType' => 6,
           'isDeliveredLater' => FALSE,
@@ -640,7 +644,16 @@ class AttachmentHandler {
           $retval['isIncludedInOtherFile'] = $field['isIncludedInOtherFile'] === "1";
         }
       }
-      if ($field['fileStatus'] === 'uploaded') {
+      // If file is just uploaded, then we need to setup like this.
+      elseif ($field['fileStatus'] == 'justUploaded') {
+        if (isset($field['attachmentName'])) {
+          $retval['fileName'] = $field["attachmentName"];
+        }
+        $retval['isDeliveredLater'] = FALSE;
+        $retval['isIncludedInOtherFile'] = FALSE;
+        $retval['isNewAttachment'] = TRUE;
+      }
+      elseif ($field['fileStatus'] == 'uploaded') {
         if (isset($field['attachmentName'])) {
           $retval['fileName'] = $field["attachmentName"];
         }
@@ -648,12 +661,12 @@ class AttachmentHandler {
         $retval['isIncludedInOtherFile'] = FALSE;
         $retval['isNewAttachment'] = FALSE;
       }
-      if ($field['fileStatus'] === 'otherFile') {
+      elseif ($field['fileStatus'] == 'otherFile') {
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = TRUE;
         $retval['isNewAttachment'] = FALSE;
       }
-      if ($field['fileStatus'] == 'deliveredLater') {
+      elseif ($field['fileStatus'] == 'deliveredLater') {
         if ($field['attachmentName']) {
           $retval['fileName'] = $field["attachmentName"];
         }
@@ -676,11 +689,13 @@ class AttachmentHandler {
 
       if (isset($field["integrationID"]) && $field["integrationID"] !== "") {
         $retval['integrationID'] = $field["integrationID"];
-        $retval['isNewAttachment'] = FALSE;
+        // $retval['isNewAttachment'] = FALSE;
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
       }
     }
+    $d = 'asdf';
+
     return [
       'attachment' => $retval,
       'event' => $event,

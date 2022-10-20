@@ -205,10 +205,10 @@ class GrantsAttachments extends WebformCompositeBase {
 
     if (isset($value["integrationID"]) && !empty($value["integrationID"])) {
       // Add filename if it has been uploaded earlier.
-      if (isset($value["fileName"]) && !empty($value["fileName"])) {
+      if (isset($value["fileName"]) && !empty($value["fileName"]) && !in_array($value["fileName"], $lines)) {
         $lines[] = $value["fileName"];
       }
-      elseif (isset($value["attachmentName"]) && !empty($value["attachmentName"])) {
+      elseif (isset($value["attachmentName"]) && !empty($value["attachmentName"]) && !in_array($value["attachmentName"], $lines)) {
         $lines[] = $value["attachmentName"];
       }
     }
@@ -237,6 +237,11 @@ class GrantsAttachments extends WebformCompositeBase {
         $lines[] = '<span class="upload-ok-icon">Upload OK</span>';
       }
       elseif (isset($value["fileName"]) && in_array($value["fileName"], $attachmentEvents["event_targets"])) {
+        $lines[] = '<span class="upload-ok-icon">Upload OK</span>';
+      }
+      // If we have integrationID & status is justuploaded then we know
+      // upload was fine.
+      elseif (isset($value["integrationID"]) && $value['fileStatus'] == 'justUploaded') {
         $lines[] = '<span class="upload-ok-icon">Upload OK</span>';
       }
       else {
