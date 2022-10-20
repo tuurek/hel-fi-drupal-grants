@@ -1,0 +1,18 @@
+#edit-field-category-target-id {
+    display: flex;
+  .hds-radio-button:is(:first-of-type) {
+    margin-top: var(--spacing-2-xs);
+  }
+  .hds-radio-button .hds-radio-button__input:checked + .hds-radio-button__label {
+    background: var(--color-black);
+    color: var(--color-white);
+    border-radius: var(--spacing-m);
+    padding: var(--spacing-xs) var(--spacing-m);
+  }
+  .hds-radio-button__label {
+    padding: var(--spacing-xs) var(--spacing-m);
+    &:before, &:after {
+      display: none;
+    }
+  }
+}

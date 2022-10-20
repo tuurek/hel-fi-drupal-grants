@@ -12,7 +12,7 @@
         "cweagans/composer-patches": "^1.6.7",
         "druidfi/omen": "^0.2.0",
         "drupal/api_tools": "^1.0",
-        "drupal/better_exposed_filters": "^5.2",
+        "drupal/better_exposed_filters": "^6.0",
         "drupal/config_filter": "^2.2",
         "drupal/config_ignore": "^2.3",
         "drupal/content_access": "^1.0@alpha",
@@ -52,8 +52,8 @@
         "drupal/webform_views": "^5.0@beta",
         "drush/drush": "^10.4 || ^11",
         "globalcitizen/php-iban": "^4.1",
-        "ramsey/uuid": "^4.3",
-        "league/uri": "^6.7"
+        "league/uri": "^6.7",
+        "ramsey/uuid": "^4.3"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.7",

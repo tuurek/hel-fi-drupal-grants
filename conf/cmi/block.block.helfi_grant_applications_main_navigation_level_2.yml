@@ -13,8 +13,8 @@ _core:
   default_config_hash: zS9zgTlcanrv75vk0WibXcekGUttnN4EwP1pwFdTAcM
 id: helfi_grant_applications_main_navigation_level_2
 theme: helfi_grant_applications
-region: before_footer
-weight: 0
+region: sidebar_first
+weight: -11
 provider: null
 plugin: 'menu_block_current_language:main'
 settings:
@@ -22,7 +22,7 @@ settings:
   label: 'Main navigation (Level 2 ->)'
   label_display: '0'
   provider: menu_block_current_language
-  level: 2
+  level: 1
   expand_all_items: true
   depth: 0
   translation_providers:
@@ -35,6 +35,4 @@ visibility:
     negate: true
     context_mapping:
       node: '@node.node_route_context:node'
-    bundles:
-      article: article
-      landing_page: landing_page
+    bundles: {  }
