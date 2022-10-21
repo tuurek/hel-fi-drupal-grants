@@ -865,6 +865,7 @@ class ApplicationHandler {
    * @throws \GuzzleHttp\Exception\GuzzleException
    * @throws \Drupal\Core\TempStore\TempStoreException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Exception
    */
   public function handleApplicationUploadToAtv(
     TypedDataInterface $applicationData,

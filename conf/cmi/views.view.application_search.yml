@@ -519,8 +519,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: webform_entity_reference_url
-          settings: {  }
+          type: webform_entity_reference_link
+          settings:
+            label: 'Go to [webform:title] webform'
+            dialog: ''
+            attributes: {  }
           group_column: ''
           group_columns: {  }
           group_rows: true
