@@ -23,7 +23,7 @@ uid: 1
 template: false
 archive: false
 id: yleisavustushakemus
-title: Kaupunginhallituksen yleisavustushakemus
+title: 'Kaupunginhallituksen yleisavustushakemus'
 description: MVP-lomake
 category: ''
 elements: |-
