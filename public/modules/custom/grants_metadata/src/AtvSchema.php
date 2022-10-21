@@ -65,10 +65,13 @@ class AtvSchema {
    */
   public function setSchema(string $schemaPath) {
 
-    $jsonString = file_get_contents($schemaPath);
-    $jsonStructure = Json::decode($jsonString);
+    if ($schemaPath != '') {
+      $jsonString = file_get_contents($schemaPath);
+      $jsonStructure = Json::decode($jsonString);
 
-    $this->structure = $jsonStructure;
+      $this->structure = $jsonStructure;
+    }
+
   }
 
   /**
