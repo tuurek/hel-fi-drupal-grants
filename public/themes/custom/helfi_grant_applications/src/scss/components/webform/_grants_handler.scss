@@ -1,3 +1,7 @@
+.form-item-application-number, .form-item-status, .form-item-applicant-type {
+  display: none;
+
+}
 .grants-handler {
   &__completion {
     padding: var(--spacing-layout-l) var(--spacing-layout-2-xl);

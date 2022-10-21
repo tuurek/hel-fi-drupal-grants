@@ -23,7 +23,7 @@ uid: 1
 template: false
 archive: false
 id: yleisavustushakemus
-title: 'Kaupunginhallitus, yleisavustushakemus'
+title: Kaupunginhallituksen yleisavustushakemus
 description: MVP-lomake
 category: ''
 elements: |-
@@ -33,11 +33,11 @@ elements: |-
     '#prev_button_label': '< Edellinen'
     '#next_button_label': 'Seuraava >'
     application_number:
-      '#type': textfield
-      '#title': 'Application Number'
+      '#type': hidden
+      '#title': 'Hakemusnumero'
       '#disabled': true
     status:
-      '#type': textfield
+      '#type': hidden
       '#title': 'Hakemuksen tila'
       '#readonly': true
     yhteiso_jolle_haetaan_avustusta:
@@ -48,7 +48,7 @@ elements: |-
           - grants-profile--imported-section
       applicant_type:
         '#type': hidden
-        '#title': 'Applicant TYPE'
+        '#title': 'Hakijan tyyppi'
       community_official_name:
         '#type': textfield
         '#title': 'Yhteisön nimi'
@@ -800,7 +800,7 @@ settings:
   draft_pending_single_message: ''
   draft_pending_multiple_message: ''
   confirmation_type: none
-  confirmation_url: 'https://hel-fi-form-tool.docker.so/fi/kiitos-lomakkeen-tayttamisesta'
+  confirmation_url: ''
   confirmation_title: ''
   confirmation_message: ''
   confirmation_attributes: {  }

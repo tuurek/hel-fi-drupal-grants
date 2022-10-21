@@ -327,18 +327,24 @@ function grants_handler_webform_element_alter(array &$element, FormStateInterfac
           $formValues['community_city'] . ', ' .
           $formValues['community_country'];
 
-        $defaultDelta = '0';
+        // Set initial defaultvalue to false to avoid unwanted selections
+        // in unfilled form.
+        $defaultDelta = FALSE;
 
+        // Loop addresses to figure out which address is actually selected.
         foreach ($profileData['addresses'] as $delta => $address) {
           $deltaString = (string) $delta;
           $optionSelection = $address['street'] . ', ' . $address['postCode'] .
             ', ' . $address['city'] . ', ' . $address['country'];
 
+          // If this value is same than the one on form, then set default value
           if ($formSelection == $optionSelection) {
             $defaultDelta = $deltaString;
           }
         }
-        $element["#default_value"]["community_address_select"] = $defaultDelta;
+        if ($defaultDelta) {
+          $element["#default_value"]["community_address_select"] = $defaultDelta;
+        }
       }
     }
 

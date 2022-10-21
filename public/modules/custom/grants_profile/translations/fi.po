@@ -19,6 +19,9 @@ msgstr "Yhteisön tiedot"
 msgid "Community information"
 msgstr "Yhteisön tiedot"
 
+msgid "Applying for a grant requires filling out community information. When making a grant application the information will be filled automatically."
+msgstr "Avustusten hakeminen edellyttää yhteisön tietojen täydentämistä. Tehdessäsi avustushakemuksia antamasi tiedot täytetää niihin automaattisesti."
+
 msgid "Company applications"
 msgstr "Yhteisön hakemukset"
 
