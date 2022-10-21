@@ -271,6 +271,9 @@ class GrantsProfileForm extends FormBase {
       'bank_account_id' => '{bank_account_delta}',
     ]);
 
+    $sessionHash = sha1(\Drupal::service('session')->getId());
+    $upload_location = 'private://grants_profile/' . $sessionHash;
+
     $form['bankAccountWrapper']['bankAccounts'] = [
       '#type' => 'multivalue',
       '#title' => $this->t('Bank accounts'),
@@ -294,7 +297,7 @@ class GrantsProfileForm extends FormBase {
         '#upload_validators' => [
           'file_validate_extensions' => ['doc docx gif jpg jpeg pdf png ppt pptx rtf txt xls xlsx zip'],
         ],
-        '#upload_location' => 'private://grants_profile',
+        '#upload_location' => $upload_location,
         '#sanitize' => TRUE,
         '#description' => $this->t('Confirm this bank account.'),
       ],
