@@ -37,7 +37,17 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 1
+    region: content
+  field_application_open:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 2
     region: content
   field_application_period:
     type: daterange_default
@@ -47,7 +57,7 @@ content:
       format_type: medium
       separator: '-'
     third_party_settings: {  }
-    weight: 5
+    weight: 0
     region: content
   field_content:
     type: entity_reference_revisions_entity_view
@@ -56,7 +66,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 0
+    weight: 3
     region: content
   field_errand_service:
     type: entity_reference_entity_view
@@ -65,7 +75,7 @@ content:
       view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 1
+    weight: 4
     region: content
   field_lower_content:
     type: entity_reference_revisions_entity_view
@@ -74,36 +84,28 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 6
     region: content
   field_metatags:
     type: metatag_empty_formatter
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
-    region: content
-  field_target_group:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 7
+    weight: 5
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 7
     region: content
 hidden:
-  field_application_open: true
   field_avustuslaji: true
   field_hakijatyyppi: true
   field_has_hero: true
   field_hero: true
   field_liftup_image: true
   field_service_channel: true
+  field_target_group: true
   field_webform: true
   langcode: true
   toc_enabled: true

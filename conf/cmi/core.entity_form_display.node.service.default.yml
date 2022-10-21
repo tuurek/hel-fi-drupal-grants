@@ -51,6 +51,21 @@ third_party_settings:
         id: ''
         description: ''
         required_fields: true
+    group_tpr_details:
+      children:
+        - field_service_channel
+        - field_errand_service
+      label: 'TPR Details'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: ''
+        required_fields: true
 id: node.service.default
 targetEntityType: node
 bundle: service
@@ -239,7 +254,7 @@ content:
     third_party_settings: {  }
   field_target_group:
     type: entity_reference_autocomplete
-    weight: 30
+    weight: 22
     region: content
     settings:
       match_operator: CONTAINS
