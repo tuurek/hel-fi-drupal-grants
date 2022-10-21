@@ -15,3 +15,9 @@ include $(PROJECT_DIR)/tools/make/Makefile
 -include $(PROJECT_DIR)/tools/make/override.mk
 
 .PHONY: $(PHONY)
+
+PHONY += migrate-tpr
+migrate-tpr: ## Migrate data
+	$(call step,Import TPR data....\n)
+	$(call drush,migrate:import tpr_service_channel --update)
+	$(call drush,migrate:import tpr_errand_service --update)
