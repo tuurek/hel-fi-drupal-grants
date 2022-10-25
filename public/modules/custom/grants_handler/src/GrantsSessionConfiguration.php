@@ -6,7 +6,7 @@ use Drupal\Core\Session\SessionConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- *
+ * Configure session length.
  */
 class GrantsSessionConfiguration extends SessionConfiguration {
 

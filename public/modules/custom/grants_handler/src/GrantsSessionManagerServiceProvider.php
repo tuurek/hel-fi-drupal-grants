@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
 
 /**
- *
+ * Session manager provider.
  */
 class GrantsSessionManagerServiceProvider extends ServiceProviderBase {
 

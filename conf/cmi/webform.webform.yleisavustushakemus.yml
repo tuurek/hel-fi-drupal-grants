@@ -16,6 +16,7 @@ third_party_settings:
     applicationClose: '2022-12-19T11:19:00'
     applicationContinuous: 0
     applicationTargetGroup: '2'
+    disableCopying: 0
 weight: 0
 open: null
 close: null

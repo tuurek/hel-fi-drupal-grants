@@ -752,9 +752,9 @@ class ApplicationHandler {
   }
 
   /**
-   * Method to initialise application document in ATV.
+   * Method to initialise application document in ATV. Create & save.
    *
-   * If data is given.
+   * If data is given, use that data to copy things to new application.
    *
    * @param string $webform_id
    *   Id of a webform of created application.
@@ -768,7 +768,7 @@ class ApplicationHandler {
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \Drupal\helfi_atv\AtvFailedToConnectException
-   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \GuzzleHttp\Exception\GuzzleException|\Drupal\helfi_helsinki_profiili\ProfileDataException
    */
   public function initApplication(string $webform_id, array $submissionData = []): WebformSubmission {
 

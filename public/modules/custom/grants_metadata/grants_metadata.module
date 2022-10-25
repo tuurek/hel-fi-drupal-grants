@@ -232,6 +232,12 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
       '#title' => t('Is application continuous'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationContinuous'),
     ];
+
+    $form['third_party_settings']['grants_metadata']['disableCopying'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Disable copying for this application'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'disableCopying'),
+    ];
   }
 }
 
