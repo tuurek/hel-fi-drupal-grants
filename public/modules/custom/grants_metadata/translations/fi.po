@@ -24,5 +24,31 @@ msgstr "Hakemuksen tyypin koodi"
 msgid "Check application status"
 msgstr "Tarkista hakemuksen tila"
 
+msgid "Service page @nodetitle updated"
+msgstr "Palvelusivu @nodetitle päivitetty"
+
+msgid "Applicant types"
+msgstr "Hakijatyypit"
+
+msgid "Application Types"
+msgstr "Hakemustyypit"
+
+msgid "Application target group"
+msgstr "Hakemuksen kohderyhmä"
+
+msgid "Application opens"
+msgstr "Hakemus aukeaa"
+
+msgid "Application closes"
+msgstr "Hakemus sulkeutuu"
+
+msgid "Is application continuous"
+msgstr "Onko hakemus jatkuva"
+
+msgid "Disable copying for this application"
+msgstr "Poista hakemuksen kopiointi käytöstä"
+
+
+
 
 

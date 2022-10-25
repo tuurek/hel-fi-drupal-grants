@@ -173,7 +173,7 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
 
     $form['third_party_settings']['grants_metadata']['applicationTypeTerms'] = [
       '#type' => 'select',
-      '#title' => t('Application Type terms'),
+      '#title' => t('Application Type'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeTerms'),
       '#options' => $termOptions,
       '#multiple' => TRUE,
@@ -227,6 +227,7 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
       '#title' => t('Application closes'),
       '#default_value' => $applicationCloseDate,
     ];
+
     $form['third_party_settings']['grants_metadata']['applicationContinuous'] = [
       '#type' => 'checkbox',
       '#title' => t('Is application continuous'),

@@ -157,7 +157,7 @@ class CopyApplicationModalForm extends FormBase {
     // Add a submit button that handles the submission of the form.
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Use application as base.'),
+      '#value' => $this->t('Use application as base'),
       '#ajax' => [
         'callback' => '::ajaxSubmitForm',
         'event' => 'click',
@@ -232,7 +232,7 @@ class CopyApplicationModalForm extends FormBase {
       );
     }
     else {
-      $this->messenger()->addError('Grant application copy failed.');
+      $this->messenger()->addError('Grant application copy failed');
     }
   }
 

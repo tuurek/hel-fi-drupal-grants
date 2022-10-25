@@ -271,3 +271,15 @@ msgstr "Merkitse viesti luetuksi"
 msgid "Copy application"
 msgstr "Kopioi hakemus"
 
+msgid "Grant application copied, new id: @number"
+msgstr "Avustushakemus kopioitu, uusi tunnus: @number"
+
+msgid "See this form as a modal."
+msgstr "Katsele lomaketta popupissa."
+
+msgid "Use application as base"
+msgstr "Käytä hakemusta pohjana"
+
+msgid "Grant application copy failed"
+msgstr "Hakemuksen kopiointi epäonnistui"
+
