@@ -1,0 +1,285 @@
+# Finnish translation of City of Helsinki Grants Handler Module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2022-01-18 16:58+0300\n"
+"PO-Revision-Date: 2022-10-12 08:58+0300\n"
+"Last-Translator: Petri Leinonen <ext.petri.leinonen@hel.fi>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+msgid "Development settings"
+msgstr "Kehitysasetukset"
+
+msgid "Enable debugging"
+msgstr "Debuggaus päälle"
+
+msgid "If checked, every handler method invoked will be displayed onscreen to all users."
+msgstr "Jos tämä on valittu, kaikki käsittelijän metodikutsut näytetään ruudulla kaikille käyttäjille."
+
+msgid "@fieldname field is required"
+msgstr "@fieldname -kenttä on pakollinen"
+
+msgid "@fieldname has file added, it cannot be added later."
+msgstr "@fieldname sisältää liitetiedoston, joten sitä ei voi myös lähettää myöhemmin"
+
+msgid "@fieldname has file added, it cannot belong to other file."
+msgstr "@fieldname sisältää liitetiedoston, joten se ei voi myös sisältyä toiseen tiedostoon."
+
+msgid "DEBUG: Endpoint:: @endpoint"
+msgstr "DEBUG: Endpoint:: @endpoint"
+
+msgid "DEBUG: Sent JSON: @myJSON"
+msgstr "DEBUG: Lähetetty JSON-sanoma: @myJSON"
+
+msgid "Backend DEV mode on, no posting to backend is done."
+msgstr "Taustajärjestelmän DEV-moodi päällä, mitään tietoja ei tallenneta Taustajärjestelmään"
+
+msgid "Invoked @id: @class_name:@method_name @context1"
+msgstr "Kutsuttu @id: @class_name:@method_name @context1"
+
+msgid "Some information fetched from personal information"
+msgstr "Osa tiedoista on haettu lomakkeelle asiointipalvelun omista tiedoista"
+
+msgid "Check the information on the form before sending the application. You can change your own information from personal information section of the site."
+msgstr "Tarkistathan lomakkeella olevat tiedot ennen hakemuksen lähettämistä. Voit muokata omia tietoja oma asiointi > omat tiedot -osiossa."
+
+msgid "Fields marked with an asterisk * are required, that need to be filled before saving."
+msgstr "Tähdellä * merkityt kentät ovat pakollisia tietoja, jotka sinun on täytettävä ennen tietojen tallentamista."
+
+msgid 'Subvention name'
+msgstr 'Avustustyyppi'
+
+msgid 'Subvention type'
+msgstr 'Avustustyypin koodi'
+
+msgid 'Subvention amount'
+msgstr 'Avustussumma'
+
+msgid 'Select address'
+msgstr 'Valitse osoite'
+
+msgid 'Select official'
+msgstr 'Valitse vastaava henkilö'
+
+msgid 'Select account'
+msgstr 'Valitse tilinumero'
+
+msgid 'Bank account'
+msgstr 'Tilinumero'
+
+msgid 'Only DRAFT status submissions are deletable'
+msgstr 'Vain luonnostilassa olevat hakemukset ovat poistettavissa'
+
+msgid 'Deleting draft failed. Error has been logged, please contact support.'
+msgstr 'Luonnoksen poistaminen epäonnistui. Virhe on kirjattu, ota yhteyttä tukeen.'
+
+msgid 'Edit'
+msgstr 'Muokkaa'
+
+msgid 'I have read the terms and accept them'
+msgstr 'Olen lukenut rekisteriselosteen ja hyväksyn ne.'
+
+msgid 'Date'
+msgstr 'Päivänmäärä'
+
+msgid 'Source'
+msgstr 'Lähettäjä'
+
+msgid 'Description'
+msgstr 'Kuvaus'
+
+msgid 'No events have been found.'
+msgstr 'Tapahtumia ei löytynyt.'
+
+msgid 'Delete draft'
+msgstr 'Poista luonnos'
+
+msgid 'Application saving failed, error has been logged.'
+msgstr 'Hakemuksen tallennus epäonnistui, virhe on kirjattu'
+
+msgid 'Application saving process not done, data on this page is not yet updated.'
+msgstr 'Hakemuksen tallennusprosessi on kesken, tällä sivulla oleva tieto ei ole ajan tasalla.'
+
+msgid 'File uploads are pending. Data on this page is not fully updated.'
+msgstr 'Tiedostonsiirto kesken. Tällä sivulla oleva tieto ei ole täysin ajan tasalla.'
+
+msgid 'Edit application'
+msgstr 'Muokkaa hakemusta'
+
+msgid 'Completion page for @submissionId'
+msgstr '@submissionId - valmis'
+
+msgid 'Message marked as read'
+msgstr 'Viesti merkitty luetuksi'
+
+msgid 'Message marking as read failed.'
+msgstr 'Viestin merkintä luetuksi epäonnistui.'
+
+msgid 'Message already read.'
+msgstr 'Viesti on jo merkitty luetuksi.'
+
+msgid 'Street address'
+msgstr 'Katuosoite'
+
+msgid 'Post code'
+msgstr 'Postinumero'
+
+msgid 'City'
+msgstr 'Kaupunki'
+
+msgid 'Name'
+msgstr 'Nimi'
+
+msgid 'Role'
+msgstr 'Rooli'
+
+msgid 'Email'
+msgstr 'Sähköpostiosoite'
+
+msgid 'Phone'
+msgstr 'Puhelinnumero'
+
+msgid 'Copy application'
+msgstr 'Kopioi hakemus'
+
+msgid 'Message'
+msgstr 'Viesti'
+
+msgid 'Attachment'
+msgstr 'Liite'
+
+msgid 'Add attachment to your message'
+msgstr 'Lisää liite viestiisi'
+
+msgid 'Attachment description'
+msgstr 'Liitteen kuvaus'
+
+msgid 'Send'
+msgstr 'Lähetä'
+
+msgid 'webformSubmission not found!'
+msgstr 'webformSubmission ei löytynyt!'
+
+msgid 'Your message has been sent. Please note that it will take some time it appears on application.'
+msgstr 'Viestisi on lähetetty. Huomioithan, että voi kestää hetken, ennen kuin se näkyy osana hakemusta.'
+
+msgid 'Your message: @message'
+msgstr 'Viestisi: @message'
+
+msgid 'Sending of your message failed.'
+msgstr 'Viestin lähetys epäonnistui.'
+
+msgid 'New message for @applicationNumber.'
+msgstr 'Uusi viesti hakemuksella @applicationNumber.'
+
+msgid 'You need a description of the community purpose for the application.'
+msgstr 'Avustushakemukselle tarvitaan kuvaus yhdistyksen toiminnasta.'
+
+msgid 'Add description of purpose'
+msgstr 'Lisää toiminnan kuvaus'
+
+msgid 'to My Services > My Information so it can be used on the application.'
+msgstr 'Oma asiointi > Omat tiedot -osioon, jotta sitä voidaan käyttää tällä hakemuksella.'
+
+msgid "Current"
+msgstr "Tämä sivu"
+
+msgid "Completed"
+msgstr "Valmis"
+
+msgid "Delete application"
+msgstr "Poista hakemus"
+
+msgid "Print application"
+msgstr "Tulosta hakemus"
+
+msgid "Draft saved time"
+msgstr "Luonnoksen tallennusaika"
+
+msgid "Submission date"
+msgstr "Lähetyspäiväys"
+
+msgid "Application number"
+msgstr "Hakemuksen numero"
+
+msgid "Search for an application"
+msgstr "Etsi hakemusta"
+
+msgid "Search for application"
+msgstr "Etsi hakemusta"
+
+msgid "Show only applications being processed"
+msgstr "Näytä vain käsittelyssä olevat hakemukset"
+
+msgid "Applications"
+msgstr "Hakemukset"
+
+msgid "Sort"
+msgstr "Järjestä"
+
+msgid "Sort by"
+msgstr "Järjestys"
+
+msgid "Submitted time"
+msgstr "Lähetysajankohta"
+
+msgid "Status"
+msgstr "Hakemuksen tila"
+
+msgid "Name (a-z)"
+msgstr "Hakemuksen nimi (a-ö)"
+
+msgid "Application number"
+msgstr "Hakemusnumero"
+
+msgid "Grant application sent successfully"
+msgstr "Avustushakemus lähetetty onnistuneesti"
+
+msgid "Submission date"
+msgstr "Lähetyspäiväys"
+
+msgid "Debugging is enabled"
+msgstr "Debuggaus on päällä"
+
+msgid "New message"
+msgstr "Uusi viesti"
+
+msgid "Messages"
+msgstr "Viestit"
+
+msgid "You can send a message to the handler of the application or provide a missing attachment"
+msgstr "Voit lähettää viestin hakemuksen käsittelijälle tai toimittaa puuttuvan liitteen"
+
+msgid "Sent messages"
+msgstr "Lähetetyt viestit"
+
+msgid "You don't have company selected, no fields are prepopulated"
+msgstr "Sinulla ei ole yhteisöä valittuna, joten kenttiä ei täytetä automaattisesti"
+
+msgid "Clear navigations"
+msgstr "Tyhjennä navigaatiot"
+
+msgid "Mark message read"
+msgstr "Merkitse viesti luetuksi"
+
+msgid "Copy application"
+msgstr "Kopioi hakemus"
+
+msgid "Grant application copied, new id: @number"
+msgstr "Avustushakemus kopioitu, uusi tunnus: @number"
+
+msgid "See this form as a modal."
+msgstr "Katsele lomaketta popupissa."
+
+msgid "Use application as base"
+msgstr "Käytä hakemusta pohjana"
+
+msgid "Grant application copy failed"
+msgstr "Hakemuksen kopiointi epäonnistui"
+

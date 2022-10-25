@@ -1,0 +1,54 @@
+# Finnish translation of City of Helsinki Grants Metadata module
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2021-05-31 11:00+0300\n"
+"PO-Revision-Date: 2022-10-12 11:00+0300\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Application details"
+msgstr "Hakemuksen kuvaus"
+
+msgid "Application Type"
+msgstr "Hakemustyyppi"
+
+msgid "Application Type ID"
+msgstr "Hakemuksen tyypin koodi"
+
+msgid "Check application status"
+msgstr "Tarkista hakemuksen tila"
+
+msgid "Service page @nodetitle updated"
+msgstr "Palvelusivu @nodetitle päivitetty"
+
+msgid "Applicant types"
+msgstr "Hakijatyypit"
+
+msgid "Application Types"
+msgstr "Hakemustyypit"
+
+msgid "Application target group"
+msgstr "Hakemuksen kohderyhmä"
+
+msgid "Application opens"
+msgstr "Hakemus aukeaa"
+
+msgid "Application closes"
+msgstr "Hakemus sulkeutuu"
+
+msgid "Is application continuous"
+msgstr "Onko hakemus jatkuva"
+
+msgid "Disable copying for this application"
+msgstr "Poista hakemuksen kopiointi käytöstä"
+
+
+
+
+
