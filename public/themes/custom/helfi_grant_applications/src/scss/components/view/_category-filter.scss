@@ -1,18 +1,35 @@
-#edit-field-category-target-id {
+.view-ukk {
+  #edit-field-category-target-id {
     display: flex;
-  .hds-radio-button:is(:first-of-type) {
-    margin-top: var(--spacing-2-xs);
+    .hds-radio-button:is(:first-of-type) {
+      margin-top: var(--spacing-2-xs);
+    }
+    .hds-radio-button .hds-radio-button__input:checked + .hds-radio-button__label {
+      background: var(--color-black);
+      color: var(--color-white);
+      border-radius: var(--spacing-m);
+      padding: var(--spacing-2-xs) var(--spacing-s);
+    }
+    .hds-radio-button__label {
+      padding: var(--spacing-2-xs) var(--spacing-s);
+      &:before, &:after {
+        display: none;
+      }
+    }
   }
-  .hds-radio-button .hds-radio-button__input:checked + .hds-radio-button__label {
+  .views-exposed-form {
+    fieldset {
+      margin-bottom: 0;
+    }
+    .form-submit {
+      margin-bottom: var(--spacing-l);
+    }
+  }
+  .category {
     background: var(--color-black);
     color: var(--color-white);
     border-radius: var(--spacing-m);
-    padding: var(--spacing-xs) var(--spacing-m);
-  }
-  .hds-radio-button__label {
-    padding: var(--spacing-xs) var(--spacing-m);
-    &:before, &:after {
-      display: none;
-    }
+    padding: var(--spacing-2-xs) var(--spacing-s);
+    display: inline-block;
   }
 }
