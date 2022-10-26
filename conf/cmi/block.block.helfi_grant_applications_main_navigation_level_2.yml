@@ -22,7 +22,7 @@ settings:
   label: 'Main navigation (Level 2 ->)'
   label_display: '0'
   provider: menu_block_current_language
-  level: 1
+  level: 2
   expand_all_items: true
   depth: 0
   translation_providers:
@@ -35,4 +35,9 @@ visibility:
     negate: true
     context_mapping:
       node: '@node.node_route_context:node'
-    bundles: {  }
+    bundles:
+      address: address
+      article: article
+      faq: faq
+      landing_page: landing_page
+      page: page

@@ -1,19 +1,19 @@
 uuid: 8842e5da-fb08-416a-a35a-d7838179b3ca
 langcode: fi
-status: false
+status: true
 dependencies:
   config:
     - system.menu.main
   module:
-    - ctools
     - menu_block_current_language
+    - node
   theme:
     - hdbt
 _core:
   default_config_hash: zS9zgTlcanrv75vk0WibXcekGUttnN4EwP1pwFdTAcM
 id: main_navigation_level_2
 theme: hdbt
-region: header_top
+region: sidebar_first
 weight: 0
 provider: null
 plugin: 'menu_block_current_language:main'

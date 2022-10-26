@@ -28,5 +28,5 @@ regions:
 
 # Libraries
 libraries:
-  - hdbt/global-styling
-  - hdbt/global-scripting
+  - helfi_grant_applications/global-styling
+  - helfi_grant_applications/global-scripting
