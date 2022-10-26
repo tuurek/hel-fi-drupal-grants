@@ -249,6 +249,7 @@ elements: |-
         '#help': 'Kerro mit&auml; tarkoitusta varten avustusta haetaan, erittele tarvittaessa eri k&auml;ytt&ouml;kohteet. Kerro my&ouml;s mit&auml; avustuksella on tarkoitus saada aikaiseksi ja millaisia tavoitteita avustettavaan toimintaan liittyy.'
         '#required': true
         '#counter_type': character
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#cols': 63
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
@@ -472,6 +473,7 @@ elements: |-
         '#help': 'K&auml;ytt&ouml;selvityksess&auml; tulee kuvata lyhyesti, miten my&ouml;nnetty avustus on k&auml;ytetty. Avustuksen saajan on j&auml;rjestett&auml;v&auml; kirjanpitonsa niin, ett&auml; avustuksen k&auml;ytt&ouml;&auml; voidaan sielt&auml; seurata. Esimerkiksi jos yhteis&ouml; on saanut vuokra-avustusta, tilinp&auml;&auml;t&ouml;ksen tuloslaskelmasta tulee k&auml;yd&auml; ilmi avustuksen toteutuminen sek&auml; tuloissa ett&auml; menoissa. Lis&auml;&auml; tietoja avustuksen k&auml;yt&ouml;st&auml; voi my&ouml;s kirjoittaa erilliseen liitteeseen, jonka voi palauttaa K&auml;ytt&ouml;selvitys-liite kohdasta.'
         '#counter_type': character
         '#counter_minimum': 1
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
         '#states':
@@ -493,13 +495,6 @@ elements: |-
       community_purpose:
         '#type': textfield
         '#title': 'Toiminnan kuvaus'
-        '#states':
-          visible:
-            ':input[name="community_practices_business"]':
-              value: 1
-          required:
-            ':input[name="community_practices_business"]':
-              value: 1
         '#help': 'Tieto haetaan omat tiedot -osiosta'
       community_practices_business:
         '#type': radios
@@ -571,6 +566,7 @@ elements: |-
         '#title': Lisätiedot
         '#help': 'T&auml;h&auml;n voit tarvittaessa kirjoittaa lis&auml;tietoja tai muita perusteluja hakemukseen liittyen tai ilmoittaa perustietoihin tulleista muutoksista&nbsp;'
         '#counter_type': character
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
         '#cols': 63
@@ -666,6 +662,7 @@ elements: |-
         '#type': textarea
         '#title': 'Lisäselvitys liitteistä'
         '#counter_type': character
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#counter_maximum_message': 'Max 5000 characters.'
         '#cols': 63
