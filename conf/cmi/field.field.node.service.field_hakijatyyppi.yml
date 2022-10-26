@@ -1,0 +1,21 @@
+uuid: 817e233d-052d-4b12-818b-332346aaec99
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hakijatyyppi
+    - node.type.service
+  module:
+    - options
+id: node.service.field_hakijatyyppi
+field_name: field_hakijatyyppi
+entity_type: node
+bundle: service
+label: Hakijatyyppi
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

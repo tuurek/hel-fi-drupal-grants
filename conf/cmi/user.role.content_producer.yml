@@ -15,7 +15,6 @@ dependencies:
   module:
     - content_translation
     - file
-    - grants_oma_asiointi
     - helfi_api_base
     - media
     - node
@@ -44,7 +43,6 @@ permissions:
   - 'access webform help'
   - 'access webform overview'
   - 'access webform submission user'
-  - 'administer grants_oma_asiointi configuration'
   - 'administer nodes'
   - 'administer webform element access'
   - 'cancel account'

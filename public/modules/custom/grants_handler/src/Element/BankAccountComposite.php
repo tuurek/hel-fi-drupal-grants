@@ -37,7 +37,7 @@ class BankAccountComposite extends WebformCompositeBase {
 
     $elements['account_number_select'] = [
       '#type' => 'select',
-      // '#required' => TRUE,
+      '#required' => TRUE,
       '#title' => t('Bank account'),
       '#options' => [],
       '#after_build' => [[get_called_class(), 'buildAccountOptions']],

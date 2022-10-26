@@ -1,4 +1,4 @@
-ARG DRUPAL_DOCKER_TAG=8.0
+ARG DRUPAL_DOCKER_TAG=8.1
 FROM ghcr.io/city-of-helsinki/drupal-docker-base:${DRUPAL_DOCKER_TAG}
 
 COPY / /var/www/html/
@@ -21,6 +21,3 @@ COPY docker/openshift/custom.locations /etc/nginx/conf.d/custom.locations
 # TODO: Remove in production
 # RUN chgrp -R 0 /var/www/html/public/modules && chmod g+w -R /var/www/html/public/modules
 # RUN chgrp -R 0 /var/www/html/public/core/modules && chmod g+w -R /var/www/html/public/core/modules
-
-# Helper to run commands
-# RUN alias ll='ls -lah'

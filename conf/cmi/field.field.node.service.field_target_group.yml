@@ -1,0 +1,29 @@
+uuid: 59cc13e6-fa1e-414b-9b07-fd3389771165
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_target_group
+    - node.type.service
+    - taxonomy.vocabulary.target_group
+id: node.service.field_target_group
+field_name: field_target_group
+entity_type: node
+bundle: service
+label: 'Target group'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      target_group: target_group
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

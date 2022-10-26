@@ -3,17 +3,21 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.form_page.field_application_continuous
+    - field.field.node.form_page.field_application_open
+    - field.field.node.form_page.field_application_period
     - field.field.node.form_page.field_avustuslaji
     - field.field.node.form_page.field_content
     - field.field.node.form_page.field_hakijatyyppi
     - field.field.node.form_page.field_has_hero
     - field.field.node.form_page.field_hero
     - field.field.node.form_page.field_liftup_image
-    - field.field.node.form_page.field_lomakeupotus
     - field.field.node.form_page.field_lower_content
     - field.field.node.form_page.field_metatags
+    - field.field.node.form_page.field_webform
     - node.type.form_page
   module:
+    - datetime_range
     - hdbt_admin_editorial
     - media_library
     - metatag
@@ -31,6 +35,26 @@ content:
   created:
     type: datetime_timestamp
     weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_application_continuous:
+    type: boolean_checkbox
+    weight: 30
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_application_open:
+    type: boolean_checkbox
+    weight: 31
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_application_period:
+    type: daterange_default
+    weight: 29
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -98,14 +122,6 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
-  field_lomakeupotus:
-    type: webform_entity_reference_select
-    weight: 16
-    region: content
-    settings:
-      default_data: true
-      webforms: {  }
-    third_party_settings: {  }
   field_lower_content:
     type: paragraphs
     weight: 22
@@ -132,6 +148,14 @@ content:
     settings:
       sidebar: false
       use_details: true
+    third_party_settings: {  }
+  field_webform:
+    type: webform_entity_reference_select
+    weight: 32
+    region: content
+    settings:
+      default_data: true
+      webforms: {  }
     third_party_settings: {  }
   langcode:
     type: language_select

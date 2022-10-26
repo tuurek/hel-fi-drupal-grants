@@ -1,0 +1,23 @@
+uuid: 23e9000b-763d-4fa9-9d4b-e8a2f55cd1e7
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_open
+    - node.type.service
+id: node.service.field_application_open
+field_name: field_application_open
+entity_type: node
+bundle: service
+label: 'Application open'
+description: 'This controls if the application is open or not. Ie if users are allowed to post applications. If this is false, the apply button is not shown.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Hakemus avoinna'
+  off_label: 'Hakemus suljettu'
+field_type: boolean

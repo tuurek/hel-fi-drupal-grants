@@ -1,0 +1,26 @@
+uuid: bbdfa50d-3a2e-4595-8cf8-11c6da375db1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_channel
+    - node.type.service
+id: node.service.field_service_channel
+field_name: field_service_channel
+entity_type: node
+bundle: service
+label: 'Service channel'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:tpr_service_channel'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

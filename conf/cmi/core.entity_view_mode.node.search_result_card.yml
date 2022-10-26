@@ -1,0 +1,10 @@
+uuid: dabf8170-e1f1-480f-bd79-2906fe066412
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.search_result_card
+label: 'Search result card'
+targetEntityType: node
+cache: true

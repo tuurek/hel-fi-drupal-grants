@@ -1,0 +1,11 @@
+uuid: 73095055-9edb-4bf8-bf79-f00692a3d889
+langcode: fi
+status: true
+dependencies:
+  config:
+    - simple_sitemap.type.services_sitemap
+id: services-sitemap
+label: 'Services sitemap'
+description: 'Sitempa for services pages.'
+type: services_sitemap
+weight: 0

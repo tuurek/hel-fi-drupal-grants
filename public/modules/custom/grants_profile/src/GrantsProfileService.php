@@ -544,6 +544,8 @@ class GrantsProfileService {
    *
    * @return array
    *   Profile content with required fields.
+   *
+   * @throws \Drupal\helfi_yjdh\Exception\YjdhException
    */
   public function initGrantsProfile(string $businessId, array $profileContent): array {
     // Try to get association details.
@@ -691,8 +693,10 @@ class GrantsProfileService {
    * @param bool $refetch
    *   Force refetching of the data.
    *
-   * @return \Drupal\helfi_atv\AtvDocument
+   * @return \Drupal\helfi_atv\AtvDocument|null
    *   Profiledata
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getGrantsProfile(
     string $businessId,
@@ -708,7 +712,7 @@ class GrantsProfileService {
     // Get profile document from ATV.
     try {
       $profileDocument = $this->getGrantsProfileFromAtv($businessId, $refetch);
-      if (!empty($profileDocument)) {
+      if ($profileDocument) {
         $this->setToCache($businessId, $profileDocument);
         return $profileDocument;
       }
@@ -716,6 +720,8 @@ class GrantsProfileService {
     catch (AtvDocumentNotFoundException $e) {
       return NULL;
     }
+
+    return NULL;
   }
 
   /**

@@ -19,6 +19,7 @@ use Drupal\webform\Entity\WebformSubmission;
 use Drupal\webform\WebformRequestInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -328,8 +329,11 @@ class ApplicationController extends ControllerBase {
    *   Redirect to edit form.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
+   * @throws \Drupal\helfi_atv\AtvFailedToConnectException
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function newApplication(string $webform_id) {
+  public function newApplication(string $webform_id): RedirectResponse {
 
     $newSubmission = $this->applicationHandler->initApplication($webform_id);
     $webform = $newSubmission->getWebform();

@@ -52,8 +52,6 @@ class GrantsAttachments extends WebformCompositeBase {
     $submission = $form_state->getFormObject()->getEntity();
     $submissionData = $submission->getData();
 
-
-
     if (isset($submissionData[$element['#webform_key']]) && is_array($submissionData[$element['#webform_key']])) {
 
       $dataForElement = $element['#value'];
@@ -161,6 +159,9 @@ class GrantsAttachments extends WebformCompositeBase {
    * {@inheritdoc}
    */
   public static function getCompositeElements(array $element): array {
+    $sessionHash = sha1(\Drupal::service('session')->getId());
+    $upload_location = 'private://grants_attachments/' . $sessionHash;
+
     $elements = [];
     $elements['attachment'] = [
       '#type' => 'managed_file',
@@ -171,7 +172,7 @@ class GrantsAttachments extends WebformCompositeBase {
       '#upload_validators' => [
         'file_validate_extensions' => 'doc,docx,gif,jpg,jpeg,pdf,png,ppt,pptx,rtf,txt,xls,xlsx,zip',
       ],
-      '#upload_location' => 'private://grants_attachments',
+      '#upload_location' => $upload_location,
       '#sanitize' => TRUE,
       '#element_validate' => ['\Drupal\grants_attachments\Element\GrantsAttachments::validateUpload'],
     ];
@@ -279,6 +280,10 @@ class GrantsAttachments extends WebformCompositeBase {
       $webformKey,
       'attachmentName',
     ];
+    $attachmenIsNewFileValue = [
+      $webformKey,
+      'attachmentIsNew',
+    ];
 
     $application_number = $webformData['application_number'];
 
@@ -303,6 +308,7 @@ class GrantsAttachments extends WebformCompositeBase {
       $form_state->setValue($anotherFileValue, '0');
       $form_state->setValue($nameFileValue, $file->getFilename());
       $form_state->setValue($attachmenNameFileValue, $file->getFilename());
+      $form_state->setValue($attachmenIsNewFileValue, TRUE);
     }
     catch (\Exception $e) {
       // Set error to form.
