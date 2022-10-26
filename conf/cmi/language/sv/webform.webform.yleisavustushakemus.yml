@@ -1,0 +1,79 @@
+title: 'Ansökan om stadsstyrelsens allmänna understöd'
+description: 'MVP-f&ouml;rm'
+elements: |
+  prh_markup:
+    '#markup': '<div class="grants-profile-prh-info">Merkityt tiedot on haettu Patentti- ja rekisterihallinnon rekisterist&auml; (PRH), eik&auml; niit&auml; voi t&auml;m&auml;n takia muokata.</div>'
+  contact_markup:
+    '#markup': 'Ilmoita t&auml;ss&auml; sellainen yhteis&ouml;n s&auml;hk&ouml;postiosoite, jota luetaan aktiivisesti. S&auml;hk&ouml;postiin l&auml;hetet&auml;&auml;n avustushakemukseen liittyvi&auml; yhteydenottoja esim. lis&auml;selvitys- ja t&auml;ydennyspyynt&ouml;j&auml;.'
+  email:
+    '#help': 'Ilmoita s&auml;hk&ouml;postiosoite, johon t&auml;h&auml;n hakemukseen liittyv&auml;t viestit sek&auml; her&auml;tteet osoitetaan ja jota luetaan aktiivisesti'
+  address_markup:
+    '#markup': '<a class="hds-link hds-link--medium" href="/grants-profile/"><span class="link-label">Muokkaa osoitteita</span> </a>'
+  bank_account:
+    '#account_number__title': ''
+  account_markup:
+    '#markup': '<a class="hds-link hds-link--medium" href="/grants-profile/"><span class="link-label">Muokkaa tilinumeroita</span> </a>'
+  officials_markup:
+    '#markup': '<a class="hds-link hds-link--medium" href="/grants-profile/"><span class="link-label">Muokkaa henkil&ouml;it&auml;</span> </a>'
+  info_muut_samaan_tarkoitukseen_myonnetty:
+    '#text': "<p>Ilmoita tähän ainoastaan avustukset, jotka on myönnetty muualta kuin Helsingin kaupungilta kuluvana tai kahtena edellisenä verovuotena.</p>\r\n\r\n<div class=\"hds-notification hds-notification--info\">\r\n<div class=\"hds-notification__content\">\r\n<div class=\"hds-notification__label\"><span>Myöntävä vastaus avaa lisäkysymyksen</span></div>\r\n</div>\r\n</div>\r\n"
+  myonnetty_avustus:
+    '#element':
+      issuer_name:
+        '#help': 'Mik&auml; taho avustusta on my&ouml;nt&auml;nyt (esim. ministeri&ouml;n nimi)'
+      purpose:
+        '#help': 'Anna lyhyt kuvaus, mihin tarkoitukseen avustus on my&ouml;nnetty?'
+  info_muut_samaan_tarkoitukseen_haettu:
+    '#text': "<p>Ilmoita tähän ainoastaan avustukset, jotka on haettu muualta kuin Helsingin kaupungilta, eikä päätöstä ole vielä tehty.</p>\r\n\r\n<div class=\"hds-notification hds-notification--info\">\r\n<div class=\"hds-notification__content\">\r\n<div class=\"hds-notification__label\"><span>Myöntävä vastaus avaa lisäkysymyksen</span></div>\r\n</div>\r\n</div>\r\n"
+  haettu_avustus_tieto:
+    '#element':
+      issuer_name:
+        '#help': 'Mik&auml; taho avustusta on my&ouml;nt&auml;nyt (esim. ministeri&ouml;n nimi)'
+      purpose:
+        '#help': 'Anna lyhyt kuvaus, mihin tarkoitukseen avustus on my&ouml;nnetty?'
+  kaupungilta_saadut_1:
+    '#markup': 'Kaupungilta saaduista lainoista on mainittava alkuper&auml;inen lainam&auml;&auml;r&auml;, j&auml;ljell&auml; oleva lainam&auml;&auml;r&auml;, laina-aika, korkoprosentti ja mihin tarkoitukseen laina on my&ouml;nnetty. Takauksista ilmoitetaan niiden raha-arvo ja tarkoitus.'
+  compensation_boolean_info:
+    '#text': "<div class=\"hds-notification hds-notification--info\">\r\n<div class=\"hds-notification__content\">\r\n<div class=\"hds-notification__label\"><span>Myöntävä vastaus avaa lisäkysymyksen</span></div>\r\n</div>\r\n</div>\r\n"
+  attachments_info:
+    '#markup': "Avustushakemuksen k&auml;sittely&auml; varten tulee toimittaa kaikki alla luetellut liitteet. Avustushakemus voidaan hyl&auml;t&auml;, jos liitteit&auml; ei ole toimitettu. Mik&auml;li joku liitteist&auml; puuttuu kerro siit&auml; hakemuksen Lis&auml;selvitys liitteist&auml; -kohdassa.<br />\r\n<br />\r\nTuetut tiedostomuodot xx xx xx. Tiedoston maksimikoko on x Mt. Tiedostojen maksimikoko voi olla yhteens&auml; x Gt.<br />\r\n<br />\r\n<strong>Vaaditut liitteet</strong><br />\r\nAvustushakemuksen k&auml;sittely&auml; varten tarvitaan vahvistettuja, yhteis&ouml;n kokouksessaan hyv&auml;ksymi&auml; ja allekirjoittamia, liitteit&auml; edelliselt&auml; p&auml;&auml;ttyneelt&auml; tilikaudelta sek&auml; liitteit&auml; sille toimintavuodelle, jolle avustusta haetaan. Edellist&auml; tilikautta koskevat liitteet ovat: tilinp&auml;&auml;t&ouml;s, toimintakertomus ja tilin- tai toiminnantarkastuskertomus sek&auml; vuosikokouksen p&ouml;yt&auml;kirja. Liitteet vuodelle, jolle avustusta haetaan ovat: talousarvio ja toimintasuunnitelma.&nbsp;<br />\r\n<br />\r\n<strong>Usean liitteen toimittaminen yhten&auml; tiedostona</strong><br />\r\nVoit halutessasi toimittaa useampia liitteit&auml; yhten&auml; tiedostona Tilinp&auml;&auml;t&ouml;s tai talousarvio -liitekohdassa. Merkitse t&auml;ll&ouml;in muiden liiteotsikoiden kohdalla &rdquo;Liite on toimitettu yhten&auml; tiedostona tai toisen hakemuksen yhteydess&auml;&rdquo;. &nbsp;<br />\r\n<br />\r\n<strong>Helsingin kaupungille aiemmin toimitetut liitteet</strong><br />\r\nJos vaaditut liitteet on jo toimitettu toisen Helsingin kaupungille osoitetun avustushakemuksen liitteen&auml;, samoja liitteit&auml; ei tarvitse toimittaa uudelleen. Yhteis&ouml;n vahvistettu tilinp&auml;&auml;t&ouml;s, toimintakertomus, toimintasuunnitelma ja talousarvio eiv&auml;t voi olla erilaisia eri hakemusten liitteen&auml;. Merkitse t&auml;ll&ouml;in toimitettujen liitteiden kohdalla &rdquo;Liite on toimitettu yhten&auml; tiedostona tai toisen hakemuksen yhteydess&auml;&rdquo;.<br />\r\n&nbsp;"
+  notification_attachments:
+    '#text': "<div class=\"hds-notification hds-notification--info\">\r\n<div class=\"hds-notification__content\">\r\n<div class=\"hds-notification__label\"><span>Liitteiden sisältöä ei voi tarkastella jälkikäteen</span></div>\r\n\r\n<div class=\"hds-notification__body\">\r\n<p>Huomioithan, että et pysty avaamaan liitteitä sen jälkeen, kun olet liittänyt ne lomakkeelle. Näet liitteestä ainoastaan sen tiedostonimen.</p>\r\n\r\n<p>Vaikka et voi tarkastella liitteiden sisältä jälkikäteen, lomakkeelle liitetyt liitteet lähtevät lomakkeen muiden tietojen mukana avustushakemuksen käsittelijälle.</p>\r\n</div>\r\n</div>\r\n</div>\r\n"
+  vahvistettu_tilinpaatos:
+    '#help': "<span style=\"font-size:11pt\"><span style=\"line-height:107%\"><span style=\"font-family:Calibri,sans-serif\">Tilinp&auml;&auml;t&ouml;ksen t&auml;ytyy sis&auml;lt&auml;&auml; v&auml;hint&auml;&auml;n tuloslaskelma ja tase. Yhdistys liitt&auml;&auml; t&auml;h&auml;n kohtaan yhdistyksen j&auml;senkokouksessa vahvistetun ja allekirjoitetun tilinp&auml;&auml;t&ouml;ksen.</span></span></span><br />\r\n<span style=\"font-size:11.0pt\"><span style=\"line-height:107%\"><span style=\"font-family:&quot;Calibri&quot;,sans-serif\">Yhteis&ouml;n tilikausi voi olla kalenterivuosi tai jokin muu kausi. Yhdistysten kohdalla niiden omissa s&auml;&auml;nn&ouml;iss&auml; lukee, mik&auml; on yhdistyksen tilikausi.</span></span></span>"
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''
+  vahvistettu_toimintakertomus:
+    '#help': "<span style=\"font-size:11pt\"><span style=\"line-height:107%\"><span style=\"font-family:Calibri,sans-serif\">Yhdistys liitt&auml;&auml; t&auml;h&auml;n kohtaan yhdistyksen j&auml;senkokouksessa vahvistetun toimintakertomuksen.</span></span></span><br />\r\n<span style=\"font-size:11pt\"><span style=\"line-height:107%\"><span style=\"font-family:Calibri,sans-serif\">Jos toimintakertomus on osana tilinp&auml;&auml;t&ouml;st&auml; ja liititte sen jo tilinp&auml;&auml;t&ouml;ksen mukana lomakkeelle, sit&auml; ei tarvitse liitt&auml;&auml; t&auml;h&auml;n erikseen. Valitse t&auml;llaisessa tilanteessa toimintakertomuksen kohdalla &rdquo;Liite on toimitettu yhten&auml; tiedostona tai toisen hakemuksen yhteydess&auml;&rdquo;.</span></span></span><br />\r\n&nbsp;"
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''
+  vahvistettu_tilin_tai_toiminnantarkastuskertomus:
+    '#help': "<span style=\"font-size:11pt\"><span style=\"line-height:107%\"><span style=\"font-family:Calibri,sans-serif\">Liit&auml; t&auml;h&auml;n allekirjoitettu tilin- tai toiminnantarkastuskertomus yhteis&ouml;n edelliselt&auml; p&auml;&auml;ttyneelt&auml; tilikaudelta.</span></span></span><br />\r\n<span style=\"font-size:11pt\"><span style=\"line-height:107%\"><span style=\"font-family:Calibri,sans-serif\">Jos allekirjoitettu tilin- tai toiminnantarkastuskertomus on osa yhteis&ouml;nne tilinp&auml;&auml;t&ouml;st&auml; ja liitit sen jo lomakkeelle tilinp&auml;&auml;t&ouml;ksen kohdalla, valitse t&auml;ss&auml; kohdassa &rdquo;Liite on toimitettu yhten&auml; tiedostona tai toisen hakemuksen yhteydess&auml;&rdquo;.</span></span></span><br />\r\n&nbsp;"
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''
+  vuosikokouksen_poytakirja:
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''
+  toimintasuunnitelma:
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''
+  talousarvio:
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''
+  muu_liite:
+    '#attachmentName__title': ''
+    '#fileStatus__title': ''
+    '#fileType__title': ''
+    '#integrationID__title': ''

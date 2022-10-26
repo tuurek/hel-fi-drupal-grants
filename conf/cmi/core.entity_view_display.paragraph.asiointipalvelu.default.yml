@@ -1,0 +1,22 @@
+uuid: dc241ee0-aff5-40b1-892e-b9b4e51f4a74
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.asiointipalvelu.field_asiointipalvelut
+    - paragraphs.paragraphs_type.asiointipalvelu
+id: paragraph.asiointipalvelu.default
+targetEntityType: paragraph
+bundle: asiointipalvelu
+mode: default
+content:
+  field_asiointipalvelut:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

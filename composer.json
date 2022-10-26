@@ -19,8 +19,10 @@
         "drupal/core-composer-scaffold": "^9.3",
         "drupal/core-recommended": "^9.3",
         "drupal/datatables": "^2.0",
+        "drupal/date_range_formatter": "^4.0",
         "drupal/devel": "^4.1",
         "drupal/entity": "^1.0",
+        "drupal/entity_type_clone": "^1.7",
         "drupal/entityreference_filter": "^1.4",
         "drupal/error_page": "^2.0",
         "drupal/eu_cookie_compliance": "1.19",
@@ -52,8 +54,8 @@
         "drupal/webform_views": "^5.0@beta",
         "drush/drush": "^10.4 || ^11",
         "globalcitizen/php-iban": "^4.1",
-        "ramsey/uuid": "^4.3",
-        "league/uri": "^6.7"
+        "league/uri": "^6.7",
+        "ramsey/uuid": "^4.3"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.7",
@@ -160,6 +162,8 @@
         "phpcs-atv": "vendor/bin/phpcs public/modules/contrib/helfi_atv --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
         "phpcbf-atv": "vendor/bin/phpcbf public/modules/contrib/helfi_atv --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
         "phpcs-hp": "vendor/bin/phpcs public/modules/contrib/helfi_helsinki_profiili --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
-        "phpcbf-hp": "vendor/bin/phpcbf public/modules/contrib/helfi_helsinki_profiili --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install"
+        "phpcbf-hp": "vendor/bin/phpcbf public/modules/contrib/helfi_helsinki_profiili --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
+        "phpcs-fe": "vendor/bin/phpcs public/modules/contrib/helfi_formtool_embed --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install",
+        "phpcbf-fe": "vendor/bin/phpcbf public/modules/contrib/helfi_formtool_embed --standard=Drupal --ignore=*.js,*.css --extensions=php,module,install"
     }
 }

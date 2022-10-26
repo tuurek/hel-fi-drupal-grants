@@ -97,6 +97,9 @@ class MessageForm extends FormBase {
       '#required' => TRUE,
     ];
 
+    $sessionHash = sha1(\Drupal::service('session')->getId());
+    $upload_location = 'private://grants_messages/' . $sessionHash;
+
     $form['messageAttachment'] = [
       '#type' => 'managed_file',
       '#title' => t('Attachment'),
@@ -106,7 +109,7 @@ class MessageForm extends FormBase {
       '#upload_validators' => [
         'file_validate_extensions' => ['doc docx gif jpg jpeg pdf png ppt pptx rtf txt xls xlsx zip'],
       ],
-      '#upload_location' => 'private://grants_messages',
+      '#upload_location' => $upload_location,
       '#sanitize' => TRUE,
       '#description' => $this->t('Add attachment to your message'),
     ];

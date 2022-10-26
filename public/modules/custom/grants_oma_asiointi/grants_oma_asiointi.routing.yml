@@ -4,7 +4,7 @@ grants_oma_asiointi.front:
     _title_callback: '\Drupal\grants_oma_asiointi\Controller\GrantsOmaAsiointiController::title'
     _controller: '\Drupal\grants_oma_asiointi\Controller\GrantsOmaAsiointiController::build'
   requirements:
-    _permission: 'access content'
+    _permission: 'access grants_oma_asiointi'
 
 grants_oma_asiointi.applications_list:
   path: '/oma-asiointi/hakemukset'

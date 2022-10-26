@@ -23,7 +23,6 @@ display:
             offset_label: Kompensera
       fields:
         sid:
-          label: '#'
           separator: ', '
         in_draft:
           label: Utkast
@@ -51,7 +50,6 @@ display:
         webform_submission_bulk_form:
           action_title: Åtgärd
         sid:
-          label: '#'
           separator: ', '
         in_draft:
           label: Utkast
@@ -86,7 +84,6 @@ display:
         webform_submission_bulk_form:
           action_title: Åtgärd
         sid:
-          label: '#'
           separator: ', '
         in_draft:
           label: Utkast
@@ -123,7 +120,6 @@ display:
     display_options:
       fields:
         sid:
-          label: '#'
           separator: ', '
         in_draft:
           label: Utkast

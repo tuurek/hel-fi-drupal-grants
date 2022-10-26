@@ -1,0 +1,121 @@
+uuid: ae76e68b-2e9e-4b85-b85a-b5f3c4f8b34b
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content
+    - node.type.service
+    - paragraphs.paragraphs_type.accordion
+    - paragraphs.paragraphs_type.chart
+    - paragraphs.paragraphs_type.columns
+    - paragraphs.paragraphs_type.content_cards
+    - paragraphs.paragraphs_type.gallery
+    - paragraphs.paragraphs_type.image
+    - paragraphs.paragraphs_type.list_of_links
+    - paragraphs.paragraphs_type.text
+    - paragraphs.paragraphs_type.webform
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: 77NaTdy0L5BjdVGaWAgiJsRXdMpNvzk6T-JjJ1PTotk
+id: node.service.field_content
+field_name: field_content
+entity_type: node
+bundle: service
+label: Content
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      text: text
+      columns: columns
+      accordion: accordion
+      image: image
+      gallery: gallery
+      list_of_links: list_of_links
+      content_cards: content_cards
+      webform: webform
+      chart: chart
+    negate: 0
+    target_bundles_drag_drop:
+      accordion:
+        weight: -25
+        enabled: true
+      accordion_item:
+        weight: -20
+        enabled: false
+      asiointipalvelu:
+        weight: 28
+        enabled: false
+      banner:
+        weight: -16
+        enabled: false
+      chart:
+        weight: 25
+        enabled: true
+      columns:
+        weight: -26
+        enabled: true
+      content_cards:
+        weight: -21
+        enabled: true
+      content_liftup:
+        weight: 33
+        enabled: false
+      from_library:
+        weight: 34
+        enabled: false
+      gallery:
+        weight: -23
+        enabled: true
+      gallery_slide:
+        weight: -19
+        enabled: false
+      hero:
+        weight: -18
+        enabled: false
+      image:
+        weight: -24
+        enabled: true
+      liftup_with_image:
+        weight: -15
+        enabled: false
+      list_of_links:
+        weight: -22
+        enabled: true
+      list_of_links_item:
+        weight: -17
+        enabled: false
+      paragraph_verkkolomake:
+        weight: 42
+        enabled: false
+      phasing:
+        weight: 43
+        enabled: false
+      phasing_item:
+        weight: 44
+        enabled: false
+      remote_video:
+        weight: 45
+        enabled: false
+      service_list:
+        weight: 46
+        enabled: false
+      sidebar_text:
+        weight: 47
+        enabled: false
+      text:
+        weight: -27
+        enabled: true
+      unit_search:
+        weight: 49
+        enabled: false
+      webform:
+        weight: 15
+        enabled: true
+field_type: entity_reference_revisions

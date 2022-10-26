@@ -1,0 +1,60 @@
+uuid: 796be00c-e16d-429c-8334-77e834a26266
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.service.field_application_continuous
+    - field.field.node.service.field_application_open
+    - field.field.node.service.field_application_period
+    - field.field.node.service.field_avustuslaji
+    - field.field.node.service.field_content
+    - field.field.node.service.field_errand_service
+    - field.field.node.service.field_hakijatyyppi
+    - field.field.node.service.field_has_hero
+    - field.field.node.service.field_hero
+    - field.field.node.service.field_liftup_image
+    - field.field.node.service.field_lower_content
+    - field.field.node.service.field_metatags
+    - field.field.node.service.field_service_channel
+    - field.field.node.service.field_target_group
+    - field.field.node.service.field_webform
+    - node.type.service
+  module:
+    - user
+id: node.service.teaser
+targetEntityType: node
+bundle: service
+mode: teaser
+content:
+  field_liftup_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: content_card
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_application_continuous: true
+  field_application_open: true
+  field_application_period: true
+  field_avustuslaji: true
+  field_content: true
+  field_errand_service: true
+  field_hakijatyyppi: true
+  field_has_hero: true
+  field_hero: true
+  field_lower_content: true
+  field_metatags: true
+  field_service_channel: true
+  field_target_group: true
+  field_webform: true
+  langcode: true
+  toc_enabled: true

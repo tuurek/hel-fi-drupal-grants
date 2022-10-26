@@ -1,0 +1,23 @@
+uuid: 0f688d8e-5bfc-46eb-b3f6-908d70f0f620
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_continuous
+    - node.type.service
+id: node.service.field_application_continuous
+field_name: field_application_continuous
+entity_type: node
+bundle: service
+label: 'Application continuous'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

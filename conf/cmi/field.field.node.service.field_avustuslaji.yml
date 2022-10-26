@@ -1,0 +1,31 @@
+uuid: 977185e4-16a8-4e7b-b59f-f6a8711a52d7
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_avustuslaji
+    - node.type.service
+    - taxonomy.vocabulary.avustuslaji
+  module:
+    - entity_reference_revisions
+id: node.service.field_avustuslaji
+field_name: field_avustuslaji
+entity_type: node
+bundle: service
+label: Avustuslaji
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      avustuslaji: avustuslaji
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference_revisions

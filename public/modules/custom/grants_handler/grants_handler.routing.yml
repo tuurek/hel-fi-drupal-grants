@@ -52,3 +52,11 @@ grants_handler.copy_application:
     _form: 'Drupal\grants_handler\Form\CopyApplicationForm'
   requirements:
     _custom_access: '\Drupal\grants_handler\Controller\ApplicationController::accessByApplicationNumber'
+
+grants_handler.copy_application_modal:
+  path: '/hakemus/{submission_id}/kopioi/{nojs}'
+  defaults:
+    _title: 'Copy application'
+    _form: 'Drupal\grants_handler\Form\CopyApplicationModalForm'
+  requirements:
+    _custom_access: '\Drupal\grants_handler\Controller\ApplicationController::accessByApplicationNumber'

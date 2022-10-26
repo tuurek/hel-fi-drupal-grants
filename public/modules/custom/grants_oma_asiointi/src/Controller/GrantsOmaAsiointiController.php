@@ -13,7 +13,7 @@ use Drupal\grants_mandate\Controller\GrantsMandateController;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\grants_mandate\CompanySelectException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Returns responses for Oma Asiointi routes.
@@ -112,7 +112,7 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
     if ($selectedCompany == NULL) {
-      throw new CompanySelectException('User not authorised');
+      throw new AccessDeniedHttpException('User not authorised');
     }
 
     $appEnv = ApplicationHandler::getAppEnv();

@@ -1,0 +1,22 @@
+uuid: e3f67589-d489-4f94-9323-24b37abf6a78
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: hakemus_pattern
+label: 'Hakemus pattern'
+type: 'canonical_entities:node'
+pattern: '[node:menu-link:parents:join-path]/[node:title]'
+selection_criteria:
+  d2ee5080-ffe4-4014-a645-87f994de4733:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: d2ee5080-ffe4-4014-a645-87f994de4733
+    context_mapping:
+      node: node
+    bundles:
+      form_page: form_page
+selection_logic: and
+weight: -5
+relationships: {  }

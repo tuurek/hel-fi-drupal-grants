@@ -84,20 +84,7 @@ function template_preprocess_grants_attachments(array &$variables) {
  * Implements hook_cron().
  */
 function grants_attachments_cron() {
-
-  // Get saved files from db.
-  $database = \Drupal::database();
-  $query = $database->query("SELECT * FROM {grants_attachments}");
-  $result = $query->fetchAll();
-  // Parse results into structure that uploader eats.
-  $resultParsed = [];
-  foreach ($result as $item) {
-    $resultParsed[$item->grants_application_number]['fid'][] = $item->fid;
-  }
-
-  /**
-   * @var \Drupal\grants_attachments\AttachmentRemover
-   */
+  /** @var \Drupal\grants_attachments\AttachmentRemover $attachmentRemover */
   $attachmentRemover = \Drupal::service('grants_attachments.attachment_remover');
   $attachmentRemover->purgeAllAttachments();
 }

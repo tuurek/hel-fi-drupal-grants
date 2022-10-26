@@ -1,0 +1,23 @@
+uuid: 84f67653-3d99-4b2e-9685-1a030fe49232
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_open
+    - node.type.form_page
+id: node.form_page.field_application_open
+field_name: field_application_open
+entity_type: node
+bundle: form_page
+label: 'Application open'
+description: 'This value controls if application is open to users. Tämä arvo määrittelee onko hakemus auki näkymissä.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Käytössä
+  off_label: 'Pois päältä'
+field_type: boolean

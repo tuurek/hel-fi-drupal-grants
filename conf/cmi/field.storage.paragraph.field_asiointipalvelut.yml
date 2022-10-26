@@ -1,0 +1,20 @@
+uuid: f4b0fdcf-5b44-4312-81d9-421f865fdb04
+langcode: fi
+status: true
+dependencies:
+  module:
+    - helfi_tpr
+    - paragraphs
+id: paragraph.field_asiointipalvelut
+field_name: field_asiointipalvelut
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: tpr_errand_service
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
