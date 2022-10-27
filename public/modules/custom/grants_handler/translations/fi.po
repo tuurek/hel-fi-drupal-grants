@@ -283,3 +283,6 @@ msgstr "Käytä hakemusta pohjana"
 msgid "Grant application copy failed"
 msgstr "Hakemuksen kopiointi epäonnistui"
 
+msgid "You must select company & authorise it."
+msgstr "Sinun pitää valita asiointirooli ja yritys."
+
