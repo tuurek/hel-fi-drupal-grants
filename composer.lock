@@ -5349,12 +5349,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed.git",
-                "reference": "315730d100f5094143ef4e316b4c22b5993eb359"
+                "reference": "535d08eba1b7cb3ae22b4002134c41c5c9c56b14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-form-tool-embed/zipball/315730d100f5094143ef4e316b4c22b5993eb359",
-                "reference": "315730d100f5094143ef4e316b4c22b5993eb359",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-form-tool-embed/zipball/535d08eba1b7cb3ae22b4002134c41c5c9c56b14",
+                "reference": "535d08eba1b7cb3ae22b4002134c41c5c9c56b14",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -5371,7 +5371,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed/issues"
             },
-            "time": "2022-10-26T12:08:52+00:00"
+            "time": "2022-10-31T06:19:43+00:00"
         },
         {
             "name": "drupal/helfi_hauki",
