@@ -23,9 +23,14 @@
 %}
 <div class="container">
   {{ statusTag }}
-  <div>
-    <h2 class="webform-submission__application_id_header">{{ "Application number"|t }}</h2>
-    <div>{{ applicationNumber }}</div>
+</div>
+<div class="webform-submission__title-wrapper">
+  {{ drupal_block('page_title_block') }}
+</div>
+<div class="container">
+  <div class="webform-submission__application_id">
+    <h2 class="webform-submission__application_id--header">{{ "Application number"|t }}</h2>
+    <div class="webform-submission__application_id--body">{{ applicationNumber }}</div>
   </div>
 <div{{ attributes.addClass(classes) }}>
 

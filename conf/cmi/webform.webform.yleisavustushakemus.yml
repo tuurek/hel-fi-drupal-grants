@@ -67,14 +67,6 @@ elements: |-
           '#title': Rekisteröimispäivä
           '#readonly': true
           '#required': true
-        community_status:
-          '#type': textfield
-          '#title': 'Yhdistyksen tila'
-          '#readonly': true
-        community_status_special:
-          '#type': textfield
-          '#title': 'Yhdistyksen erityistilanne'
-          '#readonly': true
         home:
           '#type': textfield
           '#title': Kotipaikka
@@ -150,12 +142,6 @@ elements: |-
           class:
             - webform--large
         '#required': true
-      address_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa osoitteita</span>
-          </a>
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
@@ -167,12 +153,6 @@ elements: |-
           class:
             - webform--medium
         '#required': true
-      account_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
-          </a>
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
@@ -193,12 +173,6 @@ elements: |-
           class:
             - webform--large
         '#required': true
-      officials_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa henkilöitä</span>
-          </a>
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'

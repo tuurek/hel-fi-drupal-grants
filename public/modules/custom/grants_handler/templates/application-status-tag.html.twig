@@ -1,3 +1,8 @@
-<div class="application-list__item--status application-list__item--status--{{ statusString|lower }} applicationStatusCheckable" data-application-number="{{ applicationNumber }}">
+<div data-status="{{ statusString }}" class="hide-spinner application-list__item--status application-list__item--status--{{ statusString|lower }} applicationStatusCheckable" data-application-number="{{ applicationNumber }}">
   {{ statusStringHumanReadable }}
+</div>
+<div class="hds-loading-spinner hds-loading-spinner--small">
+  <div></div>
+  <div></div>
+  <div></div>
 </div>
