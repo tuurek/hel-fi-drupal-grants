@@ -1,5 +1,5 @@
 uuid: 6ecd6829-8b02-408c-a044-1e5d8bc1fe0d
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -202,6 +202,11 @@ content:
     third_party_settings: {  }
   scheduler_settings:
     weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }

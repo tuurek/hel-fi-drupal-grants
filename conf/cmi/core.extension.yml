@@ -28,6 +28,7 @@ module:
   dblog: 0
   default_content: 0
   diff: 0
+  draggableviews: 0
   easy_breadcrumb: 0
   editor: 0
   entity: 0
@@ -66,7 +67,6 @@ module:
   helfi_helsinki_profiili: 0
   helfi_languages: 0
   helfi_media: 0
-  helfi_news_feed: 0
   helfi_news_item: 0
   helfi_platform_config: 0
   helfi_toc: 0

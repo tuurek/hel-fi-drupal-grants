@@ -1,5 +1,5 @@
 uuid: 24a8a893-51a1-40a2-8773-e8e86d68644e
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -19,8 +19,8 @@ content:
     type: imagecache_external_responsive_image
     label: hidden
     settings:
-      imagecache_external_responsive_style: gallery_thumbnail
       imagecache_external_link: ''
+      imagecache_external_responsive_style: gallery_thumbnail
     third_party_settings: {  }
     weight: 1
     region: content

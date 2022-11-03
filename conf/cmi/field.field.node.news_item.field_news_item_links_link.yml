@@ -1,5 +1,5 @@
 uuid: ff0d3023-e180-4948-8ac5-a19aafc0bb29
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -20,6 +20,6 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  link_type: 17
   title: 2
+  link_type: 17
 field_type: link

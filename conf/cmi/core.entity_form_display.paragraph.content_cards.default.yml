@@ -3,6 +3,7 @@ langcode: fi
 status: true
 dependencies:
   config:
+    - field.field.paragraph.content_cards.field_content_cards_content
     - field.field.paragraph.content_cards.field_content_cards_design
     - field.field.paragraph.content_cards.field_content_cards_title
     - paragraphs.paragraphs_type.content_cards
@@ -15,6 +16,16 @@ targetEntityType: paragraph
 bundle: content_cards
 mode: default
 content:
+  field_content_cards_content:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_content_cards_design:
     type: design_field_widget
     weight: 1
@@ -31,5 +42,4 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_content_cards_content: true
   status: true

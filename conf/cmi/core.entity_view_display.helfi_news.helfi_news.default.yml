@@ -1,5 +1,5 @@
 uuid: 5c91fc25-47e0-47a1-ae9d-62e57c12f0d8
-langcode: en
+langcode: fi
 status: true
 dependencies:
   config:
@@ -18,8 +18,8 @@ content:
     type: imagecache_external_responsive_image
     label: hidden
     settings:
-      imagecache_external_responsive_style: gallery_thumbnail
       imagecache_external_link: ''
+      imagecache_external_responsive_style: gallery_thumbnail
     third_party_settings: {  }
     weight: 1
     region: content
