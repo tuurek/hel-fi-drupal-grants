@@ -175,8 +175,8 @@ class GrantsProfileForm extends FormBase {
     ],
       [
         'attributes' => [
-          'class' => ['hds-button', 'hds-button--secondary']
-        ]
+          'class' => ['hds-button', 'hds-button--secondary'],
+        ],
       ]);
 
     $form['addressWrapper']['addresses'] = [
@@ -232,8 +232,8 @@ class GrantsProfileForm extends FormBase {
     ],
       [
         'attributes' => [
-          'class' => ['hds-button', 'hds-button--secondary']
-        ]
+          'class' => ['hds-button', 'hds-button--secondary'],
+        ],
       ]);
 
     $form['officialWrapper']['officials'] = [
@@ -284,8 +284,8 @@ class GrantsProfileForm extends FormBase {
     ],
     [
       'attributes' => [
-        'class' => ['hds-button', 'hds-button--secondary']
-      ]
+        'class' => ['hds-button', 'hds-button--secondary'],
+      ],
     ]);
 
     $sessionHash = sha1(\Drupal::service('session')->getId());
