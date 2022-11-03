@@ -1,8 +1,14 @@
+$breakpoint-xs: 320px;
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 992px;
+$breakpoint-xl: 1248px;
+
 .grants-profile--menuitem--login,
 .grants-profile--menuitem--logout {
-  font-size: $fontsize-body-s;
-  margin-left: $spacing-half;
-  margin-right: $spacing-half;
+  font-size: var(--fontsize-body-s);
+  margin-left: var(--spacing-2-xs);
+  margin-right: var(--spacing-2-xs);
   position: relative;
   display: flex;
   flex-flow: column;
@@ -16,11 +22,11 @@
     bottom: -7px;
   }
   text-align: center;
-  width: $spacing * 2.5;
-  height: $spacing * 2.5;
+  width: var(--spacing-m);
+  height: var(--spacing-m);
   @include breakpoint($breakpoint-m) {
-    width: $spacing-triple;
-    height: $spacing-triple;
+    width: var(--spacing-2-xl);;
+    height: var(--spacing-2-xl);;
   }
 
 }
@@ -34,23 +40,23 @@
   flex-grow: 10;
 }
 .grants-profile--menuitem {
-  margin-left: $spacing-half;
-  margin-right: $spacing-half;
+  margin-left: var(--spacing-2-xs);
+  margin-right: var(--spacing-2-xs);
   position: relative;
-  width: $spacing * 2.5;
-  height: $spacing * 2.5;
+  width: var(--spacing-m);
+  height: var(--spacing-m);
   a {
     text-decoration: none;
   }
   @include breakpoint($breakpoint-m) {
-    width: $spacing-triple;
-    height: $spacing-triple;
+    width: var(--spacing-2-xl);;
+    height: var(--spacing-2-xl);;
   }
   &--notifications {
     border-radius: 50%;
-    width: $spacing * 1.25;
-    height: $spacing * 1.25;
-    line-height: $spacing * 1;
+    width: var(--spacing-xs) 1.25;
+    height: var(--spacing-xs) 1.25;
+    line-height: var(--spacing-layout-2-xs);
     border: 2px white solid;
     color: white;
     font-weight: bold;
@@ -61,13 +67,13 @@
     z-index: 2;
     top: -5px;
     right: -5px;
-    font-size: $fontsize-body-s;
+    font-size: var(--fontsize-body-s);
   }
   &--initials {
     border-radius: 50%;
-    width: $spacing * 2.5;
-    height: $spacing * 2.5;
-    line-height: $spacing * 2.5;
+    width: var(--spacing-m);
+    height: var(--spacing-m);
+    line-height: var(--spacing-m);
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -75,9 +81,9 @@
       text-decoration: underline;
     }
     @include breakpoint($breakpoint-m) {
-      width: $spacing-triple;
-      height: $spacing-triple;
-      line-height: $spacing-triple;
+      width: var(--spacing-2-xl);;
+      height: var(--spacing-2-xl);;
+      line-height: var(--spacing-2-xl);;
     }
     &-colorscheme {
       &-2 {

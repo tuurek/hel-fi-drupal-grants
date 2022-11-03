@@ -1,17 +1,21 @@
-
+$breakpoint-xs: 320px;
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 992px;
+$breakpoint-xl: 1248px;
 
 .hero.hero--no-background {
   background: none;
   .hero__category {
-    font-size: $base-font-size * 1.5;
+    font-size: var(--fontsize-heading-m);
     @include breakpoint($breakpoint-m) {
-      font-size: $base-font-size * 2;
+      font-size: var(--fontsize-heading-l);
     }
   }
   .hero__title {
-    font-size: $base-font-size * 2.25;
+    font-size: var(--fontsize-heading-l);
     @include breakpoint($breakpoint-m) {
-      font-size: $base-font-size * 4.5;
+      font-size: var(--fontsize-heading-xxl);
     }
   }
 }

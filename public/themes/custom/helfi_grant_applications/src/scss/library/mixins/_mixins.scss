@@ -10,14 +10,14 @@
   } @else if unit($font-size) == 'rem' {
     font-size: $font-size;
   } @else {
-    font-size: ($font-size / $base-font-size) * 1rem;
+    font-size: ($font-size / var(--fontsize-body-m)) * 1rem;
   }
 
   // Handle the line-height.
   @if $line-height != "" {
     // Check if line-height is in px.
     @if unit($line-height) == 'px' {
-      line-height: ($line-height / $base-font-size) * 1rem;
+      line-height: ($line-height / var(--fontsize-body-m)) * 1rem;
     }
     @else {
       // Check if line-height is in rem and handle the line-height.
