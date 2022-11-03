@@ -734,10 +734,12 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
     $statusStrings = $config->get('statusStrings');
     $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
-      $eventDate = new \DateTime($event['timeCreated']);
-      $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $translatedStatus = $statusStrings[$langCode][$event['citizenCaseStatus']];
-      $history[] = $translatedStatus . ': ' . $eventDate->format('d.m.Y H:i');
+      if ($event["citizenCaseStatus"] != 'SUBMITTED') {
+        $eventDate = new \DateTime($event['timeCreated']);
+        $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+        $translatedStatus = $statusStrings[$langCode][$event['citizenCaseStatus']];
+        $history[] = $translatedStatus . ': ' . $eventDate->format('d.m.Y H:i');
+      }
     }
   }
 
@@ -1001,7 +1003,7 @@ function grants_handler_preprocess_application_list_item(&$variables) {
 
   $thirdPartySettings = $webform->getThirdPartySettings('grants_metadata');
 
-  $variables['errorType'] = null;
+  $variables['errorType'] = NULL;
 
   $variables['openStartDate'] = strtotime($thirdPartySettings['applicationOpen']);
   $variables['openEndDate'] = strtotime($thirdPartySettings['applicationClose']);
@@ -1220,7 +1222,8 @@ function grants_handler_preprocess_webform_submission_information(array &$variab
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
   $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
-  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
+    ->getRouteName();
 
   try {
     $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
@@ -1285,5 +1288,11 @@ function grants_handler_node_access(EntityInterface $entity, $operation, Account
     }
   }
   return $result;
+}
 
+/**
+ * Implements hook_form_alter().
+ */
+function grants_handler_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $d = 'adsf';
 }
