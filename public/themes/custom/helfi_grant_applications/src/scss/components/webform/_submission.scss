@@ -10,5 +10,8 @@
   }
   &__title-wrapper {
     padding-top: var(--spacing-2-xl);
+    h1 {
+      max-width: 100%;
+    }
   }
 }
