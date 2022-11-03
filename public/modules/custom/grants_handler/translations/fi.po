@@ -286,3 +286,11 @@ msgstr "Hakemuksen kopiointi epäonnistui"
 msgid "You must select company & authorise it."
 msgstr "Sinun pitää valita asiointirooli ja yritys."
 
+msgid "This application is not open"
+msgstr "Tämä avustushaku ei ole avoimena"
+
+msgid "You can't send the applicaiton, but you can continue filling and saving as a draft."
+msgstr "Et voi lähettää hakemusta, mutta voit täydentää ja tallentaa luonnoksena."
+
+msgid "Draft expired"
+msgstr "Luonnos vanhentunut"

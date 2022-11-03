@@ -1,6 +1,17 @@
 .webform-submission {
-  &__application_id_header {
-    font-size: 1rem;
-    font-weight: bold;
+  &__application_id {
+     border-bottom: 1px var(--color-black-20) solid;
+    padding-bottom: var(--spacing-xl);
+     &--header {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+  }
+  &__title-wrapper {
+    padding-top: var(--spacing-2-xl);
+    h1 {
+      max-width: 100%;
+    }
   }
 }

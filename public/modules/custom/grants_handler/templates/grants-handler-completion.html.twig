@@ -26,7 +26,7 @@
       <div class="grants-handler__completion__info-row">
         <div class="grants-handler__completion__item--submitted">
           <h3>{{ "Submission date"|t }}</h3>
-          {{ applicationTimestamp }}
+          {{ applicationTimestamp|format_date('long') }}
         </div>
         <div class="grants-handler__completion__item--number">
           <h3>{{ "Application number"|t }}</h3>

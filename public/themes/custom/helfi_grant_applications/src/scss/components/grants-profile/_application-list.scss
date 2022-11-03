@@ -14,6 +14,7 @@
     }
     &__link {
       margin-top: var(--spacing-m);
+      display:flex;
       a {
         font-size: 1.25rem;
         i {
@@ -31,28 +32,41 @@
       }
     }
     &--status {
-      display: inline-block;
+      display: inline-flex;
+      gap: var(--spacing-2-xs);
       font-weight: bold;
+      padding: var(--spacing-2-xs) var(--spacing-s);
+    }
+    &--status + .hds-loading-spinner {
+      display: inline-block;
+      left: 10px;
+      margin: 0;
+      padding: 0;
+      top: var(--spacing-3-xs);
+      position: relative;
+    }
+    &--status.hide-spinner + .hds-loading-spinner {
+      display: none;
     }
     &--status--submitted, &--status--sent {
-      padding: var(--spacing-3-xs) var(--spacing-s);
       background: var(--color-alert);
     }
     &--status--received, &--status--pending {
-      padding: var(--spacing-3-xs) var(--spacing-s);
       background: var(--color-engel);
     }
     &--status--processing {
-      padding: var(--spacing-3-xs) var(--spacing-s);
       background: var(--color-fog);
     }
     &--status--done, &--status--ready {
-      padding: var(--spacing-3-xs) var(--spacing-s);
       background: var(--color-copper);
     }
     &--status--rejected, &--status--deleted, &--status--canceled, &--status--cancelled, &--status--done {
-      padding: var(--spacing-3-xs) var(--spacing-s);
       background: var(--color-alert);
+    }
+    &--status--error {
+      background: var(--color-error);
+      color: var(--color-white);
+      text-transform: uppercase;
     }
   }
   &__count {
