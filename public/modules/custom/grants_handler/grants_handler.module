@@ -1289,10 +1289,3 @@ function grants_handler_node_access(EntityInterface $entity, $operation, Account
   }
   return $result;
 }
-
-/**
- * Implements hook_form_alter().
- */
-function grants_handler_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $d = 'adsf';
-}
