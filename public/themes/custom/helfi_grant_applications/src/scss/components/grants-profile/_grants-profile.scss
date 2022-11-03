@@ -123,6 +123,12 @@ $breakpoint-xl: 1248px;
     color: var(--color-success);
     vertical-align: middle;
   }
+
+  &-grants-profile {
+    .tabledrag-toggle-weight-wrapper, .field-multiple-drag  {
+      display: none;
+    }
+  }
 }
 .hds-link .hds-icon {
   vertical-align: bottom;

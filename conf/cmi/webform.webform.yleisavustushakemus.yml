@@ -15,7 +15,7 @@ third_party_settings:
     applicationOpen: '2022-10-03T11:08:26'
     applicationClose: '2022-12-19T11:19:00'
     applicationContinuous: 0
-    applicationTargetGroup: '2'
+    applicationTargetGroup: '12'
     disableCopying: 0
 weight: 0
 open: null
@@ -67,14 +67,6 @@ elements: |-
           '#title': Rekisteröimispäivä
           '#readonly': true
           '#required': true
-        community_status:
-          '#type': textfield
-          '#title': 'Yhdistyksen tila'
-          '#readonly': true
-        community_status_special:
-          '#type': textfield
-          '#title': 'Yhdistyksen erityistilanne'
-          '#readonly': true
         home:
           '#type': textfield
           '#title': Kotipaikka
@@ -150,12 +142,6 @@ elements: |-
           class:
             - webform--large
         '#required': true
-      address_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa osoitteita</span>
-          </a>
     tilinumero:
       '#type': webform_section
       '#title': Tilinumero
@@ -167,12 +153,6 @@ elements: |-
           class:
             - webform--medium
         '#required': true
-      account_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa tilinumeroita</span>
-          </a>
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
@@ -193,12 +173,6 @@ elements: |-
           class:
             - webform--large
         '#required': true
-      officials_markup:
-        '#type': webform_markup
-        '#markup': |-
-          <a class="hds-link hds-link--medium" href="/grants-profile/">
-            <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s"></span><span class="link-label">Muokkaa henkilöitä</span>
-          </a>
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'
@@ -249,6 +223,7 @@ elements: |-
         '#help': 'Kerro mit&auml; tarkoitusta varten avustusta haetaan, erittele tarvittaessa eri k&auml;ytt&ouml;kohteet. Kerro my&ouml;s mit&auml; avustuksella on tarkoitus saada aikaiseksi ja millaisia tavoitteita avustettavaan toimintaan liittyy.'
         '#required': true
         '#counter_type': character
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#cols': 63
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
@@ -472,6 +447,7 @@ elements: |-
         '#help': 'K&auml;ytt&ouml;selvityksess&auml; tulee kuvata lyhyesti, miten my&ouml;nnetty avustus on k&auml;ytetty. Avustuksen saajan on j&auml;rjestett&auml;v&auml; kirjanpitonsa niin, ett&auml; avustuksen k&auml;ytt&ouml;&auml; voidaan sielt&auml; seurata. Esimerkiksi jos yhteis&ouml; on saanut vuokra-avustusta, tilinp&auml;&auml;t&ouml;ksen tuloslaskelmasta tulee k&auml;yd&auml; ilmi avustuksen toteutuminen sek&auml; tuloissa ett&auml; menoissa. Lis&auml;&auml; tietoja avustuksen k&auml;yt&ouml;st&auml; voi my&ouml;s kirjoittaa erilliseen liitteeseen, jonka voi palauttaa K&auml;ytt&ouml;selvitys-liite kohdasta.'
         '#counter_type': character
         '#counter_minimum': 1
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
         '#states':
@@ -493,13 +469,6 @@ elements: |-
       community_purpose:
         '#type': textfield
         '#title': 'Toiminnan kuvaus'
-        '#states':
-          visible:
-            ':input[name="community_practices_business"]':
-              value: 1
-          required:
-            ':input[name="community_practices_business"]':
-              value: 1
         '#help': 'Tieto haetaan omat tiedot -osiosta'
       community_practices_business:
         '#type': radios
@@ -571,6 +540,7 @@ elements: |-
         '#title': Lisätiedot
         '#help': 'T&auml;h&auml;n voit tarvittaessa kirjoittaa lis&auml;tietoja tai muita perusteluja hakemukseen liittyen tai ilmoittaa perustietoihin tulleista muutoksista&nbsp;'
         '#counter_type': character
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#counter_maximum_message': '%d/5000 merkkiä jäljellä'
         '#cols': 63
@@ -666,6 +636,7 @@ elements: |-
         '#type': textarea
         '#title': 'Lisäselvitys liitteistä'
         '#counter_type': character
+        '#maxlength': 5000
         '#counter_maximum': 5000
         '#counter_maximum_message': 'Max 5000 characters.'
         '#cols': 63
@@ -707,7 +678,7 @@ settings:
   ajax_effect: ''
   ajax_speed: null
   page: true
-  page_submit_path: /hakemus/yleisavustushakemus
+  page_submit_path: /hakemus/kaupunginhallituksen-yleisavustushakemus
   page_confirm_path: ''
   page_theme_name: ''
   form_title: source_entity_webform

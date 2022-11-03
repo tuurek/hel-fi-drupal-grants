@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77c09c1f47a868487bf5a797a51a3ee7",
+    "content-hash": "6d6524ce4159d24ba9123c85d46e7ee0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5349,12 +5349,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed.git",
-                "reference": "8e16f7e8195c225ca26538630be0523fa47b0a9b"
+                "reference": "535d08eba1b7cb3ae22b4002134c41c5c9c56b14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-form-tool-embed/zipball/8e16f7e8195c225ca26538630be0523fa47b0a9b",
-                "reference": "8e16f7e8195c225ca26538630be0523fa47b0a9b",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-form-tool-embed/zipball/535d08eba1b7cb3ae22b4002134c41c5c9c56b14",
+                "reference": "535d08eba1b7cb3ae22b4002134c41c5c9c56b14",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -5371,7 +5371,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-form-tool-embed/issues"
             },
-            "time": "2022-10-21T08:30:46+00:00"
+            "time": "2022-10-31T06:19:43+00:00"
         },
         {
             "name": "drupal/helfi_hauki",

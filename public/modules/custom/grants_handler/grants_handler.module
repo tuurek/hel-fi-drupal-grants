@@ -418,23 +418,11 @@ function _grants_handler_imported_handler(
     return;
   }
 
-  $url = Url::fromRoute('grants_oma_asiointi.front');
-
   $array["#value"] = $value;
   $array['#attributes'] = ['readonly' => 'readonly', 'style' => 'display:none'];
   $array['#description'] = FieldFilteredMarkup::create($show_checkmark ? $value .
     ' <span aria-hidden="true" class="hds-icon hds-icon--check-circle-fill hds-icon--size-s"></span>' : $value);
   $array['#wrapper_attributes']['class'][] = 'grants-handler--prefilled-field';
-  if ($show_checkmark === FALSE) {
-    $array['#field_prefix'] = '
-    <a class="hds-link hds-link--medium" style="display:inline-block;"
-      href="' . $url->toString() . '">
-      <span aria-hidden="true" class="hds-icon hds-icon--pen-line hds-icon--size-s">
-
-</span><span class="link-label">' . t('Edit') . '</span>
-    </a>';
-  }
-
 }
 
 /**
@@ -649,7 +637,6 @@ function grants_handler_preprocess_webform_submission(&$variables) {
   $submission = $variables['webform_submission'];
   $webform = $submission->getWebform();
   $data = $submission->getData();
-
   if (isset($data["application_number"])) {
     $variables['applicationNumber'] = $data["application_number"];
   }
@@ -747,10 +734,12 @@ function grants_handler_preprocess_webform_submission_status_history(&$variables
     $statusStrings = $config->get('statusStrings');
     $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     foreach (array_reverse($submissionData["status_updates"]) as $event) {
-      $eventDate = new \DateTime($event['timeCreated']);
-      $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
-      $translatedStatus = $statusStrings[$langCode][$event['citizenCaseStatus']];
-      $history[] = $translatedStatus . ': ' . $eventDate->format('d.m.Y H:i');
+      if ($event["citizenCaseStatus"] != 'SUBMITTED') {
+        $eventDate = new \DateTime($event['timeCreated']);
+        $eventDate->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+        $translatedStatus = $statusStrings[$langCode][$event['citizenCaseStatus']];
+        $history[] = $translatedStatus . ': ' . $eventDate->format('d.m.Y H:i');
+      }
     }
   }
 
@@ -1012,6 +1001,15 @@ function grants_handler_preprocess_application_list_item(&$variables) {
   $variables['deleteApplicationUrl'] = $deleteAppUrl->toString();
   $variables['printApplicationUrl'] = $printAppUrl->toString();
 
+  $thirdPartySettings = $webform->getThirdPartySettings('grants_metadata');
+
+  $variables['errorType'] = NULL;
+
+  $variables['openStartDate'] = strtotime($thirdPartySettings['applicationOpen']);
+  $variables['openEndDate'] = strtotime($thirdPartySettings['applicationClose']);
+  if ($variables['openStartDate'] > time() || $variables['openEndDate'] < time()) {
+    $variables['errorType'] = 'NOT_OPEN';
+  }
   try {
     if (array_key_exists($submissionData["status"], ApplicationHandler::$applicationStatuses)) {
       $variables['statusString'] = $submissionData['status'];
@@ -1080,7 +1078,7 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
   try {
     $submissionObject = $variables['submissionObject'];
     $submissionData = $submissionObject->getData();
-    $variables['applicationTimestamp'] = $submissionData['form_timestamp_created'];
+    $variables['applicationTimestamp'] = strtotime($submissionData['form_timestamp_created']);
   }
   catch (\Exception $e) {
     $variables['applicationTimestamp'] = '';
@@ -1189,10 +1187,12 @@ function grants_handler_preprocess_webform_submission_information(array &$variab
       ],
     ]
   );
-  $editApplicationLinkText = Markup::create('<span class="hds-button__label">' . t('Edit application') . '</span><span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>');
-  $editApplicationLink = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
-  $variables['editApplicationLink'] = $editApplicationLink;
 
+  if (ApplicationHandler::isSubmissionEditable($submission)) {
+    $editApplicationLinkText = Markup::create('<span class="hds-button__label">' . t('Edit application') . '</span><span aria-hidden="true" class="hds-icon hds-icon--pen-line"></span>');
+    $editApplicationLink = Link::fromTextAndUrl($editApplicationLinkText, $editApplicationUrl);
+    $variables['editApplicationLink'] = $editApplicationLink;
+  }
   // Show copy button only if copying has not been disabled.
   if ($thirdPartySettings["disableCopying"] != 1) {
     $copyApplicationUrl = Url::fromRoute(
@@ -1222,7 +1222,8 @@ function grants_handler_preprocess_webform_submission_information(array &$variab
 
   $variables['applicationNumber'] = ApplicationHandler::createApplicationNumber($submission);
   $variables['isEditable'] = ApplicationHandler::isSubmissionEditable($submission);
-  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()->getRouteName();
+  $variables['isEditPage'] = 'grants_handler.edit_application' === \Drupal::routeMatch()
+    ->getRouteName();
 
   try {
     $dt = new \DateTime($submissionData['form_timestamp'], new \DateTimeZone('Europe/Helsinki'));
@@ -1287,5 +1288,4 @@ function grants_handler_node_access(EntityInterface $entity, $operation, Account
     }
   }
   return $result;
-
 }

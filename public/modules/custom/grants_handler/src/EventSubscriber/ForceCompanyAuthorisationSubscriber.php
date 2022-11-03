@@ -149,7 +149,7 @@ class ForceCompanyAuthorisationSubscriber implements EventSubscriberInterface {
       $event->setResponse(
         $redirect
       );
-      $this->messenger->addError('You must select company & authorise it.');
+      $this->messenger->addError(t('You must select company & authorise it.'));
     }
   }
 

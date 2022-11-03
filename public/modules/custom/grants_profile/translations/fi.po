@@ -363,3 +363,9 @@ msgstr "Poista pankkitili"
 
 msgid "Delete confirmation"
 msgstr "Poista varmistustiedosto"
+
+msgid "Saved confirmation of account owner or copy of account statement"
+msgstr "Tallennettu pankin ilmoitus tilin omaistajasta tai tiliotekopio"
+
+msgid "Banks confirmation of account owner or copy of account statement"
+msgstr "Pankin ilmoitus tilin omaistajasta tai tiliotekopio"

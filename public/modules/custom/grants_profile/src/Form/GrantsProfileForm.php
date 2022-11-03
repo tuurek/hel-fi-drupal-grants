@@ -5,7 +5,9 @@ namespace Drupal\grants_profile\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\TypedData\Exception\ReadOnlyException;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\grants_profile\TypedData\Definition\BankAccountDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Drupal\helfi_yjdh\Exception\YjdhException;
@@ -170,7 +172,12 @@ class GrantsProfileForm extends FormBase {
 
     $deleteAddressLink = Link::createFromRoute(t('Delete'), 'grants_profile.company_addresses.remove', [
       'address_id' => '{address_delta}',
-    ]);
+    ],
+      [
+        'attributes' => [
+          'class' => ['hds-button', 'hds-button--secondary'],
+        ],
+      ]);
 
     $form['addressWrapper']['addresses'] = [
       '#type' => 'multivalue',
@@ -222,7 +229,12 @@ class GrantsProfileForm extends FormBase {
 
     $deleteOfficialLink = Link::createFromRoute(t('Delete'), 'grants_profile.application_official.remove', [
       'official_id' => '{official_delta}',
-    ]);
+    ],
+      [
+        'attributes' => [
+          'class' => ['hds-button', 'hds-button--secondary'],
+        ],
+      ]);
 
     $form['officialWrapper']['officials'] = [
       '#type' => 'multivalue',
@@ -269,6 +281,11 @@ class GrantsProfileForm extends FormBase {
 
     $deleteBankAccountLink = Link::createFromRoute(t('Delete'), 'grants_profile.bank_account.remove', [
       'bank_account_id' => '{bank_account_delta}',
+    ],
+    [
+      'attributes' => [
+        'class' => ['hds-button', 'hds-button--secondary'],
+      ],
     ]);
 
     $sessionHash = sha1(\Drupal::service('session')->getId());
@@ -277,6 +294,7 @@ class GrantsProfileForm extends FormBase {
     $form['bankAccountWrapper']['bankAccounts'] = [
       '#type' => 'multivalue',
       '#title' => $this->t('Bank accounts'),
+      '#required' => TRUE,
       'bankAccount' => [
         '#type' => 'textfield',
         '#title' => $this->t('Bank account'),
@@ -284,12 +302,12 @@ class GrantsProfileForm extends FormBase {
       ],
       'confirmationFileName' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Saved confirmation file'),
+        '#title' => $this->t('Saved confirmation of account owner or copy of account statement'),
         '#attributes' => ['readonly' => 'readonly'],
       ],
       'confirmationFile' => [
         '#type' => 'managed_file',
-        '#title' => $this->t('Confirmation file'),
+        '#title' => $this->t('Banks confirmation of account owner or copy of account statement'),
         '#multiple' => FALSE,
         '#required' => TRUE,
         '#uri_scheme' => 'private',
@@ -299,7 +317,6 @@ class GrantsProfileForm extends FormBase {
         ],
         '#upload_location' => $upload_location,
         '#sanitize' => TRUE,
-        '#description' => $this->t('Confirm this bank account.'),
       ],
       'bank_account_id' => [
         '#type' => 'hidden',
@@ -367,19 +384,55 @@ class GrantsProfileForm extends FormBase {
             }
             else {
               // Parse existing confirmation file to values array.
-              if (isset($value2["confirmationFileName"]) && !empty($value2["confirmationFileName"])) {
-                $values[$key][$key2]['confirmationFile'] = $value2["confirmationFileName"];
+              if (isset($value2['confirmationFileName']) && !empty($value2['confirmationFileName'])) {
+                $values[$key][$key2]['confirmationFile'] = $value2['confirmationFileName'];
               }
               // If we have just uploaded file.
               if (
-                isset($value2["confirmationFile"]) &&
-                is_array($value2["confirmationFile"]) &&
-                !empty($value2["confirmationFile"])
+                isset($value2['confirmationFile']) &&
+                is_array($value2['confirmationFile']) &&
+                !empty($value2['confirmationFile'])
               ) {
                 // Prepend file id with FID- to tell profile service that we
                 // need to upload this file as well.
-                $values[$key][$key2]['confirmationFile'] = 'FID-' . $value2["confirmationFile"][0] ?? '';
+                $values[$key][$key2]['confirmationFile'] = 'FID-' . $value2['confirmationFile'][0] ?? '';
               }
+
+              try {
+                if (
+                  is_array($value2['confirmationFile']) && empty($value2['confirmationFile'])) {
+                  $value2['confirmationFile'] = '';
+                }
+                elseif (isset($values[$key][$key2]['confirmationFile'])) {
+                  $value2['confirmationFile'] = $values[$key][$key2]['confirmationFile'];
+                }
+                // Get definition.
+                $bankAccountDefinition = BankAccountDefinition::create('grants_profile_bank_account');
+                // Create data object.
+                $bankAccountData = $this->typedDataManager->create($bankAccountDefinition);
+                // Set values.
+                $bankAccountData->setValue($value2);
+                // Validate inserted data.
+                $violations = $bankAccountData->validate();
+                // If there's violations in data.
+                if ($violations->count() != 0) {
+                  foreach ($violations as $violation) {
+                    // Print errors by form item name.
+                    $form_state->setErrorByName(
+                      $violation->getPropertyPath(),
+                      $violation->getMessage());
+                  }
+                }
+                else {
+                  // Move addressData object to form_state storage.
+                  $form_state->setStorage(['bankAccountData' => $bankAccountData]);
+                }
+              }
+              catch (ReadOnlyException $e) {
+                $this->messenger()->addError('Data read only');
+                $form_state->setError($form, 'Trying to write to readonly value');
+              }
+
             }
           }
         }
@@ -434,7 +487,6 @@ class GrantsProfileForm extends FormBase {
     }
 
     $grantsProfileData = $storage['grantsProfileData'];
-    $values = $form_state->getValues();
 
     /** @var \Drupal\grants_profile\GrantsProfileService $grantsProfileService */
     $grantsProfileService = \Drupal::service('grants_profile.service');
@@ -454,7 +506,7 @@ class GrantsProfileForm extends FormBase {
     if ($success != FALSE) {
       $this->messenger()
         ->addStatus($this->t('Grantsprofile for %c (%s) saved.', [
-          '%c' => $selectedCompanyArray["name"],
+          '%c' => $selectedCompanyArray['name'],
           '%s' => $selectedCompany,
         ]));
     }

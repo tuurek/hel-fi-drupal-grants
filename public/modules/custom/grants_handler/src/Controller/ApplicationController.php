@@ -351,8 +351,8 @@ class ApplicationController extends ControllerBase {
    * Returns a page title.
    */
   public function getEditTitle($webform_submission): string {
-    $applicationNumber = ApplicationHandler::createApplicationNumber($webform_submission);
-    return $applicationNumber;
+    $webform = $webform_submission->getWebform();
+    return $webform->label();
   }
 
   /**
@@ -360,10 +360,8 @@ class ApplicationController extends ControllerBase {
    */
   public function getTitle($submission_id): string {
     $submissionObject = ApplicationHandler::submissionObjectFromApplicationNumber($submission_id);
-    $submissionData = $submissionObject->getData();
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $title = ApplicationHandler::$applicationTypes[$submissionData["application_type"]][$language];
-    return $title;
+    $webform = $submissionObject->getWebform();
+    return $webform->label();
   }
 
 }

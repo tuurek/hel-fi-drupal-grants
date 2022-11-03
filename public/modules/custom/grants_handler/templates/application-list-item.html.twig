@@ -1,18 +1,26 @@
+
 <li
   data-drupal-selector="{{ applicationNumber }}"
   id="{{ applicationNumber }}"
   class="application-list__item {{ classes|join(' ') }}"
 >
-  <div class="application-list__item__row">
-    {{ statusTag }}
+  <div class="application-list__item__row" data-open-start="{{ openStartDate }}" data-open-end="{{ openEndDate }}">
+    {% if (statusString == 'DRAFT' and errorType == 'NOT_OPEN') %}
+      <div data-status="ERROR" class="hide-spinner application-list__item--status application-list__item--status--error" data-application-number="{{ applicationNumber }}">
+        <span class="hds-icon hds-icon--alert-circle hds-icon--size-s" aria-hidden="true"></span>
+        <span>{{ "Draft expired"|t }}</span>
+      </div>
+    {% else %}
+      {{ statusTag }}
+    {% endif %}
     {% if (statusString == 'DRAFT') %}
-    <div class="application-list__item--delete">
-      <a class="hds-link hds-link--medium" href="{{ deleteApplicationUrl }}">
-        <span aria-hidden="true" class="hds-icon hds-icon--trash hds-icon--size-s"></span><span class="link-label">
+        <div class="application-list__item--delete">
+          <a class="hds-link hds-link--medium" href="{{ deleteApplicationUrl }}">
+            <span aria-hidden="true" class="hds-icon hds-icon--trash hds-icon--size-s"></span><span class="link-label">
           {{ "Delete application"|t }}
         </span>
-      </a>
-    </div>
+          </a>
+        </div>
     {% else %}
       <div class="application-list__item--print">
         <a class="hds-link hds-link--medium" href="{{ printApplicationUrl }}">
@@ -28,28 +36,41 @@
   </h3>
   <div class="application-list__item__row application-list__item__row__left">
     {% if (statusString == 'DRAFT') %}
-    <div class="application-list__item--submitted">
-      <h4>{{ "Draft saved time"|t }}</h4>
-      {{ applicationSubmitted }}
-    </div>
+      <div class="application-list__item--submitted">
+        <h4>{{ "Draft saved time"|t }}</h4>
+        {{ applicationSubmitted }}
+      </div>
+      {% if (errorType == 'NOT_OPEN') %}
+        <div class="hds-notification hds-notification--error">
+          <div class="hds-notification__content">
+            <div class="hds-notification__label" role="heading" aria-level="2">
+              <span class="hds-icon hds-icon--alert-circle-fill" aria-hidden="true"></span>
+              <span>{{ "This application is not open"|t }}</span>
+            </div>
+            <div class="hds-notification__body">
+              {{ "You can't send the applicaiton, but you can continue filling and saving as a draft." }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
     {% else %}
-    <div class="application-list__item--submitted">
-      <h4>{{ "Submission date"|t }}</h4>
-      {{ applicationSubmitted }}
-    </div>
-    <div class="application-list__item--number">
-      <h4>{{ "Application number"|t }}</h4>
-      {{ applicationNumber }}
-    </div>
+      <div class="application-list__item--submitted">
+        <h4>{{ "Submission date"|t }}</h4>
+        {{ applicationSubmitted }}
+      </div>
+      <div class="application-list__item--number">
+        <h4>{{ "Application number"|t }}</h4>
+        {{ applicationNumber }}
+      </div>
     {% endif %}
   </div>
   {% if (statusString == 'DRAFT') %}
-  <div class="application-list__item__link">
-    {{ editApplicationLink }}&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>
-  </div>
+    <div class="application-list__item__link">
+      {{ editApplicationLink }}&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-m vertical-align-small-or-medium-icon" aria-hidden="true"></i>
+    </div>
   {% else %}
-  <div class="application-list__item__link">
-    {{ viewApplicationLink }}&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-s vertical-align-small-or-medium-icon" aria-hidden="true"></i>
-  </div>
+    <div class="application-list__item__link">
+      {{ viewApplicationLink }}&nbsp;<i class="hds-icon icon hds-icon--arrow-right hds-icon--size-m vertical-align-small-or-medium-icon" aria-hidden="true"></i>
+    </div>
   {% endif %}
 </li>
