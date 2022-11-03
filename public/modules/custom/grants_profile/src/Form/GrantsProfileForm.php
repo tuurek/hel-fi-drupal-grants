@@ -172,7 +172,12 @@ class GrantsProfileForm extends FormBase {
 
     $deleteAddressLink = Link::createFromRoute(t('Delete'), 'grants_profile.company_addresses.remove', [
       'address_id' => '{address_delta}',
-    ]);
+    ],
+      [
+        'attributes' => [
+          'class' => ['hds-button', 'hds-button--secondary']
+        ]
+      ]);
 
     $form['addressWrapper']['addresses'] = [
       '#type' => 'multivalue',
@@ -224,7 +229,12 @@ class GrantsProfileForm extends FormBase {
 
     $deleteOfficialLink = Link::createFromRoute(t('Delete'), 'grants_profile.application_official.remove', [
       'official_id' => '{official_delta}',
-    ]);
+    ],
+      [
+        'attributes' => [
+          'class' => ['hds-button', 'hds-button--secondary']
+        ]
+      ]);
 
     $form['officialWrapper']['officials'] = [
       '#type' => 'multivalue',
@@ -271,6 +281,11 @@ class GrantsProfileForm extends FormBase {
 
     $deleteBankAccountLink = Link::createFromRoute(t('Delete'), 'grants_profile.bank_account.remove', [
       'bank_account_id' => '{bank_account_delta}',
+    ],
+    [
+      'attributes' => [
+        'class' => ['hds-button', 'hds-button--secondary']
+      ]
     ]);
 
     $sessionHash = sha1(\Drupal::service('session')->getId());
@@ -279,6 +294,7 @@ class GrantsProfileForm extends FormBase {
     $form['bankAccountWrapper']['bankAccounts'] = [
       '#type' => 'multivalue',
       '#title' => $this->t('Bank accounts'),
+      '#required' => TRUE,
       'bankAccount' => [
         '#type' => 'textfield',
         '#title' => $this->t('Bank account'),
@@ -286,12 +302,12 @@ class GrantsProfileForm extends FormBase {
       ],
       'confirmationFileName' => [
         '#type' => 'textfield',
-        '#title' => $this->t('Saved confirmation file'),
+        '#title' => $this->t('Saved confirmation of account owner or copy of account statement'),
         '#attributes' => ['readonly' => 'readonly'],
       ],
       'confirmationFile' => [
         '#type' => 'managed_file',
-        '#title' => $this->t('Confirmation file'),
+        '#title' => $this->t('Banks confirmation of account owner or copy of account statement'),
         '#multiple' => FALSE,
         '#required' => TRUE,
         '#uri_scheme' => 'private',
