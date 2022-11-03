@@ -16,7 +16,7 @@ statusStrings:
   fi:
     DRAFT: Luonnos
     SENT: Lähetetty
-    SUBMITTED: Lähetetty - odotetaan vahvistusta
+    SUBMITTED: 'Lähetetty - odotetaan vahvistusta'
     RECEIVED: Vastaanotettu
     PENDING: Odottaa
     PROCESSING: Käsittelyssä

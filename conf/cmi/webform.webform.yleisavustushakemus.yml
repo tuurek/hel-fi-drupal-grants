@@ -15,7 +15,7 @@ third_party_settings:
     applicationOpen: '2022-10-03T11:08:26'
     applicationClose: '2022-12-19T11:19:00'
     applicationContinuous: 0
-    applicationTargetGroup: '2'
+    applicationTargetGroup: '12'
     disableCopying: 0
 weight: 0
 open: null
@@ -678,7 +678,7 @@ settings:
   ajax_effect: ''
   ajax_speed: null
   page: true
-  page_submit_path: /hakemus/yleisavustushakemus
+  page_submit_path: /hakemus/kaupunginhallituksen-yleisavustushakemus
   page_confirm_path: ''
   page_theme_name: ''
   form_title: source_entity_webform
