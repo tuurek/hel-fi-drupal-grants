@@ -1,0 +1,24 @@
+uuid: c43d0cb0-277b-4768-b8ea-b5503ca61c86
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - radioactivity
+id: node.field_radioactivity
+field_name: field_radioactivity
+entity_type: node
+type: radioactivity_reference
+settings:
+  target_type: radioactivity
+  profile: decay
+  granularity: 900
+  halflife: 43200
+  cutoff: !!float 1
+module: radioactivity
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

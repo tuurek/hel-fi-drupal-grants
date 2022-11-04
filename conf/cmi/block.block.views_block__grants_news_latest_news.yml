@@ -1,0 +1,29 @@
+uuid: dbfe2ab5-f38b-40eb-b02c-0697aa51c4b2
+langcode: fi
+status: true
+dependencies:
+  config:
+    - views.view.grants_news
+  module:
+    - system
+    - views
+  theme:
+    - helfi_grant_applications
+id: views_block__grants_news_latest_news
+theme: helfi_grant_applications
+region: sidebar_second
+weight: 0
+provider: null
+plugin: 'views_block:grants_news-latest_news'
+settings:
+  id: 'views_block:grants_news-latest_news'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/uutiset\r\n/uutiset/*\r\n/nyheter\r\n/nyheter/*\r\n/news\r\n/news/*"

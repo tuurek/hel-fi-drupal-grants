@@ -10,6 +10,7 @@ module:
   better_exposed_filters: 0
   block: 0
   block_content: 0
+  block_field: 0
   breakpoint: 0
   ckeditor: 0
   config: 0
@@ -108,6 +109,7 @@ module:
   paragraphs_asymmetric_translation_widgets: 0
   path: 0
   path_alias: 0
+  radioactivity: 0
   readonly_field_widget: 0
   redirect: 0
   responsive_image: 0

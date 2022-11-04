@@ -11,8 +11,9 @@ dependencies:
     - field.field.node.news_item.field_news_item_links_link
     - field.field.node.news_item.field_news_item_links_title
     - field.field.node.news_item.field_news_item_tags
+    - field.field.node.news_item.field_radioactivity
     - field.field.node.news_item.field_short_title
-    - image.style.3_2_m
+    - image.style.original_s
     - node.type.news_item
   module:
     - media
@@ -29,7 +30,9 @@ content:
     label: hidden
     settings:
       image_link: ''
-      image_style: 3_2_m
+      image_style: original_s
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 1
     region: content
@@ -70,5 +73,6 @@ hidden:
   field_main_image_caption: true
   field_news_item_links_link: true
   field_news_item_tags: true
+  field_radioactivity: true
   langcode: true
   toc_enabled: true

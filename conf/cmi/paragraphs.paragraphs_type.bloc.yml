@@ -1,0 +1,15 @@
+uuid: c936e29e-fb2f-40c0-86c9-269a7e27a9bf
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs_library
+third_party_settings:
+  paragraphs_library:
+    allow_library_conversion: true
+id: bloc
+label: 'Block embed'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

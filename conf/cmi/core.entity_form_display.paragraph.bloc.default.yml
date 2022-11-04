@@ -1,0 +1,26 @@
+uuid: 0194e414-8c04-4546-a445-70afc517fb19
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.bloc.field_block
+    - paragraphs.paragraphs_type.bloc
+  module:
+    - block_field
+id: paragraph.bloc.default
+targetEntityType: paragraph
+bundle: bloc
+mode: default
+content:
+  field_block:
+    type: block_field_default
+    weight: 0
+    region: content
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

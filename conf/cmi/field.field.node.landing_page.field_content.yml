@@ -6,6 +6,7 @@ dependencies:
     - field.storage.node.field_content
     - node.type.landing_page
     - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.bloc
     - paragraphs.paragraphs_type.chart
     - paragraphs.paragraphs_type.columns
     - paragraphs.paragraphs_type.content_cards
@@ -20,7 +21,7 @@ id: node.landing_page.field_content
 field_name: field_content
 entity_type: node
 bundle: landing_page
-label: Content
+label: 'Content region'
 description: ''
 required: false
 translatable: true
@@ -37,6 +38,7 @@ settings:
       content_cards: content_cards
       chart: chart
       news_list: news_list
+      bloc: bloc
     negate: 0
     target_bundles_drag_drop:
       accordion:
@@ -45,8 +47,14 @@ settings:
       accordion_item:
         weight: -21
         enabled: false
+      asiointipalvelu:
+        weight: 30
+        enabled: false
       banner:
         weight: -26
+        enabled: true
+      bloc:
+        weight: 32
         enabled: true
       chart:
         weight: 25
@@ -57,6 +65,12 @@ settings:
       content_cards:
         weight: -23
         enabled: true
+      content_liftup:
+        weight: 35
+        enabled: false
+      from_library:
+        weight: 36
+        enabled: false
       gallery:
         weight: -20
         enabled: false
@@ -81,7 +95,31 @@ settings:
       news_list:
         weight: 30
         enabled: true
+      paragraph_verkkolomake:
+        weight: 45
+        enabled: false
+      phasing:
+        weight: 46
+        enabled: false
+      phasing_item:
+        weight: 47
+        enabled: false
+      remote_video:
+        weight: 48
+        enabled: false
+      service_list:
+        weight: 49
+        enabled: false
+      sidebar_text:
+        weight: 50
+        enabled: false
       text:
         weight: -15
+        enabled: false
+      unit_search:
+        weight: 52
+        enabled: false
+      webform:
+        weight: 54
         enabled: false
 field_type: entity_reference_revisions

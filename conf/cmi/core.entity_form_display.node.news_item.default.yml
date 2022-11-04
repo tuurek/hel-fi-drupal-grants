@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.news_item.field_news_item_links_link
     - field.field.node.news_item.field_news_item_links_title
     - field.field.node.news_item.field_news_item_tags
+    - field.field.node.news_item.field_radioactivity
     - field.field.node.news_item.field_short_title
     - node.type.news_item
   module:
@@ -20,6 +21,7 @@ dependencies:
     - paragraphs
     - path
     - publication_date
+    - radioactivity
     - scheduler
     - select2
 third_party_settings:
@@ -159,6 +161,12 @@ content:
       autocomplete: false
       match_operator: CONTAINS
       match_limit: 10
+    third_party_settings: {  }
+  field_radioactivity:
+    type: radioactivity_reference
+    weight: 26
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_short_title:
     type: string_textfield
