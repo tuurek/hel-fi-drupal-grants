@@ -34,9 +34,11 @@
   </div>
 <div{{ attributes.addClass(classes) }}>
 
+  {% if statusString != 'DRAFT' %}
   <div id="message-form-wrapper">
     {{ messages }}
   </div>
+  {% endif %}
 
 
   {{ information }}

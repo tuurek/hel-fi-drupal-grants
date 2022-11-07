@@ -48,6 +48,29 @@
     &--status.hide-spinner + .hds-loading-spinner {
       display: none;
     }
+
+    &--status + div + .application-list__item--error {
+      display: none;
+    }
+    &--status.show-error {
+      background: var(--color-black-20);
+      color: var(--color-black-90);
+    }
+    &--status.show-error + div + .application-list__item--error {
+      display: inline-flex;
+      left: var(--spacing-xs);
+      margin: 0;
+      padding: 0;
+      top: var(--spacing-3-xs);
+      position: relative;
+      .application-list--error-text {
+        margin-left: var(--spacing-2-xs);
+        display: inline-block;
+      }
+    }
+    &--status--draft {
+      padding-left: 0;
+    }
     &--status--submitted, &--status--sent {
       background: var(--color-alert);
     }

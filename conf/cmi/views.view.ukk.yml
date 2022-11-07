@@ -168,7 +168,7 @@ display:
           expose:
             operator_id: field_category_target_id_op
             label: 'Kategoria (field_category)'
-            description: ''
+            description: null
             use_operator: false
             operator: field_category_target_id_op
             operator_limit_selection: false
@@ -179,11 +179,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
-              admin: '0'
-              content_producer: '0'
-              read_only: '0'
-              helsinkiprofiili: '0'
             reduce: false
           is_grouped: true
           group_info:
@@ -257,7 +252,7 @@ display:
         metatag_display_extender:
           metatags: {  }
           tokenize: false
-      path: tietoa-asioinnista/ukk
+      path: tietoa-avustuksista/ukk
       menu:
         type: normal
         title: 'Usein kysytyt kysymykset'

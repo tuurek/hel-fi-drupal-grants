@@ -2,8 +2,6 @@ uuid: 64518817-1f91-43ac-ad6e-d596e2f43fa0
 langcode: fi
 status: true
 dependencies:
-  module:
-    - system
   theme:
     - helfi_grant_applications
 id: sivunotsikko
@@ -17,8 +15,4 @@ settings:
   label: 'Sivun otsikko'
   label_display: '0'
   provider: core
-visibility:
-  request_path:
-    id: request_path
-    negate: true
-    pages: '/hakemus/*/katso'
+visibility: {  }

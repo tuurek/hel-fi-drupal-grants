@@ -2,6 +2,7 @@
   Drupal.behaviors.GrantsHandlerApplicationStatusCheck = {
     attach: function (context, settings) {
       var pollFrequency = 2000
+      var maxFrequency = 180000
       var timerInterval = null
       var applicationNumber = null
       var requestUrl = null
@@ -10,15 +11,20 @@
 
       function changeValue() {
         stop()
-        pollFrequency = Math.min(60000, pollFrequency * 1.5)
+        pollFrequency = Math.min(maxFrequency, pollFrequency * 1.5)
         const xhttp = new XMLHttpRequest()
         if (statusTagElement !== null) {
           statusTagElement.classList.remove("hide-spinner")
         }
+        var dataJson = currentStatus;
         xhttp.onload = function() {
           data = this.responseText
-          dataJson = JSON.parse(data)
-          if (dataJson.data.value !== currentStatus) {
+          try {
+            dataJson = JSON.parse(data).data.value
+          } catch (e) {
+            statusTagElement.classList.add("show-error")
+          }
+          if (dataJson !== currentStatus) {
             location.reload()
           }
           if (statusTagElement !== null) {

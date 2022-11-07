@@ -54,3 +54,4 @@ msgstr "Hakemuksen tila"
 
 msgid "Application attachments"
 msgstr "Hakemuksen liitteet"
+

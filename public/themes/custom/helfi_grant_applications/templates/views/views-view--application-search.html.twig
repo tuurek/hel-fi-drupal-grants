@@ -39,23 +39,63 @@
   dom_id ? 'js-view-dom-id-' ~ dom_id,
 ]
 %}
+{% set background_color = 'engel' %}
+{% set design = 'with-search' %}
+{% set description = content.field_hero_desc %}
+
+
+{% set design_class = "hero--with-searchs" %}
+
+{%
+  set hero_classes = [
+  'hero',
+  design_class ? design_class,
+  background_color ? 'hero--bg-color--' ~ background_color
+]
+%}
+
+
+
+
+
+
+
 <div{{ attributes.addClass(classes) }}>
+  <div{{ attributes.addClass(hero_classes) }}>
+    {% embed "@hdbt/misc/container.twig" with {container_element: 'hero'} %}
+      {% block container_content %}
+        <div class="hero__text-content">
+          <h1 class="hero__title">
+            HERO
+          </h1>
+
+          {{ title_prefix }}
+          {% if title %}
+            {{ title }}
+          {% endif %}
+          {{ title_suffix }}
+          {% if exposed %}
+            <div class="view-filters">
+              {{ exposed }}
+            </div>
+          {% endif %}
+          {% if header %}
+            <div class="view-header">
+              {{ header }}
+            </div>
+          {% endif %}
+
+        </div>
+        <span class="hero__arrow" aria-hidden="true"></span>
+      {% endblock %}
+    {% endembed %}
+    {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
+  </div>
+</div>
+  <div class="main-content">
+    <div class="layout-content">
   <div class="container">
-    {{ title_prefix }}
-    {% if title %}
-      {{ title }}
-    {% endif %}
-    {{ title_suffix }}
-    {% if exposed %}
-      <div class="view-filters">
-        {{ exposed }}
-      </div>
-    {% endif %}
-    {% if header %}
-      <div class="view-header">
-        {{ header }}
-      </div>
-    {% endif %}
+
     {% if attachment_before %}
       <div class="attachment attachment-before">
         {{ attachment_before }}
@@ -94,4 +134,3 @@
       </div>
     {% endif %}
   </div>
-</div>
