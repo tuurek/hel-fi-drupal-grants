@@ -1,0 +1,10 @@
+uuid: 9dae47f4-3349-4fb2-9b41-a29882a4559c
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: node.service_page_list
+label: 'Service page list'
+targetEntityType: node
+cache: true

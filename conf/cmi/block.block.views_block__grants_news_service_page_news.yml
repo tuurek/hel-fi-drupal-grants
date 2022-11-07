@@ -1,0 +1,33 @@
+uuid: 7e7b8b1b-3250-4f9e-8226-a0372afde439
+langcode: fi
+status: true
+dependencies:
+  config:
+    - views.view.grants_news
+  module:
+    - node
+    - views
+  theme:
+    - helfi_grant_applications
+id: views_block__grants_news_service_page_news
+theme: helfi_grant_applications
+region: messages
+weight: 0
+provider: null
+plugin: 'views_block:grants_news-service_page_news'
+settings:
+  id: 'views_block:grants_news-service_page_news'
+  label: ''
+  label_display: '0'
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      service: service

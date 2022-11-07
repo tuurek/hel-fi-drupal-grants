@@ -1,0 +1,23 @@
+uuid: e9563abe-039a-4ad7-9755-a6beafbe71fa
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_page_exclusive
+    - node.type.news_item
+id: node.news_item.field_service_page_exclusive
+field_name: field_service_page_exclusive
+entity_type: node
+bundle: news_item
+label: 'Service page exclusive'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Show only on selected service pages'
+  off_label: 'Show on news listings as well'
+field_type: boolean

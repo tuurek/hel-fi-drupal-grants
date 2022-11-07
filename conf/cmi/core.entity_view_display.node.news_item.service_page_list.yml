@@ -1,9 +1,9 @@
-uuid: cdecc646-026d-4530-bd09-ddb903028174
+uuid: 407d5831-b773-42b7-a3a0-1886828d9a70
 langcode: fi
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.service_page_list
     - field.field.node.news_item.field_content
     - field.field.node.news_item.field_lead_in
     - field.field.node.news_item.field_main_image
@@ -17,20 +17,19 @@ dependencies:
     - field.field.node.news_item.field_short_title
     - node.type.news_item
   module:
+    - helfi_content
     - user
 _core:
-  default_config_hash: 4RoByFe85YuoN-c8PBxgkvftL6UysE_Bkai-0ij0MPU
-id: node.news_item.teaser
+  default_config_hash: tqlFC6ku-KOPGVDzzfRA0SSzFD_5iAMqKfpTMcUyqBg
+id: node.news_item.service_page_list
 targetEntityType: node
 bundle: news_item
-mode: teaser
+mode: service_page_list
 content:
-  field_main_image:
-    type: entity_reference_entity_view
+  field_lead_in:
+    type: text_span
     label: hidden
-    settings:
-      view_mode: image
-      link: false
+    settings: {  }
     third_party_settings: {  }
     weight: 1
     region: content
@@ -40,39 +39,28 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 3
-    region: content
-  field_short_title:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  links:
-    settings: {  }
-    third_party_settings: {  }
     weight: 0
     region: content
   published_at:
     type: timestamp
     label: hidden
     settings:
-      date_format: long
+      date_format: publication_date_format
       custom_date_format: ''
       timezone: ''
     third_party_settings: {  }
-    weight: 4
+    weight: 2
     region: content
 hidden:
   field_content: true
-  field_lead_in: true
+  field_main_image: true
   field_main_image_caption: true
   field_news_item_links_link: true
   field_news_item_tags: true
   field_radioactivity: true
   field_service_page_exclusive: true
   field_service_pages: true
+  field_short_title: true
   langcode: true
+  links: true
   toc_enabled: true

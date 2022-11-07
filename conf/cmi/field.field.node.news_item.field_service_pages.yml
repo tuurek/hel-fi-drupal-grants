@@ -1,0 +1,29 @@
+uuid: 2b46b59c-e334-404f-b587-0d7f635a723e
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_pages
+    - node.type.news_item
+    - node.type.service
+id: node.news_item.field_service_pages
+field_name: field_service_pages
+entity_type: node
+bundle: news_item
+label: 'Service pages'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      service: service
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

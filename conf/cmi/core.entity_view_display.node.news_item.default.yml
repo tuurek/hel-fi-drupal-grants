@@ -11,6 +11,8 @@ dependencies:
     - field.field.node.news_item.field_news_item_links_title
     - field.field.node.news_item.field_news_item_tags
     - field.field.node.news_item.field_radioactivity
+    - field.field.node.news_item.field_service_page_exclusive
+    - field.field.node.news_item.field_service_pages
     - field.field.node.news_item.field_short_title
     - node.type.news_item
   module:
@@ -95,6 +97,24 @@ content:
       decimals: !!float 0
     third_party_settings: {  }
     weight: 10
+    region: content
+  field_service_page_exclusive:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_service_pages:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 11
     region: content
   field_short_title:
     type: string
