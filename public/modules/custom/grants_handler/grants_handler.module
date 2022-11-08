@@ -1066,7 +1066,7 @@ function grants_handler_preprocess_grants_handler_completion(&$variables) {
     '#theme' => 'application_status_tag',
     '#applicationID' => $variables["submissionId"],
   ];
-  $variables['ownApplicationsLink'] = Link::createFromRoute(t('My Applications'), 'grants_oma_asiointi.applications_list')
+  $variables['ownApplicationsLink'] = Link::createFromRoute(t('Grants profile'), 'grants_oma_asiointi.front')
     ->toRenderable();
   $variables['ownApplicationsLink']['#title'] = ['#markup' => '<span class="hds-button__label">' . $variables['ownApplicationsLink']['#title'] . '</span><span aria-hidden="true" class="hds-icon hds-icon--arrow-right"></span>'];
   $variables['ownApplicationsLink']['#attributes'] = ['class' => 'hds-button hds-button--primary'];

@@ -1,4 +1,17 @@
 .view-ukk {
+  background: var(--color-black-5);
+  &.hero--bg-color--engel {
+    background: var(--color-engel);
+    .hds-koros {
+      color: var(--color-black-5);
+    }
+  }
+  .view-filters {
+    display: none;
+  }
+  .hero .hero__text-content {
+    max-width: 100%;
+  }
   #edit-field-category-target-id {
     display: flex;
     .hds-radio-button:is(:first-of-type) {

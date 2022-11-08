@@ -61,76 +61,82 @@
 
 
 <div{{ attributes.addClass(classes) }}>
-  <div{{ attributes.addClass(hero_classes) }}>
-    {% embed "@hdbt/misc/container.twig" with {container_element: 'hero'} %}
-      {% block container_content %}
-        <div class="hero__text-content">
-          <h1 class="hero__title">
-            HERO
-          </h1>
+  <div class="application_search--filter-wrapper">
+    <div{{ attributes.addClass(hero_classes) }}>
+      {% embed "@hdbt/misc/container.twig" with {container_element: 'hero'} %}
+        {% block container_content %}
+          <div class="hero__text-content">
+            <h1 class="hero__title">
+              {{ "Search for application"|t }}
+            </h1>
 
-          {{ title_prefix }}
-          {% if title %}
-            {{ title }}
-          {% endif %}
-          {{ title_suffix }}
-          {% if exposed %}
-            <div class="view-filters">
-              {{ exposed }}
-            </div>
-          {% endif %}
-          {% if header %}
-            <div class="view-header">
-              {{ header }}
-            </div>
-          {% endif %}
+            {{ title_prefix }}
+            {% if title %}
+              {{ title }}
+            {% endif %}
+            {{ title_suffix }}
+            {% if header %}
+              <div class="view-header">
+                {{ header }}
+              </div>
+            {% endif %}
 
-        </div>
-        <span class="hero__arrow" aria-hidden="true"></span>
-      {% endblock %}
-    {% endembed %}
-    {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
+          </div>
+          <span class="hero__arrow" aria-hidden="true"></span>
+        {% endblock %}
+      {% endembed %}
+      {% include '@hdbt/misc/koro.twig' with {koro: koro, flip: false } %}
+    </div>
+    <div class="application_search--filters">
+      <div class="container">
+        <h2>{{ "Filter search"|t }}</h2>
+        {% if exposed %}
+          <div class="view-filters">
+            {{ exposed }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
-</div>
+
   <div class="main-content">
     <div class="layout-content">
-  <div class="container">
+      <div class="container">
+        {% if attachment_before %}
+          <div class="attachment attachment-before">
+            {{ attachment_before }}
+          </div>
+        {% endif %}
 
-    {% if attachment_before %}
-      <div class="attachment attachment-before">
-        {{ attachment_before }}
-      </div>
-    {% endif %}
+        {% if rows %}
+          <div class="application_search--rows view-content">
+            {{ rows }}
+          </div>
+        {% elseif empty %}
+          <div class="view-empty">
+            {{ empty }}
+          </div>
+        {% endif %}
 
-    {% if rows %}
-      <div class="view-content">
-        {{ rows }}
+        {% if pager %}
+          {{ pager }}
+        {% endif %}
+        {% if attachment_after %}
+          <div class="attachment attachment-after">
+            {{ attachment_after }}
+          </div>
+        {% endif %}
+        {% if more %}
+          {{ more }}
+        {% endif %}
+        {% if footer %}
+          <div class="view-footer">
+            {{ footer }}
+          </div>
+        {% endif %}
+        {% if feed_icons %}
+          <div class="feed-icons">
+            {{ feed_icons }}
+          </div>
+        {% endif %}
       </div>
-    {% elseif empty %}
-      <div class="view-empty">
-        {{ empty }}
-      </div>
-    {% endif %}
-
-    {% if pager %}
-      {{ pager }}
-    {% endif %}
-    {% if attachment_after %}
-      <div class="attachment attachment-after">
-        {{ attachment_after }}
-      </div>
-    {% endif %}
-    {% if more %}
-      {{ more }}
-    {% endif %}
-    {% if footer %}
-      <div class="view-footer">
-        {{ footer }}
-      </div>
-    {% endif %}
-    {% if feed_icons %}
-      <div class="feed-icons">
-        {{ feed_icons }}
-      </div>
-    {% endif %}
-  </div>

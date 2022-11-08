@@ -41,6 +41,24 @@ function helfi_grant_applications_preprocess(&$variables) {
   $variables['#attached']['drupalSettings']['helfigrantapplicationsIconsPath'] = $variables['helfi_grant_applications_icons_path'];
 }
 
+function helfi_grant_applications_preprocess_views_view_fields(&$variables) {
+  $view = $variables['view'];
+
+  if ($view->id() === 'application_search') {
+    $dateIcon = '<span aria-hidden="true" class="hds-icon hds-icon--calendar-clock hds-icon--size-s"></span>';
+    if ($view->field['field_application_continuous']->original_value == '1') {
+      $variables['fields']['field_application_period']->content = \Drupal\Core\Render\Markup::create($dateIcon.'<span>'.t('Continuous application').'</span>');
+      unset ($variables['fields']['field_application_continuous']);
+    } else {
+      $variables['fields']['field_application_period']->content = \Drupal\Core\Render\Markup::create($dateIcon.'<span>'.$variables['fields']['field_application_period']->content.'</span>');
+      unset ($variables['fields']['field_application_continuous']);
+    }
+    unset ($variables['fields']['field_application_open']);
+    $variables['fields']['view_node']->content = \Drupal\Core\Render\Markup::create(html_entity_decode($variables['fields']['view_node']->content));
+    $variables['fields']['field_content']->content = \Drupal\Core\Render\Markup::create(html_entity_decode($variables['fields']['field_content']->content));
+  }
+}
+
 /**
  * Implements hook_field_widget_paragraphs_form_alter().
  */
