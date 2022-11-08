@@ -1,4 +1,4 @@
-uuid: 5e3119d5-54d8-4b38-88cb-eb6fd4d34ac3
+uuid: cf6c5767-ad88-4213-899b-0905d1fc6b46
 langcode: fi
 status: true
 dependencies:
@@ -9,7 +9,7 @@ field_name: field_link_title
 entity_type: block_content
 type: string
 settings:
-  max_length: 50
+  max_length: 255
   case_sensitive: false
   is_ascii: false
 module: core
