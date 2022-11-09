@@ -5,11 +5,9 @@
  * Theme File.
  */
 
+use Drupal\Core\Render\Markup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Html;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
 
 /**
  * @file
@@ -98,34 +96,38 @@ function helfi_grant_applications_preprocess_views_view(&$variables) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function helfi_grant_applications_form_views_exposed_form_alter(&$form, $form_state, $form_id) {
-  if ( $form_state->get('view')->id() == 'ukk'){
+  if ($form_state->get('view')->id() == 'ukk') {
     $terms = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
       ->loadTree('ukk_kategoriat');
     $temp = 0;
     foreach ($terms as $term) {
-        $temp = (int) $term->tid;
-        break;
+      $temp = (int) $term->tid;
+      break;
     }
     $form['field_category']['#default_value'] = $temp;
   }
 }
 
+/**
+ *
+ */
 function helfi_grant_applications_preprocess_views_view_fields(&$variables) {
   $view = $variables['view'];
 
   if ($view->id() === 'application_search') {
     $dateIcon = '<span aria-hidden="true" class="hds-icon hds-icon--calendar-clock hds-icon--size-s"></span>';
     if ($view->field['field_application_continuous']->original_value == '1') {
-      $variables['fields']['field_application_period']->content = \Drupal\Core\Render\Markup::create($dateIcon.'<span>'.t('Continuous application').'</span>');
-      unset ($variables['fields']['field_application_continuous']);
-    } else {
-      $variables['fields']['field_application_period']->content = \Drupal\Core\Render\Markup::create($dateIcon.'<span>'.$variables['fields']['field_application_period']->content.'</span>');
-      unset ($variables['fields']['field_application_continuous']);
+      $variables['fields']['field_application_period']->content = Markup::create($dateIcon . '<span>' . t('Continuous application') . '</span>');
+      unset($variables['fields']['field_application_continuous']);
     }
-    unset ($variables['fields']['field_application_open']);
-    $variables['fields']['view_node']->content = \Drupal\Core\Render\Markup::create(html_entity_decode($variables['fields']['view_node']->content));
-    $variables['fields']['field_content']->content = \Drupal\Core\Render\Markup::create(html_entity_decode($variables['fields']['field_content']->content));
+    else {
+      $variables['fields']['field_application_period']->content = Markup::create($dateIcon . '<span>' . $variables['fields']['field_application_period']->content . '</span>');
+      unset($variables['fields']['field_application_continuous']);
+    }
+    unset($variables['fields']['field_application_open']);
+    $variables['fields']['view_node']->content = Markup::create(html_entity_decode($variables['fields']['view_node']->content));
+    $variables['fields']['field_content']->content = Markup::create(html_entity_decode($variables['fields']['field_content']->content));
   }
 }
 
@@ -285,17 +287,17 @@ function helfi_grant_applications_preprocess_form_element(array &$variables, $ti
       }
       $variables['description'] = [];
       $variables['description']['content'] = [
-          '#type' => 'container',
-          '#attributes' => new Attribute($description_attributes),
-        ] + $description;
+        '#type' => 'container',
+        '#attributes' => new Attribute($description_attributes),
+      ] + $description;
     }
     else {
       $variables['description'] += ['attributes' => new Attribute()];
       // Wrap description in a container.
       $variables['description']['content'] = [
-          '#type' => 'container',
-          '#attributes' => $variables['description']['attributes'],
-        ] + $description;
+        '#type' => 'container',
+        '#attributes' => $variables['description']['attributes'],
+      ] + $description;
       $variables['description']['attributes'] = new Attribute();
     }
 
@@ -383,8 +385,8 @@ function _helfi_grant_applications_preprocess_help(array &$variables, $title_par
     $build[$target] = (is_array($target_element)) ? $target_element : ['#markup' => $target_element];
   }
   $build['help'] = [
-      '#type' => 'webform_help',
-    ] + array_intersect_key($element, array_flip(['#help', '#help_title']));
+    '#type' => 'webform_help',
+  ] + array_intersect_key($element, array_flip(['#help', '#help_title']));
 
   // Add help attributes.
   if (isset($element['#help_attributes'])) {
