@@ -700,8 +700,12 @@ class GrantsHandler extends WebformHandlerBase {
     // Set status for data.
     $this->submittedFormData['status'] = $this->newStatus;
 
-    $current_errors = $this->validate($webform_submission, $form_state, $form);
+    // Application submitted.
+    if ($this->applicationHandler->getNewStatusHeader() == ApplicationHandler::$applicationStatuses['SUBMITTED']) {
+      $this->submittedFormData['form_timestamp_submitted'] = $dt->format('Y-m-d\TH:i:s');
+    }
 
+    $current_errors = $this->validate($webform_submission, $form_state, $form);
     $all_errors = $this->grantsFormNavigationHelper->getAllErrors($webform_submission);
 
     // If ($triggeringElement == '::next') {
