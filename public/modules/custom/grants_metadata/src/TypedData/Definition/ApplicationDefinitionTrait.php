@@ -218,11 +218,20 @@ trait ApplicationDefinitionTrait {
 
     $info['form_timestamp_created'] = DataDefinition::create('string')
       ->setRequired(TRUE)
-      ->setLabel('formTimeStamp')
+      ->setLabel('createdFormTimeStamp')
       ->setSetting('jsonPath', [
         'compensation',
         'applicationInfoArray',
         'createdFormTimeStamp',
+      ]);
+
+    $info['form_timestamp_submitted'] = DataDefinition::create('string')
+      ->setRequired(FALSE)
+      ->setLabel('submittedFormTimeStamp')
+      ->setSetting('jsonPath', [
+        'compensation',
+        'applicationInfoArray',
+        'submittedFormTimeStamp',
       ]);
 
     // ->addConstraint('NotBlank')
