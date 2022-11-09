@@ -5,14 +5,14 @@ dependencies:
   config:
     - field.storage.node.field_category
     - node.type.faq
-    - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.ukk_kategoriat
 id: node.faq.field_category
 field_name: field_category
 entity_type: node
 bundle: faq
 label: Kategoria
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      keywords: keywords
+      ukk_kategoriat: ukk_kategoriat
     sort:
       field: name
       direction: asc
