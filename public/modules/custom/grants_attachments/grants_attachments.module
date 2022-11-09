@@ -7,6 +7,7 @@
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\grants_handler\ApplicationHandler;
 use Drupal\webform\Entity\WebformSubmission;
 
 /**
@@ -51,7 +52,14 @@ function template_preprocess_grants_attachments(array &$variables) {
     $currentHost = \Drupal::request()->getSchemeAndHttpHost();
     $currentDestination = str_replace($currentHost, '', $currentUri);
 
-    $submission = WebformSubmission::load($variables["children"]["#webform_submission"]);
+    // For some reason this does not have submission data in it.
+    $submissiontemp = WebformSubmission::load($variables["children"]["#webform_submission"]);
+    // So we need to load appnro first.
+    $appno = ApplicationHandler::createApplicationNumber($submissiontemp);
+    // Then load submission again via custom method.
+    // This does not trigger another request, bc data is already
+    // loaded in storage controller.
+    $submission = ApplicationHandler::submissionObjectFromApplicationNumber($appno);
 
     if ($submission != NULL) {
       $submissionData = $submission->getData();
