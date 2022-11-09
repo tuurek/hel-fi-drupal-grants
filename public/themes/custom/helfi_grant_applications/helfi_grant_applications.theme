@@ -110,7 +110,7 @@ function helfi_grant_applications_form_views_exposed_form_alter(&$form, $form_st
 }
 
 /**
- *
+ * Preprocess views view fields.
  */
 function helfi_grant_applications_preprocess_views_view_fields(&$variables) {
   $view = $variables['view'];
