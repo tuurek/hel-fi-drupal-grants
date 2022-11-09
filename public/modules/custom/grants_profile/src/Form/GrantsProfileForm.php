@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\TypedData\Exception\ReadOnlyException;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\grants_profile\TypedData\Definition\BankAccountDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\grants_profile\TypedData\Definition\GrantsProfileDefinition;
 use Drupal\helfi_yjdh\Exception\YjdhException;
@@ -309,7 +308,7 @@ class GrantsProfileForm extends FormBase {
         '#type' => 'managed_file',
         '#title' => $this->t('Banks confirmation of account owner or copy of account statement'),
         '#multiple' => FALSE,
-        '#required' => TRUE,
+        // '#required' => TRUE,
         '#uri_scheme' => 'private',
         '#file_extensions' => 'doc,docx,gif,jpg,jpeg,pdf,png,ppt,pptx,rtf,txt,xls,xlsx,zip',
         '#upload_validators' => [
@@ -406,27 +405,6 @@ class GrantsProfileForm extends FormBase {
                 elseif (isset($values[$key][$key2]['confirmationFile'])) {
                   $value2['confirmationFile'] = $values[$key][$key2]['confirmationFile'];
                 }
-                // Get definition.
-                $bankAccountDefinition = BankAccountDefinition::create('grants_profile_bank_account');
-                // Create data object.
-                $bankAccountData = $this->typedDataManager->create($bankAccountDefinition);
-                // Set values.
-                $bankAccountData->setValue($value2);
-                // Validate inserted data.
-                $violations = $bankAccountData->validate();
-                // If there's violations in data.
-                if ($violations->count() != 0) {
-                  foreach ($violations as $violation) {
-                    // Print errors by form item name.
-                    $form_state->setErrorByName(
-                      $violation->getPropertyPath(),
-                      $violation->getMessage());
-                  }
-                }
-                else {
-                  // Move addressData object to form_state storage.
-                  $form_state->setStorage(['bankAccountData' => $bankAccountData]);
-                }
               }
               catch (ReadOnlyException $e) {
                 $this->messenger()->addError('Data read only');
@@ -445,6 +423,18 @@ class GrantsProfileForm extends FormBase {
     foreach ($grantsProfileContent as $key => $value) {
       if (array_key_exists($key, $values)) {
         $grantsProfileContent[$key] = $values[$key];
+      }
+    }
+
+    foreach ($values['bankAccounts'] as $key => $accountData) {
+      if (!empty($accountData['bankAccount'])) {
+        if (
+          empty($accountData["confirmationFileName"]) &&
+          empty($accountData["confirmationFile"])
+        ) {
+          $elementName = 'bankAccounts][' . $key . '][confirmationFile';
+          $form_state->setErrorByName($elementName, 'You must add confirmation file for account ' . $accountData["bankAccount"]);
+        }
       }
     }
 
