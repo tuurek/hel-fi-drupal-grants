@@ -6,8 +6,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.storage.node.field_lead_in
     - node.type.news_item
-    - taxonomy.vocabulary.news_group
-    - taxonomy.vocabulary.news_neighbourhoods
+    - system.menu.main
     - taxonomy.vocabulary.news_tags
   module:
     - node
@@ -1246,8 +1245,20 @@ display:
         sorts: false
         filters: false
         filter_groups: false
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
       path: news
+      menu:
+        type: normal
+        title: Uutiset
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: 'menu_link_content:3d721bbd-3076-46ab-a6bc-ec4c7895ec29'
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:

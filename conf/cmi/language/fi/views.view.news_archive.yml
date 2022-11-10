@@ -1,14 +1,5 @@
 label: 'Kaikki uutiset'
 display:
-  feed_1:
-    display_options:
-      filters:
-        field_news_groups_target_id:
-          group_info:
-            description: ''
-        field_news_item_tags_target_id:
-          group_info:
-            description: ''
   default:
     display_options:
       link_url: /uutiset
