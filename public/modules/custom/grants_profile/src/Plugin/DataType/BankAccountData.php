@@ -14,5 +14,4 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  * )
  */
 class BankAccountData extends Map {
-
 }

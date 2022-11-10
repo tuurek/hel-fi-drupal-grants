@@ -759,7 +759,8 @@ class ApplicationHandler {
    * @param string $webform_id
    *   Id of a webform of created application.
    * @param array $submissionData
-   *   If we want to pass any initial data for new application, do it with this.
+   *   If we want to pass any initial data for new application, do it with
+   *   this.
    *   Must be like webform data.
    *
    * @return \Drupal\webform\Entity\WebformSubmission
@@ -895,9 +896,6 @@ class ApplicationHandler {
     return $updatedDocument;
 
   }
-
-  // 50bfa7ed-d102-481d-b156-9fdb4545871c
-  // 50bfa7ed-d102-481d-b156-9fdb4545871c
 
   /**
    * Take in typed data object, export to Avus2 document structure & upload.
@@ -1440,6 +1438,16 @@ class ApplicationHandler {
 
     return $data;
 
+  }
+
+  /**
+   * Get updated status header. Empty if no updates.
+   *
+   * @return string
+   *   New status or empty
+   */
+  public function getNewStatusHeader(): string {
+    return $this->newStatusHeader;
   }
 
 }

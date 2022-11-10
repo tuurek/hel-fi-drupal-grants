@@ -131,7 +131,7 @@ class GrantsOmaAsiointiController extends ControllerBase implements ContainerInj
     $unreadMsg = [];
 
     foreach ($applications as $values) {
-      $other += $values;
+      $other = array_merge($other, $values);
       foreach ($values as $application) {
         $appMessages = ApplicationHandler::parseMessages($application['#submission']->getData());
         foreach ($appMessages as $msg) {

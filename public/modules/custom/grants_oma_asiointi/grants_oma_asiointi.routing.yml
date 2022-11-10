@@ -10,6 +10,6 @@ grants_oma_asiointi.applications_list:
   path: '/oma-asiointi/hakemukset'
   defaults:
     _title: 'Community applications'
-    _controller: '\Drupal\grants_oma_asiointi\Controller\ApplicationsListController::build'
+    _controller: '\Drupal\grants_oma_asiointi\Controller\GrantsOmaAsiointiController::build'
   requirements:
-    _permission: 'view own webform submission'
+    _permission: 'access grants_oma_asiointi'
