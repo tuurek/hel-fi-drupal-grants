@@ -62,11 +62,13 @@ function helfi_grant_applications_preprocess_views_view(&$variables) {
       if ($currentCategory == 0) {
         $currentCategory = (int) $term->tid;
       }
+      break;
+    }
+    foreach ($terms as $term) {
       $term_data[] = [
         'id' => (int) $term->tid,
         'name' => $term->name,
       ];
-
     }
     if ($currentCategory > 0) {
       $variables['currentDescription'] = \Drupal::entityTypeManager()
@@ -78,23 +80,6 @@ function helfi_grant_applications_preprocess_views_view(&$variables) {
     $variables['currentFilter'] = $currentCategory;
 
     $variables['termsArray'] = $term_data;
-  }
-}
-
-/**
- * Implements hook_form_BASE_FORM_ID_alter().
- */
-function helfi_grant_applications_form_views_exposed_form_alter(&$form, $form_state, $form_id) {
-  if ($form_state->get('view')->id() == 'ukk') {
-    $terms = \Drupal::entityTypeManager()
-      ->getStorage('taxonomy_term')
-      ->loadTree('ukk_kategoriat');
-    $temp = 0;
-    foreach ($terms as $term) {
-      $temp = (int) $term->tid;
-      break;
-    }
-    $form['field_category']['#default_value'] = $temp;
   }
 }
 

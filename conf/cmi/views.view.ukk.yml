@@ -7,10 +7,6 @@ dependencies:
     - node.type.faq
     - system.menu.main
     - taxonomy.vocabulary.ukk_kategoriat
-  content:
-    - 'taxonomy_term:ukk_kategoriat:38fbf457-773c-47ef-a10d-86188069fa1c'
-    - 'taxonomy_term:ukk_kategoriat:56b11658-9e7f-4515-87ac-1bb2d97b3245'
-    - 'taxonomy_term:ukk_kategoriat:a05d1000-94d9-47ff-bdca-2701efc1d2b6'
   module:
     - node
     - taxonomy
@@ -166,12 +162,7 @@ display:
           admin_label: ''
           plugin_id: taxonomy_index_tid
           operator: or
-          value:
-            14: 14
-            13: 13
-            15: 15
-            17: 17
-            16: 16
+          value: {  }
           group: 1
           exposed: true
           expose:
@@ -183,7 +174,7 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: ukk
-            required: true
+            required: false
             remember: false
             multiple: false
             remember_roles:
@@ -193,34 +184,22 @@ display:
               content_producer: '0'
               read_only: '0'
               helsinkiprofiili: '0'
-            reduce: true
+            reduce: false
           is_grouped: false
           group_info:
-            label: Kategoria
-            description: ''
+            label: 'Kategoria (field_category)'
+            description: null
             identifier: field_category_target_id
             optional: true
-            widget: radios
+            widget: select
             multiple: false
             remember: false
             default_group: All
             default_group_multiple: {  }
             group_items:
-              1:
-                title: Kategoria1
-                operator: or
-                value:
-                  1: '1'
-              2:
-                title: Kategoria2
-                operator: or
-                value:
-                  2: '2'
-              3:
-                title: 3Kategoria
-                operator: or
-                value:
-                  3: '3'
+              1: {  }
+              2: {  }
+              3: {  }
           reduce_duplicates: false
           vid: ukk_kategoriat
           type: select
