@@ -214,8 +214,9 @@ class AttachmentRemover {
         if (!in_array($sessionHash, $activeSessions)) {
           // Create path for session hash.
           $sessionPath = $attachmentPath . '/' . $sessionHash;
+
           // Scan directory for this path.
-          $sessionItems = array_diff(scandir($sessionPath), ['.', '..']);
+          $sessionItems = array_diff(scandir($sessionPath) ?? [], ['.', '..']);
           // If we have items.
           foreach ($sessionItems as $sessionFilename) {
             // Try to load file entity.
