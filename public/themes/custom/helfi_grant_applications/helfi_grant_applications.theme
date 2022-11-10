@@ -62,7 +62,7 @@ function helfi_grant_applications_preprocess_views_view(&$variables) {
       if ($currentCategory == 0) {
         $currentCategory = (int) $term->tid;
       }
-      $term_data[(int) $term->tid] = [
+      $term_data[] = [
         'id' => (int) $term->tid,
         'name' => $term->name,
       ];
@@ -75,17 +75,6 @@ function helfi_grant_applications_preprocess_views_view(&$variables) {
         ->getDescription();
     }
 
-    $term_data = [];
-    $terms = \Drupal::entityTypeManager()
-      ->getStorage('taxonomy_term')
-      ->loadTree('ukk_kategoriat');
-    foreach ($terms as $term) {
-      $term_data[(int) $term->tid] = [
-        'id' => (int) $term->tid,
-        'name' => $term->name,
-      ];
-
-    }
     $variables['currentFilter'] = $currentCategory;
 
     $variables['termsArray'] = $term_data;

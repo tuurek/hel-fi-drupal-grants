@@ -8,11 +8,9 @@ dependencies:
     - system.menu.main
     - taxonomy.vocabulary.ukk_kategoriat
   content:
-    - 'taxonomy_term:ukk_kategoriat:290b5374-b577-4ca2-9be6-f55a9494f13f'
-    - 'taxonomy_term:ukk_kategoriat:5c952160-506b-4ff2-a381-6a98fa2b6e1e'
-    - 'taxonomy_term:ukk_kategoriat:935496c9-45cb-4bac-9116-f6e3fb1671b5'
-    - 'taxonomy_term:ukk_kategoriat:977902a3-358e-49ab-8069-4c7c9bc195fb'
-    - 'taxonomy_term:ukk_kategoriat:fcb29abe-a8a0-4480-8cf8-2b27fa4dfbb6'
+    - 'taxonomy_term:ukk_kategoriat:38fbf457-773c-47ef-a10d-86188069fa1c'
+    - 'taxonomy_term:ukk_kategoriat:56b11658-9e7f-4515-87ac-1bb2d97b3245'
+    - 'taxonomy_term:ukk_kategoriat:a05d1000-94d9-47ff-bdca-2701efc1d2b6'
   module:
     - node
     - taxonomy
@@ -273,10 +271,10 @@ display:
         type: normal
         title: 'Usein kysytyt kysymykset'
         description: ''
-        weight: -49
+        weight: -50
         expanded: false
         menu_name: main
-        parent: 'menu_link_content:9ed40eb1-765f-448a-b849-3e68ae98ebf8'
+        parent: 'menu_link_content:3d721bbd-3076-46ab-a6bc-ec4c7895ec29'
         context: '0'
     cache_metadata:
       max-age: -1
