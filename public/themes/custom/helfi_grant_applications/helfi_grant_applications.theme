@@ -8,6 +8,7 @@
 use Drupal\Core\Render\Markup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Html;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * @file
@@ -48,38 +49,22 @@ function helfi_grant_applications_preprocess(&$variables) {
 function helfi_grant_applications_preprocess_views_view(&$variables) {
   $view = $variables['view'];
 
+  // Operate only on ukk view.
   if ($view->id() === 'ukk') {
+    // Get current exposed filter.
     $values = $view->getExposedInput();
-    $currentCategory = 0;
     if (isset($values['ukk'])) {
-      $currentCategory = (int) $values['ukk'];
+      // Load term object.
+      /** @var \Drupal\taxonomy\Entity\Term $currentTerm */
+      $currentTerm = Term::load((int) $values['ukk']);
+      // Set description.
+      $variables['currentDescription'] = $currentTerm->getDescription();
+      // Set current filter.
+      $variables['currentFilter'] = $currentTerm->id();
     }
-    $term_data = [];
-    $terms = \Drupal::entityTypeManager()
-      ->getStorage('taxonomy_term')
-      ->loadTree('ukk_kategoriat');
-    foreach ($terms as $term) {
-      if ($currentCategory == 0) {
-        $currentCategory = (int) $term->tid;
-      }
-      break;
-    }
-    foreach ($terms as $term) {
-      $term_data[] = [
-        'id' => (int) $term->tid,
-        'name' => $term->name,
-      ];
-    }
-    if ($currentCategory > 0) {
-      $variables['currentDescription'] = \Drupal::entityTypeManager()
-        ->getStorage('taxonomy_term')
-        ->load($currentCategory)
-        ->getDescription();
-    }
-
-    $variables['currentFilter'] = $currentCategory;
-
-    $variables['termsArray'] = $term_data;
+    // Set options for links.
+    $variables['exposedOptions'] = $variables["exposed"]["ukk"]["#options"];
+    unset($variables['exposedOptions']['All']);
   }
 }
 

@@ -1059,26 +1059,6 @@ function grants_handler_preprocess_application_status_tag(&$variables) {
 }
 
 /**
- * Implements hook_views_pre_build().
- */
-function grants_handler_views_pre_build(\Drupal\views\ViewExecutable $view) {
-  $view_ids = ['ukk'];
-  $terms = \Drupal::entityTypeManager()
-    ->getStorage('taxonomy_term')
-    ->loadTree('ukk_kategoriat');
-  $filterValueToSet = 0;
-  foreach ($terms as $term) {
-    $filterValueToSet = (int) $term->tid;
-    break;
-  }
-  if (in_array($view->id(), $view_ids)) {
-    $view->setExposedInput(['ukk' => $filterValueToSet]);
-  }
-}
-
-
-
-/**
  * Implements hook_preprocess_HOOK().
  */
 function grants_handler_preprocess_grants_handler_completion(&$variables) {
