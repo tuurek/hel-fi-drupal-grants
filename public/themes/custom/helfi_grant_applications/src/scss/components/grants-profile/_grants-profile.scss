@@ -1,3 +1,9 @@
+$breakpoint-xs: 320px;
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 992px;
+$breakpoint-xl: 1248px;
+
 .grants-profile {
   hr {
     margin: var(--spacing-layout-s) 0;
@@ -11,9 +17,9 @@
       display: none;
       margin-right: var(--spacing-m);
       border-radius: 50%;
-      width: $spacing-double * 2;
-      height: $spacing-double * 2;
-      line-height: $spacing-double * 2;
+      width: var(--spacing-4-xl);
+      height: var(--spacing-4-xl);
+      line-height: var(--spacing-4-xl);
       font-size: var(--fontsize-body-xl);
       font-weight: bold;
       text-align: center;

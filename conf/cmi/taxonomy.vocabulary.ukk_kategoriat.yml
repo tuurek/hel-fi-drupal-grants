@@ -1,0 +1,8 @@
+uuid: cb37f45e-4270-4f6c-a277-2f0a31d8facd
+langcode: fi
+status: true
+dependencies: {  }
+name: UKK-kategoriat
+vid: ukk_kategoriat
+description: 'Usein kysyttyjen kysymysten lajitteluperusteet'
+weight: 0

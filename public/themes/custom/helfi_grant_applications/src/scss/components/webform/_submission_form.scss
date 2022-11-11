@@ -1,6 +1,12 @@
+$breakpoint-xs: 320px;
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 992px;
+$breakpoint-xl: 1248px;
+
 .webform-submission-form .form-actions {
-  margin-top: $spacing-double;
-  padding-top: $spacing-triple;
+  margin-top: var(--spacing-l);
+  padding-top: var(--spacing-2-xl);;
   border-top: 1px rgba(0, 0, 0, 0.6) solid;
   @include breakpoint($breakpoint-m) {
     display: flex;
@@ -8,7 +14,7 @@
   }
   input {
     width: 100%;
-    margin-bottom: $spacing;
+    margin-bottom: var(--spacing-layout-2-xs);
     @include breakpoint($breakpoint-m) {
       width: auto;
     }

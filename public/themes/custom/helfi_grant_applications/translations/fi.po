@@ -54,3 +54,9 @@ msgstr "Hakemuksen tila"
 
 msgid "Application attachments"
 msgstr "Hakemuksen liitteet"
+
+msgid "Search for application"
+msgstr "Etsi avustusta"
+
+msgid "Filter search"
+msgstr "Rajaa hakua"

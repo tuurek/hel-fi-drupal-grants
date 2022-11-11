@@ -289,8 +289,17 @@ msgstr "Sinun pitää valita asiointirooli ja yritys."
 msgid "This application is not open"
 msgstr "Tämä avustushaku ei ole avoimena"
 
-msgid "You can't send the applicaiton, but you can continue filling and saving as a draft."
+msgid "You can't send the application, but you can continue filling and saving as a draft."
 msgstr "Et voi lähettää hakemusta, mutta voit täydentää ja tallentaa luonnoksena."
 
 msgid "Draft expired"
 msgstr "Luonnos vanhentunut"
+
+msgid "There has been an error in updating application status, please reload the page."
+msgstr "Hakemuksen tilan päivityksessä tapahtui virhe, kokeile ladata sivu uudelleen"
+
+msgid "Make sure that the status of the application changes from “Submitted” to “Received”. The application is only fully received when the status reads “Received”."
+msgstr "Muistathan varmistaa, että hakemuksen tila vaihtuu “Lähetetty - odotetaan vahvistusta” -tilasta “Vastaanotettu” -tilaan. Hakemus on vastaanotettu vasta, kun tila on muodossa: “Vastaanotettu”."
+
+msgid "The status change can take from seconds to few minutes."
+msgstr "Tilan vaihtuminen voi kestää sekunneista muutamaan minuuttiin."

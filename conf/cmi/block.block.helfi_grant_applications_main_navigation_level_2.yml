@@ -13,8 +13,8 @@ _core:
   default_config_hash: zS9zgTlcanrv75vk0WibXcekGUttnN4EwP1pwFdTAcM
 id: helfi_grant_applications_main_navigation_level_2
 theme: helfi_grant_applications
-region: before_footer
-weight: 0
+region: sidebar_first
+weight: -11
 provider: null
 plugin: 'menu_block_current_language:main'
 settings:
@@ -36,5 +36,8 @@ visibility:
     context_mapping:
       node: '@node.node_route_context:node'
     bundles:
+      address: address
       article: article
+      faq: faq
       landing_page: landing_page
+      page: page

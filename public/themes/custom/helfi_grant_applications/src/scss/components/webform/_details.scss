@@ -12,6 +12,9 @@ details.accordion {
   --content-font-color: var(--color-black-90);
   --content-font-size: var(--fontsize-body-m);
   --content-line-height: var(--lineheight-l);
+  .accordion_content {
+    padding-bottom: var(--padding-vertical);
+  }
 }
 details.accordion[open] .accordion_heading_container span.hds-icon {
   transform: rotate(180deg);

@@ -9,6 +9,8 @@
  * @see https://www.drupal.org/node/2217931
  */
 
+use Drupal\views\ViewExecutable;
+
 /**
  * Implements hook_theme().
  */
@@ -59,4 +61,32 @@ function grants_oma_asiointi_preprocess_block(&$vars) {
 function grants_oma_asiointi_preprocess_page_title(&$variables) {
   $variables['initials'] = 'AS';
   $variables['colorscheme'] = '0';
+}
+
+/**
+ * Implements hook_views_pre_build().
+ */
+function grants_oma_asiointi_views_pre_build(ViewExecutable $view) {
+  // Only operate on ukk view.
+  if ($view->id() == 'ukk') {
+    // Get the url query parameter.
+    $selected = \Drupal::request()->query->get('ukk');
+    // If we don't have one set.
+    if (!$selected) {
+      // Load all terms form ukk kats.
+      $terms = \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->loadTree('ukk_kategoriat');
+      $filterValueToSet = 0;
+      // Set first value as selected.
+      foreach ($terms as $term) {
+        $filterValueToSet = (int) $term->tid;
+        break;
+      }
+      // Only use this if we have terms.
+      if ($filterValueToSet != 0) {
+        $view->setExposedInput(['ukk' => $filterValueToSet]);
+      }
+    }
+  }
 }

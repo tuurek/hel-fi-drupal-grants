@@ -68,14 +68,21 @@
  * @ingroup themeable
  */
 #}
-<details class="webform-container webform-container-type-details js-form-wrapper form-wrapper accordion" open>
-  <summary class="accordion_header">
-    <div class="accordion_heading_container">
-      <div>{{ label }}</div>
-      <span aria-hidden="true" class="hds-icon hds-icon--angle-down hds-icon--size-m"></span>
+{{ attach_library('hdbt/accordion') }}
+<div class="component--accordion">
+  <div class="accordion__wrapper handorgel">
+
+    <{{ heading_level|default('h3') }} class="accordion-item__header handorgel__header">
+    <button class="accordion-item__button accordion-item__button--toggle handorgel__header__button">
+      {{ label|default('Missing heading'|t) }}
+    </button>
+  </{{ heading_level|default('h3')}}>
+  <div class="accordion-item__content handorgel__content">
+    <div class="accordion-item__content__inner handorgel__content__inner">
+      {{ content|default('Missing content'|t) }}
+      <span class="accordion-item__button accordion-item__button--close" role="button" tabindex="0">
+        {{ 'Close'|t }}{% include '@hdbt/misc/icon.twig' ignore missing with {icon: 'angle-up'} %}
+      </span>
     </div>
-    <span class="summary"></span></summary>
-  <div class="accordion_content">
-    {{ content }}
   </div>
-</details>
+</div>

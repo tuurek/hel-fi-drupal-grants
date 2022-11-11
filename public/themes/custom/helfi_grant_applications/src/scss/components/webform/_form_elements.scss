@@ -1,3 +1,9 @@
+$breakpoint-xs: 320px;
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 992px;
+$breakpoint-xl: 1248px;
+
 .js-form-type-webform-table {
   table {
     width: 100%;
@@ -53,10 +59,10 @@
     color: var(--hdbt-color-black);
     display: block;
     font-weight: 500;
-    margin-bottom: $spacing-quarter;
+    margin-bottom: var(--spacing-3-xs);
     width: 100%;
     hyphens: none;
-    padding-right: $spacing-triple;
+    padding-right: var(--spacing-2-xl);;
     font-size: 24px;
     flex-shrink: 0;
     margin-top: 0;
@@ -67,9 +73,9 @@
   }
 
   > .webform-section-wrapper {
-    font-size: $base-font-size;
+    font-size: var(--fontsize-body-m);
     width: 100%;
-    padding-left: $spacing-triple;
+    padding-left: var(--spacing-2-xl);;
     p:first-child {
       margin-top: 0;
     }
@@ -79,9 +85,9 @@
     display: inline;
   }
   legend, label {
-    font-size: $base-font-size;
+    font-size: var(--fontsize-body-m);
     font-weight: bold;
-    margin-bottom: $spacing;
+    margin-bottom: var(--spacing-layout-2-xs);
     display: block;
     padding-right: var(--spacing-layout-s);
   }

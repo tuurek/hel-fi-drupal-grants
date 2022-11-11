@@ -1,5 +1,7 @@
-@import "library/variables/*.*";
-@import "library/mixins/*.*";
+@import '../../../../contrib/hdbt/src/scss/00_functions/_index';
+@import '../../../../contrib/hdbt/src/scss/01_variables/_index';
+@import '../../../../contrib/hdbt/src/scss/02_mixins/_index';
+@import '../../../../contrib/hdbt/src/scss/03_generic/_index';
 
 .component-library-wrapper {
   background-color: $color-white;
@@ -14,12 +16,12 @@
 
   label {
     display: block;
-    margin-left: $spacing-half;
+    margin-left: var(--spacing-2-xs);
     position: relative;
     z-index: 1;
 
-    .icon {
-      --icon-proportions: 2.5rem;
+    .hel-icon {
+      --icon-size: 2.5rem;
     }
   }
 
@@ -32,12 +34,12 @@
   -webkit-touch-callout: none;
   cursor: pointer;
   display: block;
-  height: $spacing-double;
+  height: var(--spacing-l);
   left: 12px; // Position the input field on top of the icon.
   opacity: 0;
   padding: 0;
   position: absolute;
-  width: $spacing-double;
+  width: var(--spacing-l);
   z-index: 2;
 
   + label .toggle--open {
@@ -69,30 +71,29 @@
   list-style-type: none;
   min-width: 250px; // Min-width for the navigation to prevent automatic expanding on wider links.
   opacity: 0;
-  padding: $spacing $spacing $spacing $spacing-quadruple;
+  padding: $spacing $spacing $spacing var(--spacing-layout-l)ruple;
   position: absolute;
-  top: -$spacing-double;
+  top: -var(--spacing-l);
   transition: opacity 0.3s ease, left 0.3s ease;
 
   li {
-    padding: $spacing-quarter 0 0;
+    padding: var(--spacing-3-xs) 0 0;
   }
 
   a {
-    @include font-size(16px);
+    @include font('small');
     color: $color-black-70;
     text-decoration: none;
     transition: color 0.3s ease;
 
     &:hover {
       color: $color-bus-dark;
-      font-weight: $font-weight-bold;
     }
   }
 }
 
 .component-library__accordion {
-  @include font-size(20px);
+  @include font('body');
   background-color: $color-black-10;
   border: none;
   color: $color-black-70;
@@ -103,7 +104,8 @@
   transition: 0.4s;
   width: 100%;
 
-  &.active, &:hover {
+  &.active,
+  &:hover {
     background-color: $color-black-20;
   }
 }
@@ -142,23 +144,22 @@
   border: 1px solid $color-black-30;
   display: flex;
   flex-flow: column;
-  margin: $spacing-half;
+  margin: var(--spacing-2-xs);
 }
 
 .component-library__icon__svg {
-  padding: $spacing-half;
+  padding: var(--spacing-2-xs);
 
-  .icon {
-    --icon-proportions: 4rem;
+  .hel-icon {
+    --icon-size: 4rem;
   }
 }
 
 .component-library__icon__name {
-  @include font-size(16px);
+  @include font('small');
   background-color: $color-black-10;
-  font-weight: $font-weight-medium;
   height: 100%;
   min-width: 100%;
-  padding: $spacing-half;
+  padding: var(--spacing-2-xs);
   text-align: center;
 }

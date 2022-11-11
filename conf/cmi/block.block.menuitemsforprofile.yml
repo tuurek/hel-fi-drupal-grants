@@ -9,7 +9,7 @@ dependencies:
 id: menuitemsforprofile
 theme: helfi_grant_applications
 region: header_branding
-weight: 0
+weight: -7
 provider: null
 plugin: grants_profile_menuitem
 settings:

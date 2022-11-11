@@ -5,8 +5,10 @@
  * Theme File.
  */
 
+use Drupal\Core\Render\Markup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Html;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * @file
@@ -39,6 +41,53 @@ function helfi_grant_applications_get_icons_path() {
 function helfi_grant_applications_preprocess(&$variables) {
   $variables['helfi_grant_applications_icons_path'] = helfi_grant_applications_get_icons_path();
   $variables['#attached']['drupalSettings']['helfigrantapplicationsIconsPath'] = $variables['helfi_grant_applications_icons_path'];
+}
+
+/**
+ * Implements hook_aggregator_fetcher_info_alter().
+ */
+function helfi_grant_applications_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+
+  // Operate only on ukk view.
+  if ($view->id() === 'ukk') {
+    // Get current exposed filter.
+    $values = $view->getExposedInput();
+    if (isset($values['ukk'])) {
+      // Load term object.
+      /** @var \Drupal\taxonomy\Entity\Term $currentTerm */
+      $currentTerm = Term::load((int) $values['ukk']);
+      // Set description.
+      $variables['currentDescription'] = $currentTerm->getDescription();
+      // Set current filter.
+      $variables['currentFilter'] = $currentTerm->id();
+    }
+    // Set options for links.
+    $variables['exposedOptions'] = $variables["exposed"]["ukk"]["#options"];
+    unset($variables['exposedOptions']['All']);
+  }
+}
+
+/**
+ * Preprocess views view fields.
+ */
+function helfi_grant_applications_preprocess_views_view_fields(&$variables) {
+  $view = $variables['view'];
+
+  if ($view->id() === 'application_search') {
+    $dateIcon = '<span aria-hidden="true" class="hds-icon hds-icon--calendar-clock hds-icon--size-s"></span>';
+    if ($view->field['field_application_continuous']->original_value == '1') {
+      $variables['fields']['field_application_period']->content = Markup::create($dateIcon . '<span>' . t('Continuous application') . '</span>');
+      unset($variables['fields']['field_application_continuous']);
+    }
+    else {
+      $variables['fields']['field_application_period']->content = Markup::create($dateIcon . '<span>' . $variables['fields']['field_application_period']->content . '</span>');
+      unset($variables['fields']['field_application_continuous']);
+    }
+    unset($variables['fields']['field_application_open']);
+    $variables['fields']['view_node']->content = Markup::create(html_entity_decode($variables['fields']['view_node']->content));
+    $variables['fields']['field_content']->content = Markup::create(html_entity_decode($variables['fields']['field_content']->content));
+  }
 }
 
 /**

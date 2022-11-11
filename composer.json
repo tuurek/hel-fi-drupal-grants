@@ -12,7 +12,7 @@
         "cweagans/composer-patches": "^1.6.7",
         "druidfi/omen": "^0.2.0",
         "drupal/api_tools": "^1.0",
-        "drupal/better_exposed_filters": "^5.2",
+        "drupal/better_exposed_filters": "^6.0",
         "drupal/config_filter": "^2.2",
         "drupal/config_ignore": "^2.3",
         "drupal/content_access": "^1.0@alpha",

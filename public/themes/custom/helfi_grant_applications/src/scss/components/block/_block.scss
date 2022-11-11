@@ -1,26 +1,61 @@
-.grants-profile--menuitem--login, .grants-profile--menuitem--logout {
-  font-size: $fontsize-body-s;
-  margin-left: $spacing-half;
-  margin-right: $spacing-half;
+$breakpoint-xs: 320px;
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 992px;
+$breakpoint-xl: 1248px;
+
+.grants-profile--menuitem--mandate {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='42' height='39'%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath d='M94 0v53H0V0h94Z'/%3E%3C/clipPath%3E%3CclipPath id='b'%3E%3Cpath d='m4.5 0 1.125 1.063L3 3.542l4.266.001c2.419.057 4.359 1.939 4.359 4.249 0 2.31-1.94 4.191-4.359 4.248l-.114.002H4.125v-1.417h3c1.657 0 3-1.269 3-2.833 0-1.565-1.343-2.834-3-2.834H3l2.625 2.48L4.5 8.5 0 4.25 4.5 0Z'/%3E%3C/clipPath%3E%3CclipPath id='c'%3E%3Cpath d='M13.267 11a4.733 4.733 0 0 1 4.728 4.517l.005.216V20H0v-4.267a4.733 4.733 0 0 1 4.517-4.728L4.733 11h8.534Zm-8.534 2a2.733 2.733 0 0 0-2.728 2.567L2 15.733V18h14v-2.267c0-1.416-1.107-2.636-2.46-2.726l-.163-.005L4.733 13ZM9 0a5 5 0 1 1 0 10A5 5 0 0 1 9 0Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23a)' transform='translate(-23 -7)'%3E%3Cg clip-path='url(%23b)' transform='translate(46.375 9.125)'%3E%3Cpath d='M0 0h11.625v12.042H0V0z'/%3E%3C/g%3E%3Cg clip-path='url(%23b)' transform='rotate(-180 18.812 21.937)'%3E%3Cpath d='M0 0h11.625v12.042H0V0z'/%3E%3C/g%3E%3Cg clip-path='url(%23c)' transform='translate(26 10.839)'%3E%3Cpath d='M0 0h18v20H0V0z'/%3E%3C/g%3E%3Cg clip-path='url(%23c)' transform='translate(44 22.839)'%3E%3Cpath d='M0 0h18v20H0V0z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
+  font-size: var(--fontsize-body-s);
+  margin-left: var(--spacing-2-xs);
+  margin-right: var(--spacing-2-xs);
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  text-align: center;
+
+  .grants-profile--menuitem--roleswitcher-triggertext {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    max-height: 1px;
+    max-width: 1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    display:block;
+  }
+}
+.grants-profile--menuitem--login,
+.grants-profile--menuitem--logout {
+  font-size: var(--fontsize-body-s);
+  margin-left: var(--spacing-2-xs);
+  margin-right: var(--spacing-2-xs);
   position: relative;
   display: flex;
   flex-flow: column;
   align-items: center;
   .hds-icon {
     display: block;
-    margin: 0 auto;
+    margin: auto;
   }
   &-triggertext {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    max-height: 1px;
+    max-width: 1px;
+    opacity: 0;
+    overflow: hidden;
     position: absolute;
-    bottom: -7px;
+    white-space: nowrap;
+    display:block;
   }
   text-align: center;
-  width: $spacing * 2.5;
-  height: $spacing * 2.5;
-  @include breakpoint($breakpoint-m) {
-    width: $spacing-triple;
-    height: $spacing-triple;
-  }
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
 
 }
 .block--grants-profile--menuitem {
@@ -33,23 +68,23 @@
   flex-grow: 10;
 }
 .grants-profile--menuitem {
-  margin-left: $spacing-half;
-  margin-right: $spacing-half;
+  margin-left: var(--spacing-2-xs);
+  margin-right: var(--spacing-2-xs);
   position: relative;
-  width: $spacing * 2.5;
-  height: $spacing * 2.5;
+  width: var(--spacing-m);
+  height: var(--spacing-m);
   a {
     text-decoration: none;
   }
   @include breakpoint($breakpoint-m) {
-    width: $spacing-triple;
-    height: $spacing-triple;
+    width: var(--spacing-2-xl);;
+    height: var(--spacing-2-xl);;
   }
   &--notifications {
     border-radius: 50%;
-    width: $spacing * 1.25;
-    height: $spacing * 1.25;
-    line-height: $spacing * 1;
+    width: var(--spacing-xs) 1.25;
+    height: var(--spacing-xs) 1.25;
+    line-height: var(--spacing-layout-2-xs);
     border: 2px white solid;
     color: white;
     font-weight: bold;
@@ -60,13 +95,13 @@
     z-index: 2;
     top: -5px;
     right: -5px;
-    font-size: $fontsize-body-s;
+    font-size: var(--fontsize-body-s);
   }
   &--initials {
     border-radius: 50%;
-    width: $spacing * 2.5;
-    height: $spacing * 2.5;
-    line-height: $spacing * 2.5;
+    width: var(--spacing-m);
+    height: var(--spacing-m);
+    line-height: var(--spacing-m);
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -74,9 +109,9 @@
       text-decoration: underline;
     }
     @include breakpoint($breakpoint-m) {
-      width: $spacing-triple;
-      height: $spacing-triple;
-      line-height: $spacing-triple;
+      width: var(--spacing-2-xl);;
+      height: var(--spacing-2-xl);;
+      line-height: var(--spacing-2-xl);;
     }
     &-colorscheme {
       &-2 {
