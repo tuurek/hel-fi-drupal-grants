@@ -1,0 +1,22 @@
+uuid: fd6e6f47-3a5c-442e-811c-3bb2802d0367
+langcode: fi
+status: true
+dependencies:
+  module:
+    - node
+id: ukk
+label: UKK
+type: 'canonical_entities:node'
+pattern: '[node:menu-link:parents:join-path]/[node:title]'
+selection_criteria:
+  f6d1685b-6485-4661-b0a2-d04c7399cfe8:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: f6d1685b-6485-4661-b0a2-d04c7399cfe8
+    context_mapping:
+      node: node
+    bundles:
+      faq: faq
+selection_logic: and
+weight: -5
+relationships: {  }
