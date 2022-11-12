@@ -1,4 +1,4 @@
-uuid: 2e3eb442-714a-40b3-b171-c2fd432aa311
+uuid: 7d549e50-fedd-47ee-a9d5-88ce7bc09f78
 langcode: fi
 status: true
 dependencies:
@@ -10,9 +10,9 @@ field_name: field_link_title
 entity_type: block_content
 bundle: terms_block
 label: 'Link title'
-description: ''
+description: 'Text that will be shown on agree link.'
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
