@@ -9,7 +9,7 @@ third_party_settings:
   menu_ui:
     available_menus:
       - main
-    parent: 'main:menu_link_content:2af18f33-7628-4f26-a65f-0505d99c5ca6'
+    parent: 'main:menu_link_content:321a4464-8d0f-4d19-9485-7018cc6da342'
   scheduler:
     expand_fieldset: when_required
     fields_display_mode: vertical_tab

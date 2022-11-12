@@ -12,7 +12,7 @@ bundle: terms_block
 label: 'Link title'
 description: 'Text that will be shown on agree link.'
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
