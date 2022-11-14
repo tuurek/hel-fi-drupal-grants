@@ -36,9 +36,12 @@
   </h3>
   <div class="application-list__item__row application-list__item__row__left">
     {% if (statusString == 'DRAFT') %}
-      <div class="application-list__item--submitted">
+      <div>
         <h4>{{ "Draft saved time"|t }}</h4>
         {{ applicationSubmitted }}
+        <div class="application-list__item--submitted">
+          {{ applicationSubmittedSortable }}
+        </div>
       </div>
       {% if (errorType == 'NOT_OPEN') %}
         <div class="hds-notification hds-notification--error">
@@ -54,9 +57,12 @@
         </div>
       {% endif %}
     {% else %}
-      <div class="application-list__item--submitted">
+      <div>
         <h4>{{ "Submission date"|t }}</h4>
         {{ applicationSubmitted }}
+        <div class="application-list__item--submitted">
+          {{ applicationSubmittedSortable }}
+        </div>
       </div>
       <div class="application-list__item--number">
         <h4>{{ "Application number"|t }}</h4>

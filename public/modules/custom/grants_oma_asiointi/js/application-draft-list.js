@@ -1,26 +1,6 @@
 (function ($, Drupal, drupalSettings) {
 Drupal.behaviors.omaAsiointiFront = {
   attach: function (context, settings) {
-    if ($("#oma-asiointi__drafts")[0]) {
-      var draftListOptions = {
-        valueNames: ['application-list-item--name', 'application-list-item--status', 'application-list-item--number', 'application-list-item--submitted']
-      };
-      var draftList = new List('oma-asiointi__drafts', draftListOptions);
-      $('#oma-asiointi__drafts .application-list__count-value').html(draftList.update().matchingItems.length);
-
-      draftList.on('searchComplete', function () {
-        $('#oma-asiointi__drafts .application-list__count-value').html(draftList.update().matchingItems.length);
-      });
-
-      $('select.sort').change(function () {
-        var selection = $(this).val();
-        draftList.sort(selection);
-      });
-
-      $('button.sort').click(function () {
-        draftList.sort($(this).data('sort'));
-      });
-    }
     if ($("#oma-asiointi__sent")[0]) {
       var sentListOptions = {
         valueNames: ['application-list__item--name', 'application-list__item--status', 'application-list__item--number', 'application-list__item--submitted']
@@ -33,13 +13,17 @@ Drupal.behaviors.omaAsiointiFront = {
       });
 
       $('select.sort').change(function () {
-        var selection = $(this).val();
-        sentList.sort(selection);
+        selectionArray = $(this).val().split(' ');
+        var selection = selectionArray[1];
+        var direction = selectionArray[0]
+        sentList.sort(selection, {order: direction});
       });
 
       $('button.sort').click(function () {
         sentList.sort($(this).data('sort'));
       });
+      sentList.sort('application-list__item--submitted', {order: 'desc'});
+
     }
   }
 };
