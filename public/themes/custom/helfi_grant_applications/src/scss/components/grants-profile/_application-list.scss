@@ -1,6 +1,21 @@
 .application-list {
   padding-left: 0;
   padding-bottom: var(--spacing-xl);
+  &__sort_box {
+    display: flex;
+    align-items: flex-end;
+  }
+  &__sort-button {
+    span.hds-icon {
+      margin-left: 0;
+    }
+  }
+  &__sort__desc {
+    transform: rotate(180deg);
+  }
+  &__sort__asc {
+    transform: rotate(0deg);
+  }
   &__item {
     display: block;
     background: var(--color-bus-light);
@@ -11,6 +26,9 @@
     }
     h4 {
       font-size: 1rem;
+    }
+    &--submitted {
+      display: none;
     }
     &__link {
       margin-top: var(--spacing-m);
