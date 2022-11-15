@@ -2,8 +2,9 @@ uuid: eeec575c-618d-48d3-83d4-751f35730022
 langcode: fi
 status: true
 dependencies:
+  config:
+    - field.field.user.user.field_industry
   module:
-    - datetime
     - path
     - user
 id: user.user.default
@@ -25,6 +26,12 @@ content:
       match_limit: 10
       size: 60
       placeholder: ''
+    third_party_settings: {  }
+  field_industry:
+    type: options_select
+    weight: 38
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_kotipaikka:
     type: string_textfield

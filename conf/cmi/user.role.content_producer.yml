@@ -9,10 +9,17 @@ dependencies:
     - media.type.remote_video
     - media.type.soundcloud
     - node.type.address
+    - node.type.article
     - node.type.landing_page
     - node.type.page
+    - node.type.service
+    - taxonomy.vocabulary.avustuslaji
     - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.target_group
+    - taxonomy.vocabulary.ukk_kategoriat
+    - taxonomy.vocabulary.unit_type
   module:
+    - block_content
     - content_translation
     - file
     - helfi_api_base
@@ -29,7 +36,7 @@ _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
 label: 'Content producer'
-weight: 3
+weight: -6
 is_admin: null
 permissions:
   - 'access content overview'
@@ -40,11 +47,7 @@ permissions:
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'access user profiles'
-  - 'access webform help'
-  - 'access webform overview'
-  - 'access webform submission user'
   - 'administer nodes'
-  - 'administer webform element access'
   - 'cancel account'
   - 'change own username'
   - 'create file media'
@@ -67,24 +70,34 @@ permissions:
   - 'delete own landing_page content'
   - 'delete own page content'
   - 'delete own remote_video media'
+  - 'delete own service content'
   - 'delete own soundcloud media'
   - 'delete own webform'
   - 'edit own address content'
+  - 'edit own article content'
   - 'edit own file media'
   - 'edit own helfi_chart media'
   - 'edit own image media'
   - 'edit own landing_page content'
   - 'edit own page content'
   - 'edit own remote_video media'
+  - 'edit own service content'
   - 'edit own soundcloud media'
-  - 'edit own webform'
-  - 'edit own webform submission'
   - 'edit terms in keywords'
   - 'entity print access bundle paragraph_verkkolomake'
   - 'revert landing_page revisions'
   - 'revert page revisions'
   - 'schedule publishing of nodes'
+  - 'translate article node'
+  - 'translate avustuslaji taxonomy_term'
+  - 'translate block_content'
   - 'translate editable entities'
+  - 'translate keywords taxonomy_term'
+  - 'translate landing_page node'
+  - 'translate page node'
+  - 'translate target_group taxonomy_term'
+  - 'translate ukk_kategoriat taxonomy_term'
+  - 'translate unit_type taxonomy_term'
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
@@ -92,7 +105,6 @@ permissions:
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'
   - 'view any unpublished page content'
-  - 'view any webform submission'
   - 'view landing_page revisions'
   - 'view own unpublished content'
   - 'view own unpublished media'
