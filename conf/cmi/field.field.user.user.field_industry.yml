@@ -1,0 +1,21 @@
+uuid: 9bbc860f-7ddb-4c7f-9001-deae0322b41f
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_industry
+  module:
+    - options
+    - user
+id: user.user.field_industry
+field_name: field_industry
+entity_type: user
+bundle: user
+label: Industry
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,14 @@
+uuid: df1d4e32-5632-4c14-b6d0-a624c7c43c7a
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.content_producer_industry
+  module:
+    - user
+id: user_add_role_action.content_producer_industry
+label: 'Lisää rooli Content producer INDUSTRY valituille käyttäjille'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: content_producer_industry

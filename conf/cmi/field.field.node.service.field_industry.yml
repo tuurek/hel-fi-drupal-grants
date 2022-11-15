@@ -1,0 +1,21 @@
+uuid: a6ef3b1c-ad94-415e-9681-a1a11f3934bd
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_industry
+    - node.type.service
+  module:
+    - options
+id: node.service.field_industry
+field_name: field_industry
+entity_type: node
+bundle: service
+label: Industry
+description: 'Select industry for this service.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

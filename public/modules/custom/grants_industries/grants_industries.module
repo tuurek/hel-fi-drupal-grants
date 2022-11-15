@@ -1,0 +1,65 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * @file
+ * Primary module hooks for grants_industries module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\user\Entity\User;
+
+const GRANTS_INDUSTRIES_GID = 123;
+
+/**
+ * Implements hook_node_access_records().
+ */
+function grants_industries_node_access_records(\Drupal\node\NodeInterface $node) {
+  // Let's add custom grant for selected industry in service page nodes.
+  if ($node->getType() === 'service') {
+    // get selected field value.
+    $industry = $node->get('field_industry')->value;
+    // create realm string
+    $industry_realm = 'grants_industry_' . $industry;
+    // Create grants for this industry on this node.
+    // This means that in hook_node_grants below we can then add proper grant
+    // for user when checking their permissions.
+    $grants[] = [
+      'realm' => $industry_realm,
+      'gid' => GRANTS_INDUSTRIES_GID,
+      'grant_view' => 1,
+      'grant_update' => 1,
+      'grant_delete' => 0,
+    ];
+    return $grants;
+  }
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function grants_industries_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
+  $grants = [];
+  // Work on updates, otherwise leave as is set up in general permissions.
+  if ($op == 'update') {
+    // get user roles.
+    $userRoles = $account->getRoles();
+    // check that user has industry producer role.
+    if (in_array('content_producer_industry', $userRoles)) {
+      // Load user object.
+      $userObject = User::load($account->id());
+      // get user's industry selection
+      $userIndustry = $userObject->get('field_industry')->value;
+      if ($userIndustry) {
+        // If we have set industry for user
+        $industry_realm = 'grants_industry_' . $userIndustry;
+        // add this realm for this user.
+        $grants[$industry_realm] = GRANTS_INDUSTRIES_GID;
+      }
+    }
+  }
+  return $grants;
+}

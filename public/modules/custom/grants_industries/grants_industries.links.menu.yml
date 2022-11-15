@@ -1,0 +1,6 @@
+grants_industries.settings_form:
+  title: grants_industries
+  description: Configure grants_industries.
+  parent: system.admin_config_system
+  route_name: grants_industries.settings_form
+  weight: 10
