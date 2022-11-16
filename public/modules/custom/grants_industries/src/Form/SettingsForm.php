@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Drupal\grants_industries\Form;
@@ -33,7 +34,7 @@ class SettingsForm extends ConfigFormBase {
 
     $roles = Role::loadMultiple();
 
-    // unset unwanted roles.
+    // Unset unwanted roles.
     unset($roles['anonymous']);
     unset($roles['authenticated']);
     unset($roles['admin']);
@@ -67,8 +68,7 @@ class SettingsForm extends ConfigFormBase {
     for ($i = 0; $i < $num_mappings; $i++) {
       $form['ad_mappings']['mappings_fieldset'][$i] = [
         '#type' => 'fieldset',
-        '#title' => $this
-          ->t(' AD <-> Role'),
+        '#title' => 'AD <-> Role',
       ];
       $form['ad_mappings']['mappings_fieldset'][$i]['ad_group'] = [
         '#type' => 'textfield',
@@ -137,11 +137,7 @@ class SettingsForm extends ConfigFormBase {
     $selectorExplode = explode('-', $triggeringElement["#attributes"]["data-drupal-selector"]);
     $selector = (int) array_pop($selectorExplode);
 
-    $values = $form_state->getValues();
-
     unset($form["ad_mappings"]["mappings_fieldset"][$selector]);
-
-    //    $form["ad_mappings"]["mappings_fieldset"] = array_values($form["ad_mappings"]["mappings_fieldset"]);
 
     $num_mappings = $form_state
       ->get('num_mappings');
@@ -175,17 +171,6 @@ class SettingsForm extends ConfigFormBase {
     // don't do this, the form builder will not call buildForm().
     $form_state
       ->setRebuild();
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    //    if ($form_state->getValue('example') != 'example') {
-    //      $form_state->setErrorByName('example', $this->t('The value is not correct.'));
-    //    }
-    parent::validateForm($form, $form_state);
   }
 
   /**

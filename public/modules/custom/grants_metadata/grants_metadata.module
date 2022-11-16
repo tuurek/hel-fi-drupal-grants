@@ -44,15 +44,14 @@ function grants_metadata__validate_third_party_settings(array &$form, FormStateI
 
   // Get selected application type from form.
   $applicationTypeSelect = $formValues["third_party_settings"]["grants_metadata"]["applicationTypeSelect"];
-  // Get selected application type from config
+  // Get selected application type from config.
   $applicationTypeSelected = $thirdPartyOptions["application_types"][$applicationTypeSelect];
-  // If we have one
+  // If we have one.
   if ($applicationTypeSelected) {
     // Set third application typ + id from configuration based on selected type.
     $formValues["third_party_settings"]["grants_metadata"]["applicationType"] = $applicationTypeSelected['id'];
-    $formValues["third_party_settings"]["grants_metadata"]["applicationTypeID"] =$applicationTypeSelect;
+    $formValues["third_party_settings"]["grants_metadata"]["applicationTypeID"] = $applicationTypeSelect;
   }
-
 
   // Set values back to form state.
   $form_state->setValues($formValues);
@@ -117,7 +116,8 @@ function grants_metadata_webform_presave(Webform $entity) {
       $page->save();
       \Drupal::messenger()
         ->addStatus(t('Service page @nodetitle updated', ['@nodetitle' => $page->label()]));
-    } catch (EntityStorageException $e) {
+    }
+    catch (EntityStorageException $e) {
       \Drupal::messenger()
         ->addStatus(t('Service page @nodetitle update failed.', ['@nodetitle' => $page->label()]));
       \Drupal::messenger()
@@ -131,6 +131,7 @@ function grants_metadata_webform_presave(Webform $entity) {
  * Callback for getting options for industry field from configuration.
  *
  * @return array
+ *   Options for industry dropdown.
  */
 function grants_metadata_field_industry_options(): array {
   $config = \Drupal::config('grants_metadata.settings');
