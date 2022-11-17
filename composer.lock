@@ -5693,12 +5693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili.git",
-                "reference": "98a0b6aac50dd80d16611a6a997333751f057e13"
+                "reference": "ab460a1755127f6fa05649114a45f45635879410"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/zipball/98a0b6aac50dd80d16611a6a997333751f057e13",
-                "reference": "98a0b6aac50dd80d16611a6a997333751f057e13",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/zipball/ab460a1755127f6fa05649114a45f45635879410",
+                "reference": "ab460a1755127f6fa05649114a45f45635879410",
                 "shasum": ""
             },
             "type": "drupal-module",
@@ -5723,7 +5723,7 @@
                 "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/tree/develop",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-helsinki-profiili/issues"
             },
-            "time": "2022-10-28T12:24:43+00:00"
+            "time": "2022-11-17T08:43:38+00:00"
         },
         {
             "name": "drupal/helfi_media_formtool",
