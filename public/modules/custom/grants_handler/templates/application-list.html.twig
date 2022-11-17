@@ -3,48 +3,53 @@
     <h2>{{ header }}</h2>
     <div>{{ description }}</div>
     {% if type != 'drafts' %}
-    <div class="application-list__search-row">
-      <div class="application-list-filter hds-text-input">
-        <label for="applicationListFilter" class="hds-text-input__label">{{ "Search for an application"|t }}</label>
-        <div class="hds-text-input__input-wrapper">
-          <input autocomplete="off" class="hds-text-input__input search" type="text" name="applicationListFilter" id="applicationListFilter" />
+      <div class="application-list__search-row">
+        <div class="application-list-filter hds-text-input">
+          <label for="applicationListFilter" class="hds-text-input__label">{{ "Search for an application"|t }}</label>
+          <div class="hds-text-input__input-wrapper">
+            <input autocomplete="off" class="hds-text-input__input search" type="text" name="applicationListFilter" id="applicationListFilter" />
+          </div>
         </div>
-      </div>
         <div>
           <button type="button" class="hds-button hds-button--primary">
             <span class="hds-button__label">{{ "Search for application"|t }}</span>
             <span aria-hidden="true" class="hds-icon hds-icon--search"></span>
           </button>
         </div>
-    </div>
-    <div class="hds-checkbox">
-      <input type="checkbox" id="checkbox-processed" class="hds-checkbox__input" />
-      <label for="checkbox-processed"  class="hds-checkbox__label">{{ "Show only applications being processed"|t }}</label>
-    </div>
-    <hr/>
-    <div class="application-list__information-row">
-      <div class="application-list__count"><span class="application-list__count-value">&nbsp;</span> {{ 'Applications'|t }}</div>
-      <div class=""application-list--select">
-        <label for="applicationListSort" class="hds-text-input__label">{{ "Sort"|t }}</label>
-        <div class="grant-applications--select-wrapper">
-          <select name="applicationListSort" id="applicationListSort" class="sort form-select grant-applications--select">
-            <option value="" selected>{{ "Sort by"|t }}</option>
-            <option value="application-list__item--submitted">{{ "Submitted time"|t }}</option>
-            <option value="application-list__item--status">{{ "Status"|t }}</option>
-            <option value="application-list__item--name">{{ "Name (a-z)"|t }}</option>
-            <option value="application-list__item--number">{{ "Application number"|t }}</option>
-          </select>
-          <span class="grant-applications--select-focus"></span>
-          <i class="hds-icon hds-icon--angle-down hds-icon--size-m" aria-hidden="true" style="vertical-align: middle"></i>
-        <button class="sort hidden" data-sort="application-list-item--submitted"></button>
       </div>
-    </div>
-  </div>
+      <div class="hds-checkbox">
+        <input type="checkbox" id="checkbox-processed" class="hds-checkbox__input" />
+        <label for="checkbox-processed"  class="hds-checkbox__label">{{ "Show only applications being processed"|t }}</label>
+        <div id="string-processed" class="application-list__processed-human-readable">{{ processingHumanReadable }}</div>
+      </div>
+      <hr/>
+      <div class="application-list__information-row">
+        <div class="application-list__count"><span class="application-list__count-value">&nbsp;</span> {{ 'Applications'|t }}</div>
+        <div class="application-list--select">
+          <label for="applicationListSort" class="hds-text-input__label">{{ "Sort"|t }}</label>
+          <div class="grant-applications--select-wrapper">
+            <select name="applicationListSort" id="applicationListSort" class="sort form-select grant-applications--select">
+              <option value="" selected>{{ "Sort by"|t }}</option>
+              <option value="asc application-list__item--submitted" selected="selected">{{ "Submitted time (oldest first)"|t }}</option>
+              <option value="desc application-list__item--submitted" selected="selected">{{ "Submitted time (newest first)"|t }}</option>
+              <option value="asc application-list__item--status">{{ "Status (a-z)"|t }}</option>
+              <option value="desc application-list__item--status">{{ "Status (z-a)"|t }}</option>
+              <option value="asc application-list__item--name">{{ "Name (a-z)"|t }}</option>
+              <option value="desc application-list__item--name">{{ "Name (z-a)"|t }}</option>
+              <option value="asc application-list__item--number">{{ "Application number (a-z)"|t }}</option>
+              <option value="desc application-list__item--number">{{ "Application number (z-a)"|t }}</option>
+            </select>
+            <span class="grant-applications--select-focus"></span>
+            <i class="hds-icon hds-icon--angle-down hds-icon--size-m" aria-hidden="true" style="vertical-align: middle"></i>
+            <button class="sort hidden" data-sort="application-list-item--submitted"></button>
+          </div>
+        </div>
+      </div>
 
-  {% else %}
-    <div class="application-list__information-row">
-      <div class="application-list__count"><span class="application-list__count-value">&nbsp;</span> {{ 'Applications'|t }}</div>
-    </div>
+    {% else %}
+      <div class="application-list__information-row">
+        <div class="application-list__count"><span class="application-list__count-value">&nbsp;</span> {{ 'Applications'|t }}</div>
+      </div>
     {% endif %}
     <ul class="list application-list">
       {% for item in items %}

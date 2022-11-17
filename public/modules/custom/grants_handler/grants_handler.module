@@ -921,6 +921,16 @@ function grants_handler_preprocess_webform_submission_attachment_list(&$variable
 /**
  * Implements hook_preprocess_HOOK().
  */
+function grants_handler_preprocess_application_list(&$variables) {
+  $langCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $config = \Drupal::config('grants_handler.settings');
+  $statusStrings = $config->get('statusStrings');
+  $variables['processingHumanReadable'] = $statusStrings[$langCode]['PROCESSING'];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
 function grants_handler_preprocess_application_list_item(&$variables) {
   $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
@@ -938,12 +948,14 @@ function grants_handler_preprocess_application_list_item(&$variables) {
       if (isset($submissionData["form_timestamp"]) && !empty($submissionData["form_timestamp"])) {
         $dt = new DateTime($submissionData["form_timestamp"], new DateTimeZone('Europe/Helsinki'));
         $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+        $variables['applicationSubmittedSortable'] = $dt->format('html_datetime');
       }
     }
     else {
       if (isset($submissionData["form_timestamp_created"]) && !empty($submissionData["form_timestamp_created"])) {
         $dt = new DateTime($submissionData["form_timestamp_created"], new DateTimeZone('Europe/Helsinki'));
         $variables['applicationSubmitted'] = $dt->format('d.m.Y H:i');
+        $variables['applicationSubmittedSortable'] = $dt->format('Y-m-d\TH:i:s');
       }
     }
   }
