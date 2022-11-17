@@ -232,8 +232,29 @@ msgstr "Lähetysajankohta"
 msgid "Status"
 msgstr "Hakemuksen tila"
 
+msgid "Submitted time (oldest first)"
+msgstr "Lähetysaika (vanhin ensin)"
+
+msgid "Submitted time (newest first)"
+msgstr "Lähetysaika (uusin ensin)"
+
+msgid "Status (a-z)"
+msgstr "Lähetyksen tila (a-ö)"
+
+msgid "Status (z-a)"
+msgstr "Lähetyksen tila (ö-a)"
+
 msgid "Name (a-z)"
 msgstr "Hakemuksen nimi (a-ö)"
+
+msgid "Name (z-a)"
+msgstr "Hakemuksen nimi (ö-a)"
+
+msgid "Application number (a-z)"
+msgstr "Rajaa hakua"
+
+msgid "Application number (z-a)"
+msgstr "Rajaa hakua"
 
 msgid "Application number"
 msgstr "Hakemusnumero"
