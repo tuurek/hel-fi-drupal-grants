@@ -24,6 +24,21 @@ use Drupal\user\UserInterface;
 const GRANTS_INDUSTRIES_GID = 123;
 
 /**
+ * Implements hook_form_alter().
+ */
+function grants_industries_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+  if ($form_id == 'user_form') {
+    $currentUser = \Drupal::currentUser();
+    $roles = $currentUser->getRoles();
+    if (!in_array(['admin','grants_admin'], $roles)) {
+      $form["field_industry"]["#disabled"] = TRUE;
+    }
+  }
+
+}
+
+/**
  * Implements hook_node_access_records().
  */
 function grants_industries_node_access_records(NodeInterface $node) {
