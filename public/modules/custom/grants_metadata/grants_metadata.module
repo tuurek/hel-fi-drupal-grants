@@ -23,10 +23,14 @@ use Drupal\webform\Entity\Webform;
  *   Form state.
  */
 function grants_metadata__validate_third_party_settings(array &$form, FormStateInterface $form_state) {
+
+  // Get config for third party settings.
+  $config = \Drupal::config('grants_metadata.settings');
+  $thirdPartyOptions = $config->get('third_party_options');
+
   // Get values from form to get 3rd party settings.
   $formValues = $form_state->getValues();
   /** @var \Drupal\Core\Datetime\DrupalDateTime $applicationOpen */
-  // Get application open time.
   $applicationOpen = $formValues["third_party_settings"]["grants_metadata"]["applicationOpen"];
   if ($applicationOpen != NULL) {
     // Transform it to datetime value.
@@ -36,6 +40,17 @@ function grants_metadata__validate_third_party_settings(array &$form, FormStateI
   $applicationClose = $formValues["third_party_settings"]["grants_metadata"]["applicationClose"];
   if ($applicationClose != NULL) {
     $formValues["third_party_settings"]["grants_metadata"]["applicationClose"] = $applicationClose->format('Y-m-d\TH:i:s');
+  }
+
+  // Get selected application type from form.
+  $applicationTypeSelect = $formValues["third_party_settings"]["grants_metadata"]["applicationTypeSelect"];
+  // Get selected application type from config.
+  $applicationTypeSelected = $thirdPartyOptions["application_types"][$applicationTypeSelect];
+  // If we have one.
+  if ($applicationTypeSelected) {
+    // Set third application typ + id from configuration based on selected type.
+    $formValues["third_party_settings"]["grants_metadata"]["applicationType"] = $applicationTypeSelected['id'];
+    $formValues["third_party_settings"]["grants_metadata"]["applicationTypeID"] = $applicationTypeSelect;
   }
 
   // Set values back to form state.
@@ -113,11 +128,27 @@ function grants_metadata_webform_presave(Webform $entity) {
 }
 
 /**
+ * Callback for getting options for industry field from configuration.
+ *
+ * @return array
+ *   Options for industry dropdown.
+ */
+function grants_metadata_field_industry_options(): array {
+  $config = \Drupal::config('grants_metadata.settings');
+  $thirdPartyOptions = $config->get('third_party_options');
+  return $thirdPartyOptions['application_industries'];
+}
+
+/**
  * Alter form.
  */
 function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_id == 'webform_settings_form' || $form_id == 'webform_add_form' || $form_id == 'webform_duplicate_form') {
     $bundle = $form_state->getFormObject()->getEntity();
+
+    $config = \Drupal::config('grants_metadata.settings');
+    $thirdPartyOptions = $config->get('third_party_options');
+    $form['#attached']['drupalSettings'] = $thirdPartyOptions;
 
     $form["#validate"][] = 'grants_metadata__validate_third_party_settings';
 
@@ -132,30 +163,46 @@ function grants_metadata_form_alter(&$form, FormStateInterface $form_state, $for
       '#input' => FALSE,
     ];
 
+    $applicationTypeOptions = [];
+    foreach ($thirdPartyOptions['application_types'] as $typeId => $type) {
+      $applicationTypeOptions[$typeId] = $type['labels']['fi'];
+    }
+
+    $form['third_party_settings']['grants_metadata']['applicationTypeSelect'] = [
+      '#type' => 'select',
+      '#title' => t('Application Type'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeID'),
+      '#options' => $applicationTypeOptions,
+      '#required' => TRUE,
+    ];
+
     $form['third_party_settings']['grants_metadata']['applicationType'] = [
       '#type' => 'textfield',
       '#title' => t('Application Type'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationType'),
-      '#required' => TRUE,
+      '#disabled' => TRUE,
     ];
 
     $form['third_party_settings']['grants_metadata']['applicationTypeID'] = [
       '#type' => 'textfield',
       '#title' => t('Application Type ID'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationTypeID'),
+      '#disabled' => TRUE,
+    ];
+
+    $form['third_party_settings']['grants_metadata']['applicationIndustry'] = [
+      '#type' => 'select',
+      '#title' => t('Grants industry'),
+      '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicationIndustry'),
+      '#options' => $thirdPartyOptions['application_industries'],
       '#required' => TRUE,
     ];
 
-    $applicantTypes = [
-      'registered_community' => 'Rekisteröity yhdistys',
-      'unregistered_community' => 'Rekisteröimätön yhdistys',
-      'private_person' => 'Yksityishenkilö',
-    ];
     $form['third_party_settings']['grants_metadata']['applicantTypes'] = [
       '#type' => 'select',
       '#title' => t('Applicant types'),
       '#default_value' => $bundle->getThirdPartySetting('grants_metadata', 'applicantTypes'),
-      '#options' => $applicantTypes,
+      '#options' => $thirdPartyOptions['applicant_types'],
       '#required' => TRUE,
     ];
 

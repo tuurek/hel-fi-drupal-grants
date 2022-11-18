@@ -1,0 +1,10 @@
+ad_mappings:
+  -
+    - sl_kanslia_kayttajat
+    - kanslia_kayttajat
+  -
+    - sl_kanslia_owakayttajat
+    - kanslia_kayttajat_owa
+  -
+    - sl_kanslia_pilvi_m365_profiili1_kayttajat
+    - kanslia_kayttajat_profiili1

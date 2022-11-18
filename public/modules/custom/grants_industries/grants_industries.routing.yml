@@ -1,0 +1,7 @@
+grants_industries.settings_form:
+  path: '/admin/config/system/grants-industries'
+  defaults:
+    _title: 'grants_industries settings'
+    _form: 'Drupal\grants_industries\Form\SettingsForm'
+  requirements:
+    _permission: 'administer grants_industries configuration'

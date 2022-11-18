@@ -1,0 +1,6 @@
+grants_metadata.tools.webform:
+  title: 'Webform'
+  description: 'Access webform via tools menu'
+  route_name: entity.webform.collection
+  parent: hdbt_admin_tools.overview
+  weight: 1

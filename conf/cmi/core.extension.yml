@@ -47,6 +47,7 @@ module:
   grant_applications_content: 0
   grants_attachments: 0
   grants_handler: 0
+  grants_industries: 0
   grants_mandate: 0
   grants_metadata: 0
   grants_oma_asiointi: 0
