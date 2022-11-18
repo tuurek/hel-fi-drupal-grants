@@ -2,6 +2,10 @@ third_party_options:
   application_industries:
     KYMP: KYMP
     SOTE: SOTE
+    KANSLIA: KANSLIA
+    PEL: PEL
+    KUVA: KUVA
+    KASKO: KASKO
   applicant_types:
     registered_community: 'Rekisteröity yhdistys'
     unregistered_community: 'Rekisteröimätön yhdistys'

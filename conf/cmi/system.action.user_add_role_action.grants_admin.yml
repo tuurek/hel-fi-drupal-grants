@@ -1,0 +1,14 @@
+uuid: bb27432e-a049-415c-8957-7973e070c060
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.grants_admin
+  module:
+    - user
+id: user_add_role_action.grants_admin
+label: 'Lisää rooli Grants Admin valituille käyttäjille'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: grants_admin

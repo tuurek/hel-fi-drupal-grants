@@ -1,0 +1,14 @@
+uuid: aadb153f-660c-4e2d-ad48-2b71280aa334
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.ad_user
+  module:
+    - user
+id: user_remove_role_action.ad_user
+label: 'Poista rooli AD User valituilta käyttäjiltä'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: ad_user
