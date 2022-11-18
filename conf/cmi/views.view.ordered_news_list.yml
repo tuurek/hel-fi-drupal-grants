@@ -391,21 +391,12 @@ display:
           row_class: ''
           default_row_class: true
           columns:
-            nid: nid
             title: title
             draggableviews: draggableviews
             edit_node: edit_node
-            weight: weight
             langcode: langcode
           default: '-1'
           info:
-            nid:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             title:
               sortable: false
               default_sort_order: asc
@@ -419,13 +410,6 @@ display:
               empty_column: false
               responsive: ''
             edit_node:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            weight:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -515,7 +499,10 @@ display:
       group_by: false
       display_description: 'Order front page main news'
       rendering_language: '***LANGUAGE_language_content***'
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
       path: admin/ordered-news
     cache_metadata:
       max-age: 0

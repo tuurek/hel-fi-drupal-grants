@@ -12,7 +12,7 @@ dependencies:
 id: views_block__frontpage_news_main_news
 theme: helfi_grant_applications
 region: content
-weight: 0
+weight: -10
 provider: null
 plugin: 'views_block:frontpage_news-main_news'
 settings:

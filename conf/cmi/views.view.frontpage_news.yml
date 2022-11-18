@@ -5,15 +5,11 @@ dependencies:
   config:
     - core.entity_view_mode.node.card_teaser
     - core.entity_view_mode.node.medium_teaser
-    - core.entity_view_mode.node.teaser
     - field.storage.node.field_main_image
-    - field.storage.node.field_news_item_tags
     - node.type.news_item
-    - taxonomy.vocabulary.news_tags
   module:
     - draggableviews
     - node
-    - taxonomy
     - user
 _core:
   default_config_hash: SZqO5m00-m_85j4SvXFgDw5YnJoXBvwS29Wu2pIINsM
@@ -597,7 +593,7 @@ display:
     display_plugin: block
     position: 2
     display_options:
-      title: 'Top news'
+      title: Pääuutiset
       fields:
         published_at:
           id: published_at
@@ -801,11 +797,15 @@ display:
           draggable_views_pass_arguments: false
       arguments: {  }
       style:
-        type: default
+        type: html_list
         options:
-          row_class: ''
+          grouping: {  }
+          row_class: news-listing__item
           default_row_class: true
           uses_fields: true
+          type: ul
+          wrapper_class: item-list
+          class: 'news-listing news-listing--card-teasers'
       row:
         type: 'entity:node'
         options:
@@ -819,7 +819,10 @@ display:
         sorts: false
         arguments: false
       display_description: ''
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
       block_description: 'Main news'
     cache_metadata:
       max-age: -1
