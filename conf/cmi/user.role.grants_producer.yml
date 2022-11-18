@@ -1,0 +1,9 @@
+uuid: ad19cff5-8fb6-47b7-8de4-a447ab43d4b3
+langcode: fi
+status: true
+dependencies: {  }
+id: grants_producer
+label: 'Grants producer'
+weight: -4
+is_admin: null
+permissions: {  }

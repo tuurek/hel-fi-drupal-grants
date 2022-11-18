@@ -19,6 +19,7 @@ declare(strict_types=1);
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 const GRANTS_INDUSTRIES_GID = 123;
 
@@ -60,14 +61,71 @@ function grants_industries_node_grants(AccountInterface $account, $op) {
       // Load user object.
       $userObject = User::load($account->id());
       // Get user's industry selection.
-      $userIndustry = $userObject->get('field_industry')->value;
-      if ($userIndustry) {
-        // If we have set industry for user.
-        $industry_realm = 'grants_industry_' . $userIndustry;
-        // Add this realm for this user.
-        $grants[$industry_realm] = GRANTS_INDUSTRIES_GID;
+      foreach ($userObject->field_industry as $userIndustryField) {
+        $userIndustry = $userIndustryField->value;
+        if ($userIndustry) {
+          // If we have set industry for user.
+          $industry_realm = 'grants_industry_' . $userIndustry;
+          // Add this realm for this user.
+          $grants[$industry_realm] = GRANTS_INDUSTRIES_GID;
+        }
       }
     }
   }
   return $grants;
+}
+
+/**
+ * Implements hook_openid_connect_post_authorize().
+ */
+function grants_industries_openid_connect_post_authorize(UserInterface $account, array $context) {
+
+  // If user has AD groups.
+  if (isset($context["user_data"]["ad_groups"]) && !empty($context["user_data"]["ad_groups"])) {
+    $industryKeys = [];
+    // Loop them.
+    foreach ($context["user_data"]["ad_groups"] as $ad_group) {
+      $industryKey = '';
+      $ad_group_lower = strtolower($ad_group);
+      // @todo remove in prod
+      if (str_contains($ad_group_lower, 'owakayttajat')) {
+        $industryKey = 'KUVA';
+      }
+      if (str_contains($ad_group_lower, 'kanslia_kayttajat')) {
+        $industryKey = 'KANSLIA';
+      }
+      // If user has one of the designated groups, set the industry key.
+      if (str_contains($ad_group_lower, 'ta_kuva')) {
+        $industryKey = 'KUVA';
+      }
+      if (str_contains($ad_group_lower, 'ta_kasko')) {
+        $industryKey = 'KASKO';
+      }
+      if (str_contains($ad_group_lower, 'pk_pel')) {
+        $industryKey = 'PEL';
+      }
+      if (str_contains($ad_group_lower, 'ta_kymp')) {
+        $industryKey = 'KYMP';
+      }
+      if (str_contains($ad_group_lower, 'ta_sote')) {
+        $industryKey = 'SOTE';
+      }
+      if ($industryKey != '') {
+        $industryKeys[] = $industryKey;
+      }
+    }
+    // If we have industry key && user has this field.
+    if ($account->hasField('field_industry') && !empty($industryKeys)) {
+      // Set field value.
+      $account->set('field_industry', $industryKeys);
+      try {
+        // And try to save account.
+        $account->save();
+      }
+      catch (Exception $e) {
+        \Drupal::logger('grants_industries')->error($e->getMessage());
+      }
+    }
+  }
+
 }
