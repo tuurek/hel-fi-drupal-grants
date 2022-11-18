@@ -1,0 +1,14 @@
+uuid: aa1f6b81-9ff7-4d2e-8871-ebf790735dab
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.grants_admin
+  module:
+    - user
+id: user_remove_role_action.grants_admin
+label: 'Poista rooli Grants Admin valituilta käyttäjiltä'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: grants_admin
