@@ -8,8 +8,15 @@ dependencies:
     - media.type.image
     - media.type.remote_video
     - media.type.soundcloud
+    - node.type.article
+    - node.type.landing_page
+    - node.type.page
     - node.type.service
+    - taxonomy.vocabulary.avustuslaji
     - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.target_group
+    - taxonomy.vocabulary.ukk_kategoriat
+    - taxonomy.vocabulary.unit_type
   module:
     - content_translation
     - file
@@ -26,13 +33,13 @@ label: 'Content producer INDUSTRY'
 weight: -6
 is_admin: null
 permissions:
+  - 'access administration pages'
   - 'access content overview'
   - 'access files overview'
   - 'access media overview'
-  - 'access site in maintenance mode'
   - 'access taxonomy overview'
   - 'access toolbar'
-  - 'change own username'
+  - 'create content translations'
   - 'create file media'
   - 'create helfi_chart media'
   - 'create image media'
@@ -40,8 +47,13 @@ permissions:
   - 'create remote_video media'
   - 'create service content'
   - 'create soundcloud media'
+  - 'create terms in avustuslaji'
   - 'create terms in keywords'
+  - 'create terms in target_group'
+  - 'create terms in ukk_kategoriat'
+  - 'create terms in unit_type'
   - 'create url aliases'
+  - 'delete content translations'
   - 'delete media'
   - 'delete own file media'
   - 'delete own helfi_chart media'
@@ -58,7 +70,15 @@ permissions:
   - 'edit terms in keywords'
   - 'revert service revisions'
   - 'schedule publishing of nodes'
+  - 'translate article node'
+  - 'translate editable entities'
+  - 'translate file media'
+  - 'translate image media'
+  - 'translate landing_page node'
+  - 'translate page node'
+  - 'translate remote_video media'
   - 'translate service node'
+  - 'update content translations'
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
