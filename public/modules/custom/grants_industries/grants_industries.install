@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the grants_industries module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function grants_industries_install() {
+  \Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function grants_industries_uninstall() {
+  \Drupal::messenger()->addStatus(__FUNCTION__);
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function grants_industries_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $value = mt_rand(0, 100);
+    $requirements['grants_industries_status'] = [
+      'title' => t('grants_industries status'),
+      'value' => t('grants_industries value: @value', ['@value' => $value]),
+      'severity' => $value > 50 ? REQUIREMENT_INFO : REQUIREMENT_WARNING,
+    ];
+  }
+
+  return $requirements;
+}

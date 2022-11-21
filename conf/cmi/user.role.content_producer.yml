@@ -9,14 +9,24 @@ dependencies:
     - media.type.remote_video
     - media.type.soundcloud
     - node.type.address
+    - node.type.article
+    - node.type.faq
+    - node.type.form_page
     - node.type.landing_page
     - node.type.page
+    - node.type.service
+    - taxonomy.vocabulary.avustuslaji
     - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.target_group
+    - taxonomy.vocabulary.ukk_kategoriat
+    - taxonomy.vocabulary.unit_type
   module:
+    - block_content
     - content_translation
     - file
     - helfi_api_base
     - media
+    - menu_link_content
     - node
     - paragraphs
     - path
@@ -29,7 +39,7 @@ _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
 label: 'Content producer'
-weight: 3
+weight: -5
 is_admin: null
 permissions:
   - 'access content overview'
@@ -40,13 +50,10 @@ permissions:
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'access user profiles'
-  - 'access webform help'
-  - 'access webform overview'
-  - 'access webform submission user'
   - 'administer nodes'
-  - 'administer webform element access'
   - 'cancel account'
   - 'change own username'
+  - 'create faq content'
   - 'create file media'
   - 'create helfi_chart media'
   - 'create image media'
@@ -54,37 +61,81 @@ permissions:
   - 'create media'
   - 'create page content'
   - 'create remote_video media'
+  - 'create service content'
   - 'create soundcloud media'
   - 'create terms in keywords'
   - 'create url aliases'
   - 'create webform'
+  - 'delete all revisions'
+  - 'delete any article content'
+  - 'delete any faq content'
+  - 'delete any landing_page content'
+  - 'delete any page content'
+  - 'delete any service content'
   - 'delete any webform submission'
+  - 'delete article revisions'
+  - 'delete faq revisions'
+  - 'delete form_page revisions'
+  - 'delete landing_page revisions'
   - 'delete media'
   - 'delete own address content'
+  - 'delete own article content'
+  - 'delete own faq content'
   - 'delete own file media'
+  - 'delete own form_page content'
   - 'delete own helfi_chart media'
   - 'delete own image media'
   - 'delete own landing_page content'
   - 'delete own page content'
   - 'delete own remote_video media'
+  - 'delete own service content'
   - 'delete own soundcloud media'
   - 'delete own webform'
+  - 'delete page revisions'
+  - 'delete service revisions'
+  - 'edit any address content'
+  - 'edit any article content'
+  - 'edit any faq content'
+  - 'edit any landing_page content'
+  - 'edit any page content'
+  - 'edit any service content'
   - 'edit own address content'
+  - 'edit own article content'
+  - 'edit own faq content'
   - 'edit own file media'
   - 'edit own helfi_chart media'
   - 'edit own image media'
   - 'edit own landing_page content'
   - 'edit own page content'
   - 'edit own remote_video media'
+  - 'edit own service content'
   - 'edit own soundcloud media'
-  - 'edit own webform'
-  - 'edit own webform submission'
   - 'edit terms in keywords'
   - 'entity print access bundle paragraph_verkkolomake'
+  - 'revert address revisions'
+  - 'revert all revisions'
+  - 'revert article revisions'
+  - 'revert faq revisions'
   - 'revert landing_page revisions'
   - 'revert page revisions'
+  - 'revert service revisions'
   - 'schedule publishing of nodes'
+  - 'translate article node'
+  - 'translate avustuslaji taxonomy_term'
+  - 'translate block_content'
   - 'translate editable entities'
+  - 'translate file media'
+  - 'translate image media'
+  - 'translate keywords taxonomy_term'
+  - 'translate landing_page node'
+  - 'translate menu_link_content'
+  - 'translate page node'
+  - 'translate remote_video media'
+  - 'translate service node'
+  - 'translate soundcloud media'
+  - 'translate target_group taxonomy_term'
+  - 'translate ukk_kategoriat taxonomy_term'
+  - 'translate unit_type taxonomy_term'
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'
@@ -92,12 +143,14 @@ permissions:
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'
   - 'view any unpublished page content'
-  - 'view any webform submission'
+  - 'view article revisions'
+  - 'view faq revisions'
   - 'view landing_page revisions'
   - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view page revisions'
   - 'view remote entities'
   - 'view scheduled content'
+  - 'view service revisions'
   - 'view the administration theme'
   - 'view unpublished paragraphs'

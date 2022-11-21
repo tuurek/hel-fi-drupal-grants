@@ -1,0 +1,4 @@
+administer grants_industries configuration:
+  title: 'Administer grants_industries configuration'
+  description: 'Optional description.'
+  restrict access: true

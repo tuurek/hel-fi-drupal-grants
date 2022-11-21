@@ -2,8 +2,10 @@ uuid: a51cf46c-1d5f-4b16-8a2e-4134dcab5154
 langcode: fi
 status: true
 dependencies:
+  config:
+    - field.field.user.user.field_industry
   module:
-    - datetime
+    - options
     - user
 id: user.user.default
 targetEntityType: user
@@ -17,6 +19,13 @@ content:
       link: true
     third_party_settings: {  }
     weight: 12
+    region: content
+  field_industry:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 13
     region: content
   field_kotipaikka:
     type: string

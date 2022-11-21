@@ -1,0 +1,14 @@
+uuid: a8f06b18-bae7-4337-b76a-f955bd7e471f
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.ad_user
+  module:
+    - user
+id: user_add_role_action.ad_user
+label: 'Lisää rooli AD User valituille käyttäjille'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: ad_user

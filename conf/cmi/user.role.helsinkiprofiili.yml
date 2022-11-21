@@ -9,7 +9,7 @@ dependencies:
     - webform
 id: helsinkiprofiili
 label: HelsinkiProfiili
-weight: 5
+weight: -7
 is_admin: null
 permissions:
   - 'access grants_oma_asiointi'

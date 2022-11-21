@@ -110,7 +110,7 @@ class ApplicationHandler {
   /**
    * Holds application statuses in.
    *
-   * @var string[]
+   * @todo refactor to use configuration.
    */
   public static array $applicationStatuses = [
     'DRAFT' => 'DRAFT',
@@ -139,7 +139,7 @@ class ApplicationHandler {
    * Array key is name of the form as is set to third party information.
    * That contains strings for every language code.
    *
-   * @var string[][]
+   * @todo refactor to use configuration.
    */
   public static array $applicationTypes = [
     'ECONOMICGRANTAPPLICATION' => [
@@ -249,6 +249,10 @@ class ApplicationHandler {
 
     $this->newStatusHeader = '';
     $this->database = $datababse;
+
+    $config = \Drupal::config('grants_metadata.settings');
+    $thirdPartyOptions = $config->get('third_party_options');
+
   }
 
   /*

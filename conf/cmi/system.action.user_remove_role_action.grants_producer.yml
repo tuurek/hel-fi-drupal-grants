@@ -1,0 +1,14 @@
+uuid: 36b40860-cf61-40ee-a652-e1e94de21c99
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.grants_producer
+  module:
+    - user
+id: user_remove_role_action.grants_producer
+label: 'Poista rooli Grants producer valituilta käyttäjiltä'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: grants_producer

@@ -1,0 +1,70 @@
+uuid: 01cc1697-6de1-4359-a102-718b6f8ee572
+langcode: fi
+status: true
+dependencies:
+  config:
+    - media.type.file
+    - media.type.helfi_chart
+    - media.type.image
+    - media.type.remote_video
+    - media.type.soundcloud
+    - node.type.service
+    - taxonomy.vocabulary.keywords
+  module:
+    - content_translation
+    - file
+    - media
+    - node
+    - paragraphs
+    - path
+    - scheduler
+    - system
+    - taxonomy
+    - toolbar
+id: content_producer_industry
+label: 'Content producer INDUSTRY'
+weight: -6
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access files overview'
+  - 'access media overview'
+  - 'access site in maintenance mode'
+  - 'access taxonomy overview'
+  - 'access toolbar'
+  - 'change own username'
+  - 'create file media'
+  - 'create helfi_chart media'
+  - 'create image media'
+  - 'create media'
+  - 'create remote_video media'
+  - 'create service content'
+  - 'create soundcloud media'
+  - 'create terms in keywords'
+  - 'create url aliases'
+  - 'delete media'
+  - 'delete own file media'
+  - 'delete own helfi_chart media'
+  - 'delete own image media'
+  - 'delete own remote_video media'
+  - 'delete own service content'
+  - 'delete own soundcloud media'
+  - 'edit own file media'
+  - 'edit own helfi_chart media'
+  - 'edit own image media'
+  - 'edit own remote_video media'
+  - 'edit own service content'
+  - 'edit own soundcloud media'
+  - 'edit terms in keywords'
+  - 'revert service revisions'
+  - 'schedule publishing of nodes'
+  - 'translate service node'
+  - 'update media'
+  - 'view all media revisions'
+  - 'view all revisions'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view scheduled content'
+  - 'view service revisions'
+  - 'view the administration theme'
+  - 'view unpublished paragraphs'

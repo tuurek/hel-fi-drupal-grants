@@ -1,0 +1,14 @@
+uuid: 1130db27-c9c4-4d0a-8218-d186bffa77e0
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.grants_producer
+  module:
+    - user
+id: user_add_role_action.grants_producer
+label: 'Lisää rooli Grants producer valituille käyttäjille'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: grants_producer

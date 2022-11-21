@@ -1,0 +1,14 @@
+uuid: c7648ae8-1f34-468a-baa7-fc70c14cde3d
+langcode: fi
+status: true
+dependencies:
+  config:
+    - user.role.content_producer_industry
+  module:
+    - user
+id: user_remove_role_action.content_producer_industry
+label: 'Poista rooli Content producer INDUSTRY valituilta käyttäjiltä'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: content_producer_industry

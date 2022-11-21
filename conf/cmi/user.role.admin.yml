@@ -17,6 +17,8 @@ dependencies:
     - content_translation
     - eu_cookie_compliance
     - file
+    - grants_attachments
+    - grants_industries
     - grants_oma_asiointi
     - grants_profile
     - helfi_api_base
@@ -34,11 +36,12 @@ dependencies:
     - system
     - taxonomy
     - toolbar
+    - webform
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
 label: Admin
-weight: 2
+weight: -1
 is_admin: null
 permissions:
   - 'access administration pages'
@@ -54,15 +57,20 @@ permissions:
   - 'administer entity print'
   - 'administer eu cookie compliance categories'
   - 'administer eu cookie compliance popup'
+  - 'administer grants_attachments configuration'
+  - 'administer grants_industries configuration'
   - 'administer grants_oma_asiointi configuration'
   - 'administer grants_profile configuration'
   - 'administer menu'
   - 'administer nodes'
   - 'administer pathauto'
+  - 'administer permissions'
   - 'administer redirects'
   - 'administer sitemap settings'
   - 'administer url aliases'
   - 'administer users'
+  - 'administer webform'
+  - 'administer webform submission'
   - 'bypass entity print access'
   - 'cancel account'
   - 'change own username'
@@ -78,6 +86,7 @@ permissions:
   - 'create soundcloud media'
   - 'create terms in keywords'
   - 'create url aliases'
+  - 'create webform'
   - 'delete all revisions'
   - 'delete any file media'
   - 'delete any helfi_chart media'
@@ -87,6 +96,8 @@ permissions:
   - 'delete any page content'
   - 'delete any remote_video media'
   - 'delete any soundcloud media'
+  - 'delete any webform'
+  - 'delete any webform submission'
   - 'delete content translations'
   - 'delete landing_page revisions'
   - 'delete media'
@@ -98,6 +109,8 @@ permissions:
   - 'delete own page content'
   - 'delete own remote_video media'
   - 'delete own soundcloud media'
+  - 'delete own webform'
+  - 'delete own webform submission'
   - 'delete page revisions'
   - 'delete remote entities'
   - 'delete terms in keywords'
@@ -118,6 +131,7 @@ permissions:
   - 'edit own soundcloud media'
   - 'edit remote entities'
   - 'edit terms in keywords'
+  - 'edit webform assets'
   - 'entity print access bundle paragraph_verkkolomake'
   - 'revert all revisions'
   - 'revert landing_page revisions'

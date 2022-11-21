@@ -1,0 +1,41 @@
+third_party_options:
+  application_industries:
+    KYMP: KYMP
+    SOTE: SOTE
+    KANSLIA: KANSLIA
+    PEL: PEL
+    KUVA: KUVA
+    KASKO: KASKO
+  applicant_types:
+    registered_community: 'Rekisteröity yhdistys'
+    unregistered_community: 'Rekisteröimätön yhdistys'
+    private_person: 'Yksityishenkilö'
+  application_types:
+    29:
+      id: ECONOMICGRANTAPPLICATION
+      code: YLEIS
+      dataDefinition:
+        definitionClass: Drupal\grants_metadata\TypedData\Definition\YleisavustusHakemusDefinition
+        definitionId: grants_metadata_yleisavustushakemus
+      labels:
+        fi: 'Kaupunginhallituksen yleisavustushakemus'
+        en: 'EN Kaupunginhallituksen yleisavustushakemus'
+        sv: 'SV Kaupunginhallituksen yleisavustushakemus'
+  application_statuses:
+    DRAFT: DRAFT,
+    SENT: SENT,
+    SUBMITTED: SUBMITTED,
+    # Vastaanotettu
+    RECEIVED: RECEIVED,
+    PENDING: PENDING,
+    # Käsittelyssä
+    PROCESSING: PROCESSING,
+    # Valmis
+    READY: READY,
+    # Valmis
+    DONE: DONE,
+    REJECTED: REJECTED,
+    DELETED: DELETED,
+    CANCELED: CANCELED,
+    CANCELLED: CANCELLED,
+    CLOSED: CLOSED,
