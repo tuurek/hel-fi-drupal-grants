@@ -9,13 +9,25 @@ dependencies:
     - media.type.remote_video
     - media.type.soundcloud
     - node.type.address
+    - node.type.article
+    - node.type.faq
+    - node.type.form_page
     - node.type.landing_page
     - node.type.page
+    - node.type.service
+    - taxonomy.vocabulary.avustuslaji
     - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.target_group
+    - taxonomy.vocabulary.ukk_kategoriat
+    - taxonomy.vocabulary.unit_type
   module:
     - block
+    - block_content
     - content_translation
+    - easy_breadcrumb
+    - entity_usage
     - eu_cookie_compliance
+    - field_ui
     - file
     - grants_attachments
     - grants_industries
@@ -23,20 +35,27 @@ dependencies:
     - grants_profile
     - helfi_api_base
     - helfi_tpr
+    - language
+    - linkit
     - locale
     - media
     - menu_link_content
     - node
+    - openid_connect
     - paragraphs
+    - paragraphs_library
     - path
     - pathauto
     - redirect
+    - responsive_image
+    - role_delegation
     - scheduler
     - simple_sitemap
     - system
     - taxonomy
     - toolbar
     - webform
+    - webform_submission_log
 _core:
   default_config_hash: fnOpQQ5r1eprWvQPrJPWRfDqxozQiZnwIdYFPKb0lbM
 id: admin
@@ -45,15 +64,29 @@ weight: -1
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access any webform configuration'
   - 'access content overview'
+  - 'access entity usage statistics'
   - 'access files overview'
   - 'access media overview'
   - 'access remote entities overview'
   - 'access site in maintenance mode'
+  - 'access site reports'
   - 'access taxonomy overview'
   - 'access toolbar'
   - 'access user profiles'
+  - 'access webform help'
+  - 'access webform overview'
+  - 'access webform submission log'
+  - 'access webform submission user'
+  - 'administer account settings'
+  - 'administer block_content display'
+  - 'administer block_content fields'
+  - 'administer block_content form display'
   - 'administer blocks'
+  - 'administer content types'
+  - 'administer display modes'
+  - 'administer easy breadcrumb'
   - 'administer entity print'
   - 'administer eu cookie compliance categories'
   - 'administer eu cookie compliance popup'
@@ -61,17 +94,60 @@ permissions:
   - 'administer grants_industries configuration'
   - 'administer grants_oma_asiointi configuration'
   - 'administer grants_profile configuration'
+  - 'administer languages'
+  - 'administer linkit profiles'
+  - 'administer media'
+  - 'administer media display'
+  - 'administer media fields'
+  - 'administer media form display'
+  - 'administer media types'
   - 'administer menu'
+  - 'administer modules'
+  - 'administer node display'
+  - 'administer node fields'
+  - 'administer node form display'
   - 'administer nodes'
+  - 'administer paragraph display'
+  - 'administer paragraph fields'
+  - 'administer paragraph form display'
+  - 'administer paragraphs_library_item display'
+  - 'administer paragraphs_library_item fields'
+  - 'administer paragraphs_library_item form display'
   - 'administer pathauto'
   - 'administer permissions'
+  - 'administer redirect settings'
   - 'administer redirects'
+  - 'administer responsive images'
+  - 'administer scheduler'
+  - 'administer site configuration'
   - 'administer sitemap settings'
+  - 'administer software updates'
+  - 'administer taxonomy'
+  - 'administer taxonomy_term display'
+  - 'administer taxonomy_term fields'
+  - 'administer taxonomy_term form display'
+  - 'administer themes'
+  - 'administer tpr_errand_service fields'
+  - 'administer tpr_errand_service form display'
+  - 'administer tpr_ontology_word_details fields'
+  - 'administer tpr_ontology_word_details form display'
+  - 'administer tpr_service fields'
+  - 'administer tpr_service form display'
+  - 'administer tpr_service_channel fields'
+  - 'administer tpr_service_channel form display'
+  - 'administer tpr_unit fields'
+  - 'administer tpr_unit form display'
   - 'administer url aliases'
+  - 'administer user display'
+  - 'administer user fields'
+  - 'administer user form display'
   - 'administer users'
   - 'administer webform'
+  - 'administer webform element access'
   - 'administer webform submission'
+  - 'assign all roles'
   - 'bypass entity print access'
+  - 'bypass node access'
   - 'cancel account'
   - 'change own username'
   - 'create content translations'
@@ -84,7 +160,11 @@ permissions:
   - 'create remote entities'
   - 'create remote_video media'
   - 'create soundcloud media'
+  - 'create terms in avustuslaji'
   - 'create terms in keywords'
+  - 'create terms in target_group'
+  - 'create terms in ukk_kategoriat'
+  - 'create terms in unit_type'
   - 'create url aliases'
   - 'create webform'
   - 'delete all revisions'
@@ -99,28 +179,44 @@ permissions:
   - 'delete any webform'
   - 'delete any webform submission'
   - 'delete content translations'
+  - 'delete faq revisions'
   - 'delete landing_page revisions'
   - 'delete media'
   - 'delete own address content'
+  - 'delete own article content'
   - 'delete own file media'
+  - 'delete own form_page content'
   - 'delete own helfi_chart media'
   - 'delete own image media'
   - 'delete own landing_page content'
   - 'delete own page content'
   - 'delete own remote_video media'
+  - 'delete own service content'
   - 'delete own soundcloud media'
   - 'delete own webform'
   - 'delete own webform submission'
   - 'delete page revisions'
   - 'delete remote entities'
+  - 'delete service revisions'
+  - 'delete terms in avustuslaji'
   - 'delete terms in keywords'
+  - 'delete terms in target_group'
+  - 'delete terms in ukk_kategoriat'
+  - 'delete terms in unit_type'
+  - 'edit any address content'
+  - 'edit any article content'
+  - 'edit any faq content'
   - 'edit any file media'
+  - 'edit any form_page content'
   - 'edit any helfi_chart media'
   - 'edit any image media'
   - 'edit any landing_page content'
   - 'edit any page content'
   - 'edit any remote_video media'
+  - 'edit any service content'
   - 'edit any soundcloud media'
+  - 'edit any webform'
+  - 'edit any webform submission'
   - 'edit own address content'
   - 'edit own file media'
   - 'edit own helfi_chart media'
@@ -129,15 +225,30 @@ permissions:
   - 'edit own page content'
   - 'edit own remote_video media'
   - 'edit own soundcloud media'
+  - 'edit own webform'
+  - 'edit own webform submission'
   - 'edit remote entities'
   - 'edit terms in keywords'
   - 'edit webform assets'
+  - 'edit webform source'
+  - 'edit webform twig'
+  - 'edit webform variants'
   - 'entity print access bundle paragraph_verkkolomake'
+  - 'link to any page'
+  - 'notify of path changes'
+  - 'openid connect set own password'
+  - 'revert address revisions'
   - 'revert all revisions'
+  - 'revert article revisions'
+  - 'revert faq revisions'
+  - 'revert form_page revisions'
   - 'revert landing_page revisions'
   - 'revert page revisions'
+  - 'revert service revisions'
   - 'schedule publishing of nodes'
+  - 'select account cancellation method'
   - 'translate any entity'
+  - 'translate article node'
   - 'translate editable entities'
   - 'translate file media'
   - 'translate hauki_resource'
@@ -148,21 +259,32 @@ permissions:
   - 'translate menu_link_content'
   - 'translate page node'
   - 'translate remote_video media'
+  - 'translate service node'
   - 'translate soundcloud media'
   - 'translate tpr_service'
   - 'translate tpr_unit'
   - 'update any media'
   - 'update content translations'
   - 'update media'
+  - 'view address revisions'
   - 'view all media revisions'
   - 'view all revisions'
   - 'view any unpublished content'
   - 'view any unpublished content'
+  - 'view any webform submission'
+  - 'view article revisions'
+  - 'view faq revisions'
   - 'view landing_page revisions'
   - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view page revisions'
   - 'view remote entities'
   - 'view scheduled content'
+  - 'view service revisions'
   - 'view the administration theme'
   - 'view unpublished paragraphs'
+  - 'view unpublished tpr_errand_service'
+  - 'view unpublished tpr_service'
+  - 'view unpublished tpr_service_channel'
+  - 'view unpublished tpr_unit'
+  - 'view user email addresses'
