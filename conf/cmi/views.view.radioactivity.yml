@@ -23,7 +23,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Most read news items in the last 7 days'
+      title: 'Luetuimmat uutiset 7 päivän ajalta'
       fields:
         title:
           id: title
@@ -342,7 +342,14 @@ display:
             default_group_multiple: {  }
             group_items: {  }
       style:
-        type: default
+        type: html_list
+        options:
+          row_class: news-listing__item
+          default_row_class: true
+          uses_fields: false
+          type: ul
+          wrapper_class: item-list
+          class: 'news-listing news-listing--latest-tiny-teasers'
       row:
         type: 'entity:node'
         options:
@@ -388,7 +395,10 @@ display:
     display_plugin: block
     position: 1
     display_options:
-      display_extenders: {  }
+      display_extenders:
+        metatag_display_extender:
+          metatags: {  }
+          tokenize: false
       block_description: 'Most read news'
     cache_metadata:
       max-age: -1
