@@ -4,13 +4,11 @@ status: true
 dependencies:
   module:
     - paragraphs
-    - toolbar
 id: read_only
 label: 'Vain luku'
 weight: -8
 is_admin: null
 permissions:
-  - 'access toolbar'
   - 'view any unpublished landing_page content'
   - 'view any unpublished page content'
   - 'view unpublished paragraphs'

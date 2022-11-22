@@ -1,0 +1,10 @@
+uuid: f02501e4-a234-49dc-a877-440c38caf1b4
+langcode: fi
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: s0Shtj79sFsvzB2LJ0nC-yGJUN_DcxwVxTPfy7FeTPw
+id: node__news_item
+label: 'Content: News item'
+tags:
+  title: '[node:short-title] | [site:page-title-suffix]'

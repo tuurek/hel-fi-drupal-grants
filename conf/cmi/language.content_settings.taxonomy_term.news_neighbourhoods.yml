@@ -1,0 +1,11 @@
+uuid: c1657a4b-c7d5-45c1-9b97-7e2e274fed3d
+langcode: fi
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.news_neighbourhoods
+id: taxonomy_term.news_neighbourhoods
+target_entity_type_id: taxonomy_term
+target_bundle: news_neighbourhoods
+default_langcode: site_default
+language_alterable: false

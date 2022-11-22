@@ -1,0 +1,29 @@
+uuid: 523b036b-f23b-4fac-bdcc-13f39ea0db5f
+langcode: fi
+status: true
+dependencies:
+  config:
+    - views.view.frontpage_news
+  module:
+    - system
+    - views
+  theme:
+    - helfi_grant_applications
+id: views_block__frontpage_news_main_news
+theme: helfi_grant_applications
+region: content
+weight: -10
+provider: null
+plugin: 'views_block:frontpage_news-main_news'
+settings:
+  id: 'views_block:frontpage_news-main_news'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /news

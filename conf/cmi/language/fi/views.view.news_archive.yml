@@ -1,0 +1,5 @@
+label: 'Kaikki uutiset'
+display:
+  default:
+    display_options:
+      link_url: /uutiset

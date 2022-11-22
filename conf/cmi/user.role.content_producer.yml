@@ -30,11 +30,11 @@ dependencies:
     - node
     - paragraphs
     - path
+    - pathauto
     - scheduler
     - system
     - taxonomy
     - toolbar
-    - webform
 _core:
   default_config_hash: vrZv05Y6x-5ZH874GNgfIMO8AetqjY7vB0pzfvXDtUY
 id: content_producer
@@ -42,6 +42,7 @@ label: 'Content producer'
 weight: -5
 is_admin: null
 permissions:
+  - 'access administration pages'
   - 'access content overview'
   - 'access files overview'
   - 'access media overview'
@@ -49,10 +50,9 @@ permissions:
   - 'access site in maintenance mode'
   - 'access taxonomy overview'
   - 'access toolbar'
-  - 'access user profiles'
   - 'administer nodes'
-  - 'cancel account'
-  - 'change own username'
+  - 'administer taxonomy'
+  - 'create content translations'
   - 'create faq content'
   - 'create file media'
   - 'create helfi_chart media'
@@ -63,17 +63,20 @@ permissions:
   - 'create remote_video media'
   - 'create service content'
   - 'create soundcloud media'
+  - 'create terms in avustuslaji'
   - 'create terms in keywords'
+  - 'create terms in target_group'
+  - 'create terms in ukk_kategoriat'
+  - 'create terms in unit_type'
   - 'create url aliases'
-  - 'create webform'
   - 'delete all revisions'
   - 'delete any article content'
   - 'delete any faq content'
   - 'delete any landing_page content'
   - 'delete any page content'
   - 'delete any service content'
-  - 'delete any webform submission'
   - 'delete article revisions'
+  - 'delete content translations'
   - 'delete faq revisions'
   - 'delete form_page revisions'
   - 'delete landing_page revisions'
@@ -90,9 +93,13 @@ permissions:
   - 'delete own remote_video media'
   - 'delete own service content'
   - 'delete own soundcloud media'
-  - 'delete own webform'
   - 'delete page revisions'
   - 'delete service revisions'
+  - 'delete terms in avustuslaji'
+  - 'delete terms in keywords'
+  - 'delete terms in target_group'
+  - 'delete terms in ukk_kategoriat'
+  - 'delete terms in unit_type'
   - 'edit any address content'
   - 'edit any article content'
   - 'edit any faq content'
@@ -110,8 +117,13 @@ permissions:
   - 'edit own remote_video media'
   - 'edit own service content'
   - 'edit own soundcloud media'
+  - 'edit terms in avustuslaji'
   - 'edit terms in keywords'
+  - 'edit terms in target_group'
+  - 'edit terms in ukk_kategoriat'
+  - 'edit terms in unit_type'
   - 'entity print access bundle paragraph_verkkolomake'
+  - 'notify of path changes'
   - 'revert address revisions'
   - 'revert all revisions'
   - 'revert article revisions'
@@ -136,6 +148,7 @@ permissions:
   - 'translate target_group taxonomy_term'
   - 'translate ukk_kategoriat taxonomy_term'
   - 'translate unit_type taxonomy_term'
+  - 'update content translations'
   - 'update media'
   - 'view all media revisions'
   - 'view all revisions'

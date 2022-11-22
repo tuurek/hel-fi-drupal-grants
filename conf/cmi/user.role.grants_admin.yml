@@ -1,9 +1,199 @@
 uuid: cf491e60-aeb2-4ae7-9c51-e6196cc90e26
 langcode: fi
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - media.type.file
+    - media.type.helfi_chart
+    - media.type.image
+    - media.type.remote_video
+    - media.type.soundcloud
+    - node.type.address
+    - node.type.article
+    - node.type.faq
+    - node.type.form_page
+    - node.type.landing_page
+    - node.type.page
+    - node.type.service
+    - taxonomy.vocabulary.avustuslaji
+    - taxonomy.vocabulary.keywords
+    - taxonomy.vocabulary.target_group
+    - taxonomy.vocabulary.ukk_kategoriat
+    - taxonomy.vocabulary.unit_type
+  module:
+    - block_content
+    - content_lock
+    - content_translation
+    - entity_usage
+    - helfi_tpr
+    - media
+    - menu_link_content
+    - node
+    - path
+    - pathauto
+    - redirect
+    - responsive_image
+    - role_delegation
+    - scheduler
+    - system
+    - taxonomy
+    - toolbar
+    - webform
+    - webform_submission_log
 id: grants_admin
 label: 'Grants Admin'
 weight: -2
 is_admin: null
-permissions: {  }
+permissions:
+  - 'access administration pages'
+  - 'access any webform configuration'
+  - 'access content overview'
+  - 'access entity usage statistics'
+  - 'access site in maintenance mode'
+  - 'access site reports'
+  - 'access taxonomy overview'
+  - 'access toolbar'
+  - 'access tpr_ontology_word_details overview'
+  - 'access tpr_service overview'
+  - 'access tpr_unit overview'
+  - 'access user profiles'
+  - 'access webform help'
+  - 'access webform overview'
+  - 'access webform submission log'
+  - 'access webform submission user'
+  - 'administer account settings'
+  - 'administer media'
+  - 'administer media types'
+  - 'administer menu'
+  - 'administer nodes'
+  - 'administer redirect settings'
+  - 'administer redirects'
+  - 'administer responsive images'
+  - 'administer scheduler'
+  - 'administer taxonomy'
+  - 'administer tpr_ontology_word_details'
+  - 'administer tpr_service'
+  - 'administer tpr_unit'
+  - 'administer url aliases'
+  - 'administer users'
+  - 'administer webform'
+  - 'administer webform element access'
+  - 'administer webform submission'
+  - 'assign all roles'
+  - 'break content lock'
+  - 'change own username'
+  - 'create address content'
+  - 'create article content'
+  - 'create content translations'
+  - 'create faq content'
+  - 'create file media'
+  - 'create helfi_chart media'
+  - 'create image media'
+  - 'create landing_page content'
+  - 'create page content'
+  - 'create remote_video media'
+  - 'create service content'
+  - 'create soundcloud media'
+  - 'create terms in avustuslaji'
+  - 'create terms in keywords'
+  - 'create terms in target_group'
+  - 'create terms in ukk_kategoriat'
+  - 'create terms in unit_type'
+  - 'create url aliases'
+  - 'create webform'
+  - 'delete address revisions'
+  - 'delete all revisions'
+  - 'delete any address content'
+  - 'delete any article content'
+  - 'delete any faq content'
+  - 'delete any file media'
+  - 'delete any form_page content'
+  - 'delete any helfi_chart media'
+  - 'delete any image media'
+  - 'delete any landing_page content'
+  - 'delete any page content'
+  - 'delete any remote_video media'
+  - 'delete any service content'
+  - 'delete any soundcloud media'
+  - 'delete any webform'
+  - 'delete any webform submission'
+  - 'delete article revisions'
+  - 'delete content translations'
+  - 'delete faq revisions'
+  - 'delete form_page revisions'
+  - 'delete landing_page revisions'
+  - 'delete own article content'
+  - 'delete own faq content'
+  - 'delete own form_page content'
+  - 'delete own landing_page content'
+  - 'delete own page content'
+  - 'delete own service content'
+  - 'delete page revisions'
+  - 'delete service revisions'
+  - 'delete terms in avustuslaji'
+  - 'delete terms in keywords'
+  - 'delete terms in target_group'
+  - 'delete terms in ukk_kategoriat'
+  - 'delete terms in unit_type'
+  - 'edit any address content'
+  - 'edit any article content'
+  - 'edit any faq content'
+  - 'edit any form_page content'
+  - 'edit any landing_page content'
+  - 'edit any page content'
+  - 'edit any service content'
+  - 'edit any webform'
+  - 'edit any webform submission'
+  - 'edit own webform'
+  - 'edit own webform submission'
+  - 'edit terms in avustuslaji'
+  - 'edit terms in keywords'
+  - 'edit terms in target_group'
+  - 'edit terms in ukk_kategoriat'
+  - 'edit terms in unit_type'
+  - 'edit webform assets'
+  - 'edit webform source'
+  - 'edit webform twig'
+  - 'edit webform variants'
+  - 'notify of path changes'
+  - 'revert address revisions'
+  - 'revert all revisions'
+  - 'revert article revisions'
+  - 'revert faq revisions'
+  - 'revert form_page revisions'
+  - 'revert landing_page revisions'
+  - 'revert page revisions'
+  - 'revert service revisions'
+  - 'select account cancellation method'
+  - 'translate article node'
+  - 'translate avustuslaji taxonomy_term'
+  - 'translate block_content'
+  - 'translate editable entities'
+  - 'translate file media'
+  - 'translate image media'
+  - 'translate keywords taxonomy_term'
+  - 'translate landing_page node'
+  - 'translate menu_link_content'
+  - 'translate remote_video media'
+  - 'translate service node'
+  - 'translate target_group taxonomy_term'
+  - 'translate ukk_kategoriat taxonomy_term'
+  - 'translate unit_type taxonomy_term'
+  - 'update any media'
+  - 'update content translations'
+  - 'view address revisions'
+  - 'view all revisions'
+  - 'view any webform submission'
+  - 'view article revisions'
+  - 'view faq revisions'
+  - 'view landing_page revisions'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view page revisions'
+  - 'view service revisions'
+  - 'view the administration theme'
+  - 'view unpublished tpr_errand_service'
+  - 'view unpublished tpr_service'
+  - 'view unpublished tpr_service_channel'
+  - 'view unpublished tpr_unit'
+  - 'view user email addresses'

@@ -1,0 +1,18 @@
+#block-views-block-grants-news-latest-news h2,
+#block-views-block-radioactivity-most-read-news h2 {
+  --line-height: 1;
+  font-size: var(--fontsize-heading-l);
+  font-weight: 400;
+  border-bottom: 2px solid var(--color-black);
+  margin-top: 0;
+  padding-bottom: var(--spacing-m);
+  width: 100%;
+}
+
+.news-listing__tiny-teaser .news-listing__title {
+  font-weight: 500;
+}
+
+.sidebar-second .views-element-container {
+  margin-bottom: var(--spacing-4-xl);
+}
