@@ -632,7 +632,7 @@ class AttachmentHandler {
     else {
       // If other filetype and no attachment already set, we don't add them to
       // retval since we don't want to fill attachments with empty other files.
-      if (($fileType === "0" || $fileType === '6') && empty($field["attachmentName"])) {
+      if (($fileType === "0" || $fileType === '45') && empty($field["attachmentName"])) {
         return [];
       }
       // No upload, process accordingly.
