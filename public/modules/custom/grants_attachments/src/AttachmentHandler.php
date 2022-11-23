@@ -504,7 +504,7 @@ class AttachmentHandler {
           // IsNewAttachment controls upload to Avus2.
           // If this is false, file will not go to Avus2.
           'isNewAttachment' => TRUE,
-          'fileType' => 6,
+          'fileType' => 45,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
@@ -540,7 +540,7 @@ class AttachmentHandler {
           // Since we're not adding/changing bank account, set this to false so
           // the file is not fetched again.
           'isNewAttachment' => FALSE,
-          'fileType' => 6,
+          'fileType' => 45,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
@@ -557,7 +557,7 @@ class AttachmentHandler {
       // First clean all account confirmation files.
       // this should handle account number updates as well.
       foreach ($submittedFormData['attachments'] as $key => $value) {
-        if ((int) $value['fileType'] == 6) {
+        if ((int) $value['fileType'] == 45) {
           unset($submittedFormData['attachments'][$key]);
         }
       }
@@ -809,6 +809,39 @@ class AttachmentHandler {
       'uploaded' => $up,
       'not-uploaded' => $not,
     ];
+  }
+
+  /**
+   * Get attachment upload time from events.
+   *
+   * @param array $events
+   *   Events of the submission.
+   * @param string $fileName
+   *   Attachment file from submission data.
+   *
+   * @return string
+   *   File upload time.
+   *
+   * @throws \Exception
+   */
+  public static function getAttachmentUploadTime($events, string $fileName): string {
+    $dtString = '';
+    $event = array_filter(
+      $events,
+      function ($item) use ($fileName) {
+        if ($item['eventTarget'] == $fileName) {
+          return TRUE;
+        }
+        return FALSE;
+      }
+    );
+    $event = reset($event);
+    if ($event) {
+      $dt = new \DateTime($event['timeCreated']);
+      $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+      $dtString = $dt->format('d.m.Y H:i');
+    }
+    return $dtString;
   }
 
 }

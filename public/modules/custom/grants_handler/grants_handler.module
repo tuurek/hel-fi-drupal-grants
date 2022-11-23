@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\grants_attachments\AttachmentHandler;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\Event\UserLogoutEvent;
 use Drupal\grants_handler\Form\CopyApplicationModalForm;
@@ -901,11 +902,24 @@ function grants_handler_preprocess_webform_submission_attachment_list(&$variable
   $submission = $variables['submission'];
   $submissionData = $submission->getData();
 
+  // Get submission events.
+  $attachmentEventsHandler = EventsService::filterEvents($submissionData['events'], 'HANDLER_ATT_OK');
+
   $attachments = [];
 
   foreach ($submissionData['attachments'] as $att) {
     if (isset($att['fileName'])) {
-      $attachments[] = $att['fileName'];
+      try {
+        $fileUploadTime = AttachmentHandler::getAttachmentUploadTime($attachmentEventsHandler['events'], $att['fileName']);
+      }
+      catch (Exception $e) {
+        $fileUploadTime = '';
+      }
+      $attachmentLine = $att['fileName'];
+      if (!empty($fileUploadTime)) {
+        $attachmentLine .= ' (' . $fileUploadTime . ')';
+      }
+      $attachments[] = $attachmentLine;
     }
   }
 

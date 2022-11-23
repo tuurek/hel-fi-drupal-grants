@@ -349,6 +349,8 @@ class GrantsHandler extends WebformHandlerBase {
     // probably will change when we have proper company selection process.
     $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
+    $grantsProfile = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
+
     // If no helsinkiprofiili, don't process any further.
     if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
       ($currentUser->id() != '1') || $currentUser->id() == '1') {
@@ -378,6 +380,34 @@ class GrantsHandler extends WebformHandlerBase {
       $url = Url::fromRoute('grants_handler.new_application', [
         'webform_id' => $webform_id,
       ]);
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    // These both are required to be selected.
+    // probably will change when we have proper company selection process.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+
+    $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
+    $grantsProfile = $grantsProfileDocument->getContent();
+
+    if (empty($grantsProfile["addresses"])) {
+      $this->messenger()->addWarning('You must have address saved to your profile.');
+      $url = Url::fromRoute('grants_profile.edit');
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    if (empty($grantsProfile["bankAccounts"])) {
+      $this->messenger()->addWarning('You must have bank account saved to your profile.');
+      $url = Url::fromRoute('grants_profile.edit');
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    if (empty($grantsProfile["officials"])) {
+      $this->messenger()->addWarning('You must have officials saved to your profile.');
+      $url = Url::fromRoute('grants_profile.edit');
       $redirect = new RedirectResponse($url->toString());
       $redirect->send();
     }
@@ -737,12 +767,12 @@ class GrantsHandler extends WebformHandlerBase {
           // @todo fix validation error messages.
           $this->messenger()
             ->addError('Validation failed, please check inputs. This feature will get better.');
-          // $this->grantsFormNavigationHelper->validateAllPages(
-          // $webform_submission,
-          // $form_state,
-          // $triggeringElement,
-          // $form
-          // );
+
+          foreach ($violations as $violation) {
+            $form_state->setErrorByName('[3_yhteison_tiedot][business_info][community_purpose]', $violation->getMessage());
+            $d = 'asfd';
+          }
+
         }
       }
     }
