@@ -400,6 +400,11 @@ class AttachmentHandler {
     $profileContent = $grantsProfileDocument->getContent();
     $applicationDocument = FALSE;
     $fileArray = [];
+
+    // Get base urls.
+    $baseUrl = $this->atvService->getBaseUrl();
+    $baseUrlApps = str_replace('agw', 'apps', $baseUrl);
+
     try {
       // Search application document from ATV.
       $applicationDocumentResults = $this->atvService->searchDocuments([
@@ -460,6 +465,7 @@ class AttachmentHandler {
 
     if (!$accountConfirmationExists) {
       $selectedAccountConfirmation = FALSE;
+
       // Get confirmation file from profile.
       if ($selectedAccount['confirmationFile']) {
         $selectedAccountConfirmation = $grantsProfileDocument
@@ -474,8 +480,12 @@ class AttachmentHandler {
           $uploadResult = $this->atvService->uploadAttachment($applicationDocument->getId(), $selectedAccountConfirmation["filename"], $file);
           // If succeeded.
           if ($uploadResult !== FALSE) {
-            // Create proper integrationID.
-            $integrationID = str_replace(getenv('ATV_BASE_URL'), '', $uploadResult['href']);
+
+            // Remove server url from integrationID.
+            // We need to make sure that the integrationID gets removed inside &
+            // outside the azure environment.
+            $integrationID = str_replace($baseUrl, '', $uploadResult['href']);
+            $integrationID = str_replace($baseUrlApps, '', $integrationID);
 
             // If upload is ok, then add event.
             $submittedFormData['events'][] = EventsService::getEventData(
@@ -527,11 +537,12 @@ class AttachmentHandler {
       });
 
       if (empty($existingConfirmationForSelectedAccountExists)) {
-        // Parse integrationID from uploaded attachment.
-        $integrationID = substr(
-          $accountConfirmationFile['href'],
-          strpos($accountConfirmationFile['href'], '.hel.fi') + 7,
-        );
+
+        // Remove server url from integrationID.
+        // We need to make sure that the integrationID gets removed inside &
+        // outside the azure environment.
+        $integrationID = str_replace($baseUrl, '', $accountConfirmationFile['href']);
+        $integrationID = str_replace($baseUrlApps, '', $integrationID);
 
         // If confirmation details are not found from.
         $fileArray = [
@@ -553,7 +564,6 @@ class AttachmentHandler {
         // Add that.
         $fileArray['integrationID'] = $integrationID;
       }
-      $extraAttachments = [];
       // First clean all account confirmation files.
       // this should handle account number updates as well.
       foreach ($submittedFormData['attachments'] as $key => $value) {
