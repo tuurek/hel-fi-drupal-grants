@@ -345,25 +345,21 @@ class GrantsHandler extends WebformHandlerBase {
     $currentUser = \Drupal::currentUser();
     $currentUserRoles = $currentUser->getRoles();
 
-    // These both are required to be selected.
-    // probably will change when we have proper company selection process.
-    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    if (in_array('helsinkiprofiili', $currentUserRoles)) {
 
-    $grantsProfile = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
+      // These both are required to be selected.
+      // probably will change when we have proper company selection process.
+      $selectedCompany = $this->grantsProfileService->getSelectedCompany();
 
-    // If no helsinkiprofiili, don't process any further.
-    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
-      ($currentUser->id() != '1') || $currentUser->id() == '1') {
-      return;
+      if ($selectedCompany == NULL) {
+        throw new CompanySelectException('User not authorised');
+      }
+
+      $webform = Webform::load($values['webform_id']);
+
+      $this->setFromThirdPartySettings($webform);
     }
 
-    if ($selectedCompany == NULL) {
-      throw new CompanySelectException('User not authorised');
-    }
-
-    $webform = Webform::load($values['webform_id']);
-
-    $this->setFromThirdPartySettings($webform);
 
   }
 
@@ -371,6 +367,14 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function prepareForm(WebformSubmissionInterface $webform_submission, $operation, FormStateInterface $form_state) {
+
+    $currentUser = \Drupal::currentUser();
+    $currentUserRoles = $currentUser->getRoles();
+
+    if (!in_array('helsinkiprofiili', $currentUserRoles)) {
+      return;
+    }
+
 
     // If we're coming here with ADD operator, then we redirect user to
     // new application endpoint and from there they're redirected back ehre

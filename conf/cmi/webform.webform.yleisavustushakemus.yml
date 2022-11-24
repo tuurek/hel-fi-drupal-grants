@@ -38,7 +38,7 @@ elements: |-
     '#next_button_label': 'Seuraava >'
     application_number:
       '#type': hidden
-      '#title': 'Hakemusnumero'
+      '#title': Hakemusnumero
       '#disabled': true
     status:
       '#type': hidden
@@ -159,7 +159,6 @@ elements: |-
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
-      '#required': true
       community_officials:
         '#type': community_officials_composite
         '#title': 'Yhteisön vastaavat henkilöt'
@@ -175,7 +174,6 @@ elements: |-
         '#attributes':
           class:
             - webform--large
-        '#required': true
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'
