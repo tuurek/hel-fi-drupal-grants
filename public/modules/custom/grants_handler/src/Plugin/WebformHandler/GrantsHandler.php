@@ -771,10 +771,7 @@ class GrantsHandler extends WebformHandlerBase {
           $this->messenger()
             ->addError('Validation failed, please check inputs. This feature will get better.');
 
-          foreach ($violations as $violation) {
-            $form_state->setErrorByName('[3_yhteison_tiedot][business_info][community_purpose]', $violation->getMessage());
-            $d = 'asfd';
-          }
+          // TODO: We need to figure out how to show these errors to user.
 
         }
       }
