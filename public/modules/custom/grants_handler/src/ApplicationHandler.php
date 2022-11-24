@@ -838,6 +838,7 @@ class ApplicationHandler {
     $atvDocument->setTosRecordId(getenv('ATV_TOS_RECORD_ID'));
     $atvDocument->setBusinessId($selectedCompany['identifier']);
     $atvDocument->setDraft(TRUE);
+    $atvDocument->setDeletable(FALSE);
 
     $atvDocument->setMetadata([
       'appenv' => self::getAppEnv(),
