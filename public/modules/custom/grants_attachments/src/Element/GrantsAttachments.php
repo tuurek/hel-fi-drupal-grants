@@ -138,7 +138,7 @@ class GrantsAttachments extends WebformCompositeBase {
         $element["description"]["#default_value"] = $dataForElement['description'];
       }
 
-      if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '6') {
+      if (isset($dataForElement['fileType']) && $dataForElement['fileType'] == '45') {
         if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== "") {
           $element["fileStatus"]["#value"] = 'uploaded';
         }
@@ -299,8 +299,16 @@ class GrantsAttachments extends WebformCompositeBase {
       $file = File::load($value["attachment"]);
       // Upload attachment to document.
       $attachmentResponse = $atvService->uploadAttachment($atvDocument->getId(), $file->getFilename(), $file);
+
       // Remove server url from integrationID.
-      $integrationId = str_replace(getenv('ATV_BASE_URL'), '', $attachmentResponse['href']);
+      $baseUrl = $atvService->getBaseUrl();
+      $baseUrlApps = str_replace('agw', 'apps', $baseUrl);
+      // Remove server url from integrationID.
+      // We need to make sure that the integrationID gets removed inside &
+      // outside the azure environment.
+      $integrationId = str_replace($baseUrl, '', $attachmentResponse['href']);
+      $integrationId = str_replace($baseUrlApps, '', $integrationId);
+
       // Set values to form.
       $form_state->setValue($integrationIdValue, $integrationId);
       $form_state->setValue($fileStatusIdValue, 'justUploaded');

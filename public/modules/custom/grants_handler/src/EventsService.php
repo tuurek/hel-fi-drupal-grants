@@ -177,7 +177,7 @@ class EventsService {
    * @return array
    *   Filtered events.
    */
-  public static function filterEvents(array $events, string $typeKey) {
+  public static function filterEvents(array $events, string $typeKey): array {
     $messageEvents = array_filter($events, function ($event) use ($typeKey) {
       if ($event['eventType'] == self::$eventTypes[$typeKey]) {
         return TRUE;

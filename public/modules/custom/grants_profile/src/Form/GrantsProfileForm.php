@@ -164,9 +164,13 @@ class GrantsProfileForm extends FormBase {
     ];
 
     $addressValues = [];
-    foreach ($grantsProfileContent['addresses'] as $delta => $official) {
-      $addressValues[$delta] = $official;
+    foreach ($grantsProfileContent['addresses'] as $delta => $address) {
+      $addressValues[$delta] = $address;
       $addressValues[$delta]['address_id'] = $delta;
+    }
+
+    if (empty($addressValues)) {
+      $addressValues[0]['address_id'] = 0;
     }
 
     $deleteAddressLink = Link::createFromRoute(t('Delete'), 'grants_profile.company_addresses.remove', [
@@ -365,6 +369,9 @@ class GrantsProfileForm extends FormBase {
               empty($value2['country'])
             ) {
               unset($values[$key][$key2]);
+            }
+            if (empty($value2["address_id"])) {
+              $values[$key][$key2]['address_id'] = (string) $key2;
             }
           }
           if ($key == 'officials') {

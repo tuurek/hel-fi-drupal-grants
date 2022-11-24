@@ -13,6 +13,9 @@ ad_role_mappings:
   sl_AvustusTest_paakayttajat:
     - ad_user
     - grants_admin
+  sg_kanslia_kayttajat:
+    - ad_user
+    - content_producer_industry
   sl_AvustusTest_PK_Kanslia_kayttajat:
     - ad_user
     - content_producer_industry
@@ -50,11 +53,5 @@ ad_role_mappings:
     - ad_user
     - content_producer_industry
   sl_Avustus_TA_Sote:
-    - ad_user
-    - content_producer_industry
-  sl_kanslia_owakayttajat:
-    - ad_user
-    - content_producer_industry
-  sg_kanslia_kayttajat:
     - ad_user
     - content_producer_industry

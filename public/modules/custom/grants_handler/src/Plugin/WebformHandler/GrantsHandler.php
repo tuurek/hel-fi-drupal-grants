@@ -345,23 +345,20 @@ class GrantsHandler extends WebformHandlerBase {
     $currentUser = \Drupal::currentUser();
     $currentUserRoles = $currentUser->getRoles();
 
-    // These both are required to be selected.
-    // probably will change when we have proper company selection process.
-    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+    if (in_array('helsinkiprofiili', $currentUserRoles)) {
 
-    // If no helsinkiprofiili, don't process any further.
-    if ((in_array('helsinkiprofiili', $currentUserRoles)) &&
-      ($currentUser->id() != '1') || $currentUser->id() == '1') {
-      return;
+      // These both are required to be selected.
+      // probably will change when we have proper company selection process.
+      $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+
+      if ($selectedCompany == NULL) {
+        throw new CompanySelectException('User not authorised');
+      }
+
+      $webform = Webform::load($values['webform_id']);
+
+      $this->setFromThirdPartySettings($webform);
     }
-
-    if ($selectedCompany == NULL) {
-      throw new CompanySelectException('User not authorised');
-    }
-
-    $webform = Webform::load($values['webform_id']);
-
-    $this->setFromThirdPartySettings($webform);
 
   }
 
@@ -369,6 +366,14 @@ class GrantsHandler extends WebformHandlerBase {
    * {@inheritdoc}
    */
   public function prepareForm(WebformSubmissionInterface $webform_submission, $operation, FormStateInterface $form_state) {
+
+    $currentUser = \Drupal::currentUser();
+    $currentUserRoles = $currentUser->getRoles();
+
+    // If user is not authenticated via HP we don't do anything here.
+    if (!in_array('helsinkiprofiili', $currentUserRoles)) {
+      return;
+    }
 
     // If we're coming here with ADD operator, then we redirect user to
     // new application endpoint and from there they're redirected back ehre
@@ -378,6 +383,34 @@ class GrantsHandler extends WebformHandlerBase {
       $url = Url::fromRoute('grants_handler.new_application', [
         'webform_id' => $webform_id,
       ]);
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    // These both are required to be selected.
+    // probably will change when we have proper company selection process.
+    $selectedCompany = $this->grantsProfileService->getSelectedCompany();
+
+    $grantsProfileDocument = $this->grantsProfileService->getGrantsProfile($selectedCompany['identifier']);
+    $grantsProfile = $grantsProfileDocument->getContent();
+
+    if (empty($grantsProfile["addresses"])) {
+      $this->messenger()->addWarning('You must have address saved to your profile.');
+      $url = Url::fromRoute('grants_profile.edit');
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    if (empty($grantsProfile["bankAccounts"])) {
+      $this->messenger()->addWarning('You must have bank account saved to your profile.');
+      $url = Url::fromRoute('grants_profile.edit');
+      $redirect = new RedirectResponse($url->toString());
+      $redirect->send();
+    }
+
+    if (empty($grantsProfile["officials"])) {
+      $this->messenger()->addWarning('You must have officials saved to your profile.');
+      $url = Url::fromRoute('grants_profile.edit');
       $redirect = new RedirectResponse($url->toString());
       $redirect->send();
     }
@@ -737,12 +770,9 @@ class GrantsHandler extends WebformHandlerBase {
           // @todo fix validation error messages.
           $this->messenger()
             ->addError('Validation failed, please check inputs. This feature will get better.');
-          // $this->grantsFormNavigationHelper->validateAllPages(
-          // $webform_submission,
-          // $form_state,
-          // $triggeringElement,
-          // $form
-          // );
+
+          // TODO: We need to figure out how to show these errors to user.
+
         }
       }
     }
