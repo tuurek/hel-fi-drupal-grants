@@ -635,6 +635,11 @@ class AttachmentHandler {
       if (($fileType === "0" || $fileType === '45') && empty($field["attachmentName"])) {
         return [];
       }
+      // No matter upload status, we need to set up fileName always if the
+      // attachmentName is present.
+      if (isset($field['attachmentName'])) {
+        $retval['fileName'] = $field["attachmentName"];
+      }
       // No upload, process accordingly.
       if ($field['fileStatus'] == 'new' || empty($field['fileStatus'])) {
         if (isset($field['isDeliveredLater'])) {
@@ -646,17 +651,11 @@ class AttachmentHandler {
       }
       // If file is just uploaded, then we need to setup like this.
       elseif ($field['fileStatus'] == 'justUploaded') {
-        if (isset($field['attachmentName'])) {
-          $retval['fileName'] = $field["attachmentName"];
-        }
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
         $retval['isNewAttachment'] = TRUE;
       }
       elseif ($field['fileStatus'] == 'uploaded') {
-        if (isset($field['attachmentName'])) {
-          $retval['fileName'] = $field["attachmentName"];
-        }
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
         $retval['isNewAttachment'] = FALSE;
@@ -667,9 +666,6 @@ class AttachmentHandler {
         $retval['isNewAttachment'] = FALSE;
       }
       elseif ($field['fileStatus'] == 'deliveredLater') {
-        if ($field['attachmentName']) {
-          $retval['fileName'] = $field["attachmentName"];
-        }
         if (isset($field['isDeliveredLater'])) {
           $retval['isDeliveredLater'] = $field['isDeliveredLater'] === "1";
           $retval['isNewAttachment'] = FALSE;
@@ -824,7 +820,7 @@ class AttachmentHandler {
    *
    * @throws \Exception
    */
-  public static function getAttachmentUploadTime($events, string $fileName): string {
+  public static function getAttachmentUploadTime(array $events, string $fileName): string {
     $dtString = '';
     $event = array_filter(
       $events,

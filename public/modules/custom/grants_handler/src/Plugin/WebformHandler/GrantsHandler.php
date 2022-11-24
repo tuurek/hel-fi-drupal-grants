@@ -360,7 +360,6 @@ class GrantsHandler extends WebformHandlerBase {
       $this->setFromThirdPartySettings($webform);
     }
 
-
   }
 
   /**
@@ -371,10 +370,10 @@ class GrantsHandler extends WebformHandlerBase {
     $currentUser = \Drupal::currentUser();
     $currentUserRoles = $currentUser->getRoles();
 
+    // If user is not authenticated via HP we don't do anything here.
     if (!in_array('helsinkiprofiili', $currentUserRoles)) {
       return;
     }
-
 
     // If we're coming here with ADD operator, then we redirect user to
     // new application endpoint and from there they're redirected back ehre
