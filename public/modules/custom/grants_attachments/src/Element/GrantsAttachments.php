@@ -63,8 +63,9 @@ class GrantsAttachments extends WebformCompositeBase {
         $element["fileType"]["#value"] = $element["#filetype"];
       }
 
-      if (isset($dataForElement["integrationID"])) {
+      if (isset($dataForElement["integrationID"]) && !empty($dataForElement["integrationID"])) {
         $element["integrationID"]["#value"] = $dataForElement["integrationID"];
+        $element["fileStatus"]["#value"] = 'uploaded';
       }
 
       if (isset($dataForElement['isDeliveredLater'])) {
@@ -82,37 +83,11 @@ class GrantsAttachments extends WebformCompositeBase {
           $element["fileStatus"]["#value"] = 'otherFile';
         }
       }
-      if (isset($dataForElement['fileName'])) {
+      if (!empty($dataForElement['fileName']) || !empty($dataForElement['attachmentName'])) {
         $element['attachmentName'] = [
           '#type' => 'textfield',
-          '#default_value' => $dataForElement['fileName'],
-          '#value' => $dataForElement['fileName'],
-          '#readonly' => TRUE,
-          '#attributes' => ['readonly' => 'readonly'],
-        ];
-
-        $element["isIncludedInOtherFile"]["#disabled"] = TRUE;
-        $element["isDeliveredLater"]["#disabled"] = TRUE;
-
-        $element["attachment"]["#access"] = FALSE;
-        $element["attachment"]["#readonly"] = TRUE;
-        $element["attachment"]["#attributes"] = ['readonly' => 'readonly'];
-
-        if (isset($element["isNewAttachment"])) {
-          $element["isNewAttachment"]["#value"] = FALSE;
-        }
-
-        $element["fileStatus"]["#value"] = 'uploaded';
-
-        // $element["description"]["#disabled"] = TRUE;
-        $element["description"]["#readonly"] = TRUE;
-        $element["description"]["#attributes"] = ['readonly' => 'readonly'];
-      }
-      if (isset($dataForElement['attachmentName']) && $dataForElement['attachmentName'] !== "") {
-        $element['attachmentName'] = [
-          '#type' => 'textfield',
-          '#default_value' => $dataForElement['attachmentName'],
-          '#value' => $dataForElement['attachmentName'],
+          '#default_value' => $dataForElement['fileName'] ?? $dataForElement['attachmentName'] ,
+          '#value' => $dataForElement['fileName'] ?? $dataForElement['attachmentName'],
           '#readonly' => TRUE,
           '#attributes' => ['readonly' => 'readonly'],
         ];

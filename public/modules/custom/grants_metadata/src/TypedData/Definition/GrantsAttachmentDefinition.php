@@ -32,7 +32,8 @@ class GrantsAttachmentDefinition extends ComplexDataDefinitionBase {
           'attachmentsInfo',
           'attachmentsArray',
           'fileName',
-        ]);
+        ])
+        ->setSetting('skipEmptyValue', TRUE);
 
       $info['fileType'] = DataDefinition::create('integer')
         ->setRequired(TRUE)
