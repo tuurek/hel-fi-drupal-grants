@@ -5355,16 +5355,16 @@
         },
         {
             "name": "drupal/helfi_api_base",
-            "version": "2.3.5",
+            "version": "2.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base.git",
-                "reference": "f3560b56532df468b8f5433875a7dc79bab10c1f"
+                "reference": "f25f99abb17896c15531b4834f0908ba560437bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-api-base/zipball/f3560b56532df468b8f5433875a7dc79bab10c1f",
-                "reference": "f3560b56532df468b8f5433875a7dc79bab10c1f",
+                "url": "https://api.github.com/repos/City-of-Helsinki/drupal-module-helfi-api-base/zipball/f25f99abb17896c15531b4834f0908ba560437bd",
+                "reference": "f25f99abb17896c15531b4834f0908ba560437bd",
                 "shasum": ""
             },
             "require": {
@@ -5387,10 +5387,10 @@
             ],
             "description": "Helfi - API Base",
             "support": {
-                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/tree/2.3.5",
+                "source": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/tree/2.3.6",
                 "issues": "https://github.com/City-of-Helsinki/drupal-module-helfi-api-base/issues"
             },
-            "time": "2022-11-02T08:44:03+00:00"
+            "time": "2022-11-28T07:46:25+00:00"
         },
         {
             "name": "drupal/helfi_atv",
@@ -16138,28 +16138,31 @@
         },
         {
             "name": "donatj/mock-webserver",
-            "version": "v2.5.0",
+            "version": "v2.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/donatj/mock-webserver.git",
-                "reference": "2850c4647e14335cf3e728cad525b701e3a2aecc"
+                "reference": "389fe0269970f80bfa89f064c8b7203370f63a7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/donatj/mock-webserver/zipball/2850c4647e14335cf3e728cad525b701e3a2aecc",
-                "reference": "2850c4647e14335cf3e728cad525b701e3a2aecc",
+                "url": "https://api.github.com/repos/donatj/mock-webserver/zipball/389fe0269970f80bfa89f064c8b7203370f63a7c",
+                "reference": "389fe0269970f80bfa89f064c8b7203370f63a7c",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-sockets": "*",
-                "php": ">=5.4",
+                "php": ">=7.1",
                 "ralouphie/getallheaders": "~2.0 || ~3.0"
             },
             "require-dev": {
+                "corpus/coding-standard": "^0.6.0",
                 "donatj/drop": "^1.0",
                 "ext-curl": "*",
-                "phpunit/phpunit": "~4|~9"
+                "friendsofphp/php-cs-fixer": "^3.1",
+                "phpunit/phpunit": "~7|~9",
+                "squizlabs/php_codesniffer": "^3.6"
             },
             "type": "library",
             "autoload": {
@@ -16182,7 +16185,7 @@
             "description": "Simple mock web server for unit testing",
             "support": {
                 "issues": "https://github.com/donatj/mock-webserver/issues",
-                "source": "https://github.com/donatj/mock-webserver/tree/v2.5.0"
+                "source": "https://github.com/donatj/mock-webserver/tree/v2.6.1"
             },
             "funding": [
                 {
@@ -16194,7 +16197,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-07-17T04:27:21+00:00"
+            "time": "2022-11-28T11:26:19+00:00"
         },
         {
             "name": "drupal/coder",
