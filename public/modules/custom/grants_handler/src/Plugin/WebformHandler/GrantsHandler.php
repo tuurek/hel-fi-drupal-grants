@@ -771,8 +771,7 @@ class GrantsHandler extends WebformHandlerBase {
           $this->messenger()
             ->addError('Validation failed, please check inputs. This feature will get better.');
 
-          // TODO: We need to figure out how to show these errors to user.
-
+          // @todo We need to figure out how to show these errors to user.
         }
       }
     }
