@@ -1,5 +1,4 @@
-#block-views-block-grants-news-latest-news h2,
-#block-views-block-radioactivity-most-read-news h2 {
+.page-type--news-item .sidebar-second h2 {
   --line-height: 1;
   font-size: var(--fontsize-heading-l);
   font-weight: 400;
@@ -15,4 +14,10 @@
 
 .sidebar-second .views-element-container {
   margin-bottom: var(--spacing-4-xl);
+}
+
+.views-element-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $content-area-wrapper-width-max;
 }
