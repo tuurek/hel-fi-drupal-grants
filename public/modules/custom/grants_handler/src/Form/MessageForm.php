@@ -218,7 +218,7 @@ class MessageForm extends FormBase {
           $attachmentResponse = $this->atvService->uploadAttachment($atvDocument->getId(), $file->getFilename(), $file);
 
           $baseUrl = $this->atvService->getBaseUrl();
-          $baseUrlApps = str_replace( 'agw', 'apps', $baseUrl);
+          $baseUrlApps = str_replace('agw', 'apps', $baseUrl);
           // Remove server url from integrationID.
           $integrationId = str_replace($baseUrl, '', $attachmentResponse['href']);
           $integrationId = str_replace($baseUrlApps, '', $integrationId);
@@ -233,7 +233,7 @@ class MessageForm extends FormBase {
 
           // Remove file attachment directly after upload.
           $this->attachmentRemover->removeGrantAttachments(
-            [$file],
+            [$file->id()],
             [$file->id() => ['upload' => TRUE]],
             $submissionData['application_number'],
             $this->debug,
