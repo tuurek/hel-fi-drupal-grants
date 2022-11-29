@@ -33,7 +33,8 @@ class AddressDefinition extends ComplexDataDefinitionBase {
         ->setRequired(TRUE)
         ->setLabel('Post code')
         ->setSetting('jsonPath', ['grantsProfile', 'addressesArray', 'postCode'])
-        ->addConstraint('NotBlank');
+        ->addConstraint('NotBlank')
+        ->addConstraint('ValidPostalCode');
 
       $info['country'] = DataDefinition::create('string')
         ->setRequired(TRUE)

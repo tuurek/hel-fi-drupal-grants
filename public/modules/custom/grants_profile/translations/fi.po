@@ -369,3 +369,9 @@ msgstr "Tallennettu pankin ilmoitus tilin omaistajasta tai tiliotekopio"
 
 msgid "Banks confirmation of account owner or copy of account statement"
 msgstr "Pankin ilmoitus tilin omaistajasta tai tiliotekopio"
+
+msgid "%value is not valid Finnish postal code"
+msgstr "%value ei ole suomalainen postinumero"
+
+msgid "%value is not valid url"
+msgstr "%value ei ole url osoite."

@@ -457,12 +457,12 @@ class AtvSchema {
                   $itemValueDefinitionLabel = $itemValueDefinition->getLabel();
                   $itemTypes = $this->getJsonTypeForDataType($itemValueDefinition);
                   if (isset($propertyItem[$itemName])) {
-                    // what to do with empty values
+                    // What to do with empty values.
                     $itemSkipEmpty = $itemValueDefinition->getSetting('skipEmptyValue');
 
                     $itemValue = $propertyItem[$itemName];
                     $itemValue = $this->getItemValue($itemTypes, $itemValue, $defaultValue, $valueCallback);
-                    // if no value and skip is setting, then skip.
+                    // If no value and skip is setting, then skip.
                     if (empty($itemValue) && $itemSkipEmpty === TRUE) {
                       continue;
                     }
