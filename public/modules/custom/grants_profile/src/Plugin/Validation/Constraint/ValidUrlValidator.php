@@ -15,7 +15,7 @@ class ValidUrlValidator extends ConstraintValidator {
    */
   public function validate($value, $constraint) {
     if (!$this->isValidUrl($value)) {
-      $this->context->addViolation($constraint->notValidPostalCode, ['%value' => $value]);
+      $this->context->addViolation($constraint->notValidUrl, ['%value' => $value]);
     }
   }
 
