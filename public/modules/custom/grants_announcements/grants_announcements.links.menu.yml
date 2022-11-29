@@ -1,6 +1,0 @@
-grants_announcements.settings_form:
-  title: Grants Announcements
-  description: Configure Grants Announcements.
-  parent: system.admin_config_system
-  route_name: grants_announcements.settings_form
-  weight: 10
