@@ -20,6 +20,6 @@ class ValidUrl extends Constraint {
    *
    * @var string
    */
-  public string $notValidPostalCode = '%value is not valid url';
+  public string $notValidUrl = '%value is not valid url';
 
 }
