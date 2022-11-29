@@ -196,21 +196,6 @@ class GrantsHandler extends WebformHandlerBase {
   /**
    * Convert EUR format value to "double" .
    *
-   * @param string $value
-   *   Value to be converted.
-   *
-   * @return float
-   *   Floated value.
-   */
-  private function grantsHandlerConvertToFloat(string $value): float {
-    $value = str_replace(['€', ',', ' '], ['', '.', ''], $value);
-    $value = (float) $value;
-    return $value;
-  }
-
-  /**
-   * Convert EUR format value to "double" .
-   *
    * @param string|null $value
    *   Value to be converted.
    *
@@ -261,7 +246,7 @@ class GrantsHandler extends WebformHandlerBase {
       is_array($this->submittedFormData['myonnetty_avustus'])) {
       $tempTotal = 0;
       foreach ($this->submittedFormData['myonnetty_avustus'] as $key => $item) {
-        $amount = $this->grantsHandlerConvertToFloat($item['amount']);
+        $amount = self::convertToFloat($item['amount']);
         $tempTotal += $amount;
       }
       $this->submittedFormData['myonnetty_avustus_total'] = $tempTotal;
@@ -271,7 +256,7 @@ class GrantsHandler extends WebformHandlerBase {
       is_array($this->submittedFormData['haettu_avustus_tieto'])) {
       $tempTotal = 0;
       foreach ($this->submittedFormData['haettu_avustus_tieto'] as $item) {
-        $amount = $this->grantsHandlerConvertToFloat($item['amount']);
+        $amount = self::convertToFloat($item['amount']);
         $tempTotal += $amount;
       }
       $this->submittedFormData['haettu_avustus_tieto_total'] = $tempTotal;
@@ -395,21 +380,24 @@ class GrantsHandler extends WebformHandlerBase {
     $grantsProfile = $grantsProfileDocument->getContent();
 
     if (empty($grantsProfile["addresses"])) {
-      $this->messenger()->addWarning('You must have address saved to your profile.');
+      $this->messenger()
+        ->addWarning('You must have address saved to your profile.');
       $url = Url::fromRoute('grants_profile.edit');
       $redirect = new RedirectResponse($url->toString());
       $redirect->send();
     }
 
     if (empty($grantsProfile["bankAccounts"])) {
-      $this->messenger()->addWarning('You must have bank account saved to your profile.');
+      $this->messenger()
+        ->addWarning('You must have bank account saved to your profile.');
       $url = Url::fromRoute('grants_profile.edit');
       $redirect = new RedirectResponse($url->toString());
       $redirect->send();
     }
 
     if (empty($grantsProfile["officials"])) {
-      $this->messenger()->addWarning('You must have officials saved to your profile.');
+      $this->messenger()
+        ->addWarning('You must have officials saved to your profile.');
       $url = Url::fromRoute('grants_profile.edit');
       $redirect = new RedirectResponse($url->toString());
       $redirect->send();
@@ -490,6 +478,12 @@ class GrantsHandler extends WebformHandlerBase {
     if (isset($form['actions']['draft']['#submit']) && is_array($form['actions']['draft']['#submit'])) {
       WebformArrayHelper::removeValue($form['actions']['draft']['#submit'], '::rebuild');
     }
+
+    if (!ApplicationHandler::isApplicationOpen($webform_submission->getWebform())) {
+      $this->messenger()
+        ->addError('Application period is closed, no further editing is allowed.');
+      $form['#disabled'] = TRUE;
+    }
   }
 
   /**
@@ -560,7 +554,6 @@ class GrantsHandler extends WebformHandlerBase {
    *   Triggering element name if there's one.
    */
   public function getTriggeringElementName(?FormStateInterface $form_state): mixed {
-
     if ($this->triggeringElement == '') {
       $triggeringElement = $form_state->getTriggeringElement();
       if (isset($triggeringElement['#submit']) && is_string($triggeringElement['#submit'][0])) {
@@ -597,6 +590,7 @@ class GrantsHandler extends WebformHandlerBase {
       }
       catch (TempStoreException | AtvDocumentNotFoundException | AtvFailedToConnectException | GuzzleException $e) {
       }
+
     }
     // If new status is submitted, ie save to Avus2..
     if ($newStatus == ApplicationHandler::$applicationStatuses['SUBMITTED']) {
@@ -930,10 +924,6 @@ class GrantsHandler extends WebformHandlerBase {
                 ]
               )
             );
-
-          // Try to give integration time to do it's
-          // thing before we try to go there.
-          sleep(4);
 
           $redirectUrl = Url::fromRoute('grants_handler.view_application', [
             'submission_id' => $this->applicationNumber,
