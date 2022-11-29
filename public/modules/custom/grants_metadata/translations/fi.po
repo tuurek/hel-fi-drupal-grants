@@ -48,6 +48,9 @@ msgstr "Onko hakemus jatkuva"
 msgid "Disable copying for this application"
 msgstr "Poista hakemuksen kopiointi käytöstä"
 
+msgid "%value is not valid Finnish postal code"
+msgstr "%value ei ole suomalainen postinumero"
+
 
 
 

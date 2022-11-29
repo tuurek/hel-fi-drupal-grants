@@ -172,7 +172,8 @@ trait ApplicationDefinitionTrait {
         'formElement' => 'community_address',
         'formError' => 'You must select address',
       ])
-      ->addConstraint('NotBlank');
+      ->addConstraint('NotBlank')
+      ->addConstraint('ValidPostalCode');
 
     $info['community_country'] = DataDefinition::create('string')
       ->setRequired(TRUE)
