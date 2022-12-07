@@ -617,6 +617,41 @@ class ApplicationHandler {
   }
 
   /**
+   * Check if application is open.
+   *
+   * In reality check if given date is between other dates.
+   *
+   * @param \Drupal\webform\Entity\Webform $webform
+   *   Webform.
+   *
+   * @return bool
+   *   Is or not open.
+   */
+  public static function isApplicationOpen(Webform $webform): bool {
+
+    $thirdPartySettings = $webform->getThirdPartySettings('grants_metadata');
+    $applicationContinuous = $thirdPartySettings["applicationContinuous"] == 1;
+
+    try {
+      $now = new \DateTime();
+      $from = new \DateTime($thirdPartySettings["applicationOpen"]);
+      $to = new \DateTime($thirdPartySettings["applicationClose"]);
+    }
+    catch (\Exception $e) {
+      \Drupal::logger('application_handler')->error('isApplicationOpen date error: @error', ['@error' => $e->getMessage()]);
+      return $applicationContinuous;
+    }
+
+    // If today is between open & close dates return true.
+    if ($now->getTimestamp() > $from->getTimestamp() && $now->getTimestamp() < $to->getTimestamp()) {
+      return TRUE;
+    }
+    // Otherwise return true if is continuous, false if not.
+    return $applicationContinuous;
+
+  }
+
+  /**
    * Atv document holding this application.
    *
    * @param string $transactionId

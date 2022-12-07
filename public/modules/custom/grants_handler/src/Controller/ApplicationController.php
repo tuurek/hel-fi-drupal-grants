@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\grants_handler\ApplicationException;
 use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_profile\GrantsProfileService;
 use Drupal\helfi_atv\AtvDocumentNotFoundException;
@@ -331,12 +332,18 @@ class ApplicationController extends ControllerBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Drupal\helfi_atv\AtvDocumentNotFoundException
    * @throws \Drupal\helfi_atv\AtvFailedToConnectException
-   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \GuzzleHttp\Exception\GuzzleException|\Drupal\helfi_helsinki_profiili\ProfileDataException
+   * @throws \Drupal\grants_handler\ApplicationException
    */
   public function newApplication(string $webform_id): RedirectResponse {
 
-    $newSubmission = $this->applicationHandler->initApplication($webform_id);
-    $webform = $newSubmission->getWebform();
+    $webform = Webform::load($webform_id);
+
+    if (!ApplicationHandler::isApplicationOpen($webform)) {
+      throw new ApplicationException('Application is not open');
+    }
+
+    $newSubmission = $this->applicationHandler->initApplication($webform->id());
 
     return $this->redirect(
       'grants_handler.edit_application',
