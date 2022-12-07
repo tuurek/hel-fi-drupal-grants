@@ -1,0 +1,17 @@
+{% embed '@hdbt/content/node.html.twig' with {'node_class': 'components components--service'} %}
+
+  {% block main_content %}
+
+    {# Lead-in text, if any #}
+    {{ content.field_lead_in }}
+
+    {# Page divider, normally it comes from table of contents, but news does not have that #}
+    <div class="page-divider"></div>
+
+    {{ content.field_content }}
+
+    {{ content.field_errand_service }}
+
+  {% endblock main_content %}
+
+{% endembed %}
