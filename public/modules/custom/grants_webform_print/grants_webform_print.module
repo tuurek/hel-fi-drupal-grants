@@ -5,7 +5,6 @@
  * Allows webforms to be shared on other websites using an iframe.
  */
 
-
 /**
  * Implements hook_theme().
  */
@@ -23,7 +22,6 @@ function grants_webform_print_theme($existing, $type, $theme, $path) {
     ],
   ];
 }
-
 
 /**
  * Implements hook_preprocess_HOOK().

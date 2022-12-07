@@ -1,5 +1,5 @@
 services:
   webform_print.twig.IsArray:
-    class: Drupal\grants_webform_print\IsArray
+    class: Drupal\grants_webform_print\IsVariableArray
     tags:
       - { name: twig.extension }
