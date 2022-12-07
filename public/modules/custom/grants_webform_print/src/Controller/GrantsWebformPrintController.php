@@ -23,9 +23,16 @@ class GrantsWebformPrintController extends ControllerBase {
    */
   public function build(Webform $webform): array {
 
+    /** @var \Drupal\webform\WebformTranslationManager $wftm */
+    $wftm = \Drupal::service('webform.translation_manager');
+
+    // Load all translations for this webform.
+    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
+    $elementTranslations = $wftm->getElements($webform, $currentLanguage->getId());
+
     $webformArray = $webform->getElementsDecoded();
-    // array_walk_recursive($webformArray, [$this, 'formatWebformElement']);.
-    $webformArray = $this->traverseWebform($webformArray);
+    // Pass decoded array & translations to traversing.
+    $webformArray = $this->traverseWebform($webformArray, $elementTranslations);
 
     unset($webformArray['actions']);
 
@@ -54,10 +61,15 @@ class GrantsWebformPrintController extends ControllerBase {
    *
    * @param array $webformArray
    *   The Webform in question.
+   * @param array $elementTranslations
+   *   Translations for elements.
+   *
+   * @return array
+   *   If there is translated value for given field, they're here.
    */
-  private function traverseWebform(array $webformArray) {
+  private function traverseWebform(array $webformArray, array $elementTranslations) {
     foreach ($webformArray as $key => &$item) {
-      $this->fixWebformElement($item, $key);
+      $this->fixWebformElement($item, $key, $elementTranslations);
     }
     return $webformArray;
   }
@@ -69,8 +81,10 @@ class GrantsWebformPrintController extends ControllerBase {
    *   Element to fix.
    * @param string $key
    *   Key on the form.
+   * @param array $translatedFields
+   *   If there is translated value for given field, they're here.
    */
-  private function fixWebformElement(array &$element, string $key) {
+  private function fixWebformElement(array &$element, string $key, array $translatedFields) {
 
     // Remove states from printing.
     unset($element["#states"]);
@@ -93,7 +107,7 @@ class GrantsWebformPrintController extends ControllerBase {
     // If there is some, then loop as long as there is som.
     if ($children) {
       foreach ($children as $childKey) {
-        $this->fixWebformElement($element[$childKey], $childKey);
+        $this->fixWebformElement($element[$childKey], $childKey, $translatedFields);
       }
     }
 
@@ -151,6 +165,15 @@ class GrantsWebformPrintController extends ControllerBase {
     if ($element['#type'] === 'checkboxes') {
       $element['#title_display'] = [];
     }
+
+    if (!empty($translatedFields[$key])) {
+      foreach ($translatedFields[$key] as $fieldName => $translatedValue) {
+        if (isset($element[$fieldName])) {
+          $element[$fieldName] = $translatedValue;
+        }
+      }
+    }
+
   }
 
 }
