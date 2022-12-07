@@ -31,8 +31,6 @@ dependencies:
     - node
     - path
     - pathauto
-    - redirect
-    - responsive_image
     - role_delegation
     - scheduler
     - system
@@ -61,20 +59,9 @@ permissions:
   - 'access webform overview'
   - 'access webform submission log'
   - 'access webform submission user'
-  - 'administer account settings'
-  - 'administer media'
-  - 'administer media types'
   - 'administer menu'
   - 'administer nodes'
-  - 'administer redirect settings'
-  - 'administer redirects'
-  - 'administer responsive images'
-  - 'administer scheduler'
   - 'administer taxonomy'
-  - 'administer tpr_ontology_word_details'
-  - 'administer tpr_service'
-  - 'administer tpr_unit'
-  - 'administer url aliases'
   - 'administer users'
   - 'administer webform'
   - 'administer webform element access'
@@ -190,6 +177,7 @@ permissions:
   - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view page revisions'
+  - 'view scheduled content'
   - 'view service revisions'
   - 'view the administration theme'
   - 'view unpublished tpr_errand_service'
