@@ -22,6 +22,7 @@ dependencies:
     - content_translation
     - media
     - menu_link_content
+    - path
     - system
     - taxonomy
     - toolbar
@@ -47,6 +48,7 @@ permissions:
   - 'create terms in target_group'
   - 'create terms in ukk_kategoriat'
   - 'create terms in unit_type'
+  - 'create url aliases'
   - 'create webform'
   - 'delete content translations'
   - 'delete terms in avustuslaji'
