@@ -48,6 +48,7 @@ class GrantsProfileDefinition extends ComplexDataDefinitionBase {
       $info['companyHomePage'] = DataDefinition::create('string')
         ->setRequired(TRUE)
         ->setLabel('companyHomePage')
+        ->addConstraint('ValidUrl')
         ->setSetting('jsonPath', [
           'grantsProfile',
           'profileInfoArray',
@@ -57,6 +58,7 @@ class GrantsProfileDefinition extends ComplexDataDefinitionBase {
       $info['companyEmail'] = DataDefinition::create('string')
         ->setRequired(FALSE)
         ->setLabel('companyEmail')
+        ->addConstraint('Email')
         ->setSetting('jsonPath', [
           'grantsProfile',
           'profileInfoArray',

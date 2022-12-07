@@ -11,7 +11,7 @@ dependencies:
 id: grantsomaasiointi
 theme: helfi_grant_applications
 region: before_content
-weight: -10
+weight: -11
 provider: null
 plugin: grants_oma_asiointi_block
 settings:
