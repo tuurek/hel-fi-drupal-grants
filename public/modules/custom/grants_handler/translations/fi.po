@@ -324,3 +324,6 @@ msgstr "Muistathan varmistaa, että hakemuksen tila vaihtuu “Lähetetty - odot
 
 msgid "The status change can take from seconds to few minutes."
 msgstr "Tilan vaihtuminen voi kestää sekunneista muutamaan minuuttiin."
+
+msgid "Application period is closed, no further editing is allowed."
+msgstr "Hakemusaika on päättynyt, lisämuokkaukset on estetty."

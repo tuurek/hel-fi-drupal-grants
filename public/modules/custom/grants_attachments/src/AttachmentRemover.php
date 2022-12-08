@@ -216,7 +216,13 @@ class AttachmentRemover {
           $sessionPath = $attachmentPath . '/' . $sessionHash;
 
           // Scan directory for this path.
-          $sessionItems = array_diff(scandir($sessionPath) ?? [], ['.', '..']);
+          $pathScan = scandir($sessionPath);
+          if (is_array($pathScan)) {
+            $sessionItems = array_diff($pathScan, ['.', '..']);
+          }
+          else {
+            $sessionItems = [];
+          }
           // If we have items.
           foreach ($sessionItems as $sessionFilename) {
             // Try to load file entity.

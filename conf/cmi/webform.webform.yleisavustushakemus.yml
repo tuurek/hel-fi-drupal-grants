@@ -14,12 +14,12 @@ third_party_settings:
       1: '1'
       11: '11'
     applicationOpen: '2022-10-03T11:08:26'
-    applicationClose: '2022-12-19T11:19:00'
+    applicationClose: '2022-12-14T11:19:00'
     applicationContinuous: 0
     applicationTargetGroup: '12'
     disableCopying: 0
     applicationTypeSelect: '29'
-    applicationIndustry: KANSLIA
+    applicationIndustry: KASKO
 weight: 0
 open: null
 close: null
@@ -38,7 +38,7 @@ elements: |-
     '#next_button_label': 'Seuraava >'
     application_number:
       '#type': hidden
-      '#title': 'Hakemusnumero'
+      '#title': Hakemusnumero
       '#disabled': true
     status:
       '#type': hidden
@@ -159,7 +159,6 @@ elements: |-
     toiminnasta_vastaavat_henkilot:
       '#type': webform_section
       '#title': 'Toiminnasta vastaavat henkilöt'
-      '#required': true
       community_officials:
         '#type': community_officials_composite
         '#title': 'Yhteisön vastaavat henkilöt'
@@ -175,7 +174,6 @@ elements: |-
         '#attributes':
           class:
             - webform--large
-        '#required': true
   2_avustustiedot:
     '#type': webform_wizard_page
     '#title': '2. Avustustiedot'

@@ -6,9 +6,7 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;

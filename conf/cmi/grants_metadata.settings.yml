@@ -35,3 +35,4 @@ third_party_options:
     CANCELED: 'CANCELED,'
     CANCELLED: 'CANCELLED,'
     CLOSED: 'CLOSED,'
+langcode: fi

@@ -13,22 +13,25 @@ ad_role_mappings:
   sl_AvustusTest_paakayttajat:
     - ad_user
     - grants_admin
+  sl_kanslia_owakayttajat:
+    - ad_user
+    - grants_admin
   sg_kanslia_kayttajat:
     - ad_user
     - content_producer_industry
   sl_AvustusTest_PK_Kanslia_kayttajat:
     - ad_user
     - content_producer_industry
-  sl_AvustusTest_TA_Kasko_käyttajat:
+  sl_AvustusTest_TA_Kasko_kayttajat:
     - ad_user
     - content_producer_industry
-  sl_AvustusTest_PK_Pel_käyttajat:
+  sl_AvustusTest_PK_Pel_kayttajat:
     - ad_user
     - content_producer_industry
-  sl_AvustusTest_TA_Kymp_käyttajat:
+  sl_AvustusTest_TA_Kymp_kayttajat:
     - ad_user
     - content_producer_industry
-  sl_AvustusTest_TA_Kuva_käyttajat:
+  sl_AvustusTest_TA_Kuva_kayttajat:
     - ad_user
     - content_producer_industry
   sl_AvustusTest_TA_Sote_kayttajat:
