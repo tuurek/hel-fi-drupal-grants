@@ -67,11 +67,12 @@ class GrantsWebformPrintController extends ControllerBase {
    * @return array
    *   If there is translated value for given field, they're here.
    */
-  private function traverseWebform(array $webformArray, array $elementTranslations) {
-    foreach ($webformArray as $key => &$item) {
-      $this->fixWebformElement($item, $key, $elementTranslations);
+  private function traverseWebform(array $webformArray, array $elementTranslations): array {
+    $transfromed = [];
+    foreach ($webformArray as $key => $item) {
+      $transfromed[$key] = $this->fixWebformElement($item, $key, $elementTranslations);
     }
-    return $webformArray;
+    return $transfromed;
   }
 
   /**
@@ -84,7 +85,7 @@ class GrantsWebformPrintController extends ControllerBase {
    * @param array $translatedFields
    *   If there is translated value for given field, they're here.
    */
-  private function fixWebformElement(array &$element, string $key, array $translatedFields) {
+  private function fixWebformElement(array $element, string $key, array $translatedFields): array {
 
     // Remove states from printing.
     unset($element["#states"]);
@@ -107,7 +108,7 @@ class GrantsWebformPrintController extends ControllerBase {
     // If there is some, then loop as long as there is som.
     if ($children) {
       foreach ($children as $childKey) {
-        $this->fixWebformElement($element[$childKey], $childKey, $translatedFields);
+        $element[$childKey] = $this->fixWebformElement($element[$childKey], $childKey, $translatedFields);
       }
     }
 
@@ -166,14 +167,18 @@ class GrantsWebformPrintController extends ControllerBase {
       $element['#title_display'] = [];
     }
 
+    // Loop translated fields.
     if (!empty($translatedFields[$key])) {
+      // Unset type since we do not want to override that from trans.
+      unset($translatedFields[$key]['#type']);
       foreach ($translatedFields[$key] as $fieldName => $translatedValue) {
-        if (isset($element[$fieldName])) {
+        // Replace with translated text. only if it's an string.
+        if (isset($element[$fieldName]) && !is_array($translatedValue)) {
           $element[$fieldName] = $translatedValue;
         }
       }
     }
-
+    return $element;
   }
 
 }
