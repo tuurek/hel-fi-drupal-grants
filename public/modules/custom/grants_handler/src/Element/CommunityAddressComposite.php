@@ -104,7 +104,7 @@ class CommunityAddressComposite extends WebformCompositeBase {
     foreach ($profileData['addresses'] as $delta => $address) {
       $deltaString = (string) $delta;
       $optionSelection = $address['street'] . ', ' . $address['postCode'] .
-        ' ' . $address['city'];
+        ', ' . $address['city'];
       $options[$deltaString] = $optionSelection;
 
       if ($formSelection == $optionSelection) {

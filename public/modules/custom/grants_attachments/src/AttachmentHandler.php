@@ -400,6 +400,11 @@ class AttachmentHandler {
     $profileContent = $grantsProfileDocument->getContent();
     $applicationDocument = FALSE;
     $fileArray = [];
+
+    // Get base urls.
+    $baseUrl = $this->atvService->getBaseUrl();
+    $baseUrlApps = str_replace('agw', 'apps', $baseUrl);
+
     try {
       // Search application document from ATV.
       $applicationDocumentResults = $this->atvService->searchDocuments([
@@ -460,6 +465,7 @@ class AttachmentHandler {
 
     if (!$accountConfirmationExists) {
       $selectedAccountConfirmation = FALSE;
+
       // Get confirmation file from profile.
       if ($selectedAccount['confirmationFile']) {
         $selectedAccountConfirmation = $grantsProfileDocument
@@ -474,8 +480,12 @@ class AttachmentHandler {
           $uploadResult = $this->atvService->uploadAttachment($applicationDocument->getId(), $selectedAccountConfirmation["filename"], $file);
           // If succeeded.
           if ($uploadResult !== FALSE) {
-            // Create proper integrationID.
-            $integrationID = str_replace(getenv('ATV_BASE_URL'), '', $uploadResult['href']);
+
+            // Remove server url from integrationID.
+            // We need to make sure that the integrationID gets removed inside &
+            // outside the azure environment.
+            $integrationID = str_replace($baseUrl, '', $uploadResult['href']);
+            $integrationID = str_replace($baseUrlApps, '', $integrationID);
 
             // If upload is ok, then add event.
             $submittedFormData['events'][] = EventsService::getEventData(
@@ -504,7 +514,7 @@ class AttachmentHandler {
           // IsNewAttachment controls upload to Avus2.
           // If this is false, file will not go to Avus2.
           'isNewAttachment' => TRUE,
-          'fileType' => 6,
+          'fileType' => 45,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
@@ -527,11 +537,12 @@ class AttachmentHandler {
       });
 
       if (empty($existingConfirmationForSelectedAccountExists)) {
-        // Parse integrationID from uploaded attachment.
-        $integrationID = substr(
-          $accountConfirmationFile['href'],
-          strpos($accountConfirmationFile['href'], '.hel.fi') + 7,
-        );
+
+        // Remove server url from integrationID.
+        // We need to make sure that the integrationID gets removed inside &
+        // outside the azure environment.
+        $integrationID = str_replace($baseUrl, '', $accountConfirmationFile['href']);
+        $integrationID = str_replace($baseUrlApps, '', $integrationID);
 
         // If confirmation details are not found from.
         $fileArray = [
@@ -540,7 +551,7 @@ class AttachmentHandler {
           // Since we're not adding/changing bank account, set this to false so
           // the file is not fetched again.
           'isNewAttachment' => FALSE,
-          'fileType' => 6,
+          'fileType' => 45,
           'isDeliveredLater' => FALSE,
           'isIncludedInOtherFile' => FALSE,
         ];
@@ -553,11 +564,10 @@ class AttachmentHandler {
         // Add that.
         $fileArray['integrationID'] = $integrationID;
       }
-      $extraAttachments = [];
       // First clean all account confirmation files.
       // this should handle account number updates as well.
       foreach ($submittedFormData['attachments'] as $key => $value) {
-        if ((int) $value['fileType'] == 6) {
+        if ((int) $value['fileType'] == 45) {
           unset($submittedFormData['attachments'][$key]);
         }
       }
@@ -632,8 +642,13 @@ class AttachmentHandler {
     else {
       // If other filetype and no attachment already set, we don't add them to
       // retval since we don't want to fill attachments with empty other files.
-      if (($fileType === "0" || $fileType === '6') && empty($field["attachmentName"])) {
+      if (($fileType === "0" || $fileType === '45') && empty($field["attachmentName"])) {
         return [];
+      }
+      // No matter upload status, we need to set up fileName always if the
+      // attachmentName is present.
+      if (isset($field['attachmentName'])) {
+        $retval['fileName'] = $field["attachmentName"];
       }
       // No upload, process accordingly.
       if ($field['fileStatus'] == 'new' || empty($field['fileStatus'])) {
@@ -646,17 +661,11 @@ class AttachmentHandler {
       }
       // If file is just uploaded, then we need to setup like this.
       elseif ($field['fileStatus'] == 'justUploaded') {
-        if (isset($field['attachmentName'])) {
-          $retval['fileName'] = $field["attachmentName"];
-        }
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
         $retval['isNewAttachment'] = TRUE;
       }
       elseif ($field['fileStatus'] == 'uploaded') {
-        if (isset($field['attachmentName'])) {
-          $retval['fileName'] = $field["attachmentName"];
-        }
         $retval['isDeliveredLater'] = FALSE;
         $retval['isIncludedInOtherFile'] = FALSE;
         $retval['isNewAttachment'] = FALSE;
@@ -667,9 +676,6 @@ class AttachmentHandler {
         $retval['isNewAttachment'] = FALSE;
       }
       elseif ($field['fileStatus'] == 'deliveredLater') {
-        if ($field['attachmentName']) {
-          $retval['fileName'] = $field["attachmentName"];
-        }
         if (isset($field['isDeliveredLater'])) {
           $retval['isDeliveredLater'] = $field['isDeliveredLater'] === "1";
           $retval['isNewAttachment'] = FALSE;
@@ -809,6 +815,39 @@ class AttachmentHandler {
       'uploaded' => $up,
       'not-uploaded' => $not,
     ];
+  }
+
+  /**
+   * Get attachment upload time from events.
+   *
+   * @param array $events
+   *   Events of the submission.
+   * @param string $fileName
+   *   Attachment file from submission data.
+   *
+   * @return string
+   *   File upload time.
+   *
+   * @throws \Exception
+   */
+  public static function getAttachmentUploadTime(array $events, string $fileName): string {
+    $dtString = '';
+    $event = array_filter(
+      $events,
+      function ($item) use ($fileName) {
+        if ($item['eventTarget'] == $fileName) {
+          return TRUE;
+        }
+        return FALSE;
+      }
+    );
+    $event = reset($event);
+    if ($event) {
+      $dt = new \DateTime($event['timeCreated']);
+      $dt->setTimezone(new \DateTimeZone('Europe/Helsinki'));
+      $dtString = $dt->format('d.m.Y H:i');
+    }
+    return $dtString;
   }
 
 }

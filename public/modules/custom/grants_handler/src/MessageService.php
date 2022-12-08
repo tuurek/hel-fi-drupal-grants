@@ -147,7 +147,8 @@ class MessageService {
       $messageData['caseId'] = $submissionData["application_number"];
 
       if ($userData === NULL) {
-        $messageData['sentBy'] = 'KORJAA PROFIILIYHTEYS';
+        $currentUser = \Drupal::currentUser();
+        $messageData['sentBy'] = $currentUser->getDisplayName();
       }
       else {
         $messageData['sentBy'] = $userData['name'];

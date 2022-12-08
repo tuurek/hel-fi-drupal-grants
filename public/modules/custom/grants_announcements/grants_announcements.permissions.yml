@@ -1,4 +1,0 @@
-administer grants_announcements configuration:
-  title: 'Administer grants_announcements configuration'
-  description: 'Optional description.'
-  restrict access: true

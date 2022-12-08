@@ -46,7 +46,7 @@ function grants_attachments_theme(): array {
 function template_preprocess_grants_attachments(array &$variables) {
 
   if (isset($variables["children"]["#default_value"]["integrationID"]) &&
-    $variables["children"]["#default_value"]["fileType"] != '6') {
+    $variables["children"]["#default_value"]["fileType"] != '45') {
 
     $currentUri = \Drupal::request()->getUri();
     $currentHost = \Drupal::request()->getSchemeAndHttpHost();

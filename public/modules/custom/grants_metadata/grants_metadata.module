@@ -77,40 +77,8 @@ function grants_metadata_webform_presave(Webform $entity) {
   $servicePages = Node::loadMultiple($results);
 
   foreach ($servicePages as $page) {
-    // Set application open boolean from form open status.
-    $page->set('field_application_open', $status);
-    // Applicant types.
-    if (!empty($thirdPartySettings["applicantTypes"])) {
-      $page->set('field_hakijatyyppi', $thirdPartySettings["applicantTypes"]);
-    }
-    // Type terms.
-    if (!empty($thirdPartySettings["applicationTypeTerms"])) {
-      $tids = array_values($thirdPartySettings["applicationTypeTerms"]);
-      $terms = Term::loadMultiple($tids);
-      $page->set('field_avustuslaji', $terms);
-    }
-    // If we have open time, assume that end time is added as well and
-    // use them as is.
-    if (!empty($thirdPartySettings["applicationOpen"])) {
-      $page->set('field_application_period',
-        [
-          'value' => $thirdPartySettings["applicationOpen"],
-          'end_value' => $thirdPartySettings["applicationClose"],
-        ]);
-    }
-    // If application is set to be continuous, mark it to node as well.
-    if ($thirdPartySettings["applicationContinuous"] == 1) {
-      $page->set('field_application_continuous', '1');
-    }
-    else {
-      // If not, set it false.
-      $page->set('field_application_continuous', '0');
-    }
-    // Set target group.
-    if (!empty($thirdPartySettings["applicationTargetGroup"])) {
-      $term = Term::load($thirdPartySettings["applicationTargetGroup"]);
-      $page->set('field_target_group', $term);
-    }
+    // Update node values from 3rd party settings.
+    grants_metadata_set_node_values($page, $status, $thirdPartySettings);
     try {
       // Save node.
       $page->save();
@@ -122,8 +90,60 @@ function grants_metadata_webform_presave(Webform $entity) {
         ->addStatus(t('Service page @nodetitle update failed.', ['@nodetitle' => $page->label()]));
       \Drupal::messenger()
         ->addStatus(t('Service page @nodetitle updated', ['@nodetitle' => $page->label()]));
-      \Drupal::logger('grants_metadata')->error($e->getMessage());
+      \Drupal::logger('grants_metadata')
+        ->error('Error saving 3rd party settings to service page. Error: @error', ['@error' => $e->getMessage()]);
     }
+  }
+}
+
+/**
+ * Add configurations from webform to given node.
+ *
+ * @param \Drupal\node\Entity\Node $page
+ *   Node to be edited.
+ * @param bool $status
+ *   Status of the webform.
+ * @param mixed $thirdPartySettings
+ *   Webform third party settings.
+ */
+function grants_metadata_set_node_values(Node &$page, bool $status, mixed $thirdPartySettings): void {
+  // Set application open boolean from form open status.
+  $page->set('field_application_open', $status);
+  // Applicant types.
+  if (!empty($thirdPartySettings["applicantTypes"])) {
+    $page->set('field_hakijatyyppi', $thirdPartySettings["applicantTypes"]);
+  }
+  // Type terms.
+  if (!empty($thirdPartySettings["applicationTypeTerms"])) {
+    $tids = array_values($thirdPartySettings["applicationTypeTerms"]);
+    $terms = Term::loadMultiple($tids);
+    $page->set('field_avustuslaji', $terms);
+  }
+  // If we have open time, assume that end time is added as well and
+  // use them as is.
+  if (!empty($thirdPartySettings["applicationOpen"])) {
+    $page->set('field_application_period',
+      [
+        'value' => $thirdPartySettings["applicationOpen"],
+        'end_value' => $thirdPartySettings["applicationClose"],
+      ]);
+  }
+  // If application is set to be continuous, mark it to node as well.
+  if ($thirdPartySettings["applicationContinuous"] == 1) {
+    $page->set('field_application_continuous', '1');
+  }
+  else {
+    // If not, set it false.
+    $page->set('field_application_continuous', '0');
+  }
+  // Set target group.
+  if (!empty($thirdPartySettings["applicationTargetGroup"])) {
+    $term = Term::load($thirdPartySettings["applicationTargetGroup"]);
+    $page->set('field_target_group', $term);
+  }
+  // Set target group.
+  if (!empty($thirdPartySettings["applicationIndustry"])) {
+    $page->set('field_industry', $thirdPartySettings["applicationIndustry"]);
   }
 }
 

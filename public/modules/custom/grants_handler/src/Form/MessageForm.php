@@ -2,13 +2,18 @@
 
 namespace Drupal\grants_handler\Form;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\file\Entity\File;
+use Drupal\grants_attachments\AttachmentRemover;
+use Drupal\grants_handler\ApplicationHandler;
 use Drupal\grants_handler\MessageService;
+use Drupal\helfi_atv\AtvService;
 use Drupal\webform\Entity\WebformSubmission;
+use GuzzleHttp\Exception\GuzzleException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,6 +44,27 @@ class MessageForm extends FormBase {
   protected $entityTypeManager;
 
   /**
+   * Handle application tasks.
+   *
+   * @var \Drupal\grants_handler\ApplicationHandler
+   */
+  protected ApplicationHandler $applicationHandler;
+
+  /**
+   * Access ATV.
+   *
+   * @var \Drupal\helfi_atv\AtvService
+   */
+  protected AtvService $atvService;
+
+  /**
+   * Remove attachment files.
+   *
+   * @var \Drupal\grants_attachments\AttachmentRemover
+   */
+  protected AttachmentRemover $attachmentRemover;
+
+  /**
    * Print / log debug things.
    *
    * @var bool
@@ -51,11 +77,18 @@ class MessageForm extends FormBase {
   public function __construct(
     TypedDataManager $typed_data_manager,
     MessageService $messageService,
-    EntityTypeManager $entityTypeManager
+    EntityTypeManager $entityTypeManager,
+    ApplicationHandler $applicationHandler,
+    AtvService $atvService,
+    AttachmentRemover $attachmentRemover
   ) {
     $this->typedDataManager = $typed_data_manager;
     $this->messageService = $messageService;
     $this->entityTypeManager = $entityTypeManager;
+    $this->applicationHandler = $applicationHandler;
+    $this->atvService = $atvService;
+    $this->attachmentRemover = $attachmentRemover;
+
     $debug = getenv('debug');
 
     if ($debug == 'true') {
@@ -73,7 +106,11 @@ class MessageForm extends FormBase {
     return new static(
       $container->get('typed_data_manager'),
       $container->get('grants_handler.message_service'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('grants_handler.application_handler'),
+      $container->get('helfi_atv.atv_service'),
+      $container->get('grants_attachments.attachment_remover'),
+
     );
   }
 
@@ -167,68 +204,56 @@ class MessageForm extends FormBase {
 
     $attachment = $form_state->getValue('messageAttachment');
     $data = [
-      'body' => $form_state->getValue('message'),
+      'body' => Xss::filter($form_state->getValue('message')),
       'messageId' => $nextMessageId,
     ];
 
-    $file = NULL;
     if (!empty($attachment)) {
       $file = File::load(reset($attachment));
       if ($file) {
-        $data['attachments'] = [
-          (object) [
-            'fileName' => $file->getFilename(),
-            'description' => $form_state->getValue('attachmentDescription'),
-          ],
-        ];
+        try {
+          // Get document from atv/cache.
+          $atvDocument = $this->applicationHandler->getAtvDocument($submissionData['application_number']);
+          // Upload attachment to document.
+          $attachmentResponse = $this->atvService->uploadAttachment($atvDocument->getId(), $file->getFilename(), $file);
+
+          $baseUrl = $this->atvService->getBaseUrl();
+          $baseUrlApps = str_replace('agw', 'apps', $baseUrl);
+          // Remove server url from integrationID.
+          $integrationId = str_replace($baseUrl, '', $attachmentResponse['href']);
+          $integrationId = str_replace($baseUrlApps, '', $integrationId);
+
+          $data['attachments'] = [
+            (object) [
+              'fileName' => $file->getFilename(),
+              'description' => $form_state->getValue('attachmentDescription'),
+              'integrationID' => $integrationId,
+            ],
+          ];
+
+          // Remove file attachment directly after upload.
+          $this->attachmentRemover->removeGrantAttachments(
+            [$file->id()],
+            [$file->id() => ['upload' => TRUE]],
+            $submissionData['application_number'],
+            $this->debug,
+            $submission->id()
+          );
+        }
+        catch (\Exception $e) {
+          $this->messenger->addError('Message attachment upload failed. Error has been logged.');
+          $this->logger('message_form')
+            ->error('Error uploading message attachment. @error', ['@error' => $e->getMessage()]);
+        }
+        catch (GuzzleException $e) {
+          $this->messenger->addError('Message attachment upload failed. Error has been logged.');
+          $this->logger('message_form')
+            ->error('Error uploading message attachment. @error', ['@error' => $e->getMessage()]);
+        }
       }
     }
 
     if ($this->messageService->sendMessage($data, $submission, $nextMessageId)) {
-
-      if ($file !== NULL) {
-        /** @var \Drupal\grants_attachments\AttachmentUploader $attachmentUploader */
-        $attachmentUploader = \Drupal::service('grants_attachments.attachment_uploader');
-        $fileObjects = [$file->id() => $file->id()];
-        $attachmentResult = $attachmentUploader->uploadAttachments(
-          [$file->id() => $file->id()],
-          $submissionData['application_number'],
-          $nextMessageId
-        );
-
-        foreach ($attachmentResult as $attResult) {
-          if ($attResult['upload'] === TRUE) {
-            $this->messenger()
-              ->addStatus(
-                $this->t(
-                  'Attachment (@filename) uploaded',
-                  [
-                    '@filename' => $attResult['filename'],
-                  ]));
-          }
-          else {
-            $this->messenger()
-              ->addStatus(
-                $this->t(
-                  'Attachment (@filename) upload failed with message: @msg. Event has been logged.',
-                  [
-                    '@filename' => $attResult['filename'],
-                    '@msg' => $attResult['msg'],
-                  ]));
-          }
-        }
-        /** @var \Drupal\grants_attachments\AttachmentRemover $attachmentRemover */
-        $attachmentRemover = \Drupal::service('grants_attachments.attachment_remover');
-
-        $attachmentRemover->removeGrantAttachments(
-          $fileObjects,
-          $attachmentResult,
-          $submissionData['application_number'],
-          TRUE,
-          $submission->id()
-        );
-
-      }
       $this->messenger()
         ->addStatus($this->t('Your message has been sent. Please note that it will take some time it appears on application.'));
       $this->messenger()
