@@ -63,14 +63,15 @@
         "ramsey/uuid": "^4.3"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.7",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "donatj/mock-webserver": "^2.4",
         "drupal/coder": "^8.3",
         "drupal/core-dev": "^9.3",
+        "drupal/twig_xdebug": "^1.2",
         "mglaman/phpstan-drupal": "^1.0",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^1.7",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpunit/phpunit": "^9.5",
         "weitzman/drupal-test-traits": "^1.5"

@@ -1,17 +1,5 @@
 # Printable version of the webform on a single page
 
-entity.webform.print_page:
-  path: '/form/{webform}/print'
-  defaults:
-    _controller: '\Drupal\grants_webform_print\Controller\GrantsWebformPrintController::page'
-    _title_callback: '\Drupal\webform\Controller\WebformEntityController::title'
-  options:
-    parameters:
-      webform:
-        type: 'entity:webform'
-  requirements:
-    _entity_access: 'edit own webform submission'
-
 grants_webform_print.submission_print:
   path: '/hakemus/{submission_id}/tulosta'
   defaults:
@@ -19,3 +7,15 @@ grants_webform_print.submission_print:
     _controller: '\Drupal\grants_webform_print\Controller\GrantsWebformSubmissionPrintController::build'
   requirements:
     _permission: 'edit own webform submission'
+
+grants_webform_print.print_webform:
+  path: '/tietoja-avustuksista/{webform}/tulosta'
+  defaults:
+    _title_callback: '\Drupal\grants_webform_print\Controller\GrantsWebformPrintController::title'
+    _controller: '\Drupal\grants_webform_print\Controller\GrantsWebformPrintController::build'
+  options:
+    parameters:
+      webform:
+        type: 'entity:webform'
+  requirements:
+    _permission: 'access content'

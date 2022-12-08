@@ -1,0 +1,19 @@
+{% for key,formpage in webform %}
+  {% if formpage['#type'] == 'container' %}
+    <div class="{{ formpage['#type'] }}">
+      <h3>{{ formpage['#title'] }}</h3>
+      {% if '#' not in key %}
+        {% for elementKey,element in formpage %}
+          {% set is_not_hidden = element['#type'] != 'hidden' %}
+          {% if is_not_hidden %}
+            {% if isArray(element) %}
+              {{ element }}
+{#              {{ breakpoint() }}#}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+    </div>
+  {% endif %}
+{% endfor %}

@@ -6,7 +6,9 @@
  */
 
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -1298,4 +1300,26 @@ function grants_handler_user_logout(AccountInterface $account) {
   // Get the event_dispatcher service and dispatch the event.
   $event_dispatcher = \Drupal::service('event_dispatcher');
   $event_dispatcher->dispatch($event, UserLogoutEvent::EVENT_NAME);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function grants_handler_node_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $result = AccessResult::neutral();
+  $type = $entity->bundle();
+  if ($type == 'form_page') {
+    if ($account->isAnonymous()) {
+      $result = AccessResult::forbidden();
+    }
+  }
+
+  return $result;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function grants_handler_preprocess_compensation_composite(&$variables) {
+  // Empty method just to shut up log warnings.
 }
