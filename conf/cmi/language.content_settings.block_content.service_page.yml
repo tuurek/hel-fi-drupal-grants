@@ -1,0 +1,11 @@
+uuid: 01149bd0-d308-4b88-b67e-118fe7b39dc0
+langcode: fi
+status: true
+dependencies:
+  config:
+    - block_content.type.service_page
+id: block_content.service_page
+target_entity_type_id: block_content
+target_bundle: service_page
+default_langcode: site_default
+language_alterable: false

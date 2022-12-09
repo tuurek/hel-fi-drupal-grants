@@ -1,0 +1,22 @@
+.block--service-page-banner {
+  background-color: var(--color-engel);
+  padding: var(--spacing-layout-s);
+  margin-top: var(--spacing-layout-s);
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .hds-icon {
+    margin-bottom: var(--spacing-layout-s);
+  }
+}
+
+.hds-button.service-page-sidebar-link {
+  background-color: var(--hdbt-color-palette--secondary);
+  padding: var(--spacing-xs);
+
+  &:hover {
+    color: var(--color-black);
+  }
+}
