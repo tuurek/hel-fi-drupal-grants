@@ -100,7 +100,7 @@ function grants_industries_openid_connect_post_authorize(UserInterface $account,
   // If user has AD groups.
   if (isset($context["user_data"]["ad_groups"]) && !empty($context["user_data"]["ad_groups"])) {
 
-    Drupal::logger('grants_industries')->debug(Json::encode($context["user_data"]["ad_groups"]));
+    Drupal::logger('grants_industries')->debug('User @username, AdGroups: @adgroups',['@username' => $account->getAccountName(),'@adgroups' => Json::encode($context["user_data"]["ad_groups"])]);
 
     $industryKeys = [];
     // Loop them.
