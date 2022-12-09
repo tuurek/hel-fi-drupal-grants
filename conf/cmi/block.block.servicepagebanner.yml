@@ -1,0 +1,33 @@
+uuid: 26f73865-bb17-4b7f-b70f-8a701bb3821d
+langcode: fi
+status: true
+dependencies:
+  content:
+    - 'block_content:service_page:53d326bf-15bf-46b3-8483-23e18ac4f018'
+  module:
+    - block_content
+    - node
+  theme:
+    - helfi_grant_applications
+id: servicepagebanner
+theme: helfi_grant_applications
+region: after_content
+weight: 0
+provider: null
+plugin: 'block_content:53d326bf-15bf-46b3-8483-23e18ac4f018'
+settings:
+  id: 'block_content:53d326bf-15bf-46b3-8483-23e18ac4f018'
+  label: 'Service page banner'
+  label_display: '0'
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      service: service

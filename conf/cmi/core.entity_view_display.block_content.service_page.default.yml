@@ -1,0 +1,23 @@
+uuid: 236d34d4-34e5-4c5b-869f-bf4f2b28250f
+langcode: fi
+status: true
+dependencies:
+  config:
+    - block_content.type.service_page
+    - field.field.block_content.service_page.body
+  module:
+    - text
+id: block_content.service_page.default
+targetEntityType: block_content
+bundle: service_page
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true

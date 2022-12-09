@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.medium_teaser
-    - core.entity_view_mode.node.service_page_list
     - core.entity_view_mode.node.tiny_teaser
     - field.storage.node.field_main_image
     - node.type.news_item
@@ -765,16 +764,20 @@ display:
         groups:
           1: AND
       style:
-        type: default
+        type: html_list
         options:
-          row_class: ''
+          grouping: {  }
+          row_class: news-listing__item
           default_row_class: true
           uses_fields: true
+          type: ul
+          wrapper_class: item-list
+          class: 'news-listing news-listing--latest-tiny-teasers'
       row:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: service_page_list
+          view_mode: tiny_teaser
       defaults:
         title: false
         use_more: false

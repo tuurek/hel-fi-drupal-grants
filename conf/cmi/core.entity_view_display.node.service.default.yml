@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.service.field_has_hero
     - field.field.node.service.field_hero
     - field.field.node.service.field_industry
+    - field.field.node.service.field_lead_in
     - field.field.node.service.field_liftup_image
     - field.field.node.service.field_lower_content
     - field.field.node.service.field_metatags
@@ -21,46 +22,14 @@ dependencies:
     - field.field.node.service.field_webform
     - node.type.service
   module:
-    - datetime_range
     - entity_reference_revisions
     - metatag
-    - options
     - user
 id: node.service.default
 targetEntityType: node
 bundle: service
 mode: default
 content:
-  field_application_continuous:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_application_open:
-    type: boolean
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_application_period:
-    type: daterange_default
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: medium
-      separator: '-'
-    third_party_settings: {  }
-    weight: 0
-    region: content
   field_content:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -68,7 +37,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 1
     region: content
   field_errand_service:
     type: entity_reference_entity_view
@@ -77,14 +46,14 @@ content:
       view_mode: default
       link: true
     third_party_settings: {  }
-    weight: 4
+    weight: 2
     region: content
-  field_industry:
-    type: list_default
+  field_lead_in:
+    type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 8
+    weight: 0
     region: content
   field_lower_content:
     type: entity_reference_revisions_entity_view
@@ -93,28 +62,33 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 4
     region: content
   field_metatags:
     type: metatag_empty_formatter
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 3
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 7
+    weight: 5
     region: content
 hidden:
+  field_application_continuous: true
+  field_application_open: true
+  field_application_period: true
   field_avustuslaji: true
   field_hakijatyyppi: true
   field_has_hero: true
   field_hero: true
+  field_industry: true
   field_liftup_image: true
   field_service_channel: true
   field_target_group: true
   field_webform: true
   langcode: true
+  published_at: true
   toc_enabled: true

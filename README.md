@@ -2,9 +2,6 @@
 
 Grants application.
 
-
-
-
 ## Environments
 
 Env | Branch | Drush alias | URL
