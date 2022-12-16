@@ -16,6 +16,7 @@ declare(strict_types=1);
  * @see https://www.drupal.org/node/2217931
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
@@ -98,6 +99,9 @@ function grants_industries_openid_connect_post_authorize(UserInterface $account,
 
   // If user has AD groups.
   if (isset($context["user_data"]["ad_groups"]) && !empty($context["user_data"]["ad_groups"])) {
+
+    Drupal::logger('grants_industries')->debug('User @username, AdGroups: @adgroups',['@username' => $account->getAccountName(),'@adgroups' => Json::encode($context["user_data"]["ad_groups"])]);
+
     $industryKeys = [];
     // Loop them.
     foreach ($context["user_data"]["ad_groups"] as $ad_group) {

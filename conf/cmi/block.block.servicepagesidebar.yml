@@ -1,0 +1,33 @@
+uuid: 7532b9f1-214e-4698-9e96-74aa9c75c3a6
+langcode: fi
+status: true
+dependencies:
+  content:
+    - 'block_content:service_page:73b0bbfd-fde2-4709-8b02-ab966da56791'
+  module:
+    - block_content
+    - node
+  theme:
+    - helfi_grant_applications
+id: servicepagesidebar
+theme: helfi_grant_applications
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'block_content:73b0bbfd-fde2-4709-8b02-ab966da56791'
+settings:
+  id: 'block_content:73b0bbfd-fde2-4709-8b02-ab966da56791'
+  label: 'Service page sidebar'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      service: service

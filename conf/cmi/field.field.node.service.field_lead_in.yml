@@ -1,0 +1,19 @@
+uuid: 8d4904ec-19fc-426f-9632-8ab8d02ba376
+langcode: fi
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_lead_in
+    - node.type.service
+id: node.service.field_lead_in
+field_name: field_lead_in
+entity_type: node
+bundle: service
+label: Lead
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

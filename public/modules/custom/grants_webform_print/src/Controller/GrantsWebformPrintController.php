@@ -1,68 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\grants_webform_print\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\webform\Entity\Webform;
 
 /**
- * Undocumented class.
+ * Returns responses for Webform Printify routes.
  */
 class GrantsWebformPrintController extends ControllerBase {
 
   /**
-   * The renderer.
+   * Builds the response.
    *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The webform message manager.
+   * @param \Drupal\webform\Entity\Webform $webform
+   *   Webform to print.
    *
-   * @var \Drupal\webform\WebformMessageManagerInterface
+   * @return array
+   *   Render array.
    */
-  protected $messageManager;
+  public function build(Webform $webform): array {
 
-  /**
-   * The webform request handler.
-   *
-   * @var \Drupal\webform\WebformRequestInterface
-   */
-  protected $requestHandler;
+    /** @var \Drupal\webform\WebformTranslationManager $wftm */
+    $wftm = \Drupal::service('webform.translation_manager');
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->renderer = $container->get('renderer');
-    $instance->messageManager = $container->get('webform.message_manager');
-    $instance->requestHandler = $container->get('webform.request');
-    return $instance;
+    // Load all translations for this webform.
+    $currentLanguage = \Drupal::languageManager()->getCurrentLanguage();
+    $elementTranslations = $wftm->getElements($webform, $currentLanguage->getId());
+
+    $webformArray = $webform->getElementsDecoded();
+    // Pass decoded array & translations to traversing.
+    $webformArray = $this->traverseWebform($webformArray, $elementTranslations);
+
+    unset($webformArray['actions']);
+
+    // Webform.
+    return [
+      '#theme' => 'grants_webform_print_webform',
+      '#webform' => $webformArray,
+    ];
   }
 
   /**
-   * Does the transformations for the Element array of the form.
+   * Page title callback.
    *
-   * @param mixed $item
-   *   The reference to the item of the key-item pair.
-   * @param string $key
-   *   The key associated with the item above.
+   * @param \Drupal\webform\Entity\Webform $webform
+   *   Webform to print.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
+   *   Title to show.
    */
-  private function formatWebformElement(&$item, string $key) {
-    if ($key === '#type' && $item === 'webform_wizard_page') {
-      $item = 'container';
-    }
-    elseif ($key === '#type' && $item === 'select') {
-      $item = 'checkboxes';
-    }
-    elseif ($key === '#type' && $item === 'radios') {
-      $item = 'checkboxes';
-    }
-    if (!str_contains($key, '#')) {
-    }
+  public function title(Webform $webform) {
+    return $webform->label();
   }
 
   /**
@@ -70,66 +61,124 @@ class GrantsWebformPrintController extends ControllerBase {
    *
    * @param array $webformArray
    *   The Webform in question.
+   * @param array $elementTranslations
+   *   Translations for elements.
+   *
+   * @return array
+   *   If there is translated value for given field, they're here.
    */
-  private function traverseWebform(array &$webformArray) {
-    foreach ($webformArray as $key => &$item) {
-      if (is_array($item)) {
-        $this->traverseWebform($item);
-        if (isset($item['#help'])) {
-          if (!isset($item['#description'])) {
-            $item['#description'] = '';
-          }
-          $item['#description'] = $item['#help'] . "\n" . $item['#description'];
-          $item['#help'] = NULL;
-        }
-        if (isset($item['#type'])) {
-          if ($item['#type'] === 'textarea' || $item['#type'] === 'textfield') {
-            $item['#value'] = '';
-          }
-          if ($item['#type'] === 'checkboxes' || $item['#type'] === 'radios') {
-            $item['#value'] = '';
-          }
-        }
-      }
+  private function traverseWebform(array $webformArray, array $elementTranslations): array {
+    $transfromed = [];
+    foreach ($webformArray as $key => $item) {
+      $transfromed[$key] = $this->fixWebformElement($item, $key, $elementTranslations);
     }
+    return $transfromed;
   }
 
   /**
-   * Returns a webform to be printed.
+   * Clean out unwanted things from form elements.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
-   * @param string|null $library
-   *   The iframe JavaScript library.
-   * @param string|null $version
-   *   The iframe JavaScript library version.
-   *
-   * @return array
-   *   The webform rendered in a page template with only the content.
-   *
-   * @see page--grants-webform-print.html.twig
+   * @param array $element
+   *   Element to fix.
+   * @param string $key
+   *   Key on the form.
+   * @param array $translatedFields
+   *   If there is translated value for given field, they're here.
    */
-  public function page(Request $request, $library = NULL, $version = NULL) {
-    $webform = $this->requestHandler->getCurrentWebform();
-    $sourceEntity = $this->requestHandler->getCurrentSourceEntity(['webform']);
-    $webformArray = $webform->getElementsDecoded();
-    array_walk_recursive($webformArray, [$this, 'formatWebformElement']);
-    $this->traverseWebform($webformArray);
+  private function fixWebformElement(array $element, string $key, array $translatedFields): array {
 
-    // Create a webform.
-    $webform->setElements($webformArray);
-    $build = [
-      'webform' => [
-        '#type' => 'webform',
-        '#webform' => $webform,
-        '#source_entity' => $sourceEntity,
-        '#prefix' => '<div class="webform-print-submission-form">',
-        '#suffix' => '</div>',
-      ],
-    ];
-    // Webform.
-    return $build;
+    // Remove states from printing.
+    unset($element["#states"]);
 
+    // In case of custom component, the element parts are in #element
+    // so we need to sprad those out for printing.
+    if (isset($element['#element'])) {
+      $elements = $element['#element'];
+      unset($element['#element']);
+      $element = [
+        ...$element,
+        ...$elements,
+      ];
+    }
+    // Look for non render array parts from element.
+    $children = array_filter(array_keys($element), function ($key) {
+      return !str_contains($key, '#');
+    });
+
+    // If there is some, then loop as long as there is som.
+    if ($children) {
+      foreach ($children as $childKey) {
+        $element[$childKey] = $this->fixWebformElement($element[$childKey], $childKey, $translatedFields);
+      }
+    }
+
+    // If no id for the field, we get warnigns.
+    $element['#id'] = $key;
+    // Force description display after element.
+    $element['#description_display'] = 'after';
+
+    // Field type specific alters.
+    if (isset($element['#type'])) {
+      // Make wizard pages show as containers.
+      if ($element['#type'] === 'webform_wizard_page') {
+        $element['#type'] = 'container';
+      }
+      // Custom components as select.
+      if ($element['#type'] === 'community_address_composite') {
+        $element['#type'] = 'select';
+        $element['#options'] = [0 => t('Select address')];
+      }
+      if ($element['#type'] === 'community_officials_composite') {
+        $element['#type'] = 'select';
+        $element['#options'] = [0 => t('Select official')];
+      }
+      if ($element['#type'] === 'bank_account_composite') {
+        $element['#type'] = 'select';
+        $element['#options'] = [0 => t('Select bank account')];
+      }
+      // Subventions as hidden textfield.
+      if ($element['#type'] === 'grants_compensations') {
+        $element['#type'] = 'textfield';
+        $element["#attributes"]["class"][] = 'hide-input';
+      }
+      // Get attachment descriptions from subfields.
+      if ($element['#type'] === 'grants_attachments') {
+        $element['#type'] = 'textfield';
+        $element["#attributes"]["class"][] = 'hide-input';
+        $element["#description__access"] = TRUE;
+        if (!empty($element["#attachment__description"])) {
+          $element['#description'] = $element["#attachment__description"];
+        }
+      }
+      // Show no radios, hidden textfields.
+      if ($element['#type'] === 'radios') {
+        $element['#type'] = 'textfield';
+        $element["#attributes"]["class"][] = 'hide-input';
+      }
+
+      if ($element['#type'] === 'textarea' || $element['#type'] === 'textfield') {
+        $element['#value'] = '';
+      }
+      if ($element['#type'] === 'checkboxes' || $element['#type'] === 'radios') {
+        $element['#value'] = '';
+      }
+    }
+    if ($element['#type'] === 'checkboxes') {
+      $element['#title_display'] = [];
+    }
+
+    // Loop translated fields.
+    if (!empty($translatedFields[$key])) {
+      // Unset type since we do not want to override that from trans.
+      unset($translatedFields[$key]['#type']);
+      foreach ($translatedFields[$key] as $fieldName => $translatedValue) {
+        // Replace with translated text. only if it's an string.
+        if (isset($element[$fieldName]) && !is_array($translatedValue)) {
+          $element[$fieldName] = $translatedValue;
+        }
+      }
+    }
+    return $element;
   }
 
 }
